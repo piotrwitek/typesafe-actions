@@ -11,8 +11,8 @@ describe('Redux Utils', () => {
     });
 
     it('with payload', () => {
-      const add = createAction('ADD', (type: 'ADD') => (amount: number) =>
-        ({ type, payload: amount }),
+      const add = createAction('ADD',
+        (amount: number) => ({ type: 'ADD', payload: amount }),
       );
 
       expect(add(10)).toEqual({ type: 'ADD', payload: 10 });
@@ -20,9 +20,9 @@ describe('Redux Utils', () => {
     });
 
     it('with payload and meta', () => {
-      const notify = createAction('NOTIFY', (type: 'NOTIFY') =>
+      const notify = createAction('NOTIFY',
         (username: string, message: string) => ({
-          type,
+          type: 'NOTIFY',
           payload: { message: `${username}: ${message}` },
           meta: { username, message },
         }),
@@ -37,8 +37,11 @@ describe('Redux Utils', () => {
     });
 
     it('with payload and no params', () => {
-      const showNotification = createAction('SHOW_NOTIFICATION', (type: 'SHOW_NOTIFICATION') =>
-        () => ({ type, payload: 'default message' }),
+      const showNotification = createAction('SHOW_NOTIFICATION',
+        () => ({
+          type: 'SHOW_NOTIFICATION',
+          payload: 'default message',
+        }),
       );
       const result = showNotification();
 
@@ -50,8 +53,11 @@ describe('Redux Utils', () => {
     });
 
     it('with payload and optional param', () => {
-      const showNotification = createAction('SHOW_NOTIFICATION', (type: 'SHOW_NOTIFICATION') =>
-        (message?: string) => ({ type, payload: message }),
+      const showNotification = createAction('SHOW_NOTIFICATION',
+        (message?: string) => ({
+          type: 'SHOW_NOTIFICATION',
+          payload: message,
+        }),
       );
 
       expect(showNotification()).toEqual({
@@ -62,8 +68,11 @@ describe('Redux Utils', () => {
     });
 
     it('with meta and no params', () => {
-      const showError = createAction('SHOW_ERROR', (type: 'SHOW_ERROR') =>
-        () => ({ type, meta: { type: 'error' } }),
+      const showError = createAction('SHOW_ERROR',
+        () => ({
+          type: 'SHOW_ERROR',
+          meta: { type: 'error' },
+        }),
       );
 
       expect(showError()).toEqual({
@@ -74,8 +83,12 @@ describe('Redux Utils', () => {
     });
 
     it('with meta and optional param', () => {
-      const showError = createAction('SHOW_ERROR', (type: 'SHOW_ERROR') =>
-        (message?: string) => ({ type, payload: message, meta: { type: 'error' } }),
+      const showError = createAction('SHOW_ERROR',
+        (message?: string) => ({
+          type: 'SHOW_ERROR',
+          payload: message,
+          meta: { type: 'error' },
+        }),
       );
 
       expect(showError()).toEqual({

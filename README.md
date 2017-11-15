@@ -44,9 +44,12 @@ It doesn't allow for correct type inference when using TypeScript and it will fo
 
 The other common issue with `redux-actions` types and similar solutions are related to losing your function definition type inference and intellisense (named arguments and arity) in resulting "action creator" function which for me is unacceptable.
 
-As a bonus there is a convenient `type` static property on every action creator for common reducer switch case scenarios (working with narrowing of union types):
+As a bonus there is a convenient `type` static property on every action creator for common reducer switch case scenarios (can be used to narrow "Discriminated Union" type):
 ```ts
 const increment = createAction('INCREMENT');
+// const increment: (() => {
+//     type: "INCREMENT";
+// }) & { readonly type: "INCREMENT"; } << HERE
 
 switch (action.type) {
   case increment.type:
@@ -77,9 +80,9 @@ const notify1 = createAction('NOTIFY')
 // with ts-redux-actions
 const notify1 = createAction('NOTIFY')
 // only what is expected, no nullables, with inferred literal type in type property!
-// const notify1: () => {
+// const notify1: (() => {
 //   type: "NOTIFY";
-// }
+// }) & { readonly type: "NOTIFY"; }
 ```
 
 - with payload
@@ -98,17 +101,17 @@ const notify2 = createAction('NOTIFY',
 // }
 
 // with ts-redux-actions
-const notify2 = createAction('NOTIFY', (type: 'NOTIFY') =>
+const notify2 = createAction('NOTIFY',
   (username: string, message?: string) => ({
-    type,
+    type: 'NOTIFY',
     payload: { message: `${username}: ${message}` },
   })
 )
 // still all good!
-// const notify2: (username: string, message?: string | undefined) => {
+// const notify2: ((username: string, message?: string | undefined) => {
 //   type: "NOTIFY";
 //   payload: { message: string; };
-// }
+// }) & { readonly type: "NOTIFY"; }
 
 ```
 
@@ -128,20 +131,20 @@ const notify3 = createAction('NOTIFY',
 // }
 
 // with ts-redux-actions
-const notify3 = createAction('NOTIFY', (type: 'NOTIFY') =>
+const notify3 = createAction('NOTIFY',
     (username: string, message?: string) => ({
-      type,
+      type: 'NOTIFY',
       payload: { message: `${username}: ${message}` },
       meta: { username, message },
     }),
   )
 
 // inference working as expected and compiler will catch all those nasty bugs:
-// const: notify: (username: string, message?: string | undefined) => {
+// const: notify: ((username: string, message?: string | undefined) => {
 //   type: "NOTIFY";
 //   payload: { message: string; };
 //   meta: { username: string; message: string | undefined; };
-// }
+// }) & { readonly type: "NOTIFY"; }
 ```
 
 ---
@@ -154,10 +157,12 @@ const notify3 = createAction('NOTIFY', (type: 'NOTIFY') =>
 > [> Advanced Usage](src/create-action.spec.ts)
 
 ```ts
-createAction(type, creatorFunction?)
-type: string,
-creatorFunction: (type: T) => (...args: any[]) => { type: T, payload?: P, meta?: M }
-return: (...args: any[]) => { type: T, payload?: P, meta?: M }
+createAction(typeString, creatorFunction?)
+typeString: TS extends string,
+creatorFunction: (...args: any[]) => { type: TS, payload?: P, meta?: M, error?: boolean }
+return: (
+  (...args: any[]) => { type: TS, payload?: P, meta?: M, error?: boolean }
+) & { readonly type: TS }
 ```
 
 Examples:
