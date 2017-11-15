@@ -1,6 +1,6 @@
 {
   "name": "ts-redux-actions",
-  "version": "1.0.0-beta3",
+  "version": "1.0.0-beta4",
   "description": "Typed Redux Actions for TypeScript Projects",
   "author": "Piotr Witek <piotrek.witek@gmail.com> (http://piotrwitek.github.io)",
   "repository": "https://github.com/piotrwitek/ts-redux-actions",

@@ -1,4 +1,4 @@
-export type ActionCreator<T extends string, P> =
+export type ActionCreatorFunction<T extends string, P> =
   | (() => { type: T })
   | ((...args: any[]) => { type: T, payload: P, meta?: {}, error?: boolean });
 
@@ -9,11 +9,11 @@ export type TSActionCreator<AC, T extends string> = AC & {
 export function createAction<T extends string>(
   typeString: T,
 ): TSActionCreator<(() => { type: T }), T>;
-export function createAction<T extends string, TS extends T, P, AC extends ActionCreator<T, P>>(
+export function createAction<T extends string, TS extends T, P, AC extends ActionCreatorFunction<T, P>>(
   typeString: TS,
   creatorFunction?: (type: T) => AC,
 ): TSActionCreator<AC, T>;
-export function createAction<T extends string, TS extends T, P, AC extends ActionCreator<T, P>>(
+export function createAction<T extends string, TS extends T, P, AC extends ActionCreatorFunction<T, P>>(
   typeString: TS,
   creatorFunction?: (type: T) => AC,
 ): TSActionCreator<AC, T> {
