@@ -147,6 +147,39 @@ const notify3 = createAction('NOTIFY',
 // }) & { readonly type: "NOTIFY"; }
 ```
 
+There is a helper function for when you just want to copy the parameters into the payload.
+
+```ts
+// Use an interface to type the payload.
+define interface NotifyPayload = {
+  username?: string,
+  message?: string, 
+}
+
+const notify = createPayloadAction('NOTIFY', {} as NotifyPayload);
+
+notify({username: 'Piotr', message: 'Hi!'});
+```
+...which is equivalent to:
+
+```ts
+const notify = createAction('NOTIFY',
+  ({username: string, message?: string}) => ({
+    type: 'NOTIFY',
+    payload: { message, username },
+  })
+
+```
+You can also set defaults for the payload
+
+```ts
+const notify = createPayloadAction('NOTIFY', {message: 'Hi!'} as NotifyPayload);
+
+// Which lets you call:
+
+notify({username: 'Matt'});
+
+```
 ---
 
 ## API

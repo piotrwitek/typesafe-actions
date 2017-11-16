@@ -1,4 +1,4 @@
-import { createAction } from '.';
+import { createAction, createPayloadAction } from '.';
 
 describe('Redux Utils', () => {
   describe('createAction', () => {
@@ -99,6 +99,56 @@ describe('Redux Utils', () => {
       expect(showError.type).toBe('SHOW_ERROR');
     });
 
+  });
+  describe('createPayloadAction', () => {
+
+    interface NotifyPayload {
+      username?: string,
+      message?: string
+    }
+
+    it('without defaults', () => {
+      const notify = createPayloadAction('NOTIFY', {} as NotifyPayload);
+
+      expect(notify({message: 'Hi!', username: 'Matt'})).toEqual({
+        type: 'NOTIFY',
+        payload: {
+          username: 'Matt',
+          message: 'Hi!',
+        },
+      });
+
+    });
+
+    it('with defaults', () => {
+      const notify = createPayloadAction('NOTIFY', {
+        username: 'Matt',
+      } as NotifyPayload);
+
+      expect(notify({message: 'Hi!'})).toEqual({
+        type: 'NOTIFY',
+        payload: {
+          username: 'Matt',
+          message: 'Hi!',
+        },
+      });
+
+    });
+
+    it('overriding defaults', () => {
+      const notify = createPayloadAction('NOTIFY', {
+        username: 'Matt',
+      } as NotifyPayload);
+
+      expect(notify({message: 'Hi!', username: 'Piotr'})).toEqual({
+        type: 'NOTIFY',
+        payload: {
+          username: 'Piotr',
+          message: 'Hi!',
+        },
+      });
+
+    });
   });
 
 });
