@@ -1,10 +1,10 @@
 # TS Redux Actions
-> Typed Redux Action Creators for TypeScript
+> Typesafe Redux Action Creators for TypeScript  
 
-From now on no type errors will sneak in unnoticed through your action creators!
+This lib is a part of [`react-redux-typescript`](https://github.com/piotrwitek/react-redux-typescript) library, which is a collection of valuable utilities commonly used across many TypeScript Projects. 
 
 - Semantic Versioning
-- No external dependencies
+- No third-party dependencies
 - Output separate bundles for your specific workflow needs:
   - ES5 + CommonJS - `main`
   - ES5 + ES-Modules - `module` 
@@ -14,7 +14,8 @@ From now on no type errors will sneak in unnoticed through your action creators!
 
 - [Installation](#installation)
 - [Motivation](#motivation)
-- [Usage](#usage)
+- [Get Started](#get-started)
+- [Features](#features)
 - [API](#api)
   - [createAction](#createaction)
   - [~~createActions~~](#createactions) (WIP)
@@ -39,12 +40,15 @@ $ yarn add ts-redux-actions
 
 ## Motivation
 
-I wasn't satisfied with the API design in [redux-actions](https://redux-actions.js.org/) because of separate payload & meta map callback functions. 
-It doesn't allow for correct type inference when using TypeScript and it will force you to do an extra effort for explicit type annotations and probably result in more boilerplate when trying to work around it.
+I wasn't satisfied with [redux-actions](https://redux-actions.js.org/) with TypeScript because of separate payload & meta map functions which makes it not idiomatic when using with static typing.  
+What I mean here is it will break your function definition type inference and intellisense in returned "action creator" function (e.g. named arguments will be renamed to generic names like a1, a2, etc... and function arity with optional parameters will break your function signature entirely).  
+It will force you to do an extra effort for explicit type annotations and probably result in more boilerplate when trying to work around it.
 
-The other common issue with `redux-actions` types and similar solutions are related to losing your function definition type inference and intellisense (named arguments and arity) in resulting "action creator" function which for me is unacceptable.
+---
 
-As a bonus there is a convenient `type` static property on every action creator for common reducer switch case scenarios (can be used to narrow "Discriminated Union" type):
+## Get Started
+
+> Important note: On every created "action creator" function there is a convenient `getType` static method for common reducer switch case scenarios like below (can be used to narrow "Discriminated Union" type just remember to add trailing `!` to strip undefined):
 ```ts
 const increment = createAction('INCREMENT');
 // const increment: (() => {
@@ -52,17 +56,13 @@ const increment = createAction('INCREMENT');
 // }) & { readonly type: "INCREMENT"; } << HERE
 
 switch (action.type) {
-  case increment.type:
+  case increment.getType()!:
     return state + 1;
   ...
   ...
   default: return state;
 }
 ```
-
----
-
-## Usage
 
 To highlight the difference in API design and the benefits of "action creator" type inference found in this solution let me show you some usage examples:
 
@@ -176,8 +176,8 @@ it('no payload', () => {
 });
 
 it('with payload', () => {
-  const add = createAction('ADD', (type: 'ADD') => (amount: number) =>
-    ({ type, payload: amount }),
+  const add = createAction('ADD',
+    (amount: number) => ({ type: 'ADD', payload: amount }),
   );
 
   expect(add(10)).toEqual({ type: 'ADD', payload: 10 });
@@ -185,9 +185,9 @@ it('with payload', () => {
 });
 
 it('with payload and meta', () => {
-  const notify = createAction('NOTIFY', (type: 'NOTIFY') =>
+  const notify = createAction('NOTIFY',
     (username: string, message: string) => ({
-      type,
+      type: 'NOTIFY',
       payload: { message: `${username}: ${message}` },
       meta: { username, message },
     }),
