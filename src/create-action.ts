@@ -19,20 +19,27 @@ export function createAction<T extends string,
   typeString: T | AC,
   creatorFunction?: AC,
 ): AC & TypeGetter<T> {
-  if (creatorFunction) {
+  let actionCreator: any;
+
+  if (creatorFunction != null) {
     if (typeof creatorFunction !== 'function') {
       throw new Error('second argument is not a function');
     }
 
-    const actionCreator: any = creatorFunction;
-    actionCreator.getType = () => typeString;
-
-    return actionCreator;
+    actionCreator = creatorFunction;
   } else {
-    const actionCreator: any =
-      () => ({ type: typeString });
-    actionCreator.getType = () => typeString;
-
-    return actionCreator;
+    actionCreator = () => ({ type: typeString });
   }
+
+  if (typeString != null) {
+    if (typeof typeString !== 'string') {
+      throw new Error('first argument is not a type string');
+    }
+
+    actionCreator.getType = () => typeString;
+  } else {
+    throw new Error('first argument is missing');
+  }
+
+  return actionCreator;
 }
