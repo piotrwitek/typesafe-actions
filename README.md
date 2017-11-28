@@ -155,7 +155,13 @@ const notify3 = createAction('NOTIFY',
 ---
 
 ## API
-> For more advanced usage scenarios please check use cases described in test specifications  
+> For advanced usage scenarios please check use cases described in test specifications  
+
+- [getType](#gettype)
+- [createAction](#createaction)
+- [~~createActions~~](#createactions) (WIP)
+
+---
 
 ### getType
 > get type literal from action creator
