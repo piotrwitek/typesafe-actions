@@ -1,36 +1,37 @@
-export type ActionCreatorFunction<TS extends string> =
-  | ((...args: any[]) => { type: TS, payload?: any, meta?: any, error?: boolean });
+import { EmptyAction, FluxStandardAction, TypeGetter } from '.';
 
-export type TSActionCreator<AC, T extends string> = AC & {
-  readonly type: T,
-};
-
-export function createAction<TS extends string, AC extends (() => { type: TS })>(
-  typeString: TS,
-): TSActionCreator<AC, TS>;
-
-export function createAction<TS extends string, AC extends ActionCreatorFunction<TS>>(
-  typeString: TS,
+export function createAction<T extends string,
+  AC extends (...args: any[]) => FluxStandardAction<T>
+  >(
+  typeString: T,
   creatorFunction: AC,
-): TSActionCreator<AC, TS>;
+): AC & TypeGetter<T>;
 
-export function createAction<TS extends string, AC extends ActionCreatorFunction<TS>>(
-  typeString: TS,
+export function createAction<T extends string,
+  AC extends () => { type: T }
+  >(
+  typeString: T,
+): AC & TypeGetter<T>;
+
+export function createAction<T extends string,
+  AC extends (...args: any[]) => FluxStandardAction<T>
+  >(
+  typeString: T | AC,
   creatorFunction?: AC,
-): TSActionCreator<AC, TS> {
+): AC & TypeGetter<T> {
   if (creatorFunction) {
     if (typeof creatorFunction !== 'function') {
       throw new Error('second argument is not a function');
     }
 
     const actionCreator: any = creatorFunction;
-    actionCreator.type = typeString;
+    actionCreator.getType = () => typeString;
 
     return actionCreator;
   } else {
     const actionCreator: any =
       () => ({ type: typeString });
-    actionCreator.type = typeString;
+    actionCreator.getType = () => typeString;
 
     return actionCreator;
   }
