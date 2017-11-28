@@ -16,14 +16,14 @@
   "scripts": {
     "reinstall": "rm -rf node_modules/ && yarn install",
     "clean": "rm -rf es5-commonjs/ es5-module/ jsnext/",
-    "prepublishOnly": "yarn run clean && yarn run reinstall && yarn run check && yarn run test && yarn run build",
+    "prepublishOnly": "npm run clean && npm run reinstall && npm run check && npm run test && npm run build",
     "check": "npm run lint & npm run tsc",
     "lint": "tslint --project './tsconfig.json'",
     "tsc": "tsc -p . --noEmit",
     "tsc:watch": "tsc -p . --noEmit -w",
     "test": "jest --config jest.config.json ./src",
     "test:watch": "jest --config jest.config.json ./src --watch",
-    "build": "yarn run build:commonjs & yarn run build:module & yarn run build:jsnext",
+    "build": "npm run build:commonjs & npm run build:module & npm run build:jsnext",
     "build:commonjs": "rm -rf es5-commonjs/ && tsc -p . --outDir es5-commonjs/",
     "build:module": "rm -rf es5-module/ && tsc -p . --outDir es5-module/ -m 'ES2015'",
     "build:jsnext": "rm -rf jsnext/ && tsc -p . --outDir jsnext/ -t 'ES2015'"
