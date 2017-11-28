@@ -1,4 +1,4 @@
-import { createAction } from '.';
+import { createAction, getType } from '.';
 
 describe('Redux Utils', () => {
   describe('createAction', () => {
@@ -6,8 +6,23 @@ describe('Redux Utils', () => {
     it('no payload', () => {
       const increment = createAction('INCREMENT');
 
-      expect(increment()).toEqual({ type: 'INCREMENT' });
-      expect(increment.type).toBe('INCREMENT');
+      const action: { type: 'INCREMENT' } = increment();
+      expect(action).toEqual({ type: 'INCREMENT' });
+      const type: 'INCREMENT' = increment.getType!();
+      const type2: 'INCREMENT' = getType(increment);
+      expect(type).toBe('INCREMENT');
+      expect(type2).toBe('INCREMENT');
+    });
+
+    it('no payload alternative', () => {
+      const increment = createAction('INCREMENT', () => ({ type: 'INCREMENT' }));
+
+      const action: { type: 'INCREMENT' } = increment();
+      expect(action).toEqual({ type: 'INCREMENT' });
+      const type: 'INCREMENT' = increment.getType!();
+      const type2: 'INCREMENT' = getType(increment);
+      expect(type).toBe('INCREMENT');
+      expect(type2).toBe('INCREMENT');
     });
 
     it('with payload', () => {
@@ -15,8 +30,12 @@ describe('Redux Utils', () => {
         (amount: number) => ({ type: 'ADD', payload: amount }),
       );
 
-      expect(add(10)).toEqual({ type: 'ADD', payload: 10 });
-      expect(add.type).toBe('ADD');
+      const action: { type: 'ADD', payload: number } = add(10);
+      expect(action).toEqual({ type: 'ADD', payload: 10 });
+      const type: 'ADD' = add.getType!();
+      const type2: 'ADD' = getType(add);
+      expect(type).toBe('ADD');
+      expect(type2).toBe('ADD');
     });
 
     it('with payload and meta', () => {
@@ -28,12 +47,20 @@ describe('Redux Utils', () => {
         }),
       );
 
-      expect(notify('Piotr', 'Hello!')).toEqual({
+      const action: {
+        type: 'NOTIFY',
+        payload: { message: string },
+        meta: { username: string, message: string },
+      } = notify('Piotr', 'Hello!');
+      expect(action).toEqual({
         type: 'NOTIFY',
         payload: { message: 'Piotr: Hello!' },
         meta: { username: 'Piotr', message: 'Hello!' },
       });
-      expect(notify.type).toBe('NOTIFY');
+      const type: 'NOTIFY' = notify.getType!();
+      const type2: 'NOTIFY' = getType(notify);
+      expect(type).toBe('NOTIFY');
+      expect(type2).toBe('NOTIFY');
     });
 
     it('with payload and no params', () => {
@@ -43,13 +70,16 @@ describe('Redux Utils', () => {
           payload: 'default message',
         }),
       );
-      const result = showNotification();
 
-      expect(result).toEqual({
+      const action: { type: 'SHOW_NOTIFICATION', payload: string } = showNotification();
+      expect(action).toEqual({
         type: 'SHOW_NOTIFICATION',
         payload: 'default message',
       });
-      expect(showNotification.type).toBe('SHOW_NOTIFICATION');
+      const type: 'SHOW_NOTIFICATION' = showNotification.getType!();
+      const type2: 'SHOW_NOTIFICATION' = getType(showNotification);
+      expect(type).toBe('SHOW_NOTIFICATION');
+      expect(type2).toBe('SHOW_NOTIFICATION');
     });
 
     it('with payload and optional param', () => {
@@ -60,11 +90,15 @@ describe('Redux Utils', () => {
         }),
       );
 
-      expect(showNotification()).toEqual({
+      const action: { type: 'SHOW_NOTIFICATION', payload: string | undefined } = showNotification();
+      expect(action).toEqual({
         type: 'SHOW_NOTIFICATION',
         payload: undefined,
       });
-      expect(showNotification.type).toBe('SHOW_NOTIFICATION');
+      const type: 'SHOW_NOTIFICATION' = showNotification.getType!();
+      const type2: 'SHOW_NOTIFICATION' = getType(showNotification);
+      expect(type).toBe('SHOW_NOTIFICATION');
+      expect(type2).toBe('SHOW_NOTIFICATION');
     });
 
     it('with meta and no params', () => {
@@ -75,11 +109,15 @@ describe('Redux Utils', () => {
         }),
       );
 
-      expect(showError()).toEqual({
+      const action: { type: 'SHOW_ERROR', meta: { type: string } } = showError();
+      expect(action).toEqual({
         type: 'SHOW_ERROR',
         meta: { type: 'error' },
       });
-      expect(showError.type).toBe('SHOW_ERROR');
+      const type: 'SHOW_ERROR' = showError.getType!();
+      const type2: 'SHOW_ERROR' = getType(showError);
+      expect(type).toBe('SHOW_ERROR');
+      expect(type2).toBe('SHOW_ERROR');
     });
 
     it('with meta and optional param', () => {
@@ -91,12 +129,16 @@ describe('Redux Utils', () => {
         }),
       );
 
-      expect(showError()).toEqual({
+      const action: { type: 'SHOW_ERROR', payload: string | undefined, meta: { type: string } } = showError();
+      expect(action).toEqual({
         type: 'SHOW_ERROR',
         payload: undefined,
         meta: { type: 'error' },
       });
-      expect(showError.type).toBe('SHOW_ERROR');
+      const type: 'SHOW_ERROR' = showError.getType!();
+      const type2: 'SHOW_ERROR' = getType(showError);
+      expect(type).toBe('SHOW_ERROR');
+      expect(type2).toBe('SHOW_ERROR');
     });
 
   });
