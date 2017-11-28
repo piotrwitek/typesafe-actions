@@ -6,4 +6,6 @@
 
 export * from './type-utils';
 export * from './redux-types';
+
+export * from './get-type';
 export * from './create-action';

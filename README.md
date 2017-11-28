@@ -1,10 +1,11 @@
 # TS Redux Actions
-> Typed Redux Action Creators for TypeScript
+> Typesafe Redux Action Creators for TypeScript  
 
-From now on no type errors will sneak in unnoticed through your action creators!
+This lib is a part of [`react-redux-typescript`](https://github.com/piotrwitek/react-redux-typescript) library, which is a collection of valuable utilities commonly used across many TypeScript Projects. 
 
+- Thoroughly tested both logic and type correctness
+- No third-party dependencies
 - Semantic Versioning
-- No external dependencies
 - Output separate bundles for your specific workflow needs:
   - ES5 + CommonJS - `main`
   - ES5 + ES-Modules - `module` 
@@ -14,8 +15,10 @@ From now on no type errors will sneak in unnoticed through your action creators!
 
 - [Installation](#installation)
 - [Motivation](#motivation)
-- [Usage](#usage)
+- [Get Started](#get-started)
+- [Features](#features)
 - [API](#api)
+  - [getType](#gettype)
   - [createAction](#createaction)
   - [~~createActions~~](#createactions) (WIP)
 
@@ -39,30 +42,32 @@ $ yarn add ts-redux-actions
 
 ## Motivation
 
-I wasn't satisfied with the API design in [redux-actions](https://redux-actions.js.org/) because of separate payload & meta map callback functions. 
-It doesn't allow for correct type inference when using TypeScript and it will force you to do an extra effort for explicit type annotations and probably result in more boilerplate when trying to work around it.
-
-The other common issue with `redux-actions` types and similar solutions are related to losing your function definition type inference and intellisense (named arguments and arity) in resulting "action creator" function which for me is unacceptable.
-
-As a bonus there is a convenient `type` static property on every action creator for common reducer switch case scenarios (can be used to narrow "Discriminated Union" type):
-```ts
-const increment = createAction('INCREMENT');
-// const increment: (() => {
-//     type: "INCREMENT";
-// }) & { readonly type: "INCREMENT"; } << HERE
-
-switch (action.type) {
-  case increment.type:
-    return state + 1;
-  ...
-  ...
-  default: return state;
-}
-```
+I wasn't satisfied with [redux-actions](https://redux-actions.js.org/) with TypeScript because of separate payload & meta map functions which makes it not idiomatic when using with static typing.  
+What I mean here is it will break your function definition type inference and intellisense in returned "action creator" function (e.g. named arguments will be renamed to generic names like a1, a2, etc... and function arity with optional parameters will break your function signature entirely).  
+It will force you to do an extra effort for explicit type annotations and probably result in more boilerplate when trying to work around it.
 
 ---
 
-## Usage
+## Get Started
+
+> Important note: Every function created by `createAction` has a convenient `getType` method for a reducer switch case scenarios like below to reduce common boilerplate (works to narrow "Discriminated Union" types, remember to add trailing `!` to remove optional undefined type):
+```ts
+import { createAction, getType } from 'ts-redux-actions';
+
+const increment = createAction('INCREMENT');
+// const increment: (() => { type: "INCREMENT"; }) & { getType?(): "INCREMENT"; } << HERE
+
+switch (action.type) {
+  // getter on every action creator function:
+  case increment.getType!():
+    return state + 1;
+  // alternative helper function for more "FP" style:
+  case getType(increment):
+    return state + 1;
+
+  default: return state;
+}
+```
 
 To highlight the difference in API design and the benefits of "action creator" type inference found in this solution let me show you some usage examples:
 
@@ -80,9 +85,9 @@ const notify1 = createAction('NOTIFY')
 // with ts-redux-actions
 const notify1 = createAction('NOTIFY')
 // only what is expected, no nullables, with inferred literal type in type property!
-// const notify1: (() => {
+// const notify1: () => {
 //   type: "NOTIFY";
-// }) & { readonly type: "NOTIFY"; }
+// }
 ```
 
 - with payload
@@ -108,10 +113,10 @@ const notify2 = createAction('NOTIFY',
   })
 )
 // still all good!
-// const notify2: ((username: string, message?: string | undefined) => {
+// const notify2: (username: string, message?: string | undefined) => {
 //   type: "NOTIFY";
 //   payload: { message: string; };
-// }) & { readonly type: "NOTIFY"; }
+// }
 
 ```
 
@@ -140,29 +145,55 @@ const notify3 = createAction('NOTIFY',
   )
 
 // inference working as expected and compiler will catch all those nasty bugs:
-// const: notify: ((username: string, message?: string | undefined) => {
+// const: notify: (username: string, message?: string | undefined) => {
 //   type: "NOTIFY";
 //   payload: { message: string; };
 //   meta: { username: string; message: string | undefined; };
-// }) & { readonly type: "NOTIFY"; }
+// }
 ```
 
 ---
 
 ## API
+> For more advanced usage scenarios please check use cases described in test specifications  
 
-> For more advanced usage scenarios please check use cases described in test specification  
+### getType
+> get type literal from action creator
 
-### createAction
-> [> Advanced Usage](src/create-action.spec.ts)
+[> Advanced Usage](src/get-type.spec.ts)
 
 ```ts
-createAction(typeString, creatorFunction?)
-typeString: TS extends string,
-creatorFunction: (...args: any[]) => { type: TS, payload?: P, meta?: M, error?: boolean }
-return: (
-  (...args: any[]) => { type: TS, payload?: P, meta?: M, error?: boolean }
-) & { readonly type: TS }
+function getType(actionCreator: AC<T>): T
+
+// AC<T> extends (...args: any[]) => { type: T }
+```
+
+Examples:
+
+```ts
+const increment = createAction('INCREMENT');
+const type: 'INCREMENT' = getType(increment);
+expect(type).toBe('INCREMENT');
+
+// in reducer
+switch (action.type) {
+  case getType(increment):
+    return state + 1;
+
+  default: return state;
+}
+```
+---
+
+### createAction
+> creates action creator function with type helper
+
+[> Advanced Usage](src/create-action.spec.ts)
+
+```ts
+function createAction(typeString: T, creatorFunction?: CF): CF & { getType?(): T }
+
+// CF extends (...args: any[]) => { type: T, payload?: P, meta?: M, error?: boolean }
 ```
 
 Examples:
@@ -170,35 +201,38 @@ Examples:
 ```ts
 it('no payload', () => {
   const increment = createAction('INCREMENT');
+  // same as:
+  // const increment = createAction('INCREMENT', () => ({ type: 'INCREMENT' }));
 
   expect(increment()).toEqual({ type: 'INCREMENT' });
-  expect(increment.type).toBe('INCREMENT');
+  expect(increment.getType!()).toBe('INCREMENT');
 });
 
 it('with payload', () => {
-  const add = createAction('ADD', (type: 'ADD') => (amount: number) =>
-    ({ type, payload: amount }),
+  const add = createAction('ADD',
+    (amount: number) => ({ type: 'ADD', payload: amount }),
   );
 
   expect(add(10)).toEqual({ type: 'ADD', payload: 10 });
-  expect(add.type).toBe('ADD');
+  expect(add.getType!()).toBe('ADD');
 });
 
 it('with payload and meta', () => {
-  const notify = createAction('NOTIFY', (type: 'NOTIFY') =>
+  const notify = createAction('NOTIFY',
     (username: string, message: string) => ({
-      type,
+      type: 'NOTIFY',
       payload: { message: `${username}: ${message}` },
       meta: { username, message },
     }),
   );
 
-  expect(notify('Piotr', 'Hello!')).toEqual({
-    type: 'NOTIFY',
-    payload: { message: 'Piotr: Hello!' },
-    meta: { username: 'Piotr', message: 'Hello!' },
-  });
-  expect(notify.type).toBe('NOTIFY');
+  expect(notify('Piotr', 'Hello!'))
+    .toEqual({
+      type: 'NOTIFY',
+      payload: { message: 'Piotr: Hello!' },
+      meta: { username: 'Piotr', message: 'Hello!' },
+    });
+  expect(notify.getType!()).toBe('NOTIFY');
 });
 ```
 

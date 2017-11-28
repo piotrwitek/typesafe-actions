@@ -1,104 +1,127 @@
-import { createAction } from '.';
+import { createAction, getType } from '.';
 
-describe('Redux Utils', () => {
-  describe('createAction', () => {
+describe('createAction', () => {
 
-    it('no payload', () => {
-      const increment = createAction('INCREMENT');
+  it('no payload', () => {
+    const increment = createAction('INCREMENT');
 
-      expect(increment()).toEqual({ type: 'INCREMENT' });
-      expect(increment.type).toBe('INCREMENT');
-    });
+    const action: { type: 'INCREMENT' } = increment();
+    expect(action).toEqual({ type: 'INCREMENT' });
+    const type: 'INCREMENT' = increment.getType!();
+    expect(type).toBe('INCREMENT');
+  });
 
-    it('with payload', () => {
-      const add = createAction('ADD',
-        (amount: number) => ({ type: 'ADD', payload: amount }),
-      );
+  it('no payload alternative', () => {
+    const increment = createAction('INCREMENT', () => ({ type: 'INCREMENT' }));
 
-      expect(add(10)).toEqual({ type: 'ADD', payload: 10 });
-      expect(add.type).toBe('ADD');
-    });
+    const action: { type: 'INCREMENT' } = increment();
+    expect(action).toEqual({ type: 'INCREMENT' });
+    const type: 'INCREMENT' = increment.getType!();
+    expect(type).toBe('INCREMENT');
+  });
 
-    it('with payload and meta', () => {
-      const notify = createAction('NOTIFY',
-        (username: string, message: string) => ({
-          type: 'NOTIFY',
-          payload: { message: `${username}: ${message}` },
-          meta: { username, message },
-        }),
-      );
+  it('with payload', () => {
+    const add = createAction('ADD',
+      (amount: number) => ({ type: 'ADD', payload: amount }),
+    );
 
-      expect(notify('Piotr', 'Hello!')).toEqual({
+    const action: { type: 'ADD', payload: number } = add(10);
+    expect(action).toEqual({ type: 'ADD', payload: 10 });
+    const type: 'ADD' = add.getType!();
+    expect(type).toBe('ADD');
+  });
+
+  it('with payload and meta', () => {
+    const notify = createAction('NOTIFY',
+      (username: string, message: string) => ({
         type: 'NOTIFY',
-        payload: { message: 'Piotr: Hello!' },
-        meta: { username: 'Piotr', message: 'Hello!' },
-      });
-      expect(notify.type).toBe('NOTIFY');
+        payload: { message: `${username}: ${message}` },
+        meta: { username, message },
+      }),
+    );
+
+    const action: {
+      type: 'NOTIFY',
+      payload: { message: string },
+      meta: { username: string, message: string },
+    } = notify('Piotr', 'Hello!');
+    expect(action).toEqual({
+      type: 'NOTIFY',
+      payload: { message: 'Piotr: Hello!' },
+      meta: { username: 'Piotr', message: 'Hello!' },
     });
+    const type: 'NOTIFY' = notify.getType!();
+    expect(type).toBe('NOTIFY');
+  });
 
-    it('with payload and no params', () => {
-      const showNotification = createAction('SHOW_NOTIFICATION',
-        () => ({
-          type: 'SHOW_NOTIFICATION',
-          payload: 'default message',
-        }),
-      );
-      const result = showNotification();
-
-      expect(result).toEqual({
+  it('with payload and no params', () => {
+    const showNotification = createAction('SHOW_NOTIFICATION',
+      () => ({
         type: 'SHOW_NOTIFICATION',
         payload: 'default message',
-      });
-      expect(showNotification.type).toBe('SHOW_NOTIFICATION');
+      }),
+    );
+
+    const action: { type: 'SHOW_NOTIFICATION', payload: string } = showNotification();
+    expect(action).toEqual({
+      type: 'SHOW_NOTIFICATION',
+      payload: 'default message',
     });
+    const type: 'SHOW_NOTIFICATION' = showNotification.getType!();
+    expect(type).toBe('SHOW_NOTIFICATION');
+  });
 
-    it('with payload and optional param', () => {
-      const showNotification = createAction('SHOW_NOTIFICATION',
-        (message?: string) => ({
-          type: 'SHOW_NOTIFICATION',
-          payload: message,
-        }),
-      );
-
-      expect(showNotification()).toEqual({
+  it('with payload and optional param', () => {
+    const showNotification = createAction('SHOW_NOTIFICATION',
+      (message?: string) => ({
         type: 'SHOW_NOTIFICATION',
-        payload: undefined,
-      });
-      expect(showNotification.type).toBe('SHOW_NOTIFICATION');
+        payload: message,
+      }),
+    );
+
+    const action: { type: 'SHOW_NOTIFICATION', payload: string | undefined } = showNotification();
+    expect(action).toEqual({
+      type: 'SHOW_NOTIFICATION',
+      payload: undefined,
     });
+    const type: 'SHOW_NOTIFICATION' = showNotification.getType!();
+    expect(type).toBe('SHOW_NOTIFICATION');
+  });
 
-    it('with meta and no params', () => {
-      const showError = createAction('SHOW_ERROR',
-        () => ({
-          type: 'SHOW_ERROR',
-          meta: { type: 'error' },
-        }),
-      );
-
-      expect(showError()).toEqual({
+  it('with meta and no params', () => {
+    const showError = createAction('SHOW_ERROR',
+      () => ({
         type: 'SHOW_ERROR',
         meta: { type: 'error' },
-      });
-      expect(showError.type).toBe('SHOW_ERROR');
+      }),
+    );
+
+    const action: { type: 'SHOW_ERROR', meta: { type: string } } = showError();
+    expect(action).toEqual({
+      type: 'SHOW_ERROR',
+      meta: { type: 'error' },
     });
+    const type: 'SHOW_ERROR' = showError.getType!();
+    expect(type).toBe('SHOW_ERROR');
+  });
 
-    it('with meta and optional param', () => {
-      const showError = createAction('SHOW_ERROR',
-        (message?: string) => ({
-          type: 'SHOW_ERROR',
-          payload: message,
-          meta: { type: 'error' },
-        }),
-      );
-
-      expect(showError()).toEqual({
+  it('with meta and optional param', () => {
+    const showError = createAction('SHOW_ERROR',
+      (message?: string) => ({
         type: 'SHOW_ERROR',
-        payload: undefined,
+        payload: message,
         meta: { type: 'error' },
-      });
-      expect(showError.type).toBe('SHOW_ERROR');
-    });
+      }),
+    );
 
+    const action: { type: 'SHOW_ERROR', payload: string | undefined, meta: { type: string } } = showError();
+    expect(action).toEqual({
+      type: 'SHOW_ERROR',
+      payload: undefined,
+      meta: { type: 'error' },
+    });
+    const type: 'SHOW_ERROR' = showError.getType!();
+    expect(type).toBe('SHOW_ERROR');
   });
 
 });

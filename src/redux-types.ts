@@ -33,9 +33,9 @@ export type PayloadMetaAction<T extends string, P, M> = {
  * @template P - Payload Type
  * @template M - Meta Type
  */
-export type FluxStandardAction<T extends string, P, M = undefined> = {
+export type FluxStandardAction<T extends string, P = any, M = any> = {
   type: T;
-  payload: P | Error;
+  payload?: P;
   meta?: M,
   error?: boolean;
 };
