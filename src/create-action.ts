@@ -1,4 +1,8 @@
-import { EmptyAction, FluxStandardAction, TypeGetter } from '.';
+import {
+  EmptyAction,
+  FluxStandardAction,
+  TypeGetter,
+} from './';
 
 export function createAction<T extends string,
   AC extends (...args: any[]) => FluxStandardAction<T>
@@ -16,7 +20,7 @@ export function createAction<T extends string,
 export function createAction<T extends string,
   AC extends (...args: any[]) => FluxStandardAction<T>
   >(
-  typeString: T | AC,
+  typeString: T,
   creatorFunction?: AC,
 ): AC & TypeGetter<T> {
   let actionCreator: any;
