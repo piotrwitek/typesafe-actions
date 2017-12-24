@@ -18,9 +18,9 @@ This lib is a part of [`react-redux-typescript`](https://github.com/piotrwitek/r
 - [Get Started](#get-started)
 - [Features](#features)
 - [API](#api)
-  - [getType](#gettype)
   - [createAction](#createaction)
-  - [~~createActions~~](#createactions) (WIP)
+  - [getType](#gettype)
+  - [actionOf](#actionof)
 
 ---
 
@@ -157,38 +157,10 @@ const notify3 = createAction('NOTIFY',
 ## API
 > For advanced usage scenarios please check use cases described in test specifications  
 
-- [getType](#gettype)
 - [createAction](#createaction)
-- [~~createActions~~](#createactions) (WIP)
+- [getType](#gettype)
+- [actionOf](#actionof)
 
----
-
-### getType
-> get type literal from action creator
-
-[> Advanced Usage](src/get-type.spec.ts)
-
-```ts
-function getType(actionCreator: AC<T>): T
-
-// AC<T> extends (...args: any[]) => { type: T }
-```
-
-Examples:
-
-```ts
-const increment = createAction('INCREMENT');
-const type: 'INCREMENT' = getType(increment);
-expect(type).toBe('INCREMENT');
-
-// in reducer
-switch (action.type) {
-  case getType(increment):
-    return state + 1;
-
-  default: return state;
-}
-```
 ---
 
 ### createAction
@@ -242,10 +214,59 @@ it('with payload and meta', () => {
 });
 ```
 
-### createActions
-(WIP)
+---
+
+### getType
+> get type literal from action creator
+
+[> Advanced Usage](src/get-type.spec.ts)
 
 ```ts
+function getType(actionCreator: AC<T>): T
+
+// AC<T> extends (...args: any[]) => { type: T }
+```
+
+Examples:
+
+```ts
+const increment = createAction('INCREMENT');
+const type: 'INCREMENT' = getType(increment);
+expect(type).toBe('INCREMENT');
+
+// in reducer
+switch (action.type) {
+  case getType(increment):
+    return state + 1;
+
+  default: return state;
+}
+```
+
+---
+
+### actionOf
+> assert specific action from union type
+
+[> Advanced Usage](src/action-of.spec.ts)
+
+```ts
+function actionOf(actionCreator: AC<T>): (action: A<T>) => action is T
+
+// AC<T> extends (...args: any[]) => A<T>
+```
+
+Examples:
+
+```ts
+const addTodo = createAction('ADD_TODO');
+
+// in epics
+const addTodoToast: Epic<RootAction, RootState> =
+  (action$, store) => action$
+    .filter(actionOf(addTodo))
+    .concatMap((action) => { // action is asserted as addTodo Action Type
+      const toast = { id: v4(), text: action.payload };
 ```
 
 ---
