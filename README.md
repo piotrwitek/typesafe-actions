@@ -1,7 +1,7 @@
-# TS Redux Actions
-> Typesafe Redux Action Creators for TypeScript  
+# typesafe-actions
+> Typesafe Action Creators for Redux / Flux Architectures (in TypeScript)  
 
-This lib is a part of [`react-redux-typescript`](https://github.com/piotrwitek/react-redux-typescript) library, which is a collection of valuable utilities commonly used across many TypeScript Projects. 
+This lib is a part of [React & Redux TypeScript Guide](https://github.com/piotrwitek/react-redux-typescript-guide). 
 
 - Thoroughly tested both logic and type correctness
 - No third-party dependencies
@@ -29,47 +29,43 @@ This lib is a part of [`react-redux-typescript`](https://github.com/piotrwitek/r
 For NPM users
 
 ```bash
-$ npm install --save ts-redux-actions
+$ npm install --save typesafe-actions
 ```
 
 For Yarn users
 
 ```bash
-$ yarn add ts-redux-actions
+$ yarn add typesafe-actions
 ```
 
 ---
 
 ## Motivation
 
-I wasn't satisfied with [redux-actions](https://redux-actions.js.org/) with TypeScript because of separate payload & meta map functions which makes it not idiomatic when using with static typing.  
-What I mean here is it will break your function definition type inference and intellisense in returned "action creator" function (e.g. named arguments will be renamed to generic names like a1, a2, etc... and function arity with optional parameters will break your function signature entirely).  
-It will force you to do an extra effort for explicit type annotations and probably result in more boilerplate when trying to work around it.
+I wasn't satisfied with [redux-actions](https://redux-actions.js.org/) with TypeScript because of separate payload & meta map functions which makes it non-idiomatic when using with static typing.  
+What I mean specifically is that it will break "type soundness" of returned "action creator" function (e.g. named arguments will be renamed to generic names like a1, a2, etc... and function arity with optional parameters will break your function signature entirely).  
+It will force you to do an extra effort for explicit type annotations and probably result in even more boilerplate when trying to work around it.
 
 ---
 
 ## Get Started
 
-> Important note: Every function created by `createAction` has a convenient `getType` method for a reducer switch case scenarios like below to reduce common boilerplate (works to narrow "Discriminated Union" types, remember to add trailing `!` to remove optional undefined type):
+> Important note: Every function created by `createAction` has a convenient `getType` method for a reducer switch case scenarios like below to reduce common boilerplate (works to narrow "Discriminated Union" types):
 ```ts
-import { createAction, getType } from 'ts-redux-actions';
+import { createAction, getType } from 'typesafe-actions';
 
-const increment = createAction('INCREMENT');
-// const increment: (() => { type: "INCREMENT"; }) & { getType?(): "INCREMENT"; } << HERE
+const add = createAction('ADD',
+  (amount: number) => ({ type: 'ADD', payload: amount }),
+);
 
-switch (action.type) {
-  // getter on every action creator function:
-  case increment.getType!():
-    return state + 1;
-  // alternative helper function for more "FP" style:
-  case getType(increment):
-    return state + 1;
-
-  default: return state;
-}
+const reducer = (state: RootState, action: RootAction) => {
+  switch (action.type) {
+    case getType(add):
+      return state + action.payload; // action is narrowed to a type of "add" action (payload is number)
+  ...
 ```
 
-To highlight the difference in API design and the benefits of "action creator" type inference found in this solution let me show you some usage examples:
+To highlight the benefits of type inference mechanics found in this solution let me show you how to handle some of the common use-cases while pointing out the differences in API design:
 
 - no payload
 ```ts
@@ -82,7 +78,7 @@ const notify1 = createAction('NOTIFY')
 //   error: boolean | undefined;
 // }
 
-// with ts-redux-actions
+// with typesafe-actions
 const notify1 = createAction('NOTIFY')
 // only what is expected, no nullables, with inferred literal type in type property!
 // const notify1: () => {
@@ -105,7 +101,7 @@ const notify2 = createAction('NOTIFY',
 //   error: boolean | undefined;
 // }
 
-// with ts-redux-actions
+// with typesafe-actions
 const notify2 = createAction('NOTIFY',
   (username: string, message?: string) => ({
     type: 'NOTIFY',
@@ -135,7 +131,7 @@ const notify3 = createAction('NOTIFY',
 //   error: boolean | undefined;
 // }
 
-// with ts-redux-actions
+// with typesafe-actions
 const notify3 = createAction('NOTIFY',
     (username: string, message?: string) => ({
       type: 'NOTIFY',

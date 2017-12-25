@@ -1,10 +1,10 @@
 {
-  "name": "ts-redux-actions",
+  "name": "typesafe-actions",
   "version": "1.0.0-rc.0",
-  "description": "Typesafe Redux Action Creators for TypeScript",
+  "description": "Typesafe Action Creators for Redux / Flux Architectures (in TypeScript)",
   "author": "Piotr Witek <piotrek.witek@gmail.com> (http://piotrwitek.github.io)",
-  "repository": "https://github.com/piotrwitek/ts-redux-actions",
-  "homepage": "https://github.com/piotrwitek/ts-redux-actions",
+  "repository": "https://github.com/piotrwitek/typesafe-actions",
+  "homepage": "https://github.com/piotrwitek/typesafe-actions",
   "license": "MIT",
   "types": "es5-commonjs/index.d.ts",
   "main": "es5-commonjs/index.js",
@@ -43,11 +43,13 @@
     "typescript": "2.6.2"
   },
   "keywords": [
-    "redux-actions",
-    "redux",
     "typescript",
-    "static-typing",
-    "action-creator",
-    "javscript"
+    "typesafe",
+    "actions",
+    "action-creators",
+    "redux",
+    "flux",
+    "redux-actions",
+    "static-typing"
   ]
 }
