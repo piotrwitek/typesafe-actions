@@ -4,7 +4,7 @@ import {
   TypeGetter,
 } from './';
 
-export function actionOf<T extends A, A extends { type: string }>(
+export function isActionOf<T extends A, A extends { type: string }>(
   actionCreator: ((...args: any[]) => T) & TypeGetter<T['type']>,
 ) {
   return (action: A): action is T => {

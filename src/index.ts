@@ -8,5 +8,5 @@ export * from './type-utils';
 export * from './redux-types';
 
 export * from './get-type';
-export * from './action-of';
+export * from './is-action-of';
 export * from './create-action';

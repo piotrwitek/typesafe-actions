@@ -1,28 +1,28 @@
-import { createAction, actionOf } from '.';
+import { createAction, isActionOf } from '.';
 
-describe('actionOf', () => {
+describe('isActionOf', () => {
 
   it('should succeed with same action', () => {
     const increment = createAction('INCREMENT');
 
-    const actionOfIncrement = actionOf(increment);
-    expect(actionOfIncrement(increment())).toBeTruthy();
+    const isActionOfIncrement = isActionOf(increment);
+    expect(isActionOfIncrement(increment())).toBeTruthy();
   });
 
   it('should fail with different action', () => {
     const increment = createAction('INCREMENT');
     const add = createAction('ADD');
 
-    const actionOfAdd = actionOf(increment);
-    expect(actionOfAdd(add())).toBeFalsy();
+    const isActionOfAdd = isActionOf(increment);
+    expect(isActionOfAdd(add())).toBeFalsy();
   });
 
   it('should correctly assert type for EmptyAction', () => {
     const increment = createAction('INCREMENT');
-    const actionOfIncrement = actionOf(increment);
+    const isActionOfIncrement = isActionOf(increment);
 
     const action = { type: 'ERROR' };
-    if (actionOfIncrement(action)) {
+    if (isActionOfIncrement(action)) {
       const a: { type: 'INCREMENT' } = action;
     }
   });
@@ -31,10 +31,10 @@ describe('actionOf', () => {
     const add = createAction('ADD',
       (amount: number) => ({ type: 'ADD', payload: amount }),
     );
-    const isAdd = actionOf(add);
+    const isActionOfAdd = isActionOf(add);
 
     const action = { type: 'ERROR' };
-    if (isAdd(action)) {
+    if (isActionOfAdd(action)) {
       const a: { type: 'ADD', payload: number } = action;
     }
   });
