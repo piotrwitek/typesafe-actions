@@ -8,7 +8,9 @@ This lib is a part of [React & Redux TypeScript Guide](https://github.com/piotrw
 - Semantic Versioning
 - Output separate bundles for different workflow needs (es5-commonjs, es5-module, jsnext)
 
-# Table of Contents (v1.0)
+---
+
+## Table of Contents
 
 - [Installation](#installation)
 - [Motivation](#motivation)
@@ -35,6 +37,8 @@ For Yarn users
 $ yarn add typesafe-actions
 ```
 
+[⇧ back to top](#table-of-contents)
+
 ---
 
 ## Motivation
@@ -43,17 +47,11 @@ While trying to use [redux-actions](https://redux-actions.js.org/) with TypeScri
 What I mean specifically is that named arguments in returned "action creators" will be renamed to some generic "non-descriptive" arguments like a1, a2, etc..., moreover function arity with optional parameters will break "type soundness" of your function signature.  
 In the end it will force you to do an extra effort for explicit type annotations and probably result in even more boilerplate when trying to work around it.
 
+[⇧ back to top](#table-of-contents)
+
 ---
 
 ## API
-
-> For advanced usage scenarios please check use cases described in test specifications  
-
-- [createAction](#createaction)
-- [getType](#gettype)
-- [isActionOf](#isactionof)
-
----
 
 ### createAction
 > creates action creator function with type helper
@@ -105,6 +103,8 @@ it('with payload and meta', () => {
 });
 ```
 
+[⇧ back to top](#table-of-contents)
+
 ---
 
 ### getType
@@ -133,12 +133,14 @@ switch (action.type) {
 }
 ```
 
+[⇧ back to top](#table-of-contents)
+
 ---
 
 ### isActionOf
 > assert specific action from union type
 
-[> Advanced Usage](src/action-of.spec.ts)
+[> Advanced Usage](src/is-action-of.spec.ts)
 
 ```ts
 function isActionOf(actionCreator: AC<T>): (action: A<T>) => action is T
@@ -158,13 +160,15 @@ const addTodoToast: Epic<RootAction, RootState> =
       const toast = { id: v4(), text: action.payload };
 ```
 
+[⇧ back to top](#table-of-contents)
+
 ---
 
 ## Tutorial
 
 To highlight the benefits of type inference leveraged in this solution, best would be to let me show you how to handle the common use-cases found in Redux Architecture:
 
-### create union type of all possible action types (a.k.a `RootAction`)
+### create union type of actions (a.k.a. `RootAction`)
 ```ts
 import { getReturnOfExpression } from 'react-redux-typescript';
 import { createAction } from 'typesafe-actions';
@@ -189,7 +193,10 @@ export type RootAction =
   | ReactRouterAction;
 ```  
 
-### reducer switch cases - use `getType` pure function to reduce common boilerplate and narrow `RootAction` union type to a specific action
+[⇧ back to top](#table-of-contents)
+
+### reducer switch cases
+Use `getType` pure function to reduce common boilerplate and narrow `RootAction` union type to a specific action
 ```ts
 import { getType } from 'typesafe-actions';
 
@@ -203,7 +210,10 @@ const reducer = (state: RootState, action: RootAction) => {
   ...
 ```
 
-### epics from `redux-observable` - use `isActionOf` pure function to narrow `RootAction` union type to a specific action down the stream
+[⇧ back to top](#table-of-contents)
+
+### epics from `redux-observable`
+Use `isActionOf` pure function to narrow `RootAction` union type to a specific action down the stream
 ```ts
 import { isActionOf } from 'typesafe-actions';
 
@@ -217,6 +227,8 @@ const addTodoToast: Epic<RootAction, RootState> =
     .concatMap((action) => { // action is asserted as addTodo Action Type
       const toast = { text: action.payload };
 ```
+
+[⇧ back to top](#table-of-contents)
 
 ---
 
@@ -302,6 +314,8 @@ const notify3 = createAction('NOTIFY',
 //   meta: { username: string; message: string | undefined; };
 // }
 ```
+
+[⇧ back to top](#table-of-contents)
 
 ---
 
