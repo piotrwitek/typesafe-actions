@@ -14,12 +14,12 @@ This lib is a part of [React & Redux TypeScript Guide](https://github.com/piotrw
 
 - [Installation](#installation)
 - [Motivation](#motivation)
+- [Tutorial](#tutorial)
 - [API](#api)
   - [createAction](#createaction)
   - [getType](#gettype)
   - [isActionOf](#isactionof)
-- [Tutorial](#tutorial)
-- [Advantages](#advantages)
+- [Compare to others](#compare-to-others)
 
 ---
 
@@ -51,122 +51,9 @@ In the end it will force you to do an extra effort for explicit type annotations
 
 ---
 
-## API
-
-### createAction
-> creates action creator function with type helper
-
-[> Advanced Usage](src/create-action.spec.ts)
-
-```ts
-function createAction(typeString: T, creatorFunction?: CF): CF & { getType?(): T }
-
-// CF extends (...args: any[]) => { type: T, payload?: P, meta?: M, error?: boolean }
-```
-
-Examples:
-```ts
-it('no payload', () => {
-  const increment = createAction('INCREMENT');
-  // same as:
-  // const increment = createAction('INCREMENT', () => ({ type: 'INCREMENT' }));
-
-  expect(increment()).toEqual({ type: 'INCREMENT' });
-  expect(increment.getType!()).toBe('INCREMENT');
-});
-
-it('with payload', () => {
-  const add = createAction('ADD',
-    (amount: number) => ({ type: 'ADD', payload: amount }),
-  );
-
-  expect(add(10)).toEqual({ type: 'ADD', payload: 10 });
-  expect(add.getType!()).toBe('ADD');
-});
-
-it('with payload and meta', () => {
-  const notify = createAction('NOTIFY',
-    (username: string, message: string) => ({
-      type: 'NOTIFY',
-      payload: { message: `${username}: ${message}` },
-      meta: { username, message },
-    }),
-  );
-
-  expect(notify('Piotr', 'Hello!'))
-    .toEqual({
-      type: 'NOTIFY',
-      payload: { message: 'Piotr: Hello!' },
-      meta: { username: 'Piotr', message: 'Hello!' },
-    });
-  expect(notify.getType!()).toBe('NOTIFY');
-});
-```
-
-[⇧ back to top](#table-of-contents)
-
----
-
-### getType
-> get type literal from action creator
-
-[> Advanced Usage](src/get-type.spec.ts)
-
-```ts
-function getType(actionCreator: AC<T>): T
-
-// AC<T> extends (...args: any[]) => { type: T }
-```
-
-Examples:
-```ts
-const increment = createAction('INCREMENT');
-const type: 'INCREMENT' = getType(increment);
-expect(type).toBe('INCREMENT');
-
-// in reducer
-switch (action.type) {
-  case getType(increment):
-    return state + 1;
-
-  default: return state;
-}
-```
-
-[⇧ back to top](#table-of-contents)
-
----
-
-### isActionOf
-> assert specific action from union type
-
-[> Advanced Usage](src/is-action-of.spec.ts)
-
-```ts
-function isActionOf(actionCreator: AC<T>): (action: A<T>) => action is T
-
-// AC<T> extends (...args: any[]) => A<T>
-```
-
-Examples:
-```ts
-const addTodo = createAction('ADD_TODO');
-
-// in epics
-const addTodoToast: Epic<RootAction, RootState> =
-  (action$, store) => action$
-    .filter(isActionOf(addTodo))
-    .concatMap((action) => { // action is asserted as addTodo Action Type
-      const toast = { id: v4(), text: action.payload };
-```
-
-[⇧ back to top](#table-of-contents)
-
----
-
 ## Tutorial
 
-To highlight the benefits of type inference leveraged in this solution, best would be to let me show you how to handle the common use-cases found in Redux Architecture:
+To highlight the benefits of type inference leveraged in this solution, let me show you how to handle the most common use-cases found in Redux Architecture:
 
 ### create union type of actions (a.k.a. `RootAction`)
 ```ts
@@ -232,7 +119,115 @@ const addTodoToast: Epic<RootAction, RootState> =
 
 ---
 
-## Advantages
+## API
+
+### createAction
+> creates action creator function with type helper
+
+[> Advanced Usage](src/create-action.spec.ts)
+
+```ts
+function createAction(typeString: T, creatorFunction?: CF): CF & { getType?(): T }
+
+// CF extends (...args: any[]) => { type: T, payload?: P, meta?: M, error?: boolean }
+```
+
+Examples:
+```ts
+// no payload
+const increment = createAction('INCREMENT');
+// same as:
+// const increment = createAction('INCREMENT', () => ({ type: 'INCREMENT' }));
+
+expect(increment()).toEqual({ type: 'INCREMENT' });
+
+// with payload
+const add = createAction('ADD',
+  (amount: number) => ({ type: 'ADD', payload: amount }),
+);
+
+expect(add(10)).toEqual({ type: 'ADD', payload: 10 });
+
+// with payload and meta
+const notify = createAction('NOTIFY',
+  (username: string, message: string) => ({
+    type: 'NOTIFY',
+    payload: { message: `${username}: ${message}` },
+    meta: { username, message },
+  }),
+);
+
+expect(notify('Piotr', 'Hello!'))
+  .toEqual({
+    type: 'NOTIFY',
+    payload: { message: 'Piotr: Hello!' },
+    meta: { username: 'Piotr', message: 'Hello!' },
+  });
+```
+
+[⇧ back to top](#table-of-contents)
+
+---
+
+### getType
+> get type literal from action creator
+
+[> Advanced Usage](src/get-type.spec.ts)
+
+```ts
+function getType(actionCreator: AC<T>): T
+
+// AC<T> extends (...args: any[]) => { type: T }
+```
+
+Examples:
+```ts
+const increment = createAction('INCREMENT');
+const type: 'INCREMENT' = getType(increment);
+expect(type).toBe('INCREMENT');
+
+// in reducer
+switch (action.type) {
+  case getType(increment):
+    return state + 1;
+
+  default: return state;
+}
+```
+
+[⇧ back to top](#table-of-contents)
+
+---
+
+### isActionOf
+> assert specific action from union type
+
+[> Advanced Usage](src/is-action-of.spec.ts)
+
+```ts
+function isActionOf(actionCreator: AC<T>): (action: A<T>) => action is T
+
+// AC<T> extends (...args: any[]) => A<T>
+```
+
+Examples:
+```ts
+import { addTodo } from './actions';
+
+// in epics
+const addTodoToast: Epic<RootAction, RootState> =
+  (action$, store) => action$
+    .filter(isActionOf(addTodo))
+    .concatMap((action) => { // action is asserted as addTodo Action Type
+      const toast = { text: action.payload };
+```
+
+[⇧ back to top](#table-of-contents)
+
+---
+
+## Compare to others
+Here you can find out the differences and the advantages you'll get compared to other solutions (using `redux-actions` as example here)
 
 - no payload
 ```ts
