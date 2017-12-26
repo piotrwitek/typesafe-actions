@@ -1,7 +1,7 @@
 # typesafe-actions
 > Typesafe Action Creators for Redux / Flux Architectures (in TypeScript)
 
-> `typesafe-actions` have simple and functional API specifically designed to retain complete "type soundness" in Static Typing of TypeScript
+> `typesafe-actions` have simple and functional API specifically designed to retain complete "type soundness" with static-typing of TypeScript
 
 This lib is a part of [React & Redux TypeScript Guide](https://github.com/piotrwitek/react-redux-typescript-guide). 
 
@@ -50,7 +50,7 @@ While trying to use [redux-actions](https://redux-actions.js.org/) with TypeScri
 What I mean specifically is that named arguments in returned "action creators" will be renamed to some generic "non-descriptive" arguments like a1, a2, etc..., moreover function arity with optional parameters will break "type soundness" of your function signature.  
 In the end it will force you to do an extra effort for explicit type annotations and probably result in even more boilerplate when trying to work around it.
 
-**That's why in `typesafe-actions` I created API specifically designed to retain complete "type soundness" in Static Typing of TypeScript.**
+**That's why in `typesafe-actions` I created API specifically designed to retain complete "type soundness" with static-typing of TypeScript.**
 
 [⇧ back to top](#table-of-contents)
 
@@ -235,11 +235,11 @@ const addTodoToast: Epic<RootAction, RootState> =
 Here you can find out the differences compared to other solutions.
 
 ### `redux-actions`
+> tested with "@types/redux-actions": "2.2.3"
 
 #### no payload
 ```ts
 const notify1 = createAction('NOTIFY')
-
 // resulting type:
 // const notify1: () => {
 //   type: string;
@@ -247,18 +247,17 @@ const notify1 = createAction('NOTIFY')
 //   error: boolean | undefined;
 // }
 ```
-> in `redux-actions` notice excess nullable properties "payload" and "error", action "type" property is widened to string (🐼 is sad!)
+> with `redux-actions` notice excess "nullable" properties `payload` and `error`, also the action `type` property is widened to string (🐼 is really sad!)
 
 - typesafe-actions
 ```ts
 const notify1 = createAction('NOTIFY')
-
 // resulting type:
 // const notify1: () => {
 //   type: "NOTIFY";
 // }
 ```
-> in `typesafe-actions` there is no nullable types shows only the data that is really there, also action "type" property is correct narrowed to literal type (great success!)
+> with `typesafe-actions` there is no nullable types, only the data that is really there, also the action "type" property is correct narrowed to literal type (great success!)
 
 
 #### with payload
@@ -266,10 +265,9 @@ const notify1 = createAction('NOTIFY')
 // redux-actions
 const notify2 = createAction('NOTIFY',
   (username: string, message?: string) => ({
-    message: `${username}: ${message}`
+    message: `${username}: ${message || ''}`
   })
 )
-
 // resulting type:
 // const notify2: (t1: string) => {
 //   type: string;
@@ -277,17 +275,16 @@ const notify2 = createAction('NOTIFY',
 //   error: boolean | undefined;
 // }
 ```
-> notice missing optional "message" argument, arg name changed to "t1", "type" property widened to string, and excess nullable properties
+> notice the missing optional `message` parameter in resulting function also `username` param name is changed to `t1`, action `type` property is widened to string and incorrect nullable properties
 
 - typesafe-actions
 ```ts
 const notify2 = createAction('NOTIFY',
   (username: string, message?: string) => ({
-    type: 'NOTIFY',
-    payload: { message: `${username}: ${message}` },
+    type: 'NOTIFY'
+    payload: { message: `${username}: ${message || ''}` },
   })
 )
-
 // resulting type:
 // const notify2: (username: string, message?: string | undefined) => {
 //   type: "NOTIFY";
@@ -300,10 +297,9 @@ const notify2 = createAction('NOTIFY',
 - redux-actions
 ```ts
 const notify3 = createAction('NOTIFY',
-  (username: string, message?: string) => ({ message: `${username}: ${message}` }),
+  (username: string, message?: string) => ({ message: `${username}: ${message || ''}` }),
   (username: string, message?: string) => ({ username, message })
 )
-
 // resulting type:
 // const notify3: (...args: any[]) => {
 //   type: string;
@@ -312,18 +308,17 @@ const notify3 = createAction('NOTIFY',
 //   error: boolean | undefined;
 // }
 ```
-> notice lost arguments arity and types, moreover action "type" property is also lost and widened to string
+> notice complete loss of arguments arity and types in resulting function, moreover action `type` property is again widened to string with nullable `payload` and `error`
 
 - typesafe-actions
 ```ts
 const notify3 = createAction('NOTIFY',
     (username: string, message?: string) => ({
       type: 'NOTIFY',
-      payload: { message: `${username}: ${message}` },
+      payload: { message: `${username}: ${message || ''}` },
       meta: { username, message },
     }),
   )
-
 // resulting type:
 // const notify3: (username: string, message?: string | undefined) => {
 //   type: "NOTIFY";
