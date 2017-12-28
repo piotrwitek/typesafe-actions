@@ -1,6 +1,6 @@
 {
   "name": "typesafe-actions",
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0",
   "description": "Typesafe Action Creators for Redux / Flux Architectures (in TypeScript)",
   "author": "Piotr Witek <piotrek.witek@gmail.com> (http://piotrwitek.github.io)",
   "repository": "https://github.com/piotrwitek/typesafe-actions",
@@ -29,8 +29,7 @@
     "prepush": "npm run test",
     "prepublishOnly": "npm run clean && npm run reinstall && npm run lint && npm run tsc && npm run test && npm run build"
   },
-  "dependencies": { 
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/jest": "21.1.9",
     "@types/node": "6.0.95",
