@@ -5,13 +5,30 @@ import {
 } from './';
 
 export function isActionOf<T extends A, A extends { type: string }>(
-  actionCreator: ((...args: any[]) => T) & TypeGetter<T['type']>,
+  actionCreators: ((...args: any[]) => T) & TypeGetter<T['type']>
+    | Array<((...args: any[]) => T) & TypeGetter<T['type']>>,
 ) {
   return (action: A): action is T => {
-    if (actionCreator == null || actionCreator.getType == null) {
-      throw new Error('first argument is not a "ts-action-creator" instance');
+    if (actionCreators == null) {
+      throw new Error('first argument is missing');
     }
 
-    return actionCreator.getType() === action.type;
+    // check if array
+    if (Array.isArray(actionCreators)) {
+      return actionCreators.some((actionCreator, index) => {
+        if (actionCreator.getType == null) {
+          throw new Error(`element of the first argument with index [${index}]
+          is not an instance of "typesafe-actions"`);
+        }
+
+        return actionCreator.getType() === action.type;
+      });
+    } else {
+      if (actionCreators.getType == null) {
+        throw new Error('first argument is not an instance of "typesafe-actions"');
+      }
+
+      return actionCreators.getType() === action.type;
+    }
   };
 }
