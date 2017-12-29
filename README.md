@@ -1,9 +1,9 @@
 # typesafe-actions
-> Typesafe Action Creators for Redux / Flux Architectures (in TypeScript)
+### Typesafe Action Creators for Redux / Flux Architectures (in TypeScript)
 
-> `typesafe-actions` have simple and functional API specifically designed to retain complete "type soundness" with static-typing of TypeScript
+Clean and simple functional API that's specifically designed to reduce repetition and complexity of type annotations in "Redux" and to guarantee complete type-safety.
 
-This lib is a part of [React & Redux TypeScript Guide](https://github.com/piotrwitek/react-redux-typescript-guide). 
+> This lib is part of [React & Redux TypeScript Guide](https://github.com/piotrwitek/react-redux-typescript-guide). 
 
 - Thoroughly tested both logic and type correctness
 - No third-party dependencies
@@ -18,9 +18,9 @@ This lib is a part of [React & Redux TypeScript Guide](https://github.com/piotrw
 - [Motivation](#motivation)
 - [Tutorial](#tutorial)
 - [API](#api)
-  - [createAction](#createaction)
-  - [getType](#gettype)
-  - [isActionOf](#isactionof)
+  - [`createAction`](#createaction)
+  - [`getType`](#gettype)
+  - [`isActionOf`](#isactionof)
 - [Compare to others](#compare-to-others)
   - [redux-actions](#redux-actions)
 
@@ -88,7 +88,7 @@ export type RootAction =
 [⇧ back to top](#table-of-contents)
 
 ### reducer switch cases
-Use `getType` pure function to reduce common boilerplate and narrow `RootAction` union type to a specific action
+Use `getType` to reduce common boilerplate and to narrow `RootAction` union type to a specific action
 ```ts
 import { getType } from 'typesafe-actions';
 
@@ -98,26 +98,35 @@ import { add } from './actions';
 const reducer = (state: RootState, action: RootAction) => {
   switch (action.type) {
     case getType(add):
-      return state + action.payload; // action is narrowed to a type of "add" action (payload is number)
+      return state + action.payload; // action is narrowed to a type of "add" action (payload: number)
   ...
 ```
 
 [⇧ back to top](#table-of-contents)
 
 ### epics from `redux-observable`
-Use `isActionOf` pure function to narrow `RootAction` union type to a specific action down the stream
+Use `isActionOf` to narrow `RootAction` union type to a specific action down the stream of actions
 ```ts
-import { isActionOf } from 'typesafe-actions';
+import { isActionOf, isActionOneOf } from 'typesafe-actions';
 
 import { RootState, RootAction } from '@src/redux';
-import { addTodo } from './actions';
+import { addTodo, toggleTodo } from './actions';
 
-// in epics
+// single action
 const addTodoToast: Epic<RootAction, RootState> =
   (action$, store) => action$
     .filter(isActionOf(addTodo))
-    .concatMap((action) => { // action is asserted as addTodo Action Type
-      const toast = { text: action.payload };
+    .concatMap((action) => { // action is asserted as: { type: "ADD_TODO", payload: string }
+      const toast = `Added new todo: ${action.payload}`;
+...
+
+// multiple actions
+const logTodoAction: Epic<RootAction, RootState> =
+  (action$, store) => action$
+    .filter(isActionOf([addTodo, toggleTodo]))
+    .switchMap((action) => { // action is asserted as: { type: "ADD_TODO", payload: string } | { type: "TOGGLE_TODO", payload: string }
+      const log = `Dispatched action: ${action.type}`;
+...
 ```
 
 [⇧ back to top](#table-of-contents)
@@ -132,7 +141,7 @@ const addTodoToast: Epic<RootAction, RootState> =
 [> Advanced Usage](src/create-action.spec.ts)
 
 ```ts
-function createAction(typeString: T, creatorFunction?: CF): CF & { getType?(): T }
+function createAction(typeString: T, creatorFunction?: CF): CF
 
 // CF extends (...args: any[]) => { type: T, payload?: P, meta?: M, error?: boolean }
 ```
@@ -175,7 +184,7 @@ expect(notify('Piotr', 'Hello!'))
 ---
 
 ### getType
-> get type literal from action creator
+> get "type literal" from action creator
 
 [> Advanced Usage](src/get-type.spec.ts)
 
@@ -210,21 +219,31 @@ switch (action.type) {
 [> Advanced Usage](src/is-action-of.spec.ts)
 
 ```ts
-function isActionOf(actionCreator: AC<T>): (action: A<T>) => action is T
+function isActionOf(actionCreator: AC<T>): (action: any) => action is T
+function isActionOf(actionCreators: AC<T>[]): (action: any) => action is T
 
-// AC<T> extends (...args: any[]) => A<T>
+// AC<T> extends (...args: any[]) => T
 ```
 
 Examples:
 ```ts
-import { addTodo } from './actions';
-
 // in epics
+import { addTodo } from './actions';
 const addTodoToast: Epic<RootAction, RootState> =
   (action$, store) => action$
     .filter(isActionOf(addTodo))
     .concatMap((action) => { // action is asserted as addTodo Action Type
-      const toast = { text: action.payload };
+      const toast = `Added new todo: ${action.payload}`;
+
+// multiple actions
+import { addTodo, toggleTodo } from './actions';
+const logTodoAction: Epic<RootAction, RootState> =
+  (action$, store) => action$
+    .filter(isActionOf([addTodo, toggleTodo]))
+    .concatMap((action) => { // action is asserted as: { type: "ADD_TODO", payload: string } | { type: "TOGGLE_TODO", payload: string }
+      const log = `Dispatched action: ${action.type}`;
+...
+```
 ```
 
 [⇧ back to top](#table-of-contents)
