@@ -18,9 +18,9 @@ Clean and simple functional API that's specifically designed to reduce repetitio
 - [Motivation](#motivation)
 - [Tutorial](#tutorial)
 - [API](#api)
-  - [createAction](#createaction)
-  - [getType](#gettype)
-  - [isActionOf](#isactionof)
+  - [`createAction`](#createaction)
+  - [`getType`](#gettype)
+  - [`isActionOf`](#isactionof)
 - [Compare to others](#compare-to-others)
   - [redux-actions](#redux-actions)
 
@@ -88,7 +88,7 @@ export type RootAction =
 [⇧ back to top](#table-of-contents)
 
 ### reducer switch cases
-Use `getType` pure function to reduce common boilerplate and narrow `RootAction` union type to a specific action
+Use `getType` to reduce common boilerplate and to narrow `RootAction` union type to a specific action
 ```ts
 import { getType } from 'typesafe-actions';
 
@@ -98,7 +98,7 @@ import { add } from './actions';
 const reducer = (state: RootState, action: RootAction) => {
   switch (action.type) {
     case getType(add):
-      return state + action.payload; // action is narrowed to a type of "add" action (payload is number)
+      return state + action.payload; // action is narrowed to a type of "add" action (payload: number)
   ...
 ```
 
@@ -184,7 +184,7 @@ expect(notify('Piotr', 'Hello!'))
 ---
 
 ### getType
-> get type literal from action creator
+> get "type literal" from action creator
 
 [> Advanced Usage](src/get-type.spec.ts)
 
