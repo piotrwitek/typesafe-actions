@@ -107,7 +107,7 @@ const reducer = (state: RootState, action: RootAction) => {
 ### epics from `redux-observable`
 Use `isActionOf` to narrow `RootAction` union type to a specific action down the stream of actions
 ```ts
-import { isActionOf, isActionOneOf } from 'typesafe-actions';
+import { isActionOf } from 'typesafe-actions';
 
 import { RootState, RootAction } from '@src/redux';
 import { addTodo, toggleTodo } from './actions';
