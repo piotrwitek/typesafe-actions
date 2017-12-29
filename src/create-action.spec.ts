@@ -2,6 +2,11 @@ import { createAction, getType } from '.';
 
 describe('createAction', () => {
 
+  // TODO: #3
+  // should error when missing argument
+  // should error when passed invalid arguments
+  // check object, empty array, primitives
+
   it('no payload', () => {
     const increment = createAction('INCREMENT');
 

@@ -23,6 +23,7 @@
     "build:module": "rm -rf es5-module/ && tsc -p . --outDir es5-module/ -m 'ES2015'",
     "build:jsnext": "rm -rf jsnext/ && tsc -p . --outDir jsnext/ -t 'ES2015'",
     "lint": "tslint --project './tsconfig.json'",
+    "pretest": "tsc -p ./tsconfig.spec.json --noEmit",
     "test": "jest --config jest.config.json ./src",
     "test:watch": "jest --config jest.config.json ./src --watch",
     "precommit": "npm run lint",
