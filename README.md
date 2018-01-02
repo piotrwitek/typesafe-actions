@@ -1,9 +1,11 @@
 # typesafe-actions
-### Typesafe Action Creators for Redux / Flux Architectures (in TypeScript)
+### Typesafe "Action Creators" for Redux / Flux Architectures (in TypeScript)
 
-Clean and simple functional API that's specifically designed to reduce repetition and complexity of type annotations in "Redux" and to guarantee complete type-safety.
+> #### This lib is a part of [React & Redux TypeScript Guide](https://github.com/piotrwitek/react-redux-typescript-guide)
 
-> This lib is part of [React & Redux TypeScript Guide](https://github.com/piotrwitek/react-redux-typescript-guide). 
+Simple functional API that's specifically designed to reduce **verbosity** (no explicit type annotations!)
+and **complexity** (retain "type soundness" and easily discriminate union types of Actions) 
+of type annotations for "Redux".  
 
 - Thoroughly tested both logic and type correctness
 - No third-party dependencies
@@ -46,11 +48,11 @@ $ yarn add typesafe-actions
 
 ## Motivation
 
-While trying to use [redux-actions](https://redux-actions.js.org/) with TypeScript I wasn't really satisfied because of it's API (separate payload & meta mapping functions) which makes it non-idiomatic with static typing.  
-What I mean specifically is that named arguments in returned "action creators" will be renamed to some generic "non-descriptive" arguments like a1, a2, etc..., moreover function arity with optional parameters will break "type soundness" of your function signature.  
-In the end it will force you to do an extra effort for explicit type annotations and probably result in even more boilerplate when trying to work around it.
+While trying to use [redux-actions](https://redux-actions.js.org/) with TypeScript I was dissapointed by it's "unsoundness" with static-typing [(more info here)](#redux-actions).
 
-**That's why in `typesafe-actions` I created API specifically designed to retain complete "type soundness" with static-typing of TypeScript.**
+Moreover **alternative solutions** in the wild have been either too verbose, used classes or was too "explicitly typed" instead leveraging type-inference, which just feels wrong when paired with Redux.
+
+**That's why in `typesafe-actions` I created an API specifically designed to retain "type soundness" and provide a clean functional interface without any explicit type annotations, so that it looks the same in JavaScript as in TypeScript.**
 
 [⇧ back to top](#table-of-contents)
 
@@ -88,7 +90,7 @@ export type RootAction =
 [⇧ back to top](#table-of-contents)
 
 ### reducer switch cases
-Use `getType` to reduce common boilerplate and to narrow `RootAction` union type to a specific action
+Use `getType` function to reduce common boilerplate and discriminate union type of `RootAction` to a specific action.
 ```ts
 import { getType } from 'typesafe-actions';
 
@@ -105,7 +107,7 @@ const reducer = (state: RootState, action: RootAction) => {
 [⇧ back to top](#table-of-contents)
 
 ### epics from `redux-observable`
-Use `isActionOf` to narrow `RootAction` union type to a specific action down the stream of actions
+Use `isActionOf` function to filter actions and discriminate union type of `RootAction` to a specific action(s) down the stream.
 ```ts
 import { isActionOf } from 'typesafe-actions';
 
@@ -136,7 +138,7 @@ const logTodoAction: Epic<RootAction, RootState> =
 ## API
 
 ### createAction
-> create the action creator of a given function that contains hidden "type" metadata
+> create the action creator of a given function that contains private "type" metadata
 
 [> Advanced Usage](src/create-action.spec.ts)
 
@@ -188,7 +190,8 @@ expect(notify('Piotr', 'Hello!'))
 ---
 
 ### getType
-> get the "type literal" of a given action creator
+> get the "type" property of a given action creator  
+(It will infer literal type of action)
 
 [> Advanced Usage](src/get-type.spec.ts)
 
@@ -218,13 +221,14 @@ switch (action.type) {
 ---
 
 ### isActionOf
-> create the assert function that will assert a given action of `any` type to the specific "action type" if matching the specified action creator(s)
+> create the assert function for specified action creator(s) - resulting function will then assert (true/false) maching actions  
+(it will discriminate union type to specified action creator(s))
 
 [> Advanced Usage](src/is-action-of.spec.ts)
 
 ```ts
 function isActionOf(actionCreator: AC<T>): (action: any) => action is T
-function isActionOf(actionCreators: AC<T>[]): (action: any) => action is T
+function isActionOf(actionCreators: Array<AC<T>>): (action: any) => action is T
 
 // AC<T> extends (...args: any[]) => T
 ```
