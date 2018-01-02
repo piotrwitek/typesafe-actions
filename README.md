@@ -136,7 +136,7 @@ const logTodoAction: Epic<RootAction, RootState> =
 ## API
 
 ### createAction
-> creates action creator function with type helper
+> create the action creator of a given function that contains hidden "type" metadata
 
 [> Advanced Usage](src/create-action.spec.ts)
 
@@ -184,7 +184,7 @@ expect(notify('Piotr', 'Hello!'))
 ---
 
 ### getType
-> get "type literal" from action creator
+> get the "type literal" of a given action creator
 
 [> Advanced Usage](src/get-type.spec.ts)
 
@@ -214,7 +214,7 @@ switch (action.type) {
 ---
 
 ### isActionOf
-> assert specific action from union type
+> create the assert function that will assert a given action of `any` type to the specific "action type" if matching the specified action creator(s)
 
 [> Advanced Usage](src/is-action-of.spec.ts)
 
@@ -232,7 +232,7 @@ import { addTodo } from './actions';
 const addTodoToast: Epic<RootAction, RootState> =
   (action$, store) => action$
     .filter(isActionOf(addTodo))
-    .concatMap((action) => { // action is asserted as addTodo Action Type
+    .concatMap((action) => { // action is asserted as: { type: "ADD_TODO", payload: string }
       const toast = `Added new todo: ${action.payload}`;
 ...
 

@@ -4,6 +4,9 @@ import {
   TypeGetter,
 } from './';
 
+/**
+ * @description create the action creator of a given function that contains hidden "type" metadata
+ */
 export function createAction<T extends string,
   AC extends (...args: any[]) => FluxStandardAction<T>
   >(
@@ -11,6 +14,9 @@ export function createAction<T extends string,
   creatorFunction: AC,
 ): AC & TypeGetter<T>;
 
+/**
+ * @description create the action creator of a given function that contains hidden "type" metadata
+ */
 export function createAction<T extends string,
   AC extends () => { type: T }
   >(
