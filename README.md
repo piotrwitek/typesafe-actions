@@ -112,7 +112,7 @@ import { isActionOf } from 'typesafe-actions';
 import { RootState, RootAction } from '@src/redux';
 import { addTodo, toggleTodo } from './actions';
 
-// single action
+// with single action
 const addTodoToast: Epic<RootAction, RootState> =
   (action$, store) => action$
     .filter(isActionOf(addTodo))
@@ -120,7 +120,7 @@ const addTodoToast: Epic<RootAction, RootState> =
       const toast = `Added new todo: ${action.payload}`;
 ...
 
-// multiple actions
+// with multiple actions
 const logTodoAction: Epic<RootAction, RootState> =
   (action$, store) => action$
     .filter(isActionOf([addTodo, toggleTodo]))
@@ -227,15 +227,16 @@ function isActionOf(actionCreators: AC<T>[]): (action: any) => action is T
 
 Examples:
 ```ts
-// in epics
+// in epics, with single action
 import { addTodo } from './actions';
 const addTodoToast: Epic<RootAction, RootState> =
   (action$, store) => action$
     .filter(isActionOf(addTodo))
     .concatMap((action) => { // action is asserted as addTodo Action Type
       const toast = `Added new todo: ${action.payload}`;
+...
 
-// multiple actions
+// with multiple actions
 import { addTodo, toggleTodo } from './actions';
 const logTodoAction: Epic<RootAction, RootState> =
   (action$, store) => action$
@@ -243,7 +244,6 @@ const logTodoAction: Epic<RootAction, RootState> =
     .concatMap((action) => { // action is asserted as: { type: "ADD_TODO", payload: string } | { type: "TOGGLE_TODO", payload: string }
       const log = `Dispatched action: ${action.type}`;
 ...
-```
 ```
 
 [⇧ back to top](#table-of-contents)
@@ -257,6 +257,8 @@ Here you can find out the differences compared to other solutions.
 > tested with "@types/redux-actions": "2.2.3"
 
 #### no payload
+
+- redux-actions
 ```ts
 const notify1 = createAction('NOTIFY')
 // resulting type:
@@ -278,10 +280,10 @@ const notify1 = createAction('NOTIFY')
 ```
 > with `typesafe-actions` there is no nullable types, only the data that is really there, also the action "type" property is correct narrowed to literal type (great success!)
 
-
 #### with payload
+
+- redux-actions
 ```ts
-// redux-actions
 const notify2 = createAction('NOTIFY',
   (username: string, message?: string) => ({
     message: `${username}: ${message || ''}`
@@ -313,6 +315,7 @@ const notify2 = createAction('NOTIFY',
 > `typesafe-actions` retain complete type soundness
 
 #### with payload and meta
+
 - redux-actions
 ```ts
 const notify3 = createAction('NOTIFY',
