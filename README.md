@@ -145,6 +145,10 @@ function createAction(typeString: T, creatorFunction?: CF): CF
 
 // CF extends (...args: any[]) => { type: T, payload?: P, meta?: M, error?: boolean }
 ```
+> NOTE: I know the `typeString` argument looks kinda redundand to use with `creatorFunction` and I would like to infer the type from `type` property of returning action,
+but at the moment (TS v.2.6.2) it's impossible because the type inference is widening it to `string` and other API's (`getType` and `isActionOf`)
+will not work when trying to discriminate union types
+This is something I should be able to address with the future TS versions and then simplify the API with backward compatibility in mind.
 
 Examples:
 ```ts
