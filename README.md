@@ -50,9 +50,9 @@ $ yarn add typesafe-actions
 
 While trying to use [redux-actions](https://redux-actions.js.org/) with TypeScript I was dissapointed by it's "unsoundness" with static-typing [(more info here)](#redux-actions).
 
-Moreover **alternative solutions** in the wild have been either too verbose, used classes or was too "explicitly typed" instead leveraging type-inference, which just feels wrong when paired with Redux.
+Moreover **alternative solutions** in the wild have been either too verbose, used classes or was too "explicitly typed" instead of leveraging incredible type-inference, which just feels wrong.
 
-**That's why in `typesafe-actions` I created an API specifically designed to retain "type soundness" and provide a clean functional interface without any explicit type annotations, so that it looks the same in JavaScript as in TypeScript.**
+**That's why in `typesafe-actions` I created an API specifically designed to retain "type soundness" and provide a clean functional interface without a need to type any explicit type annotations, so that it looks the same in JavaScript as in TypeScript.**
 
 [⇧ back to top](#table-of-contents)
 
