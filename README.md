@@ -64,7 +64,7 @@ To highlight the benefits of type inference leveraged in this solution, let me s
 
 ### create union type of actions (a.k.a. `RootAction`)
 ```ts
-import { getReturnOfExpression } from 'react-redux-typescript';
+import { $call } from 'utility-types';
 import { createAction } from 'typesafe-actions';
 
 export const actions = {
@@ -75,9 +75,8 @@ export const actions = {
   })),
 };
 
-const returnOfActions =
-  Object.values(actions).map(getReturnOfExpression);
-type AppAction = typeof returnOfActions[number];
+const returnsOfActions = Object.values(actions).map($call);
+type AppAction = typeof returnsOfActions[number];
 
 // third-party actions
 type ReactRouterAction = RouterAction | LocationChangeAction;
@@ -85,7 +84,7 @@ type ReactRouterAction = RouterAction | LocationChangeAction;
 export type RootAction =
   | AppAction
   | ReactRouterAction;
-```  
+```
 
 [⇧ back to top](#table-of-contents)
 

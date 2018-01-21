@@ -4,7 +4,6 @@
  * @license MIT
  */
 
-export * from './type-utils';
 export * from './redux-types';
 
 export * from './get-type';
