@@ -64,7 +64,7 @@ To highlight the benefits of type inference leveraged in this solution, let me s
 
 ### create union type of actions (a.k.a. `RootAction`)
 ```ts
-import { $call } from 'utility-types';
+import { $call } from 'utility-types'; // From https://github.com/piotrwitek/utility-types
 import { createAction } from 'typesafe-actions';
 
 export const actions = {
