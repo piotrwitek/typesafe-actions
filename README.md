@@ -3,14 +3,11 @@
 
 > #### This lib is a part of [React & Redux TypeScript Guide](https://github.com/piotrwitek/react-redux-typescript-guide)
 
-Simple functional API that's specifically designed to reduce **verbosity** (no explicit type annotations!)
+Simple functional API that's specifically designed to reduce **verbosity** (no explicit generic type arguments in the API, type inference FTW!)
 and **complexity** (retain "type soundness" and easily discriminate union types of Actions) 
-of type annotations for "Redux".  
+of type annotations for "Action Creators".  
 
-- Thoroughly tested both logic and type correctness
-- No third-party dependencies
-- Semantic Versioning
-- Output separate bundles for different workflow needs (es5-commonjs, es5-module, jsnext)
+The main goal of this library is to limit the developers using the actions to incorrectly use them by strictly checking if the input parameters are correct. (for instance when you do **not** provide payload creator function, this means that your action creator will not accept any parameters and show error when someone will try to do that) 
 
 ---
 
@@ -50,9 +47,9 @@ $ yarn add typesafe-actions
 
 While trying to use [redux-actions](https://redux-actions.js.org/) with TypeScript I was dissapointed by it's "unsoundness" with static-typing [(more info here)](#redux-actions).
 
-Moreover **alternative solutions** in the wild have been either too verbose, used classes or was too "explicitly typed" instead of leveraging incredible type-inference, which just feels wrong.
+Moreover **alternative solutions** in the wild have been either too verbose, used classes (which hinders readability) or was too "explicitly typed" instead of leveraging incredible type-inference ("implicit types").
 
-**That's why in `typesafe-actions` I created an API specifically designed to retain "type soundness" and provide a clean functional interface without a need to type any explicit type annotations, so that it looks the same in JavaScript as in TypeScript.**
+**That's why in `typesafe-actions` I created an API specifically designed to only use "type-inference" and provide a clean functional interface without a need to type any explicit type annotations, so that it feels like an expressive and idiomatic JavaScript.**
 
 [⇧ back to top](#table-of-contents)
 
