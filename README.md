@@ -4,8 +4,8 @@
 > #### This lib is a part of [React & Redux TypeScript Guide](https://github.com/piotrwitek/react-redux-typescript-guide)
 
 Simple functional API that's specifically designed to reduce **verbosity** (no explicit generic type arguments in the API, type inference FTW!)
-and **complexity** (retain "type soundness" and easily discriminate union types of Actions) 
-of type annotations for "Action Creators".  
+and **complexity** (retain "type soundness" and easily discriminate union types) 
+of type annotations.  
 
 The main goal of this library is to limit the developers using the actions to incorrectly use them by strictly checking if the input parameters are correct. (for instance when you do **not** provide payload creator function, this means that your action creator will not accept any parameters and show error when someone will try to do that) 
 
