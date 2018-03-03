@@ -49,7 +49,7 @@ While trying to use [redux-actions](https://redux-actions.js.org/) with TypeScri
 
 Moreover **alternative solutions** in the wild have been either too verbose, used classes (which hinders readability) or was too "explicitly typed" instead of leveraging incredible type-inference ("implicit types").
 
-**That's why in `typesafe-actions` I created an API specifically designed to only use "type-inference" and provide a clean functional interface without a need to type any explicit type annotations, so that it feels like an expressive and idiomatic JavaScript.**
+**That's why in `typesafe-actions` I created an API specifically designed to only use "type-inference" and provide a clean functional interface without a need to provide explicit generic type arguments, so that it feels like an expressive and idiomatic JavaScript.**
 
 [⇧ back to top](#table-of-contents)
 
