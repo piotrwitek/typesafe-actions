@@ -6,8 +6,13 @@ import {
 } from './';
 
 export type AC<T extends { type: string }> = ((...args: any[]) => T) & TypeGetter<T['type']>;
-export type ACs<T1 extends { type: string }, T2 extends { type: string } = any, T3 extends { type: string } = any, T4 extends { type: string } = any, T5 extends { type: string } = any> =
-  any[] & (
+export type ACs<
+  T1 extends { type: string },
+  T2 extends { type: string } = any,
+  T3 extends { type: string } = any,
+  T4 extends { type: string } = any,
+  T5 extends { type: string } = any,
+  > = (
     |[AC<T1>]
     | [AC<T1>, AC<T2>]
     | [AC<T1>, AC<T2>, AC<T3>]
