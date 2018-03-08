@@ -130,14 +130,17 @@ describe('createAction', () => {
   });
 
   it('should accept symbol as action type', () => {
-    const INCREMENT = Symbol(1) as any as 'INCREMENT';
+    enum Increment { }
+    const INCREMENT = Symbol(1) as any as Increment & string;
+    const a: string = INCREMENT; // Ok
+    // const b: typeof INCREMENT = 'INCREMENT'; // Error
     const increment = createAction(INCREMENT);
     const decrement = createAction(Symbol(2));
 
-    const action: { type: 'INCREMENT' } = increment();
+    const action: { type: typeof INCREMENT } = increment();
     expect(action).toEqual({ type: INCREMENT });
     expect(action).not.toEqual({ type: 'INCREMENT' });
-    const type: 'INCREMENT' = increment.getType!();
+    const type: typeof INCREMENT = increment.getType!();
     expect(type).toBe(INCREMENT);
     expect(type).not.toBe('INCREMENT');
   });

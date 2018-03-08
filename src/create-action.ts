@@ -1,5 +1,5 @@
 import {
-  ActionType,
+  StringType,
   EmptyAction,
   FluxStandardAction,
   TypeGetter,
@@ -8,7 +8,7 @@ import {
 /**
  * @description create the action creator of a given function that contains hidden "type" metadata
  */
-export function createAction<T extends ActionType,
+export function createAction<T extends StringType,
   AC extends (...args: any[]) => FluxStandardAction<T>
   >(
     actionType: T | symbol,
@@ -18,14 +18,14 @@ export function createAction<T extends ActionType,
 /**
  * @description create the action creator of a given function that contains hidden "type" metadata
  */
-export function createAction<T extends ActionType,
+export function createAction<T extends StringType,
   AC extends () => { type: T }
   >(
     actionType: T | symbol,
 ): AC & TypeGetter<T>;
 
 /** implementation */
-export function createAction<T extends ActionType,
+export function createAction<T extends StringType,
   AC extends (...args: any[]) => FluxStandardAction<T>
   >(
     actionType: T | symbol,
@@ -46,7 +46,7 @@ export function createAction<T extends ActionType,
   if (actionType != null) {
     if (typeof actionType !== 'string'
       && typeof actionType !== 'symbol') {
-      throw new Error('first argument should be of type: string | symbol');
+      throw new Error('first argument should be type of: string | symbol');
     }
 
     actionCreator.getType = () => actionType as T;
