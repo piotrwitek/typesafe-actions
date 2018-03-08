@@ -1,8 +1,14 @@
 /**
+ * @type ActionType - Represent action-type type
+ * @template T - Action Type
+ */
+export type ActionType = string;
+
+/**
  * @type EmptyAction - Empty Action
  * @template T - Action Type
  */
-export type EmptyAction<T extends string> = {
+export type EmptyAction<T extends ActionType> = {
   type: T;
 };
 
@@ -11,7 +17,7 @@ export type EmptyAction<T extends string> = {
  * @template T - Action Type
  * @template P - Payload Type
  */
-export type PayloadAction<T extends string, P> = {
+export type PayloadAction<T extends ActionType, P> = {
   type: T;
   payload: P;
 };
@@ -21,7 +27,7 @@ export type PayloadAction<T extends string, P> = {
  * @template T - Action Type
  * @template P - Payload Type
  */
-export type PayloadMetaAction<T extends string, P, M> = {
+export type PayloadMetaAction<T extends ActionType, P, M> = {
   type: T;
   payload: P;
   meta: M;
@@ -33,7 +39,7 @@ export type PayloadMetaAction<T extends string, P, M> = {
  * @template P - Payload Type
  * @template M - Meta Type
  */
-export type FluxStandardAction<T extends string, P = any, M = any> = {
+export type FluxStandardAction<T extends ActionType, P = any, M = any> = {
   type: T;
   payload?: P;
   meta?: M,
