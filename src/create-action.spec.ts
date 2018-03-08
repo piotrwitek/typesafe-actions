@@ -129,4 +129,17 @@ describe('createAction', () => {
     expect(type).toBe('SHOW_ERROR');
   });
 
+  it('should accept symbol as action type', () => {
+    const INCREMENT = Symbol(1) as any as 'INCREMENT';
+    const increment = createAction(INCREMENT);
+    const decrement = createAction(Symbol(2));
+
+    const action: { type: 'INCREMENT' } = increment();
+    expect(action).toEqual({ type: INCREMENT });
+    expect(action).not.toEqual({ type: 'INCREMENT' });
+    const type: 'INCREMENT' = increment.getType!();
+    expect(type).toBe(INCREMENT);
+    expect(type).not.toBe('INCREMENT');
+  });
+
 });

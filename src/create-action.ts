@@ -1,4 +1,5 @@
 import {
+  ActionType,
   EmptyAction,
   FluxStandardAction,
   TypeGetter,
@@ -7,27 +8,28 @@ import {
 /**
  * @description create the action creator of a given function that contains hidden "type" metadata
  */
-export function createAction<T extends string,
+export function createAction<T extends ActionType,
   AC extends (...args: any[]) => FluxStandardAction<T>
   >(
-  typeString: T,
-  creatorFunction: AC,
+    actionType: T | symbol,
+    creatorFunction: AC,
 ): AC & TypeGetter<T>;
 
 /**
  * @description create the action creator of a given function that contains hidden "type" metadata
  */
-export function createAction<T extends string,
+export function createAction<T extends ActionType,
   AC extends () => { type: T }
   >(
-  typeString: T,
+    actionType: T | symbol,
 ): AC & TypeGetter<T>;
 
-export function createAction<T extends string,
+/** implementation */
+export function createAction<T extends ActionType,
   AC extends (...args: any[]) => FluxStandardAction<T>
   >(
-  typeString: T,
-  creatorFunction?: AC,
+    actionType: T | symbol,
+    creatorFunction?: AC,
 ): AC & TypeGetter<T> {
   let actionCreator: AC & TypeGetter<T>;
 
@@ -38,15 +40,16 @@ export function createAction<T extends string,
 
     actionCreator = creatorFunction as (AC & TypeGetter<T>);
   } else {
-    actionCreator = (() => ({ type: typeString })) as (AC & TypeGetter<T>);
+    actionCreator = (() => ({ type: actionType })) as (AC & TypeGetter<T>);
   }
 
-  if (typeString != null) {
-    if (typeof typeString !== 'string') {
-      throw new Error('first argument is not a type string');
+  if (actionType != null) {
+    if (typeof actionType !== 'string'
+      && typeof actionType !== 'symbol') {
+      throw new Error('first argument should be of type: string | symbol');
     }
 
-    (actionCreator as TypeGetter<T>).getType = () => typeString;
+    actionCreator.getType = () => actionType as T;
   } else {
     throw new Error('first argument is missing');
   }
