@@ -8,30 +8,30 @@ export type StringType = string;
  * @type EmptyAction - Empty Action
  * @template T - Action Type
  */
-export type EmptyAction<T extends StringType> = {
+export interface EmptyAction<T extends StringType> {
   type: T;
-};
+}
 
 /**
  * @type PayloadAction - Action with Payload
  * @template T - Action Type
  * @template P - Payload Type
  */
-export type PayloadAction<T extends StringType, P> = {
+export interface PayloadAction<T extends StringType, P> {
   type: T;
   payload: P;
-};
+}
 
 /**
  * @type PayloadAction - Action with Payload
  * @template T - Action Type
  * @template P - Payload Type
  */
-export type PayloadMetaAction<T extends StringType, P, M> = {
+export interface PayloadMetaAction<T extends StringType, P, M> {
   type: T;
   payload: P;
   meta: M;
-};
+}
 
 /**
  * @type FluxStandardAction - Flux Standard Action
@@ -39,9 +39,9 @@ export type PayloadMetaAction<T extends StringType, P, M> = {
  * @template P - Payload Type
  * @template M - Meta Type
  */
-export type FluxStandardAction<T extends StringType, P = any, M = any> = {
+export interface FluxStandardAction<T extends StringType, P = any, M = any> {
   type: T;
   payload?: P;
   meta?: M,
   error?: boolean;
-};
+}
