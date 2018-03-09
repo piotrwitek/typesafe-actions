@@ -2,10 +2,10 @@
 import {
   EmptyAction,
   FluxStandardAction,
-  TypeGetter,
+  TypeMeta,
 } from './';
 
-export type AC<T extends { type: string }> = ((...args: any[]) => T) & TypeGetter<T['type']>;
+export type AC<T extends { type: string }> = ((...args: any[]) => T) & TypeMeta<T['type']>;
 export type ACs<
   T1 extends { type: string },
   T2 extends { type: string } = any,
@@ -48,7 +48,7 @@ export function isActionOf<A extends { type: string }, T1 extends A, T2 extends 
       }
     }
 
-    const actionCreators = Array.isArray(actionOrActions)
+    const actionCreators: any[] = Array.isArray(actionOrActions)
       ? actionOrActions : [actionOrActions];
 
     return actionCreators.some((actionCreator, index) => {

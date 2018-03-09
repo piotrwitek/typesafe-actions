@@ -1,8 +1,7 @@
 import {
   StringType,
-  EmptyAction,
   FluxStandardAction,
-  TypeGetter,
+  TypeMeta,
 } from './';
 
 /**
@@ -13,7 +12,7 @@ export function createAction<T extends StringType,
   >(
     actionType: T | symbol,
     creatorFunction: AC,
-): AC & TypeGetter<T>;
+): AC & TypeMeta<T>;
 
 /**
  * @description create the action creator of a given function that contains hidden "type" metadata
@@ -22,7 +21,7 @@ export function createAction<T extends StringType,
   AC extends () => { type: T }
   >(
     actionType: T | symbol,
-): AC & TypeGetter<T>;
+): AC & TypeMeta<T>;
 
 /** implementation */
 export function createAction<T extends StringType,
@@ -30,17 +29,17 @@ export function createAction<T extends StringType,
   >(
     actionType: T | symbol,
     creatorFunction?: AC,
-): AC & TypeGetter<T> {
-  let actionCreator: AC & TypeGetter<T>;
+): AC & TypeMeta<T> {
+  let actionCreator: AC & TypeMeta<T>;
 
   if (creatorFunction != null) {
     if (typeof creatorFunction !== 'function') {
       throw new Error('second argument is not a function');
     }
 
-    actionCreator = creatorFunction as (AC & TypeGetter<T>);
+    actionCreator = creatorFunction as (AC & TypeMeta<T>);
   } else {
-    actionCreator = (() => ({ type: actionType })) as (AC & TypeGetter<T>);
+    actionCreator = (() => ({ type: actionType })) as (AC & TypeMeta<T>);
   }
 
   if (actionType != null) {

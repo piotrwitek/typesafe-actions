@@ -1,19 +1,19 @@
 import { createAction, isActionOf } from '.';
 
-// fixtures
-const increment = createAction('INCREMENT');
-const decrement = createAction('DECREMENT');
-const add = createAction('ADD',
-  (amount: number) => ({ type: 'ADD', payload: amount }),
-);
-const multiply = createAction('MULTIPLY',
-  (amount: number) => ({ type: 'MULTIPLY', payload: amount }),
-);
-const divide = createAction('DIVIDE',
-  (amount: number) => ({ type: 'DIVIDE', payload: amount }),
-);
-
 describe('isActionOf', () => {
+
+  // fixtures
+  const increment = createAction('INCREMENT');
+  const decrement = createAction('DECREMENT');
+  const add = createAction('ADD',
+    (amount: number) => ({ type: 'ADD', payload: amount }),
+  );
+  const multiply = createAction('MULTIPLY',
+    (amount: number) => ({ type: 'MULTIPLY', payload: amount }),
+  );
+  const divide = createAction('DIVIDE',
+    (amount: number) => ({ type: 'DIVIDE', payload: amount }),
+  );
 
   // TODO: #3
   // should error when missing argument
