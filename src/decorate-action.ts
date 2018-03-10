@@ -3,13 +3,12 @@ import {
   FluxStandardAction,
   TypeMeta,
   getType,
-  ReturnType,
 } from './';
 
 /**
  * @description create the action creator of a given function that contains hidden "type" metadata
  */
-export function createAction<T extends StringType,
+export function decorateAction<T extends StringType,
   AC extends (...args: any[]) => FluxStandardAction<T>
   >(
     actionType: T | symbol,
@@ -19,14 +18,14 @@ export function createAction<T extends StringType,
 /**
  * @description create the action creator of a given function that contains hidden "type" metadata
  */
-export function createAction<T extends StringType,
+export function decorateAction<T extends StringType,
   AC extends () => { type: T }
   >(
     actionType: T | symbol,
 ): AC & TypeMeta<T>;
 
 /** implementation */
-export function createAction<T extends StringType,
+export function decorateAction<T extends StringType,
   AC extends (...args: any[]) => FluxStandardAction<T>
   >(
     actionType: T | symbol,
