@@ -129,7 +129,7 @@ describe('createAction', () => {
     expect(type).toBe('SHOW_ERROR');
   });
 
-  it('should accept symbol as action type', () => {
+  it('should work at runtime with symbol as action type', () => {
     enum Increment { }
     const INCREMENT = Symbol(1) as any as Increment & string;
     const a: string = INCREMENT; // Ok

@@ -4,8 +4,9 @@
  * @license MIT
  */
 
-export * from './redux-types';
+export * from './types';
 
 export * from './get-type';
 export * from './is-action-of';
 export * from './create-action';
+export * from './create-symbol-action';
