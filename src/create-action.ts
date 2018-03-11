@@ -7,7 +7,7 @@ import {
 } from './';
 
 /**
- * @description create the action creator of a given function that contains hidden "type" metadata
+ * @description create an action creator of a given function that contains hidden "type" metadata
  */
 export function createAction<T extends StringType,
   AC extends (...args: any[]) => FluxStandardAction<T>
@@ -17,7 +17,7 @@ export function createAction<T extends StringType,
 ): AC & TypeMeta<T>;
 
 /**
- * @description create the action creator of a given function that contains hidden "type" metadata
+ * @description create an action creator of a given function that contains hidden "type" metadata
  */
 export function createAction<T extends StringType,
   AC extends () => { type: T }
@@ -25,7 +25,9 @@ export function createAction<T extends StringType,
     actionType: T | symbol,
 ): AC & TypeMeta<T>;
 
-/** implementation */
+/**
+ *  implementation
+ */
 export function createAction<T extends StringType,
   AC extends (...args: any[]) => FluxStandardAction<T>
   >(
