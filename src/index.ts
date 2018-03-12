@@ -9,3 +9,4 @@ export * from './redux-types';
 export * from './get-type';
 export * from './is-action-of';
 export * from './create-action';
+export * from './combine-reducers';
