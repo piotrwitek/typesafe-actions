@@ -10,3 +10,4 @@ export * from './get-type';
 export * from './is-action-of';
 export * from './create-action';
 export * from './create-symbol-action';
+export * from './build-action';

@@ -1,7 +1,6 @@
 import {
   SymbolType,
   TypeMeta,
-  FluxStandardAction,
 } from './';
 
 // TODO: mandatory to fill in generic symbol type arg
@@ -12,12 +11,12 @@ import {
  * @description create an action creator of a given function that contains hidden "type" metadata
  */
 export declare function createSymbolAction<T extends SymbolType>(
-  actionType: T,
+  actionType: T
 ): (() => { type: T }) & TypeMeta<T>;
 
 export declare function createSymbolAction<T extends SymbolType, P>(
-  actionType: T,
-): ((payload: P) => { type: T, payload: P }) & TypeMeta<T>;
+  actionType: T
+): ((payload: P) => { type: T; payload: P }) & TypeMeta<T>;
 
 /**
  * @description create an action creator of a given function that contains hidden "type" metadata

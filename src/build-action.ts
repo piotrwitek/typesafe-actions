@@ -1,97 +1,122 @@
 import {
   StringType,
-  FluxStandardAction,
   TypeMeta,
-  getType,
-  ReturnType,
   EmptyAction,
   PayloadAction,
+  PayloadMetaAction,
 } from './';
 
-export type ActionCreator<Type extends string, Payload, Else> =
-  Payload extends void ? () => EmptyAction<Type> :
-  Else;
+export type EACreator<Type extends string> =
+  () => EmptyAction<Type>;
 
-export type PayloadCreator<Type extends string, Payload> =
-  ActionCreator<Type, Payload, (payload: Payload) => PayloadAction<Type, Payload>>;
+export type PACreator<Type extends string, Payload> =
+  Payload extends void ? EACreator<Type>
+  : (payload: Payload) => PayloadAction<Type, Payload>;
 
-export type RequestPayloadCreator<Type extends string, Payload> =
-  ActionCreator<Type, Payload, (requestPayload: Payload) => PayloadAction<Type, Payload>>;
-
-export type SuccessPayloadCreator<Type extends string, Payload> =
-  ActionCreator<Type, Payload, (successPayload: Payload) => PayloadAction<Type, Payload>>;
-
-export type ErrorPayloadCreator<Type extends string, Payload> =
-  ActionCreator<Type, Payload, (errorPayload: Payload) => PayloadAction<Type, Payload>>;
+export type FSACreator<Type extends string, Payload, Meta = void, Arg = void> =
+  Arg extends void ? Meta extends void ? () => PayloadAction<Type, Payload>
+  : () => PayloadMetaAction<Type, Payload, Meta> :
+  Meta extends void ? (payload: Arg) => PayloadAction<Type, Payload>
+  : (payload: Arg) => PayloadMetaAction<Type, Payload, Meta>;
 
 /**
  * @description create an action creator of a given function that contains hidden "type" metadata
  */
 export interface BuildAction<Type extends string> {
-  empty(): () => EmptyAction<Type>;
-  withPayload<Payload>(): PayloadCreator<Type, Payload>;
-  async<RequestPayload, SuccessPayload, ErrorPayload>(): {
-    request: RequestPayloadCreator<Type & 'REQUEST', RequestPayload>,
-    success: SuccessPayloadCreator<Type & 'SUCCESS', SuccessPayload>,
-    error: ErrorPayloadCreator<Type & 'ERROR', ErrorPayload>,
-  }
+  empty(): EACreator<Type>;
+  payload<Payload>(): PACreator<Type, Payload>;
+  async<RequestPayload, SuccessPayload, FailurePayload>(): {
+    request: PACreator<Type & 'REQUEST', RequestPayload>;
+    success: PACreator<Type & 'SUCCESS', SuccessPayload>;
+    failure: PACreator<Type & 'FAILURE', FailurePayload>;
+  };
+  fsa<Payload, Meta = void>(
+    payloadCreator: () => Payload,
+    metaCreator?: () => Meta
+  ): FSACreator<Type, Payload, Meta>;
+  fsa<Arg, Payload, Meta = void>(
+    payloadCreator: (payload: Arg) => Payload,
+    metaCreator?: (payload: Arg) => Meta
+  ): FSACreator<Type, Payload, Meta, Arg>;
 }
 
-export declare function buildAction<T extends string>(
-  actionType: T,
-): BuildAction<T>;
+function attachGetType<T extends string, AC>(
+  ac: AC & TypeMeta<T>,
+  actionType: T
+): AC & TypeMeta<T> {
+  ac.getType = () => actionType;
+  return ac;
+}
 
 /** implementation */
-// export function buildAction<
-// T extends StringType,
-//   AC extends (...args: any[]) => FluxStandardAction<T>,
-//   >(
-//     actionType: T | symbol,
-//     creatorFunction?: AC,
-// ): AC & TypeMeta<T> {
-//   let actionCreator: AC & TypeMeta<T>;
+export function buildAction<T extends StringType>(
+  actionType: T
+): BuildAction<T> {
+  if (actionType == null) {
+    throw new Error('first argument is missing');
+  } else {
+    if (typeof actionType !== 'string'
+      && typeof actionType !== 'symbol') {
+      throw new Error('first argument should be type of: string | symbol');
+    }
+  }
 
-//   if (creatorFunction != null) {
-//     if (typeof creatorFunction !== 'function') {
-//       throw new Error('second argument is not a function');
-//     }
+  function createEmpty(): EACreator<T> {
+    const ac = () => ({ type: actionType });
+    return attachGetType(ac, actionType);
+  }
 
-//     actionCreator = creatorFunction as (AC & TypeMeta<T>);
-//   } else {
-//     actionCreator = (() => ({ type: actionType })) as (AC & TypeMeta<T>);
-//   }
+  function createPayload<P>(): PACreator<T, P> {
+    const ac = (payload: P) => ({ type: actionType, payload });
+    return attachGetType(ac, actionType) as PACreator<T, P>;
+  }
 
-//   if (actionType != null) {
-//     if (typeof actionType !== 'string'
-//       && typeof actionType !== 'symbol') {
-//       throw new Error('first argument should be type of: string | symbol');
-//     }
+  function createFsa<P, M, A>(
+    payloadCreator: (a?: A) => P,
+    metaCreator?: (a?: A) => M
+  ): FSACreator<T, P, M> {
+    const ac = (payload?: A) => ({
+      type: actionType,
+      ...{ payload: payloadCreator != null ? payloadCreator(payload) : undefined },
+      ...{ meta: metaCreator != null ? metaCreator(payload) : undefined },
+    });
+    return attachGetType(ac, actionType) as FSACreator<T, P, M>;
+  }
 
-//     actionCreator.getType = () => actionType as T;
-//   } else {
-//     throw new Error('first argument is missing');
-//   }
+  function createAsync<R, S, F>(): {
+    request: PACreator<T & 'REQUEST', R>;
+    success: PACreator<T & 'SUCCESS', S>;
+    failure: PACreator<T & 'FAILURE', F>;
+  } {
+    const atRequest = actionType + ('_' + 'REQUEST');
+    const atSuccess = actionType + ('_' + 'SUCCESS');
+    const atFailure = actionType + ('_' + 'FAILURE');
 
-//   return actionCreator;
-// }
+    const acRequest = (payload: R) => ({
+      type: atRequest,
+      ...{ payload: payload != null ? payload : undefined },
+    });
+    const acSuccess = (payload: S) => ({
+      type: atSuccess,
+      ...{ payload: payload != null ? payload : undefined },
+    });
+    const acFailure = (payload: F) => ({
+      type: atFailure,
+      ...{ payload: payload != null ? payload : undefined },
+    });
 
-// SYNC
-const increment = buildAction('INCREMENT')
-  .empty();
-const incrementType: { type: 'INCREMENT' } = increment();
+    return {
+      request: attachGetType(acRequest, atRequest) as PACreator<T & 'REQUEST', R>,
+      success: attachGetType(acSuccess, atSuccess) as PACreator<T & 'SUCCESS', S>,
+      failure: attachGetType(acFailure, atFailure) as PACreator<T & 'FAILURE', F>,
+    };
+  }
 
-const add = buildAction('ADD')
-  .withPayload<number>();
-const addType: { type: 'ADD', payload: number } = add(10);
-
-// ASYNC
-type User = {};
-const fetchUsers = buildAction('LIST_USERS')
-  .async<void, User[], string>();
-
-const fetchUsersRequestType: { type: 'LIST_USERS' & 'REQUEST' } = fetchUsers.request();
-const fetchUsersSuccessType: { type: 'LIST_USERS' & 'SUCCESS', payload: User[] } = fetchUsers.success([{}]);
-const fetchUsersErrorType: { type: 'LIST_USERS' & 'ERROR', payload: string } = fetchUsers.error('Error');
-
-let c: 'LIST_USERS' & 'ERROR' = getType(fetchUsers.error);
-c = 'FETCH_ERROR' as any;
+  const actionBuilder: BuildAction<T> = {
+    empty: createEmpty,
+    payload: createPayload,
+    async: createAsync,
+    fsa: createFsa,
+  };
+  return actionBuilder;
+}

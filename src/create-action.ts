@@ -1,20 +1,24 @@
 import {
   StringType,
-  FluxStandardAction,
   TypeMeta,
-  getType,
-  ReturnType,
 } from './';
+
+export interface FSA<T extends StringType, P = {}, M = {}, E = boolean> {
+  type: T;
+  payload?: P;
+  meta?: M;
+  error?: E;
+}
 
 /**
  * @description create an action creator of a given function that contains hidden "type" metadata
  */
 export function createAction<T extends StringType,
-  AC extends (...args: any[]) => FluxStandardAction<T>
+  AC extends (...args: any[]) => FSA<T>
   >(
     actionType: T | symbol,
-    creatorFunction: AC,
-): AC & TypeMeta<T>;
+    creatorFunction: AC
+  ): AC & TypeMeta<T>;
 
 /**
  * @description create an action creator of a given function that contains hidden "type" metadata
@@ -22,18 +26,18 @@ export function createAction<T extends StringType,
 export function createAction<T extends StringType,
   AC extends () => { type: T }
   >(
-    actionType: T | symbol,
-): AC & TypeMeta<T>;
+    actionType: T | symbol
+  ): AC & TypeMeta<T>;
 
 /**
  *  implementation
  */
 export function createAction<T extends StringType,
-  AC extends (...args: any[]) => FluxStandardAction<T>
+  AC extends (...args: any[]) => FSA<T>
   >(
     actionType: T | symbol,
-    creatorFunction?: AC,
-): AC & TypeMeta<T> {
+    creatorFunction?: AC
+  ): AC & TypeMeta<T> {
   let actionCreator: AC & TypeMeta<T>;
 
   if (creatorFunction != null) {
