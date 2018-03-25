@@ -1,7 +1,5 @@
 // tslint:disable:max-line-length
 import {
-  EmptyAction,
-  FluxStandardAction,
   TypeMeta,
 } from './';
 
@@ -24,18 +22,18 @@ export type ACs<
  * @description create the assert function that will assert a given action of `any` type to the specific "action type" if matching the specified action creator(s)
  */
 export function isActionOf<A extends { type: string }, T1 extends A>(
-  actionOrActions: AC<T1>,
+  actionOrActions: AC<T1>
 ): (action: A) => action is T1;
 
 /**
  * @description create the assert function that will assert a given action of `any` type to the specific "action type" if matching the specified action creator(s)
  */
 export function isActionOf<A extends { type: string }, T1 extends A, T2 extends A, T3 extends A, T4 extends A, T5 extends A>(
-  actionOrActions: ACs<T1> | ACs<T1, T2> | ACs<T1, T2, T3> | ACs<T1, T2, T3, T4> | ACs<T1, T2, T3, T4, T5>,
+  actionOrActions: ACs<T1> | ACs<T1, T2> | ACs<T1, T2, T3> | ACs<T1, T2, T3, T4> | ACs<T1, T2, T3, T4, T5>
 ): (action: A) => action is [T1, T2, T3, T4, T5][number];
 
 export function isActionOf<A extends { type: string }, T1 extends A, T2 extends A, T3 extends A, T4 extends A, T5 extends A>(
-  actionOrActions: AC<T1> | (ACs<T1> | ACs<T1, T2> | ACs<T1, T2, T3> | ACs<T1, T2, T3, T4> | ACs<T1, T2, T3, T4, T5>),
+  actionOrActions: AC<T1> | (ACs<T1> | ACs<T1, T2> | ACs<T1, T2, T3> | ACs<T1, T2, T3, T4> | ACs<T1, T2, T3, T4, T5>)
 ) {
   return (action: A): action is [T1, T2, T3, T4, T5][number] => {
     if (actionOrActions == null) {

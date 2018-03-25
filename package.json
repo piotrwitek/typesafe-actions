@@ -34,10 +34,9 @@
     "tslib": "1.8.1"
   },
   "devDependencies": {
-    "@types/jest": "21.1.9",
-    "@types/node": "6.0.95",
+    "@types/jest": "22.2.2",
     "husky": "0.14.3",
-    "jest-cli": "22.0.4",
+    "jest": "22.4.3",
     "redux": "^3.7.2",
     "ts-jest": "22.0.0",
     "ts-node": "4.1.0",

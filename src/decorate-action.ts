@@ -2,7 +2,6 @@ import {
   StringType,
   FluxStandardAction,
   TypeMeta,
-  getType,
 } from './';
 
 /**
@@ -12,8 +11,8 @@ export function decorateAction<T extends StringType,
   AC extends (...args: any[]) => FluxStandardAction<T>
   >(
     actionType: T | symbol,
-    creatorFunction: AC,
-): AC & TypeMeta<T>;
+    creatorFunction: AC
+  ): AC & TypeMeta<T>;
 
 /**
  * @description create the action creator of a given function that contains hidden "type" metadata
@@ -21,16 +20,16 @@ export function decorateAction<T extends StringType,
 export function decorateAction<T extends StringType,
   AC extends () => { type: T }
   >(
-    actionType: T | symbol,
-): AC & TypeMeta<T>;
+    actionType: T | symbol
+  ): AC & TypeMeta<T>;
 
 /** implementation */
 export function decorateAction<T extends StringType,
   AC extends (...args: any[]) => FluxStandardAction<T>
   >(
     actionType: T | symbol,
-    creatorFunction?: AC,
-): AC & TypeMeta<T> {
+    creatorFunction?: AC
+  ): AC & TypeMeta<T> {
   let actionCreator: AC & TypeMeta<T>;
 
   if (creatorFunction != null) {
