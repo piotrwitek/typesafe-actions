@@ -6,13 +6,13 @@ describe('isActionOf', () => {
   const increment = createAction('INCREMENT');
   const decrement = createAction('DECREMENT');
   const add = createAction('ADD',
-    (amount: number) => ({ type: 'ADD', payload: amount }),
+    (amount: number) => ({ type: 'ADD', payload: amount })
   );
   const multiply = createAction('MULTIPLY',
-    (amount: number) => ({ type: 'MULTIPLY', payload: amount }),
+    (amount: number) => ({ type: 'MULTIPLY', payload: amount })
   );
   const divide = createAction('DIVIDE',
-    (amount: number) => ({ type: 'DIVIDE', payload: amount }),
+    (amount: number) => ({ type: 'DIVIDE', payload: amount })
   );
 
   // TODO: #3
@@ -57,9 +57,9 @@ describe('isActionOf', () => {
 
     const action = { type: 'FALSE' };
     if (isActionOfAdd(action)) {
-      const a: { type: 'ADD', payload: number } = action;
+      const a: { type: 'ADD'; payload: number } = action;
     } else if (isActionOfAdd2(action)) {
-      const a: { type: 'ADD', payload: number } = action;
+      const a: { type: 'ADD'; payload: number } = action;
     } else {
       done();
     }
@@ -116,7 +116,7 @@ describe('isActionOf', () => {
           break;
         }
         case 'ADD': {
-          const a: { type: 'ADD', payload: number } = action;
+          const a: { type: 'ADD'; payload: number } = action;
           break;
         }
       }
@@ -140,11 +140,11 @@ describe('isActionOf', () => {
           break;
         }
         case 'ADD': {
-          const a: { type: 'ADD', payload: number } = action;
+          const a: { type: 'ADD'; payload: number } = action;
           break;
         }
         case 'MULTIPLY': {
-          const a: { type: 'MULTIPLY', payload: number } = action;
+          const a: { type: 'MULTIPLY'; payload: number } = action;
           break;
         }
       }
@@ -168,15 +168,15 @@ describe('isActionOf', () => {
           break;
         }
         case 'ADD': {
-          const a: { type: 'ADD', payload: number } = action;
+          const a: { type: 'ADD'; payload: number } = action;
           break;
         }
         case 'MULTIPLY': {
-          const a: { type: 'MULTIPLY', payload: number } = action;
+          const a: { type: 'MULTIPLY'; payload: number } = action;
           break;
         }
         case 'DIVIDE': {
-          const a: { type: 'DIVIDE', payload: number } = action;
+          const a: { type: 'DIVIDE'; payload: number } = action;
           break;
         }
       }

@@ -25,7 +25,7 @@ describe('buildAction', () => {
 
   it('with payload', () => {
     const add = buildAction('ADD').payload<number>();
-    const action: { type: 'ADD', payload: number } = add(10);
+    const action: { type: 'ADD'; payload: number } = add(10);
     expect(action).toEqual({ type: 'ADD', payload: 10 });
     const type: 'ADD' = getType(add);
     expect(type).toBe('ADD');
@@ -36,7 +36,7 @@ describe('buildAction', () => {
       .fsa(
         () => 'hardcoded message'
       );
-    const action: { type: 'SHOW_NOTIFICATION', payload: string } = showNotification();
+    const action: { type: 'SHOW_NOTIFICATION'; payload: string } = showNotification();
     expect(action).toEqual({
       type: 'SHOW_NOTIFICATION',
       payload: 'hardcoded message',
@@ -50,7 +50,7 @@ describe('buildAction', () => {
       .fsa(
         (message: string) => message
       );
-    const action: { type: 'SHOW_NOTIFICATION', payload: string } = showNotification('info message');
+    const action: { type: 'SHOW_NOTIFICATION'; payload: string } = showNotification('info message');
     expect(action).toEqual({
       type: 'SHOW_NOTIFICATION',
       payload: 'info message',
@@ -60,16 +60,16 @@ describe('buildAction', () => {
   });
 
   it('with payload and meta', () => {
-    type Notification = { username: string, message?: string };
+    type Notification = { username: string; message?: string };
     const notify = buildAction('NOTIFY')
       .fsa(
         ({ username, message }: Notification) => `${username}: ${message || ''}`,
-        ({ username, message }: Notification) => ({ username, message }),
-    );
+        ({ username, message }: Notification) => ({ username, message })
+      );
     const action: {
-      type: 'NOTIFY'
-      payload: string,
-      meta: Notification,
+      type: 'NOTIFY';
+      payload: string;
+      meta: Notification;
     } = notify({ username: 'Piotr', message: 'Hello!' });
     expect(action).toEqual({
       type: 'NOTIFY',
@@ -87,7 +87,7 @@ describe('buildAction', () => {
         () => ({ type: 'error' })
       );
 
-    const action: { type: 'SHOW_ERROR', payload: string, meta: { type: string } } = showError();
+    const action: { type: 'SHOW_ERROR'; payload: string; meta: { type: string } } = showError();
     expect(action).toEqual({
       type: 'SHOW_ERROR',
       payload: 'hardcoded error',
@@ -103,7 +103,7 @@ describe('buildAction', () => {
         (message: string) => message,
         () => ({ type: 'error' })
       );
-    const action: { type: 'SHOW_ERROR', payload: string, meta: { type: string } } = showError('error message');
+    const action: { type: 'SHOW_ERROR'; payload: string; meta: { type: string } } = showError('error message');
     expect(action).toEqual({
       type: 'SHOW_ERROR',
       payload: 'error message',
@@ -143,19 +143,19 @@ describe('buildAction', () => {
     expect(type3).toBe('LIST_USERS_FAILURE');
   });
 
-  // it('should work at runtime with symbol as action type', () => {
-  //   enum Increment { }
-  //   const INCREMENT = Symbol(1) as any as Increment & string;
-  //   const a: string = INCREMENT; // Ok
-  //   // const b: typeof INCREMENT = 'INCREMENT'; // Error
-  //   const increment = createAction(INCREMENT);
-  //   const decrement = createAction(Symbol(2));
-  //   const action: { type: typeof INCREMENT } = increment();
-  //   expect(action).toEqual({ type: INCREMENT });
-  //   expect(action).not.toEqual({ type: 'INCREMENT' });
-  //   const type: typeof INCREMENT = increment.getType!();
-  //   expect(type).toBe(INCREMENT);
-  //   expect(type).not.toBe('INCREMENT');
-  // });
+  it('should work at runtime with symbol as action type', () => {
+    enum Increment { }
+    const INCREMENT = Symbol(1) as any as Increment & string;
+    const a: string = INCREMENT; // Ok
+    // const b: typeof INCREMENT = 'INCREMENT'; // Error
+    const increment = buildAction(INCREMENT).empty();
+    const decrement = buildAction(Symbol(2) as any as 'DECREMENT').empty();
+    const action: { type: typeof INCREMENT } = increment();
+    expect(action).toEqual({ type: INCREMENT });
+    expect(action).not.toEqual({ type: 'INCREMENT' });
+    const type: typeof INCREMENT = getType(increment);
+    expect(type).toBe(INCREMENT);
+    expect(type).not.toBe('INCREMENT');
+  });
 
 });
