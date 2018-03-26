@@ -61,11 +61,10 @@ describe('buildAction', () => {
 
   it('with payload and meta', () => {
     type Notification = { username: string; message?: string };
-    const notify = buildAction('NOTIFY')
-      .fsa(
-        ({ username, message }: Notification) => `${username}: ${message || ''}`,
-        ({ username, message }: Notification) => ({ username, message })
-      );
+    const notify = buildAction('NOTIFY').fsa(
+      ({ username, message }: Notification) => `${username}: ${message || ''}`,
+      ({ username, message }) => ({ username, message })
+    );
     const action: {
       type: 'NOTIFY';
       payload: string;
@@ -81,12 +80,10 @@ describe('buildAction', () => {
   });
 
   it('with payload and meta and no params', () => {
-    const showError = buildAction('SHOW_ERROR')
-      .fsa(
-        () => 'hardcoded error',
-        () => ({ type: 'error' })
-      );
-
+    const showError = buildAction('SHOW_ERROR').fsa(
+      () => 'hardcoded error',
+      () => ({ type: 'error' })
+    );
     const action: { type: 'SHOW_ERROR'; payload: string; meta: { type: string } } = showError();
     expect(action).toEqual({
       type: 'SHOW_ERROR',
@@ -98,11 +95,10 @@ describe('buildAction', () => {
   });
 
   it('with payload and meta and param', () => {
-    const showError = buildAction('SHOW_ERROR')
-      .fsa(
-        (message: string) => message,
-        () => ({ type: 'error' })
-      );
+    const showError = buildAction('SHOW_ERROR').fsa(
+      (message: string) => message,
+      () => ({ type: 'error' })
+    );
     const action: { type: 'SHOW_ERROR'; payload: string; meta: { type: string } } = showError('error message');
     expect(action).toEqual({
       type: 'SHOW_ERROR',
