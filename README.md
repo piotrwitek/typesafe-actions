@@ -3,7 +3,7 @@
 
 > #### This lib is a part of [React & Redux TypeScript Guide](https://github.com/piotrwitek/react-redux-typescript-guide)
 
-### *New API ([link to API docs](../issues/xx)) thanks to a new language feature ([conditional types](https://github.com/Microsoft/TypeScript/pull/21847)) coming to TypesScript in v2.8)*
+### *New API ([link to API docs](../issues/22)) thanks to a new language feature ([conditional types](https://github.com/Microsoft/TypeScript/pull/21847)) coming to TypesScript in v2.8)*
 
 Simple functional API that's specifically designed to reduce **verbosity** (no explicit generic type arguments in the API, type inference FTW!)
 and **complexity** (retain "type soundness" and easily discriminate union types) 
