@@ -53,10 +53,12 @@ export interface FluxStandardAction<T extends StringType, P = undefined, M = und
 export type ReturnType<T> = T extends (...args: any[]) => infer R ? R : T;
 
 export type ActionCreator = (...args: any[]) => {};
-export type AsyncActionCreator = { [K in 'request' | 'success' | 'failure']: ActionCreator };
-export type ActionCreatorMap<P extends string> = { [K in P]: ActionCreator | AsyncActionCreator };
-
-export type ActionsUnion<Obj extends ActionCreatorMap<keyof Obj>> = {
-  [K in keyof Obj]: Obj[K] extends AsyncActionCreator ?
-  ReturnType<Obj[K]['request' | 'success' | 'failure']> : ReturnType<Obj[K]>
-}[keyof Obj];
+export type ActionCreatorMap<T> = {
+  [K in keyof T]: ActionsUnion<T[K]>
+};
+export type ActionsUnion<Obj> = (
+  // tslint:disable-next-line:ban-types
+  Obj extends ActionCreator ? ReturnType<Obj> :
+  Obj extends object ? ActionCreatorMap<Obj>[keyof Obj] :
+  Obj
+);

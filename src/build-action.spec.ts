@@ -156,14 +156,14 @@ describe('buildAction', () => {
 
   it('should create correct Union type with ActionUnion', () => {
     const actions = {
-      empty: buildAction('INCREMENT').empty(),
+      very: { deep: { empty: buildAction('INCREMENT').empty() } },
       payload: buildAction('ADD').payload<number>(),
       fsa: buildAction('SHOW_NOTIFICATION').fsa((message: string) => message),
       async: buildAction('GET_USER').async<number, { name: string }, string>(),
     };
     type RootAction = ActionsUnion<typeof actions>;
-    // tslint:disable-next-line:max-line-length
-    const action1: RootAction = actions.empty();
+    // tslint:disable-next-line:max-line-lengta
+    const action1: RootAction = actions.very.deep.empty();
     const action2: RootAction = actions.payload(3);
     const action3: RootAction = actions.fsa('Message');
     const action4: RootAction = actions.async.request(2);
