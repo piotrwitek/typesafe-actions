@@ -52,6 +52,11 @@ export interface FluxStandardAction<T extends StringType, P = undefined, M = und
 
 export type ReturnType<T> = T extends (...args: any[]) => infer R ? R : T;
 
-export type ActionsUnion<Obj> = {
-  [K in keyof Obj]: ReturnType<Obj[K]>
+export type ActionCreator = (...args: any[]) => {};
+export type AsyncActionCreator = { [K in 'request' | 'success' | 'failure']: ActionCreator };
+export type ActionCreatorMap<P extends string> = { [K in P]: ActionCreator | AsyncActionCreator };
+
+export type ActionsUnion<Obj extends ActionCreatorMap<keyof Obj>> = {
+  [K in keyof Obj]: Obj[K] extends AsyncActionCreator ?
+  ReturnType<Obj[K]['request' | 'success' | 'failure']> : ReturnType<Obj[K]>
 }[keyof Obj];
