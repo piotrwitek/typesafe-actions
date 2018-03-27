@@ -1,4 +1,4 @@
-import { buildAction, getType } from './';
+import { buildAction, getType, ActionsUnion } from './';
 
 describe('buildAction', () => {
 
@@ -152,6 +152,23 @@ describe('buildAction', () => {
     const type: typeof INCREMENT = getType(increment);
     expect(type).toBe(INCREMENT);
     expect(type).not.toBe('INCREMENT');
+  });
+
+  it('should create correct Union type with ActionUnion', () => {
+    const actions = {
+      empty: buildAction('INCREMENT').empty(),
+      payload: buildAction('ADD').payload<number>(),
+      fsa: buildAction('SHOW_NOTIFICATION').fsa((message: string) => message),
+      async: buildAction('GET_USER').async<number, { name: string }, string>(),
+    };
+    type RootAction = ActionsUnion<typeof actions>;
+    // tslint:disable-next-line:max-line-length
+    const action1: RootAction = actions.empty();
+    const action2: RootAction = actions.payload(3);
+    const action3: RootAction = actions.fsa('Message');
+    const action4: RootAction = actions.async.request(2);
+    const action5: RootAction = actions.async.success({ name: 'Piotr' });
+    const action6: RootAction = actions.async.failure('Error');
   });
 
 });

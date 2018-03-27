@@ -19,17 +19,20 @@ export type FSACreator<Type extends string, Payload, Meta = void, Arg = void> =
   Meta extends void ? (payload: Arg) => PayloadAction<Type, Payload>
   : (payload: Arg) => PayloadMetaAction<Type, Payload, Meta>;
 
+export type AsyncCreator<Type extends string, RequestPayload, SuccessPayload, FailurePayload> = {
+  request: PACreator<Type & 'REQUEST', RequestPayload>;
+  success: PACreator<Type & 'SUCCESS', SuccessPayload>;
+  failure: PACreator<Type & 'FAILURE', FailurePayload>;
+};
+
 /**
  * @description create an action creator of a given function that contains hidden "type" metadata
  */
 export interface BuildAction<Type extends string> {
   empty(): EACreator<Type>;
   payload<Payload>(): PACreator<Type, Payload>;
-  async<RequestPayload, SuccessPayload, FailurePayload>(): {
-    request: PACreator<Type & 'REQUEST', RequestPayload>;
-    success: PACreator<Type & 'SUCCESS', SuccessPayload>;
-    failure: PACreator<Type & 'FAILURE', FailurePayload>;
-  };
+  async<RequestPayload, SuccessPayload, FailurePayload>():
+    AsyncCreator<Type, RequestPayload, SuccessPayload, FailurePayload>;
   fsa<Payload, Meta = void>(
     payloadCreator: () => Payload,
     metaCreator?: () => Meta
@@ -83,11 +86,7 @@ export function buildAction<T extends StringType>(
     return attachGetType(ac, actionType) as FSACreator<T, P, M>;
   }
 
-  function createAsync<R, S, F>(): {
-    request: PACreator<T & 'REQUEST', R>;
-    success: PACreator<T & 'SUCCESS', S>;
-    failure: PACreator<T & 'FAILURE', F>;
-  } {
+  function createAsync<R, S, F>(): AsyncCreator<T, R, S, F> {
     const atRequest = actionType + ('_' + 'REQUEST');
     const atSuccess = actionType + ('_' + 'SUCCESS');
     const atFailure = actionType + ('_' + 'FAILURE');
