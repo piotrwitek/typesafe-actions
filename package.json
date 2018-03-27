@@ -40,7 +40,7 @@
     "ts-node": "5.0.1",
     "tslib": "1.9.0",
     "tslint": "5.9.1",
-    "typescript": "2.8.0-rc"
+    "typescript": "2.8.1"
   },
   "keywords": [
     "typescript",
