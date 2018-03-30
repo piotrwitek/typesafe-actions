@@ -50,8 +50,6 @@ export interface FluxStandardAction<T extends StringType, P = undefined, M = und
   error: E;
 }
 
-export type ReturnType<T> = T extends (...args: any[]) => infer R ? R : T;
-
 export type ActionCreator = (...args: any[]) => {};
 export type ActionCreatorMap<T> = {
   [K in keyof T]: ActionsUnion<T[K]>
