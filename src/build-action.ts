@@ -1,25 +1,42 @@
-import { StringType, TypeMeta, EmptyAction, PayloadAction, PayloadMetaAction } from './';
+import {
+  StringType,
+  TypeMeta,
+  EmptyAction,
+  PayloadAction,
+  PayloadMetaAction,
+  Box,
+  Unbox,
+} from './';
 
 export type EACreator<Type extends string> = () => EmptyAction<Type>;
 
-export type PACreator<Type extends string, Payload> = Payload extends void
-  ? EACreator<Type>
-  : Payload extends boolean
-    ? (payload: boolean) => PayloadAction<Type, boolean>
-    : (payload: Payload) => PayloadAction<Type, Payload>;
+export type PACreator<Type extends string, Payload> = (
+  payload: Payload,
+) => PayloadAction<Type, Payload>;
 
-export type FSACreator<Type extends string, Payload, Meta = void, Arg = void> = Arg extends void
-  ? Meta extends void
-    ? () => PayloadAction<Type, Payload>
-    : () => PayloadMetaAction<Type, Payload, Meta>
-  : Meta extends void
-    ? (payload: Arg) => PayloadAction<Type, Payload>
-    : (payload: Arg) => PayloadMetaAction<Type, Payload, Meta>;
+export type EmptyOrPayload<Type extends string, Payload extends Box<any>> = Payload extends Box<
+  void
+>
+  ? EACreator<Type>
+  : PACreator<Type, Unbox<Payload>>;
+
+export type FSACreator<
+  Type extends string,
+  Payload extends Box<any>,
+  Meta extends Box<any> = Box<void>,
+  Arg extends Box<any> = Box<void>
+> = Arg extends Box<void>
+  ? Meta extends Box<void>
+    ? () => PayloadAction<Type, Unbox<Payload>>
+    : () => PayloadMetaAction<Type, Unbox<Payload>, Unbox<Meta>>
+  : Meta extends Box<void>
+    ? (payload: Unbox<Arg>) => PayloadAction<Type, Unbox<Payload>>
+    : (payload: Unbox<Arg>) => PayloadMetaAction<Type, Unbox<Payload>, Unbox<Meta>>;
 
 export type AsyncCreator<Type extends string, RequestPayload, SuccessPayload, FailurePayload> = {
-  request: PACreator<Type & 'REQUEST', RequestPayload>;
-  success: PACreator<Type & 'SUCCESS', SuccessPayload>;
-  failure: PACreator<Type & 'FAILURE', FailurePayload>;
+  request: EmptyOrPayload<Type & 'REQUEST', Box<RequestPayload>>;
+  success: EmptyOrPayload<Type & 'SUCCESS', Box<SuccessPayload>>;
+  failure: EmptyOrPayload<Type & 'FAILURE', Box<FailurePayload>>;
 };
 
 /**
@@ -27,7 +44,7 @@ export type AsyncCreator<Type extends string, RequestPayload, SuccessPayload, Fa
  */
 export interface BuildAction<Type extends string> {
   empty(): EACreator<Type>;
-  payload<Payload>(): PACreator<Type, Payload>;
+  payload<Payload>(): EmptyOrPayload<Type, Box<Payload>>;
   async<RequestPayload, SuccessPayload, FailurePayload>(): AsyncCreator<
     Type,
     RequestPayload,
@@ -37,11 +54,11 @@ export interface BuildAction<Type extends string> {
   fsa<Payload, Meta = void>(
     payloadCreator: () => Payload,
     metaCreator?: () => Meta,
-  ): FSACreator<Type, Payload, Meta>;
+  ): FSACreator<Type, Box<Payload>, Box<Meta>>;
   fsa<Arg, Payload, Meta = void>(
     payloadCreator: (payload: Arg) => Payload,
     metaCreator?: (payload: Arg) => Meta,
-  ): FSACreator<Type, Payload, Meta, Arg>;
+  ): FSACreator<Type, Box<Payload>, Box<Meta>, Box<Arg>>;
 }
 
 function attachGetType<T extends string, AC>(
@@ -67,21 +84,21 @@ export function buildAction<T extends StringType>(actionType: T): BuildAction<T>
     return attachGetType(ac, actionType);
   }
 
-  function createPayload<P>(): PACreator<T, P> {
+  function createPayload<P>(): EmptyOrPayload<T, Box<P>> {
     const ac = (payload: P) => ({ type: actionType, payload });
-    return attachGetType(ac, actionType) as PACreator<T, P>;
+    return attachGetType(ac, actionType) as EmptyOrPayload<T, Box<P>>;
   }
 
   function createFsa<P, M, A>(
     payloadCreator: (a?: A) => P,
     metaCreator?: (a?: A) => M,
-  ): FSACreator<T, P, M> {
+  ): FSACreator<T, Box<P>, Box<M>> {
     const ac = (payload?: A) => ({
       type: actionType,
       ...{ payload: payloadCreator != null ? payloadCreator(payload) : undefined },
       ...{ meta: metaCreator != null ? metaCreator(payload) : undefined },
     });
-    return attachGetType(ac, actionType) as FSACreator<T, P, M>;
+    return attachGetType(ac, actionType) as FSACreator<T, Box<P>, Box<M>>;
   }
 
   function createAsync<R, S, F>(): AsyncCreator<T, R, S, F> {
@@ -103,9 +120,9 @@ export function buildAction<T extends StringType>(actionType: T): BuildAction<T>
     });
 
     return {
-      request: attachGetType(acRequest, atRequest) as PACreator<T & 'REQUEST', R>,
-      success: attachGetType(acSuccess, atSuccess) as PACreator<T & 'SUCCESS', S>,
-      failure: attachGetType(acFailure, atFailure) as PACreator<T & 'FAILURE', F>,
+      request: attachGetType(acRequest, atRequest) as EmptyOrPayload<T & 'REQUEST', Box<R>>,
+      success: attachGetType(acSuccess, atSuccess) as EmptyOrPayload<T & 'SUCCESS', Box<S>>,
+      failure: attachGetType(acFailure, atFailure) as EmptyOrPayload<T & 'FAILURE', Box<F>>,
     };
   }
 

@@ -38,6 +38,18 @@ describe('buildAction', () => {
     expect(type).toBe('SET');
   });
 
+  it('with union payload', () => {
+    const union = buildAction('UNION').payload<string | null | number>();
+    const action: { type: 'UNION'; payload: string | null | number } = union('foo');
+    expect(action).toEqual({ type: 'UNION', payload: 'foo' });
+    const action2: { type: 'UNION'; payload: string | null | number } = union(null);
+    expect(action2).toEqual({ type: 'UNION', payload: null });
+    const action3: { type: 'UNION'; payload: string | null | number } = union(3);
+    expect(action3).toEqual({ type: 'UNION', payload: 3 });
+    const type: 'UNION' = getType(union);
+    expect(type).toBe('UNION');
+  });
+
   it('with payload and no params', () => {
     const showNotification = buildAction('SHOW_NOTIFICATION').fsa(() => 'hardcoded message');
     const action: { type: 'SHOW_NOTIFICATION'; payload: string } = showNotification();
@@ -55,6 +67,37 @@ describe('buildAction', () => {
     expect(action).toEqual({
       type: 'SHOW_NOTIFICATION',
       payload: 'info message',
+    });
+    const type: 'SHOW_NOTIFICATION' = getType(showNotification);
+    expect(type).toBe('SHOW_NOTIFICATION');
+  });
+
+  it('with payload and union param', () => {
+    const showNotification = buildAction('SHOW_NOTIFICATION').fsa(
+      (message: string | null | number) => message,
+    );
+    const action: { type: 'SHOW_NOTIFICATION'; payload: string | null | number } = showNotification(
+      'info message',
+    );
+    expect(action).toEqual({
+      type: 'SHOW_NOTIFICATION',
+      payload: 'info message',
+    });
+    const action2: {
+      type: 'SHOW_NOTIFICATION';
+      payload: string | null | number;
+    } = showNotification(null);
+    expect(action2).toEqual({
+      type: 'SHOW_NOTIFICATION',
+      payload: null,
+    });
+    const action3: {
+      type: 'SHOW_NOTIFICATION';
+      payload: string | null | number;
+    } = showNotification(3);
+    expect(action3).toEqual({
+      type: 'SHOW_NOTIFICATION',
+      payload: 3,
     });
     const type: 'SHOW_NOTIFICATION' = getType(showNotification);
     expect(type).toBe('SHOW_NOTIFICATION');
@@ -83,13 +126,13 @@ describe('buildAction', () => {
   it('with payload and meta and no params', () => {
     const showError = buildAction('SHOW_ERROR').fsa(
       () => 'hardcoded error',
-      () => ({ type: 'error' }),
+      () => ({ severity: 'error' }),
     );
-    const action: { type: 'SHOW_ERROR'; payload: string; meta: { type: string } } = showError();
+    const action: { type: 'SHOW_ERROR'; payload: string; meta: { severity: string } } = showError();
     expect(action).toEqual({
       type: 'SHOW_ERROR',
       payload: 'hardcoded error',
-      meta: { type: 'error' },
+      meta: { severity: 'error' },
     });
     const type: 'SHOW_ERROR' = getType(showError);
     expect(type).toBe('SHOW_ERROR');
@@ -98,15 +141,15 @@ describe('buildAction', () => {
   it('with payload and meta and param', () => {
     const showError = buildAction('SHOW_ERROR').fsa(
       (message: string) => message,
-      () => ({ type: 'error' }),
+      () => ({ severity: 'error' }),
     );
-    const action: { type: 'SHOW_ERROR'; payload: string; meta: { type: string } } = showError(
+    const action: { type: 'SHOW_ERROR'; payload: string; meta: { severity: string } } = showError(
       'error message',
     );
     expect(action).toEqual({
       type: 'SHOW_ERROR',
       payload: 'error message',
-      meta: { type: 'error' },
+      meta: { severity: 'error' },
     });
     const type: 'SHOW_ERROR' = getType(showError);
     expect(type).toBe('SHOW_ERROR');
