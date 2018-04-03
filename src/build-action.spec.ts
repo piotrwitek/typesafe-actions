@@ -1,7 +1,6 @@
 import { buildAction, getType, ActionsUnion } from './';
 
 describe('buildAction', () => {
-
   // TODO: #3
   // should error when missing argument
   // should error when passed invalid arguments
@@ -30,7 +29,7 @@ describe('buildAction', () => {
     const type: 'ADD' = getType(add);
     expect(type).toBe('ADD');
   });
-  
+
   it('with boolean payload', () => {
     const set = buildAction('SET').payload<boolean>();
     const action: { type: 'SET'; payload: boolean } = set(true);
@@ -40,10 +39,7 @@ describe('buildAction', () => {
   });
 
   it('with payload and no params', () => {
-    const showNotification = buildAction('SHOW_NOTIFICATION')
-      .fsa(
-        () => 'hardcoded message'
-      );
+    const showNotification = buildAction('SHOW_NOTIFICATION').fsa(() => 'hardcoded message');
     const action: { type: 'SHOW_NOTIFICATION'; payload: string } = showNotification();
     expect(action).toEqual({
       type: 'SHOW_NOTIFICATION',
@@ -54,10 +50,7 @@ describe('buildAction', () => {
   });
 
   it('with payload and param', () => {
-    const showNotification = buildAction('SHOW_NOTIFICATION')
-      .fsa(
-        (message: string) => message
-      );
+    const showNotification = buildAction('SHOW_NOTIFICATION').fsa((message: string) => message);
     const action: { type: 'SHOW_NOTIFICATION'; payload: string } = showNotification('info message');
     expect(action).toEqual({
       type: 'SHOW_NOTIFICATION',
@@ -71,7 +64,7 @@ describe('buildAction', () => {
     type Notification = { username: string; message?: string };
     const notify = buildAction('NOTIFY').fsa(
       ({ username, message }: Notification) => `${username}: ${message || ''}`,
-      ({ username, message }) => ({ username, message })
+      ({ username, message }) => ({ username, message }),
     );
     const action: {
       type: 'NOTIFY';
@@ -90,7 +83,7 @@ describe('buildAction', () => {
   it('with payload and meta and no params', () => {
     const showError = buildAction('SHOW_ERROR').fsa(
       () => 'hardcoded error',
-      () => ({ type: 'error' })
+      () => ({ type: 'error' }),
     );
     const action: { type: 'SHOW_ERROR'; payload: string; meta: { type: string } } = showError();
     expect(action).toEqual({
@@ -105,9 +98,11 @@ describe('buildAction', () => {
   it('with payload and meta and param', () => {
     const showError = buildAction('SHOW_ERROR').fsa(
       (message: string) => message,
-      () => ({ type: 'error' })
+      () => ({ type: 'error' }),
     );
-    const action: { type: 'SHOW_ERROR'; payload: string; meta: { type: string } } = showError('error message');
+    const action: { type: 'SHOW_ERROR'; payload: string; meta: { type: string } } = showError(
+      'error message',
+    );
     expect(action).toEqual({
       type: 'SHOW_ERROR',
       payload: 'error message',
@@ -122,19 +117,20 @@ describe('buildAction', () => {
     type User = { name: string };
     // NOTE: with `void` type you can make explicit no arguments needed for this action creator
     const fetchUsers = buildAction('LIST_USERS').async<void, User[], string>();
-    const requestAction: { type: 'LIST_USERS' & 'REQUEST' } =
-      fetchUsers.request();
+    const requestAction: { type: 'LIST_USERS' & 'REQUEST' } = fetchUsers.request();
     expect(requestAction).toEqual({
       type: 'LIST_USERS_REQUEST',
     });
-    const successAction: { type: 'LIST_USERS' & 'SUCCESS'; payload: User[] } =
-      fetchUsers.success([{ name: 'Piotr' }]);
+    const successAction: { type: 'LIST_USERS' & 'SUCCESS'; payload: User[] } = fetchUsers.success([
+      { name: 'Piotr' },
+    ]);
     expect(successAction).toEqual({
       type: 'LIST_USERS_SUCCESS',
       payload: [{ name: 'Piotr' }],
     });
-    const failureAction: { type: 'LIST_USERS' & 'FAILURE'; payload: string } =
-      fetchUsers.failure('error message');
+    const failureAction: { type: 'LIST_USERS' & 'FAILURE'; payload: string } = fetchUsers.failure(
+      'error message',
+    );
     expect(failureAction).toEqual({
       type: 'LIST_USERS_FAILURE',
       payload: 'error message',
@@ -148,12 +144,12 @@ describe('buildAction', () => {
   });
 
   it('should work at runtime with symbol as action type', () => {
-    enum Increment { }
-    const INCREMENT = Symbol(1) as any as Increment & string;
+    enum Increment {}
+    const INCREMENT = (Symbol(1) as any) as Increment & string;
     const a: string = INCREMENT; // Ok
     // const b: typeof INCREMENT = 'INCREMENT'; // Error
     const increment = buildAction(INCREMENT).empty();
-    const decrement = buildAction(Symbol(2) as any as 'DECREMENT').empty();
+    const decrement = buildAction((Symbol(2) as any) as 'DECREMENT').empty();
     const action: { type: typeof INCREMENT } = increment();
     expect(action).toEqual({ type: INCREMENT });
     expect(action).not.toEqual({ type: 'INCREMENT' });
@@ -178,5 +174,4 @@ describe('buildAction', () => {
     const action5: RootAction = actions.async.success({ name: 'Piotr' });
     const action6: RootAction = actions.async.failure('Error');
   });
-
 });
