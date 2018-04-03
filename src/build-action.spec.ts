@@ -30,6 +30,14 @@ describe('buildAction', () => {
     const type: 'ADD' = getType(add);
     expect(type).toBe('ADD');
   });
+  
+  it('with boolean payload', () => {
+    const set = buildAction('SET').payload<boolean>();
+    const action: { type: 'SET'; payload: boolean } = set(true);
+    expect(action).toEqual({ type: 'SET', payload: true });
+    const type: 'SET' = getType(set);
+    expect(type).toBe('SET');
+  });
 
   it('with payload and no params', () => {
     const showNotification = buildAction('SHOW_NOTIFICATION')
