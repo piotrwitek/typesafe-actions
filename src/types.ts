@@ -43,20 +43,23 @@ export type PayloadMetaAction<T extends StringType, P, M> = {
  * @template P - Payload Type
  * @template M - Meta Type
  */
-export interface FluxStandardAction<T extends StringType, P = undefined, M = undefined, E = boolean> {
+export interface FluxStandardAction<
+  T extends StringType,
+  P = undefined,
+  M = undefined,
+  E = boolean
+> {
   type: T;
   payload: P;
   meta: M;
   error: E;
 }
 
+export type Box<T> = { value: T };
+export type Unbox<T extends Box<any>> = T['value'];
+
 export type ActionCreator = (...args: any[]) => {};
-export type ActionCreatorMap<T> = {
-  [K in keyof T]: ActionsUnion<T[K]>
-};
-export type ActionsUnion<Obj> = (
-  // tslint:disable-next-line:ban-types
-  Obj extends ActionCreator ? ReturnType<Obj> :
-  Obj extends object ? ActionCreatorMap<Obj>[keyof Obj] :
-  Obj
-);
+export type ActionCreatorMap<T> = { [K in keyof T]: ActionsUnion<T[K]> };
+export type ActionsUnion<Obj> = Obj extends ActionCreator // tslint:disable-next-line:ban-types
+  ? ReturnType<Obj>
+  : Obj extends object ? ActionCreatorMap<Obj>[keyof Obj] : Obj;
