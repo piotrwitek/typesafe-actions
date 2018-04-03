@@ -1,29 +1,32 @@
 # typesafe-actions
+
 ### Typesafe "Action Creators" for Redux / Flux Architectures (in TypeScript)
 
 > #### This lib is a part of [React & Redux TypeScript Guide](https://github.com/piotrwitek/react-redux-typescript-guide)
 
-### *New API ([link to API docs](../../issues/22)) thanks to a new language feature ([conditional types](https://github.com/Microsoft/TypeScript/pull/21847)) coming to TypesScript in v2.8)*
+### _New API ([link to API docs](../../issues/22)) thanks to a new language feature ([conditional types](https://github.com/Microsoft/TypeScript/pull/21847)) coming to TypesScript in v2.8)_
 
 Simple functional API that's specifically designed to reduce **verbosity** (no explicit generic type arguments in the API, type inference FTW!)
-and **complexity** (retain "type soundness" and easily discriminate union types) 
-of type annotations.  
+and **complexity** (retain "type soundness" and easily discriminate union types)
+of type annotations.
 
-The main goal of this library is to limit the developers using the actions to incorrectly use them by strictly checking if the input parameters are correct. (for instance when you do **not** provide payload creator function, this means that your action creator will not accept any parameters and show error when someone will try to do that) 
+The main goal of this library is to limit the developers using the actions to incorrectly use them by strictly checking if the input parameters are correct. (for instance when you do **not** provide payload creator function, this means that your action creator will not accept any parameters and show error when someone will try to do that)
 
 ---
 
 ## Table of Contents
 
-- [Installation](#installation)
-- [Motivation](#motivation)
-- [Tutorial](#tutorial)
-- [API](#api)
-  - [`createAction`](#createaction)
-  - [`getType`](#gettype)
-  - [`isActionOf`](#isactionof)
-- [Compare to others](#compare-to-others)
-  - [redux-actions](#redux-actions)
+* [Installation](#installation)
+* [Motivation](#motivation)
+* [Tutorial](#tutorial)
+* [API](#api)
+  * [`ActionsUnion`](#actionsunion)
+  * [`buildAction`](#buildaction)
+  * [`createAction`](#createaction)
+  * [`getType`](#gettype)
+  * [`isActionOf`](#isactionof)
+* [Compare to others](#compare-to-others)
+  * [redux-actions](#redux-actions)
 
 ---
 
@@ -62,33 +65,36 @@ Moreover **alternative solutions** in the wild have been either too verbose, use
 To highlight the benefits of type inference leveraged in this solution, let me show you how to handle the most common use-cases found in Redux Architecture:
 
 ### create union type of actions (a.k.a. `RootAction`)
-```ts
-import { $call } from 'utility-types'; // From https://github.com/piotrwitek/utility-types
-import { createAction } from 'typesafe-actions';
 
-export const actions = {
-  increment: createAction('INCREMENT'),
-  add: createAction('ADD', (amount: number) => ({
-    type: 'ADD',
-    payload: amount,
-  })),
+```ts
+import { buildAction, ActionsUnion } from 'typesafe-actions';
+
+export const counterActions = {
+  increment: buildAction('INCREMENT').empty(),
+  add: buildAction('ADD').payload<number>(),
 };
 
-const returnsOfActions = Object.values(actions).map($call);
-type AppAction = typeof returnsOfActions[number];
+export const todosActions = { ... };
 
-// third-party actions
+// all actions merged for convenience
+export type RootAction = ActionsUnion<typeof counterActions>;
+```
+
+> **PRO-TIP:** merge with third-party actions to create a complete Action Type
+
+```ts
+import { RouterAction, LocationChangeAction } from 'react-router';
 type ReactRouterAction = RouterAction | LocationChangeAction;
 
-export type RootAction =
-  | AppAction
-  | ReactRouterAction;
+export type AppAction = RootAction | ReactRouterAction;
 ```
 
 [⇧ back to top](#table-of-contents)
 
 ### reducer switch cases
+
 Use `getType` function to reduce common boilerplate and discriminate union type of `RootAction` to a specific action.
+
 ```ts
 import { getType } from 'typesafe-actions';
 
@@ -105,7 +111,9 @@ const reducer = (state: RootState, action: RootAction) => {
 [⇧ back to top](#table-of-contents)
 
 ### epics from `redux-observable`
+
 Use `isActionOf` function to filter actions and discriminate union type of `RootAction` to a specific action(s) down the stream.
+
 ```ts
 import { isActionOf } from 'typesafe-actions';
 
@@ -125,7 +133,7 @@ const logTodoAction: Epic<RootAction, RootState> =
   (action$, store) => action$
     .filter(isActionOf([addTodo, toggleTodo]))
     .switchMap((action) => { // action is asserted as: { type: "ADD_TODO", payload: string } | { type: "TOGGLE_TODO", payload: string }
-      const log = `Dispatched action: ${action.type}`;
+      const log = `Dispatched action (${action.type}: ${action.payload})`;
 ...
 ```
 
@@ -135,22 +143,32 @@ const logTodoAction: Epic<RootAction, RootState> =
 
 ## API
 
+### ActionsUnion
+
+WIP v2.0.0
+
+[⇧ back to top](#table-of-contents)
+
+### buildAction
+
+WIP v2.0.0
+
+[⇧ back to top](#table-of-contents)
+
 ### createAction
+
 > create the action creator of a given function that contains private "type" metadata
 
 [> Advanced Usage](src/create-action.spec.ts)
 
 ```ts
-function createAction(typeString: T, creatorFunction?: CF): CF
+function createAction(typeString: T, creatorFunction?: CF): CF;
 
 // CF extends (...args: any[]) => { type: T, payload?: P, meta?: M, error?: boolean }
 ```
-> NOTE: I know the `typeString` argument looks kinda redundand to use with `creatorFunction` and I would like to infer the type from `type` property of returning action,
-but at the moment (TS v.2.6.2) it's impossible because the type inference is widening it to `string` and other API's (`getType` and `isActionOf`)
-will not work when trying to discriminate union types  
-This is something I should be able to address with the future TS versions and then simplify the API with backward compatibility in mind.
 
 Examples:
+
 ```ts
 // no payload
 const increment = createAction('INCREMENT');
@@ -160,27 +178,22 @@ const increment = createAction('INCREMENT');
 expect(increment()).toEqual({ type: 'INCREMENT' });
 
 // with payload
-const add = createAction('ADD',
-  (amount: number) => ({ type: 'ADD', payload: amount }),
-);
+const add = createAction('ADD', (amount: number) => ({ type: 'ADD', payload: amount }));
 
 expect(add(10)).toEqual({ type: 'ADD', payload: 10 });
 
 // with payload and meta
-const notify = createAction('NOTIFY',
-  (username: string, message: string) => ({
-    type: 'NOTIFY',
-    payload: { message: `${username}: ${message}` },
-    meta: { username, message },
-  }),
-);
+const notify = createAction('NOTIFY', (username: string, message: string) => ({
+  type: 'NOTIFY',
+  payload: { message: `${username}: ${message}` },
+  meta: { username, message },
+}));
 
-expect(notify('Piotr', 'Hello!'))
-  .toEqual({
-    type: 'NOTIFY',
-    payload: { message: 'Piotr: Hello!' },
-    meta: { username: 'Piotr', message: 'Hello!' },
-  });
+expect(notify('Piotr', 'Hello!')).toEqual({
+  type: 'NOTIFY',
+  payload: { message: 'Piotr: Hello!' },
+  meta: { username: 'Piotr', message: 'Hello!' },
+});
 ```
 
 [⇧ back to top](#table-of-contents)
@@ -188,18 +201,20 @@ expect(notify('Piotr', 'Hello!'))
 ---
 
 ### getType
+
 > get the "type" property of a given action creator  
-(It will infer literal type of action)
+> (It will infer literal type of action)
 
 [> Advanced Usage](src/get-type.spec.ts)
 
 ```ts
-function getType(actionCreator: AC<T>): T
+function getType(actionCreator: AC<T>): T;
 
 // AC<T> extends (...args: any[]) => { type: T }
 ```
 
 Examples:
+
 ```ts
 const increment = createAction('INCREMENT');
 const type: 'INCREMENT' = getType(increment);
@@ -210,7 +225,8 @@ switch (action.type) {
   case getType(increment):
     return state + 1;
 
-  default: return state;
+  default:
+    return state;
 }
 ```
 
@@ -219,19 +235,21 @@ switch (action.type) {
 ---
 
 ### isActionOf
+
 > create the assert function for specified action creator(s) - resulting function will then assert (true/false) maching actions  
-(it will discriminate union type to specified action creator(s))
+> (it will discriminate union type to specified action creator(s))
 
 [> Advanced Usage](src/is-action-of.spec.ts)
 
 ```ts
-function isActionOf(actionCreator: AC<T>): (action: any) => action is T
-function isActionOf(actionCreators: Array<AC<T>>): (action: any) => action is T
+function isActionOf(actionCreator: AC<T>): (action: any) => action is T;
+function isActionOf(actionCreators: Array<AC<T>>): (action: any) => action is T;
 
 // AC<T> extends (...args: any[]) => T
 ```
 
 Examples:
+
 ```ts
 // in epics, with single action
 import { addTodo } from './actions';
@@ -257,16 +275,19 @@ const logTodoAction: Epic<RootAction, RootState> =
 ---
 
 ## Compare to others
+
 Here you can find out the differences compared to other solutions.
 
 ### `redux-actions`
+
 > tested with "@types/redux-actions": "2.2.3"
 
 #### no payload
 
-- redux-actions
+* redux-actions
+
 ```ts
-const notify1 = createAction('NOTIFY')
+const notify1 = createAction('NOTIFY');
 // resulting type:
 // const notify1: () => {
 //   type: string;
@@ -274,27 +295,29 @@ const notify1 = createAction('NOTIFY')
 //   error: boolean | undefined;
 // }
 ```
+
 > with `redux-actions` notice excess "nullable" properties `payload` and `error`, also the action `type` property is widened to string (🐼 is really sad!)
 
-- typesafe-actions
+* typesafe-actions
+
 ```ts
-const notify1 = createAction('NOTIFY')
+const notify1 = createAction('NOTIFY');
 // resulting type:
 // const notify1: () => {
 //   type: "NOTIFY";
 // }
 ```
+
 > with `typesafe-actions` there is no nullable types, only the data that is really there, also the action "type" property is correct narrowed to literal type (great success!)
 
 #### with payload
 
-- redux-actions
+* redux-actions
+
 ```ts
-const notify2 = createAction('NOTIFY',
-  (username: string, message?: string) => ({
-    message: `${username}: ${message || ''}`
-  })
-)
+const notify2 = createAction('NOTIFY', (username: string, message?: string) => ({
+  message: `${username}: ${message || ''}`,
+}));
 // resulting type:
 // const notify2: (t1: string) => {
 //   type: string;
@@ -302,9 +325,11 @@ const notify2 = createAction('NOTIFY',
 //   error: boolean | undefined;
 // }
 ```
+
 > notice the missing optional `message` parameter in resulting function also `username` param name is changed to `t1`, action `type` property is widened to string and incorrect nullable properties
 
-- typesafe-actions
+* typesafe-actions
+
 ```ts
 const notify2 = createAction('NOTIFY',
   (username: string, message?: string) => ({
@@ -318,16 +343,19 @@ const notify2 = createAction('NOTIFY',
 //   payload: { message: string; };
 // }
 ```
+
 > `typesafe-actions` retain complete type soundness
 
 #### with payload and meta
 
-- redux-actions
+* redux-actions
+
 ```ts
-const notify3 = createAction('NOTIFY',
+const notify3 = createAction(
+  'NOTIFY',
   (username: string, message?: string) => ({ message: `${username}: ${message || ''}` }),
-  (username: string, message?: string) => ({ username, message })
-)
+  (username: string, message?: string) => ({ username, message }),
+);
 // resulting type:
 // const notify3: (...args: any[]) => {
 //   type: string;
@@ -336,17 +364,17 @@ const notify3 = createAction('NOTIFY',
 //   error: boolean | undefined;
 // }
 ```
+
 > notice complete loss of arguments arity and types in resulting function, moreover action `type` property is again widened to string with nullable `payload` and `error`
 
-- typesafe-actions
+* typesafe-actions
+
 ```ts
-const notify3 = createAction('NOTIFY',
-    (username: string, message?: string) => ({
-      type: 'NOTIFY',
-      payload: { message: `${username}: ${message || ''}` },
-      meta: { username, message },
-    }),
-  )
+const notify3 = createAction('NOTIFY', (username: string, message?: string) => ({
+  type: 'NOTIFY',
+  payload: { message: `${username}: ${message || ''}` },
+  meta: { username, message },
+}));
 // resulting type:
 // const notify3: (username: string, message?: string | undefined) => {
 //   type: "NOTIFY";
@@ -354,6 +382,7 @@ const notify3 = createAction('NOTIFY',
 //   meta: { username: string; message: string | undefined; };
 // }
 ```
+
 > `typesafe-actions` makes 🐼 happy once again
 
 [⇧ back to top](#table-of-contents)
@@ -362,4 +391,4 @@ const notify3 = createAction('NOTIFY',
 
 MIT License
 
-Copyright (c) 2017 Piotr Witek <piotrek.witek@gmail.com> (http://piotrwitek.github.io)
+Copyright (c) 2017 Piotr Witek <mailto:piotrek.witek@gmail.com> (http://piotrwitek.github.io)
