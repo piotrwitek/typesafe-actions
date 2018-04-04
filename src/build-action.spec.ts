@@ -83,10 +83,10 @@ describe('buildAction', () => {
 
   it('with payload and union param', () => {
     const showNotification = buildAction('SHOW_NOTIFICATION').fsa(
-      (message: string | null | number) => message,
+      (message: string | null | number) => message
     );
     const action: { type: 'SHOW_NOTIFICATION'; payload: string | null | number } = showNotification(
-      'info message',
+      'info message'
     );
     expect(action).toEqual({
       type: 'SHOW_NOTIFICATION',
@@ -116,7 +116,7 @@ describe('buildAction', () => {
     type Notification = { username: string; message?: string };
     const notify = buildAction('NOTIFY').fsa(
       ({ username, message }: Notification) => `${username}: ${message || ''}`,
-      ({ username, message }) => ({ username, message }),
+      ({ username, message }) => ({ username, message })
     );
     const action: {
       type: 'NOTIFY';
@@ -135,7 +135,7 @@ describe('buildAction', () => {
   it('with payload and meta and no params', () => {
     const showError = buildAction('SHOW_ERROR').fsa(
       () => 'hardcoded error',
-      () => ({ severity: 'error' }),
+      () => ({ severity: 'error' })
     );
     const action: { type: 'SHOW_ERROR'; payload: string; meta: { severity: string } } = showError();
     expect(action).toEqual({
@@ -150,10 +150,10 @@ describe('buildAction', () => {
   it('with payload and meta and param', () => {
     const showError = buildAction('SHOW_ERROR').fsa(
       (message: string) => message,
-      () => ({ severity: 'error' }),
+      () => ({ severity: 'error' })
     );
     const action: { type: 'SHOW_ERROR'; payload: string; meta: { severity: string } } = showError(
-      'error message',
+      'error message'
     );
     expect(action).toEqual({
       type: 'SHOW_ERROR',
@@ -181,7 +181,7 @@ describe('buildAction', () => {
       payload: [{ name: 'Piotr' }],
     });
     const failureAction: { type: 'LIST_USERS' & 'FAILURE'; payload: string } = fetchUsers.failure(
-      'error message',
+      'error message'
     );
     expect(failureAction).toEqual({
       type: 'LIST_USERS_FAILURE',

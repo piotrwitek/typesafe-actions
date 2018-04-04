@@ -1,4 +1,6 @@
-export interface TypeMeta<T extends string | symbol> { getType?: () => T; }
+export interface TypeMeta<T extends string | symbol> {
+  getType?: () => T;
+}
 
 /**
  * @description get the "type literal" of a given action creator

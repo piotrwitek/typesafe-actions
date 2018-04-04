@@ -1,7 +1,4 @@
-import {
-  StringType,
-  TypeMeta,
-} from './';
+import { StringType, TypeMeta } from './';
 
 export interface FSA<T extends StringType, P = {}, M = {}, E = boolean> {
   type: T;
@@ -13,31 +10,25 @@ export interface FSA<T extends StringType, P = {}, M = {}, E = boolean> {
 /**
  * @description create an action creator of a given function that contains hidden "type" metadata
  */
-export function createAction<T extends StringType,
-  AC extends (...args: any[]) => FSA<T>
-  >(
-    actionType: T | symbol,
-    creatorFunction: AC
-  ): AC & TypeMeta<T>;
+export function createAction<T extends StringType, AC extends (...args: any[]) => FSA<T>>(
+  actionType: T | symbol,
+  creatorFunction: AC
+): AC & TypeMeta<T>;
 
 /**
  * @description create an action creator of a given function that contains hidden "type" metadata
  */
-export function createAction<T extends StringType,
-  AC extends () => { type: T }
-  >(
-    actionType: T | symbol
-  ): AC & TypeMeta<T>;
+export function createAction<T extends StringType, AC extends () => { type: T }>(
+  actionType: T | symbol
+): AC & TypeMeta<T>;
 
 /**
  *  implementation
  */
-export function createAction<T extends StringType,
-  AC extends (...args: any[]) => FSA<T>
-  >(
-    actionType: T | symbol,
-    creatorFunction?: AC
-  ): AC & TypeMeta<T> {
+export function createAction<T extends StringType, AC extends (...args: any[]) => FSA<T>>(
+  actionType: T | symbol,
+  creatorFunction?: AC
+): AC & TypeMeta<T> {
   let actionCreator: AC & TypeMeta<T>;
 
   if (creatorFunction != null) {
@@ -45,14 +36,13 @@ export function createAction<T extends StringType,
       throw new Error('second argument is not a function');
     }
 
-    actionCreator = creatorFunction as (AC & TypeMeta<T>);
+    actionCreator = creatorFunction as AC & TypeMeta<T>;
   } else {
-    actionCreator = (() => ({ type: actionType })) as (AC & TypeMeta<T>);
+    actionCreator = (() => ({ type: actionType })) as AC & TypeMeta<T>;
   }
 
   if (actionType != null) {
-    if (typeof actionType !== 'string'
-      && typeof actionType !== 'symbol') {
+    if (typeof actionType !== 'string' && typeof actionType !== 'symbol') {
       throw new Error('first argument should be type of: string | symbol');
     }
 

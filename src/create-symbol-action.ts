@@ -1,7 +1,4 @@
-import {
-  SymbolType,
-  TypeMeta,
-} from './';
+import { SymbolType, TypeMeta } from './';
 
 // TODO: mandatory to fill in generic symbol type arg
 // because symbol loses uniqueness when inferred
