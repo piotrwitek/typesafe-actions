@@ -11,7 +11,7 @@ import {
 export type EACreator<Type extends string> = () => EmptyAction<Type>;
 
 export type PACreator<Type extends string, Payload> = (
-  payload: Payload,
+  payload: Payload
 ) => PayloadAction<Type, Payload>;
 
 export type EmptyOrPayload<Type extends string, Payload extends Box<any>> = Payload extends Box<
@@ -53,17 +53,17 @@ export interface BuildAction<Type extends string> {
   >;
   fsa<Payload, Meta = void>(
     payloadCreator: () => Payload,
-    metaCreator?: () => Meta,
+    metaCreator?: () => Meta
   ): FSACreator<Type, Box<Payload>, Box<Meta>>;
   fsa<Arg, Payload, Meta = void>(
     payloadCreator: (payload: Arg) => Payload,
-    metaCreator?: (payload: Arg) => Meta,
+    metaCreator?: (payload: Arg) => Meta
   ): FSACreator<Type, Box<Payload>, Box<Meta>, Box<Arg>>;
 }
 
 function attachGetType<T extends string, AC>(
   ac: AC & TypeMeta<T>,
-  actionType: T,
+  actionType: T
 ): AC & TypeMeta<T> {
   ac.getType = () => actionType;
   return ac;
@@ -91,7 +91,7 @@ export function buildAction<T extends StringType>(actionType: T): BuildAction<T>
 
   function createFsa<P, M, A>(
     payloadCreator: (a?: A) => P,
-    metaCreator?: (a?: A) => M,
+    metaCreator?: (a?: A) => M
   ): FSACreator<T, Box<P>, Box<M>> {
     const ac = (payload?: A) => ({
       type: actionType,

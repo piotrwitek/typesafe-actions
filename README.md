@@ -178,7 +178,10 @@ const increment = createAction('INCREMENT');
 expect(increment()).toEqual({ type: 'INCREMENT' });
 
 // with payload
-const add = createAction('ADD', (amount: number) => ({ type: 'ADD', payload: amount }));
+const add = createAction('ADD', (amount: number) => ({
+  type: 'ADD',
+  payload: amount,
+}));
 
 expect(add(10)).toEqual({ type: 'ADD', payload: 10 });
 
@@ -353,8 +356,10 @@ const notify2 = createAction('NOTIFY',
 ```ts
 const notify3 = createAction(
   'NOTIFY',
-  (username: string, message?: string) => ({ message: `${username}: ${message || ''}` }),
-  (username: string, message?: string) => ({ username, message }),
+  (username: string, message?: string) => ({
+    message: `${username}: ${message || ''}`,
+  }),
+  (username: string, message?: string) => ({ username, message })
 );
 // resulting type:
 // const notify3: (...args: any[]) => {

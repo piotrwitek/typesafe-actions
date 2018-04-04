@@ -1,19 +1,15 @@
 import { createAction, isActionOf } from '.';
 
 describe('isActionOf', () => {
-
   // fixtures
   const increment = createAction('INCREMENT');
   const decrement = createAction('DECREMENT');
-  const add = createAction('ADD',
-    (amount: number) => ({ type: 'ADD', payload: amount })
-  );
-  const multiply = createAction('MULTIPLY',
-    (amount: number) => ({ type: 'MULTIPLY', payload: amount })
-  );
-  const divide = createAction('DIVIDE',
-    (amount: number) => ({ type: 'DIVIDE', payload: amount })
-  );
+  const add = createAction('ADD', (amount: number) => ({ type: 'ADD', payload: amount }));
+  const multiply = createAction('MULTIPLY', (amount: number) => ({
+    type: 'MULTIPLY',
+    payload: amount,
+  }));
+  const divide = createAction('DIVIDE', (amount: number) => ({ type: 'DIVIDE', payload: amount }));
 
   // TODO: #3
   // should error when missing argument
@@ -21,7 +17,6 @@ describe('isActionOf', () => {
   // check object, empty array, primitives
 
   it('should succeed on action with correct type', () => {
-
     const isActionOfIncrement = isActionOf(increment);
     expect(isActionOfIncrement(increment())).toBeTruthy();
 
@@ -37,7 +32,7 @@ describe('isActionOf', () => {
     expect(isActionOfIncrement2(add(2))).toBeFalsy();
   });
 
-  it('should correctly assert type for EmptyAction', (done) => {
+  it('should correctly assert type for EmptyAction', done => {
     const isActionOfIncrement = isActionOf(increment);
     const isActionOfIncrement2 = isActionOf([increment]);
 
@@ -51,7 +46,7 @@ describe('isActionOf', () => {
     }
   });
 
-  it('should correctly assert type for FluxStandardAction', (done) => {
+  it('should correctly assert type for FluxStandardAction', done => {
     const isActionOfAdd = isActionOf(add);
     const isActionOfAdd2 = isActionOf([add]);
 
@@ -65,7 +60,7 @@ describe('isActionOf', () => {
     }
   });
 
-  it('should correctly assert array with one action', (done) => {
+  it('should correctly assert array with one action', done => {
     const isActionOfOne = isActionOf([increment]);
 
     const action = { type: 'FALSE' };
@@ -81,7 +76,7 @@ describe('isActionOf', () => {
     }
   });
 
-  it('should correctly assert array with two actions', (done) => {
+  it('should correctly assert array with two actions', done => {
     const isActionOfTwo = isActionOf([increment, decrement]);
 
     const action = { type: 'FALSE' };
@@ -101,7 +96,7 @@ describe('isActionOf', () => {
     }
   });
 
-  it('should correctly assert array with three actions', (done) => {
+  it('should correctly assert array with three actions', done => {
     const isActionOfThree = isActionOf([increment, decrement, add]);
 
     const action = { type: 'FALSE' };
@@ -125,7 +120,7 @@ describe('isActionOf', () => {
     }
   });
 
-  it('should correctly assert array with four actions', (done) => {
+  it('should correctly assert array with four actions', done => {
     const isActionOfFour = isActionOf([increment, decrement, add, multiply]);
 
     const action = { type: 'FALSE' };
@@ -153,7 +148,7 @@ describe('isActionOf', () => {
     }
   });
 
-  it('should correctly assert array with five actions', (done) => {
+  it('should correctly assert array with five actions', done => {
     const isActionOfFive = isActionOf([increment, decrement, add, multiply, divide]);
 
     const action = { type: 'FALSE' };
@@ -184,5 +179,4 @@ describe('isActionOf', () => {
       done();
     }
   });
-
 });

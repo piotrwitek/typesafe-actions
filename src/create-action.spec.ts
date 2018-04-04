@@ -1,7 +1,6 @@
 import { createAction, getType } from '.';
 
 describe('createAction', () => {
-
   // TODO: #3
   // should error when missing argument
   // should error when passed invalid arguments
@@ -26,29 +25,25 @@ describe('createAction', () => {
   });
 
   it('with payload', () => {
-    const add = createAction('ADD',
-      (amount: number) => ({ type: 'ADD', payload: amount }),
-    );
+    const add = createAction('ADD', (amount: number) => ({ type: 'ADD', payload: amount }));
 
-    const action: { type: 'ADD', payload: number } = add(10);
+    const action: { type: 'ADD'; payload: number } = add(10);
     expect(action).toEqual({ type: 'ADD', payload: 10 });
     const type: 'ADD' = add.getType!();
     expect(type).toBe('ADD');
   });
 
   it('with payload and meta', () => {
-    const notify = createAction('NOTIFY',
-      (username: string, message: string) => ({
-        type: 'NOTIFY',
-        payload: { message: `${username}: ${message}` },
-        meta: { username, message },
-      }),
-    );
+    const notify = createAction('NOTIFY', (username: string, message: string) => ({
+      type: 'NOTIFY',
+      payload: { message: `${username}: ${message}` },
+      meta: { username, message },
+    }));
 
     const action: {
-      type: 'NOTIFY',
-      payload: { message: string },
-      meta: { username: string, message: string },
+      type: 'NOTIFY';
+      payload: { message: string };
+      meta: { username: string; message: string };
     } = notify('Piotr', 'Hello!');
     expect(action).toEqual({
       type: 'NOTIFY',
@@ -60,14 +55,12 @@ describe('createAction', () => {
   });
 
   it('with payload and no params', () => {
-    const showNotification = createAction('SHOW_NOTIFICATION',
-      () => ({
-        type: 'SHOW_NOTIFICATION',
-        payload: 'default message',
-      }),
-    );
+    const showNotification = createAction('SHOW_NOTIFICATION', () => ({
+      type: 'SHOW_NOTIFICATION',
+      payload: 'default message',
+    }));
 
-    const action: { type: 'SHOW_NOTIFICATION', payload: string } = showNotification();
+    const action: { type: 'SHOW_NOTIFICATION'; payload: string } = showNotification();
     expect(action).toEqual({
       type: 'SHOW_NOTIFICATION',
       payload: 'default message',
@@ -77,14 +70,12 @@ describe('createAction', () => {
   });
 
   it('with payload and optional param', () => {
-    const showNotification = createAction('SHOW_NOTIFICATION',
-      (message?: string) => ({
-        type: 'SHOW_NOTIFICATION',
-        payload: message,
-      }),
-    );
+    const showNotification = createAction('SHOW_NOTIFICATION', (message?: string) => ({
+      type: 'SHOW_NOTIFICATION',
+      payload: message,
+    }));
 
-    const action: { type: 'SHOW_NOTIFICATION', payload: string | undefined } = showNotification();
+    const action: { type: 'SHOW_NOTIFICATION'; payload: string | undefined } = showNotification();
     expect(action).toEqual({
       type: 'SHOW_NOTIFICATION',
       payload: undefined,
@@ -94,14 +85,12 @@ describe('createAction', () => {
   });
 
   it('with meta and no params', () => {
-    const showError = createAction('SHOW_ERROR',
-      () => ({
-        type: 'SHOW_ERROR',
-        meta: { type: 'error' },
-      }),
-    );
+    const showError = createAction('SHOW_ERROR', () => ({
+      type: 'SHOW_ERROR',
+      meta: { type: 'error' },
+    }));
 
-    const action: { type: 'SHOW_ERROR', meta: { type: string } } = showError();
+    const action: { type: 'SHOW_ERROR'; meta: { type: string } } = showError();
     expect(action).toEqual({
       type: 'SHOW_ERROR',
       meta: { type: 'error' },
@@ -111,15 +100,17 @@ describe('createAction', () => {
   });
 
   it('with meta and optional param', () => {
-    const showError = createAction('SHOW_ERROR',
-      (message?: string) => ({
-        type: 'SHOW_ERROR',
-        payload: message,
-        meta: { type: 'error' },
-      }),
-    );
+    const showError = createAction('SHOW_ERROR', (message?: string) => ({
+      type: 'SHOW_ERROR',
+      payload: message,
+      meta: { type: 'error' },
+    }));
 
-    const action: { type: 'SHOW_ERROR', payload: string | undefined, meta: { type: string } } = showError();
+    const action: {
+      type: 'SHOW_ERROR';
+      payload: string | undefined;
+      meta: { type: string };
+    } = showError();
     expect(action).toEqual({
       type: 'SHOW_ERROR',
       payload: undefined,
@@ -130,8 +121,8 @@ describe('createAction', () => {
   });
 
   it('should work at runtime with symbol as action type', () => {
-    enum Increment { }
-    const INCREMENT = Symbol(1) as any as Increment & string;
+    enum Increment {}
+    const INCREMENT = (Symbol(1) as any) as Increment & string;
     const a: string = INCREMENT; // Ok
     // const b: typeof INCREMENT = 'INCREMENT'; // Error
     const increment = createAction(INCREMENT);
@@ -144,5 +135,4 @@ describe('createAction', () => {
     expect(type).toBe(INCREMENT);
     expect(type).not.toBe('INCREMENT');
   });
-
 });

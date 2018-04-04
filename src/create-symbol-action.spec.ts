@@ -2,7 +2,6 @@ import { createSymbolAction, getType } from '.';
 import { ActionsUnion } from '.';
 
 describe('createSymbolAction', () => {
-
   // fixtures
   const INCREMENT = Symbol(1);
   const ADD = Symbol(2);
@@ -56,5 +55,4 @@ describe('createSymbolAction', () => {
 
   //     expect(reducer(undefined, actions.increment())).toBe(1);
   //   });
-
 });

@@ -19,7 +19,7 @@ export type ACs<
  * @description create the assert function that will assert a given action of `any` type to the specific "action type" if matching the specified action creator(s)
  */
 export function isActionOf<A extends { type: string }, T1 extends A>(
-  actionOrActions: AC<T1>,
+  actionOrActions: AC<T1>
 ): (action: A) => action is T1;
 
 /**
@@ -38,7 +38,7 @@ export function isActionOf<
     | ACs<T1, T2>
     | ACs<T1, T2, T3>
     | ACs<T1, T2, T3, T4>
-    | ACs<T1, T2, T3, T4, T5>,
+    | ACs<T1, T2, T3, T4, T5>
 ): (action: A) => action is [T1, T2, T3, T4, T5][number];
 
 export function isActionOf<
@@ -51,7 +51,7 @@ export function isActionOf<
 >(
   actionOrActions:
     | AC<T1>
-    | (ACs<T1> | ACs<T1, T2> | ACs<T1, T2, T3> | ACs<T1, T2, T3, T4> | ACs<T1, T2, T3, T4, T5>),
+    | (ACs<T1> | ACs<T1, T2> | ACs<T1, T2, T3> | ACs<T1, T2, T3, T4> | ACs<T1, T2, T3, T4, T5>)
 ) {
   return (action: A): action is [T1, T2, T3, T4, T5][number] => {
     if (actionOrActions == null) {
