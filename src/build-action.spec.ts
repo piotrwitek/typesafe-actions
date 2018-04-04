@@ -38,6 +38,15 @@ describe('buildAction', () => {
     expect(type).toBe('SET');
   });
 
+  it('with string literal type payload', () => {
+    type NetStatus = 'up' | 'down' | 'unknown';
+    const set = buildAction('SET').payload<NetStatus>();
+    const action: { type: 'SET'; payload: NetStatus } = set('up');
+    expect(action).toEqual({ type: 'SET', payload: 'up' });
+    const type: 'SET' = getType(set);
+    expect(type).toBe('SET');
+  });
+
   it('with union payload', () => {
     const union = buildAction('UNION').payload<string | null | number>();
     const action: { type: 'UNION'; payload: string | null | number } = union('foo');
