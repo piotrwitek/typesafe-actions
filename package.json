@@ -22,14 +22,15 @@
     "build:commonjs": "rm -rf es5-commonjs/ && tsc -p . --outDir es5-commonjs/",
     "build:module": "rm -rf es5-module/ && tsc -p . --outDir es5-module/ -m 'ES2015'",
     "build:jsnext": "rm -rf jsnext/ && tsc -p . --outDir jsnext/ -t 'ES2015'",
+    "prelint": "prettier --write 'src/**/*' 'README.md'",
     "lint": "tslint --project './tsconfig.json'",
-    "format": "prettier --write 'src/**/*' 'README.md'",
     "pretest": "tsc -p ./tsconfig.spec.json --noEmit",
     "test": "jest --config jest.config.json ./src",
     "test:watch": "jest --config jest.config.json ./src --watch",
     "precommit": "npm run lint",
     "prepush": "npm run test",
-    "prepublishOnly": "npm run clean && npm run reinstall && npm run lint && npm run tsc && npm run test && npm run build"
+    "prepublishOnly":
+      "npm run clean && npm run reinstall && npm run lint && npm run tsc && npm run test && npm run build"
   },
   "dependencies": {
     "tslib": "1.8.1"
