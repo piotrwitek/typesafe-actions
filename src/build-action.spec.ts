@@ -1,4 +1,12 @@
-import { buildAction, getType, isActionOf, ActionsUnion } from './';
+import { buildAction, getType, ActionsUnion } from './';
+
+// const noPayload = buildAction('NO_PAYLOAD').withType<void>(); // noPayload()
+// const createUser = buildAction('CREATE_USER').withType<PayloadType>();
+// const createUser = buildAction('CREATE_USER').withTypes<PayloadType, MetaType>();
+// const notify = buildAction('NOTIFY').withMappers<InputArgumentType>( // output types are inferred
+//   ({ username, message }) => `${username}: ${message || ''}`, // payload mapper
+//   ({ timestamp }) => ({ timestamp }) // meta mapper
+// );
 
 describe('buildAction', () => {
   // TODO: #3
@@ -210,40 +218,25 @@ describe('buildAction', () => {
     expect(type).not.toBe('INCREMENT');
   });
 
-  it('should create correct Union type with ActionUnion', () => {
+  it('should work correctly in reducer switch case', () => {
     const actions = {
       very: { deep: { empty: buildAction('INCREMENT').empty() } },
-      // payload: buildAction('ADD').payload<number>(),
-      // fsa: buildAction('SHOW_NOTIFICATION').fsa((message: string) => message),
-      async: buildAction('GET_USER').async<number, { name: string }, string>(),
+      payload: buildAction('ADD').payload<number>(),
+      // async: buildAction('GET_USER').async<number, { name: string }, string>(),
     };
     type RootAction = ActionsUnion<typeof actions>;
-    // tslint:disable-next-line:max-line-lengta
-    const action1: RootAction = actions.very.deep.empty();
-    const action2: RootAction = actions.payload(3);
-    const action3: RootAction = actions.fsa('Message');
-    const action4: RootAction = actions.async.request(2);
-    const action5: RootAction = actions.async.success({ name: 'Piotr' });
-    const action6: RootAction = actions.async.failure('Error');
-    export type B<T> = { v: T };
-    export type U<T extends B<any>> = T['v'];
-    declare const getA: <A extends {type: T}, T extends string>(as: A) => A['type'];
+    // tslint:disable-next-line:max-line-length
 
     function reducer(action: RootAction): RootAction {
-      const a = getA(action);
-      switch () {
+      switch (action.type) {
         case getType(actions.very.deep.empty): {
           const a: { type: 'INCREMENT' } = action;
           return a;
         }
-        case getType(actions.async.request): {
-          const a: { type: 'GET_USER' & 'REQUEST'; payload: number } = action;
+        case getType(actions.payload): {
+          const a: { type: 'ADD'; payload: number } = action;
           return a;
         }
-        // case getType(actions.async.success): {
-        //   const a: { type: 'GET_USER' & 'SUCCESS'; payload: { name: string } } = action;
-        //   return a;
-        // }
       }
     }
   });

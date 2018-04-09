@@ -1,6 +1,15 @@
-function action<T extends string, P>(type: T, payload: P) {
-  return { type, payload };
+export function action<T extends string, P, M>(
+  type: T,
+  payload: P,
+  meta: M
+): { type: T; payload: P; meta: M };
+export function action<T extends string, P>(type: T, payload: P): { type: T; payload: P };
+export function action<T extends string>(type: T): { type: T };
+export function action<T extends string, P, M>(type: T, payload?: P, meta?: M) {
+  return { type, payload, meta };
 }
 
-const createUser = (id: number, name: string) => action('GET_USER', { id, name });
-const result = createUser(1, 'Piotr');
+export function createActions<ACs>(actions: ACs) {
+  // add TypeMeta
+  return actions;
+}

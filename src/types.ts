@@ -1,25 +1,25 @@
 /**
- * @type StringType - Represent action-type of string
+ * @desc Represent action-type of string
  */
 export type StringType = string;
 
 /**
- * @type StringType - Represent action-type of symbol
+ * @desc Represent action-type of symbol
  */
 export type SymbolType = symbol;
 
 /**
- * @type EmptyAction - Empty Action
- * @template T - Action Type
+ * @desc Action without Payload
+ * @type T - ActionType
  */
 export type EmptyAction<T extends StringType> = {
   type: T;
 };
 
 /**
- * @type PayloadAction - Action with Payload
- * @template T - Action Type
- * @template P - Payload Type
+ * @desc Action with Payload
+ * @type T - ActionType
+ * @type P - Payload
  */
 export type PayloadAction<T extends StringType, P> = {
   type: T;
@@ -27,9 +27,10 @@ export type PayloadAction<T extends StringType, P> = {
 };
 
 /**
- * @type PayloadAction - Action with Payload
- * @template T - Action Type
- * @template P - Payload Type
+ * @desc Action with Payload and Meta
+ * @type T - ActionType
+ * @type P - Payload
+ * @type M - Meta
  */
 export type PayloadMetaAction<T extends StringType, P, M> = {
   type: T;
@@ -38,25 +39,34 @@ export type PayloadMetaAction<T extends StringType, P, M> = {
 };
 
 /**
- * @type FluxStandardAction - Flux Standard Action
- * @template T - Action Type
- * @template P - Payload Type
- * @template M - Meta Type
+ * @desc FluxStandardAction - Flux Standard Action
+ * @type T - ActionType
+ * @type P - Payload
+ * @type M - Meta
+ * @type E - Error
  */
-export interface FluxStandardAction<
-  T extends StringType,
-  P = undefined,
-  M = undefined,
-  E = boolean
-> {
+export interface FluxStandardAction<T extends StringType, P = undefined, M = undefined> {
   type: T;
   payload: P;
   meta: M;
-  error: E;
+  error?: true;
 }
 
 export type B<T> = { v: T };
 export type U<T extends B<any>> = T['v'];
+
+export type EACreator<Type extends StringType> = () => EmptyAction<Type>;
+
+export type PACreator<Type extends StringType, Payload> = (
+  payload: Payload
+) => PayloadAction<Type, Payload>;
+
+export type EmptyOrPayload<Type extends StringType, Payload extends B<any>> = Payload extends B<
+  void
+>
+  ? EACreator<Type>
+  : PACreator<Type, U<Payload>>;
+
 export type ActionCreator = (...args: any[]) => {};
 export type ActionCreatorMap<T> = { [K in keyof T]: ActionsUnion<T[K]> };
 export type ActionsUnion<FnOrObj> = FnOrObj extends ActionCreator
