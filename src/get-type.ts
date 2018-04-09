@@ -1,11 +1,13 @@
-export interface TypeMeta<T extends string | symbol> {
+import { StringType, SymbolType } from './';
+
+export interface TypeMeta<T extends StringType | SymbolType> {
   getType?: () => T;
 }
 
 /**
  * @description get the "type literal" of a given action creator
  */
-export function getType<T extends string | symbol>(
+export function getType<T extends StringType | SymbolType>(
   actionCreator: ((...args: any[]) => { type: T }) & TypeMeta<T>
 ): T {
   if (actionCreator == null) {
@@ -17,4 +19,12 @@ export function getType<T extends string | symbol>(
   }
 
   return actionCreator.getType();
+}
+
+export function withType<T extends StringType | SymbolType, AC>(
+  actionType: T,
+  ac: AC & TypeMeta<T>
+): AC & TypeMeta<T> {
+  ac.getType = () => actionType;
+  return ac;
 }
