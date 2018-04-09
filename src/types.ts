@@ -55,11 +55,10 @@ export interface FluxStandardAction<
   error: E;
 }
 
-export type Box<T> = { value: T };
-export type Unbox<T extends Box<any>> = T['value'];
-
+export type B<T> = { v: T };
+export type U<T extends B<any>> = T['v'];
 export type ActionCreator = (...args: any[]) => {};
 export type ActionCreatorMap<T> = { [K in keyof T]: ActionsUnion<T[K]> };
-export type ActionsUnion<Obj> = Obj extends ActionCreator // tslint:disable-next-line:ban-types
-  ? ReturnType<Obj>
-  : Obj extends object ? ActionCreatorMap<Obj>[keyof Obj] : Obj;
+export type ActionsUnion<FnOrObj> = FnOrObj extends ActionCreator
+  ? ReturnType<FnOrObj>
+  : FnOrObj extends object ? ActionCreatorMap<FnOrObj>[keyof FnOrObj] : never;

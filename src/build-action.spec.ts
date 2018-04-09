@@ -1,4 +1,4 @@
-import { buildAction, getType, ActionsUnion } from './';
+import { buildAction, getType, isActionOf, ActionsUnion } from './';
 
 describe('buildAction', () => {
   // TODO: #3
@@ -213,8 +213,8 @@ describe('buildAction', () => {
   it('should create correct Union type with ActionUnion', () => {
     const actions = {
       very: { deep: { empty: buildAction('INCREMENT').empty() } },
-      payload: buildAction('ADD').payload<number>(),
-      fsa: buildAction('SHOW_NOTIFICATION').fsa((message: string) => message),
+      // payload: buildAction('ADD').payload<number>(),
+      // fsa: buildAction('SHOW_NOTIFICATION').fsa((message: string) => message),
       async: buildAction('GET_USER').async<number, { name: string }, string>(),
     };
     type RootAction = ActionsUnion<typeof actions>;
@@ -225,5 +225,26 @@ describe('buildAction', () => {
     const action4: RootAction = actions.async.request(2);
     const action5: RootAction = actions.async.success({ name: 'Piotr' });
     const action6: RootAction = actions.async.failure('Error');
+    export type B<T> = { v: T };
+    export type U<T extends B<any>> = T['v'];
+    declare const getA: <A extends {type: T}, T extends string>(as: A) => A['type'];
+
+    function reducer(action: RootAction): RootAction {
+      const a = getA(action);
+      switch () {
+        case getType(actions.very.deep.empty): {
+          const a: { type: 'INCREMENT' } = action;
+          return a;
+        }
+        case getType(actions.async.request): {
+          const a: { type: 'GET_USER' & 'REQUEST'; payload: number } = action;
+          return a;
+        }
+        // case getType(actions.async.success): {
+        //   const a: { type: 'GET_USER' & 'SUCCESS'; payload: { name: string } } = action;
+        //   return a;
+        // }
+      }
+    }
   });
 });
