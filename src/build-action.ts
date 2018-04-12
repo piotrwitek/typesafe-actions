@@ -6,22 +6,10 @@ import {
   U,
   EACreator,
   EmptyOrPayload,
+  FSACreator,
   TypeMeta,
   withType,
 } from './';
-
-export type FSACreator<
-  Type extends StringType,
-  Payload extends B<any>,
-  Meta extends B<any> = B<void>,
-  Arg extends B<any> = B<void>
-> = Arg extends B<void>
-  ? Meta extends B<void>
-    ? () => PayloadAction<Type, U<Payload>>
-    : () => PayloadMetaAction<Type, U<Payload>, U<Meta>>
-  : Meta extends B<void>
-    ? (payload: U<Arg>) => PayloadAction<Type, U<Payload>>
-    : (payload: U<Arg>) => PayloadMetaAction<Type, U<Payload>, U<Meta>>;
 
 /**
  * @description create an action creator of a given function that contains hidden "type" metadata
