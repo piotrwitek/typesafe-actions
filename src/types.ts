@@ -67,6 +67,19 @@ export type EmptyOrPayload<Type extends StringType, Payload extends B<any>> = Pa
   ? EACreator<Type>
   : PACreator<Type, U<Payload>>;
 
+export type FSACreator<
+  Type extends StringType,
+  Payload extends B<any>,
+  Meta extends B<any> = B<void>,
+  Arg extends B<any> = B<void>
+> = Arg extends B<void>
+  ? Meta extends B<void>
+    ? () => PayloadAction<Type, U<Payload>>
+    : () => PayloadMetaAction<Type, U<Payload>, U<Meta>>
+  : Meta extends B<void>
+    ? (payload: U<Arg>) => PayloadAction<Type, U<Payload>>
+    : (payload: U<Arg>) => PayloadMetaAction<Type, U<Payload>, U<Meta>>;
+
 export type ActionCreator = (...args: any[]) => {};
 export type ActionCreatorMap<T> = { [K in keyof T]: ActionsUnion<T[K]> };
 export type ActionsUnion<FnOrObj> = FnOrObj extends ActionCreator
