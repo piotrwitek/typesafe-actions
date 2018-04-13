@@ -1,30 +1,18 @@
-import {
-  StringType,
-  PayloadAction,
-  PayloadMetaAction,
-  B,
-  U,
-  EACreator,
-  EmptyOrPayload,
-  FSACreator,
-  TypeMeta,
-  withType,
-} from './';
+import { StringType, B, FsaActionCreator, MapperActionCreator, withType } from './';
 
 /**
  * @description create an action creator of a given function that contains hidden "type" metadata
  */
 export interface BuildAction<Type extends StringType> {
-  empty(): EACreator<Type>;
-  payload<Payload>(): EmptyOrPayload<Type, B<Payload>>;
-  fsa<Payload, Meta = void>(
+  withTypes<Payload, Meta>(): FsaActionCreator<Type, B<Payload>, B<Meta>>;
+  withMappers<Payload, Meta = void>(
     payloadCreator: () => Payload,
     metaCreator?: () => Meta
-  ): FSACreator<Type, B<Payload>, B<Meta>>;
-  fsa<Arg, Payload, Meta = void>(
+  ): MapperActionCreator<Type, B<void>, B<Payload>, B<Meta>>;
+  withMappers<Arg, Payload, Meta = void>(
     payloadCreator: (payload: Arg) => Payload,
     metaCreator?: (payload: Arg) => Meta
-  ): FSACreator<Type, B<Payload>, B<Meta>, B<Arg>>;
+  ): MapperActionCreator<Type, B<Arg>, B<Payload>, B<Meta>>;
 }
 
 /** implementation */
@@ -37,32 +25,25 @@ export function buildAction<T extends StringType>(actionType: T): BuildAction<T>
     }
   }
 
-  function createEmpty(): EACreator<T> {
-    const ac = () => ({ type: actionType });
-    return withType(actionType, ac);
-  }
-
-  function createPayload<P>(): EmptyOrPayload<T, B<P>> {
+  function createWithTypes<P, M = void>(): FsaActionCreator<T, B<P>, B<M>> {
     const ac = (payload: P) => ({ type: actionType, payload });
-    return withType(actionType, ac) as EmptyOrPayload<T, B<P>>;
+    return withType(actionType, ac) as FsaActionCreator<T, B<P>, B<M>>;
   }
 
-  function createFsa<P, M, A>(
+  function createWithMappers<P, M, A>(
     payloadCreator: (a?: A) => P,
     metaCreator?: (a?: A) => M
-  ): FSACreator<T, B<P>, B<M>> {
+  ): MapperActionCreator<T, B<A>, B<P>, B<M>> {
     const ac = (payload?: A) => ({
       type: actionType,
-      ...{ payload: payloadCreator != null ? payloadCreator(payload) : undefined },
-      ...{ meta: metaCreator != null ? metaCreator(payload) : undefined },
+      payload: payloadCreator != null ? payloadCreator(payload) : undefined,
+      meta: metaCreator != null ? metaCreator(payload) : undefined,
     });
-    return withType(actionType, ac) as FSACreator<T, B<P>, B<M>>;
+    return withType(actionType, ac) as MapperActionCreator<T, B<A>, B<P>, B<M>>;
   }
 
-  const actionBuilder: BuildAction<T> = {
-    empty: createEmpty,
-    payload: createPayload,
-    fsa: createFsa,
+  return {
+    withTypes: createWithTypes,
+    withMappers: createWithMappers,
   };
-  return actionBuilder;
 }

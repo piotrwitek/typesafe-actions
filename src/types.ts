@@ -39,39 +39,60 @@ export type PayloadMetaAction<T extends StringType, P, M> = {
 };
 
 /**
- * @desc FluxStandardAction - Flux Standard Action
+ * @desc Flux Standard Action
  * @type T - ActionType
  * @type P - Payload
  * @type M - Meta
- * @type E - Error
  */
-export interface FluxStandardAction<T extends StringType, P = undefined, M = undefined> {
+export interface FluxStandardAction<T extends StringType, P = void, M = void> {
   type: T;
   payload: P;
   meta: M;
   error?: true;
 }
 
+/**
+ * @desc Create a union type from action-creators map object
+ * @type T - ActionType
+ * @type P - Payload
+ * @type M - Meta
+ * @type E - Error
+ */
+export type ActionsUnion<ACOrACsObject> = ACOrACsObject extends ActionCreator
+  ? ReturnType<ACOrACsObject>
+  : ACOrACsObject extends object ? ActionCreatorsMap<ACOrACsObject>[keyof ACOrACsObject] : never;
+
+/** @private */
 export type B<T> = { v: T };
+/** @private */
 export type U<T extends B<any>> = T['v'];
-
-export type EACreator<Type extends StringType> = () => EmptyAction<Type>;
-
-export type PACreator<Type extends StringType, Payload> = (
+/** @private */
+export type NoArgCreator<Type extends StringType> = () => EmptyAction<Type>;
+/** @private */
+export type PayloadCreator<Type extends StringType, Payload> = (
   payload: Payload
 ) => PayloadAction<Type, Payload>;
-
-export type EmptyOrPayload<Type extends StringType, Payload extends B<any>> = Payload extends B<
-  void
->
-  ? EACreator<Type>
-  : PACreator<Type, U<Payload>>;
-
-export type FSACreator<
+/** @private */
+export type PayloadMetaCreator<Type extends StringType, Payload, Meta> = (
+  payload: Payload,
+  meta?: Meta
+) => PayloadMetaAction<Type, Payload, Meta>;
+/** @private */
+export type FsaActionCreator<
   Type extends StringType,
-  Payload extends B<any>,
-  Meta extends B<any> = B<void>,
-  Arg extends B<any> = B<void>
+  Payload extends B<any> = B<void>,
+  Meta extends B<any> = B<void>
+> = Payload extends B<void>
+  ? NoArgCreator<Type>
+  : Meta extends B<void>
+    ? PayloadCreator<Type, U<Payload>>
+    : PayloadMetaCreator<Type, U<Payload>, U<Meta>>;
+/** @private */
+export type MapperActionCreator<
+  Type extends StringType,
+  Arg extends B<any> = B<void>,
+  Payload extends B<any> = B<void>,
+  Meta extends B<any> = B<void>
 > = Arg extends B<void>
   ? Meta extends B<void>
     ? () => PayloadAction<Type, U<Payload>>
@@ -79,9 +100,7 @@ export type FSACreator<
   : Meta extends B<void>
     ? (payload: U<Arg>) => PayloadAction<Type, U<Payload>>
     : (payload: U<Arg>) => PayloadMetaAction<Type, U<Payload>, U<Meta>>;
-
+/** @private */
 export type ActionCreator = (...args: any[]) => {};
-export type ActionCreatorMap<T> = { [K in keyof T]: ActionsUnion<T[K]> };
-export type ActionsUnion<FnOrObj> = FnOrObj extends ActionCreator
-  ? ReturnType<FnOrObj>
-  : FnOrObj extends object ? ActionCreatorMap<FnOrObj>[keyof FnOrObj] : never;
+/** @private */
+export type ActionCreatorsMap<T> = { [K in keyof T]: ActionsUnion<T[K]> };
