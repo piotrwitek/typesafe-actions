@@ -24,7 +24,7 @@ export function getType<T extends StringType | SymbolType>(
 export function withType<T extends StringType | SymbolType, AC>(
   actionType: T,
   ac: AC & TypeMeta<T>
-): AC & TypeMeta<T> {
+): AC {
   ac.getType = () => actionType;
   return ac;
 }

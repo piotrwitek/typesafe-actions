@@ -1,48 +1,108 @@
 import { buildAsyncAction } from './build-async-action';
 
-type User = { id: string; name: string };
+type User = { firstName: string; lastName: string };
 describe('buildAsyncAction', () => {
-  it('should create an async action', () => {
-    const fetchUser = buildAsyncAction(
+  it('should create an async action with types', () => {
+    const fetchUserTypes = buildAsyncAction(
       'FETCH_USER_REQUEST',
       'FETCH_USER_SUCCESS',
       'FETCH_USER_FAILURE'
-    ).withTypes<string, User, Error>();
-  });
+    ).withTypes<void, User, Error>();
 
-  it('should create an async action with mappers', () => {
-    const fetchUser = buildAsyncAction(
-      'FETCH_USER_REQUEST',
-      'FETCH_USER_SUCCESS',
-      'FETCH_USER_FAILURE'
-    ).withMappers<string, User, Error>(
-      id => ({ id }), // request mapper
-      ({ firstName, lastName }) => `${firstName} ${lastName}`, // success mapper
-      ({ message }) => message // error mapper
-    );
-
-    const requestResult: { type: 'FETCH_USER_REQUEST' } = fetchUser.request();
+    const requestResult: { type: 'FETCH_USER_REQUEST' } = fetchUserTypes.request();
     expect(requestResult).toEqual({ type: 'FETCH_USER_REQUEST' });
     const successResult: {
       type: 'FETCH_USER_SUCCESS';
-      payload: { id: number; name: string };
-    } = fetchUser.success({
-      id: 1,
-      name: 'Piotr',
+      payload: User;
+    } = fetchUserTypes.success({
+      firstName: 'Piotr',
+      lastName: 'Witek',
     });
     expect(successResult).toEqual({
       type: 'FETCH_USER_SUCCESS',
-      payload: { id: 1, name: 'Piotr' },
+      payload: {
+        firstName: 'Piotr',
+        lastName: 'Witek',
+      },
+    });
+    const failureResult: {
+      type: 'FETCH_USER_FAILURE';
+      payload: Error;
+    } = fetchUserTypes.failure(Error('reason'));
+    expect(failureResult).toEqual({
+      type: 'FETCH_USER_FAILURE',
+      payload: Error('reason'),
+    });
+  });
+
+  it('should create an async action with mappers', () => {
+    const fetchUserMappers = buildAsyncAction(
+      'FETCH_USER_REQUEST',
+      'FETCH_USER_SUCCESS',
+      'FETCH_USER_FAILURE'
+    ).withMappers(
+      (id: string) => ({ id }), // request mapper
+      ({ firstName, lastName }: User) => `${firstName} ${lastName}`, // success mapper
+      () => 'hardcoded error' // error mapper
+    );
+
+    const requestResult: {
+      type: 'FETCH_USER_REQUEST';
+      payload: { id: string };
+    } = fetchUserMappers.request('fake_id');
+    expect(requestResult).toEqual({ type: 'FETCH_USER_REQUEST', payload: { id: 'fake_id' } });
+    const successResult: {
+      type: 'FETCH_USER_SUCCESS';
+      payload: string;
+    } = fetchUserMappers.success({
+      firstName: 'Piotr',
+      lastName: 'Witek',
+    });
+    expect(successResult).toEqual({
+      type: 'FETCH_USER_SUCCESS',
+      payload: 'Piotr Witek',
     });
     const failureResult: {
       type: 'FETCH_USER_FAILURE';
       payload: string;
-      meta: string;
-    } = fetchUser.failure('not found', 'fake_trace_id');
+    } = fetchUserMappers.failure();
     expect(failureResult).toEqual({
       type: 'FETCH_USER_FAILURE',
-      payload: 'not found',
-      meta: 'fake_trace_id',
+      payload: 'hardcoded error',
+    });
+  });
+
+  it('should create an async action with unions', () => {
+    const fetchUserMappers = buildAsyncAction(
+      'FETCH_USER_REQUEST',
+      'FETCH_USER_SUCCESS',
+      'FETCH_USER_FAILURE'
+    ).withMappers(
+      (id: string | number) => ({ id }), // request mapper
+      ({ firstName, lastName }: User | undefined) => `${firstName} ${lastName}`, // success mapper
+      (error: boolean | string) => error // error mapper
+    );
+
+    const requestResult: {
+      type: 'FETCH_USER_REQUEST';
+      payload: { id: string | number };
+    } = fetchUserMappers.request(2);
+    expect(requestResult).toEqual({ type: 'FETCH_USER_REQUEST', payload: { id: 2 } });
+    const successResult: {
+      type: 'FETCH_USER_SUCCESS';
+      payload: string | undefined;
+    } = fetchUserMappers.success(undefined);
+    expect(successResult).toEqual({
+      type: 'FETCH_USER_SUCCESS',
+      payload: undefined,
+    });
+    const failureResult: {
+      type: 'FETCH_USER_FAILURE';
+      payload: boolean | string;
+    } = fetchUserMappers.failure(true);
+    expect(failureResult).toEqual({
+      type: 'FETCH_USER_FAILURE',
+      payload: true,
     });
   });
 });
