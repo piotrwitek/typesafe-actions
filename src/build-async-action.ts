@@ -1,4 +1,4 @@
-import { StringType, B, MapperActionCreator, FsaActionCreator, withType } from './';
+import { StringType, B, MapBuilder, FsaBuilder, withType } from './';
 
 export interface BuildAsyncAction<
   T1 extends StringType,
@@ -21,9 +21,9 @@ export type AsyncActionWithTypes<
   P2,
   P3
 > = {
-  request: FsaActionCreator<T1, B<P1>>;
-  success: FsaActionCreator<T2, B<P2>>;
-  failure: FsaActionCreator<T3, B<P3>>;
+  request: FsaBuilder<T1, B<P1>>;
+  success: FsaBuilder<T2, B<P2>>;
+  failure: FsaBuilder<T3, B<P3>>;
 };
 
 export type AsyncActionWithMappers<
@@ -37,9 +37,9 @@ export type AsyncActionWithMappers<
   A3 = void,
   P3 = void
 > = {
-  request: MapperActionCreator<T1, B<A1>, B<P1>>;
-  success: MapperActionCreator<T2, B<A2>, B<P2>>;
-  failure: MapperActionCreator<T3, B<A3>, B<P3>>;
+  request: MapBuilder<T1, B<A1>, B<P1>>;
+  success: MapBuilder<T2, B<A2>, B<P2>>;
+  failure: MapBuilder<T3, B<A3>, B<P3>>;
 };
 
 /** implementation */
@@ -72,9 +72,9 @@ export function buildAsyncAction<
     });
 
     return {
-      request: withType(requestType, requestCreator) as FsaActionCreator<T1, B<P1>>,
-      success: withType(successType, successCreator) as FsaActionCreator<T2, B<P2>>,
-      failure: withType(failureType, failureCreator) as FsaActionCreator<T3, B<P3>>,
+      request: withType(requestType, requestCreator) as FsaBuilder<T1, B<P1>>,
+      success: withType(successType, successCreator) as FsaBuilder<T2, B<P2>>,
+      failure: withType(failureType, failureCreator) as FsaBuilder<T3, B<P3>>,
     };
   }
 
@@ -97,9 +97,9 @@ export function buildAsyncAction<
     });
 
     return {
-      request: withType(requestType, requestCreator) as MapperActionCreator<T1, B<A1>, B<P1>>,
-      success: withType(successType, successCreator) as MapperActionCreator<T2, B<A2>, B<P2>>,
-      failure: withType(failureType, failureCreator) as MapperActionCreator<T3, B<A3>, B<P3>>,
+      request: withType(requestType, requestCreator) as MapBuilder<T1, B<A1>, B<P1>>,
+      success: withType(successType, successCreator) as MapBuilder<T2, B<A2>, B<P2>>,
+      failure: withType(failureType, failureCreator) as MapBuilder<T3, B<A3>, B<P3>>,
     };
   }
 

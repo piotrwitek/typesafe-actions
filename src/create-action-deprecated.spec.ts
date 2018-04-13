@@ -1,4 +1,4 @@
-import { createAction, getType } from '.';
+import { createActionDeprecated, getType } from '.';
 
 describe('createAction', () => {
   // TODO: #3
@@ -7,7 +7,7 @@ describe('createAction', () => {
   // check object, empty array, primitives
 
   it('no payload', () => {
-    const increment = createAction('INCREMENT');
+    const increment = createActionDeprecated('INCREMENT');
 
     const action: { type: 'INCREMENT' } = increment();
     expect(action).toEqual({ type: 'INCREMENT' });
@@ -16,7 +16,7 @@ describe('createAction', () => {
   });
 
   it('no payload alternative', () => {
-    const increment = createAction('INCREMENT', () => ({ type: 'INCREMENT' }));
+    const increment = createActionDeprecated('INCREMENT', () => ({ type: 'INCREMENT' }));
 
     const action: { type: 'INCREMENT' } = increment();
     expect(action).toEqual({ type: 'INCREMENT' });
@@ -25,7 +25,10 @@ describe('createAction', () => {
   });
 
   it('with payload', () => {
-    const add = createAction('ADD', (amount: number) => ({ type: 'ADD', payload: amount }));
+    const add = createActionDeprecated('ADD', (amount: number) => ({
+      type: 'ADD',
+      payload: amount,
+    }));
 
     const action: { type: 'ADD'; payload: number } = add(10);
     expect(action).toEqual({ type: 'ADD', payload: 10 });
@@ -34,7 +37,7 @@ describe('createAction', () => {
   });
 
   it('with payload and meta', () => {
-    const notify = createAction('NOTIFY', (username: string, message: string) => ({
+    const notify = createActionDeprecated('NOTIFY', (username: string, message: string) => ({
       type: 'NOTIFY',
       payload: { message: `${username}: ${message}` },
       meta: { username, message },
@@ -55,7 +58,7 @@ describe('createAction', () => {
   });
 
   it('with payload and no params', () => {
-    const showNotification = createAction('SHOW_NOTIFICATION', () => ({
+    const showNotification = createActionDeprecated('SHOW_NOTIFICATION', () => ({
       type: 'SHOW_NOTIFICATION',
       payload: 'default message',
     }));
@@ -70,7 +73,7 @@ describe('createAction', () => {
   });
 
   it('with payload and optional param', () => {
-    const showNotification = createAction('SHOW_NOTIFICATION', (message?: string) => ({
+    const showNotification = createActionDeprecated('SHOW_NOTIFICATION', (message?: string) => ({
       type: 'SHOW_NOTIFICATION',
       payload: message,
     }));
@@ -85,7 +88,7 @@ describe('createAction', () => {
   });
 
   it('with meta and no params', () => {
-    const showError = createAction('SHOW_ERROR', () => ({
+    const showError = createActionDeprecated('SHOW_ERROR', () => ({
       type: 'SHOW_ERROR',
       meta: { type: 'error' },
     }));
@@ -100,7 +103,7 @@ describe('createAction', () => {
   });
 
   it('with meta and optional param', () => {
-    const showError = createAction('SHOW_ERROR', (message?: string) => ({
+    const showError = createActionDeprecated('SHOW_ERROR', (message?: string) => ({
       type: 'SHOW_ERROR',
       payload: message,
       meta: { type: 'error' },
@@ -125,8 +128,8 @@ describe('createAction', () => {
     const INCREMENT = (Symbol(1) as any) as Increment & string;
     const a: string = INCREMENT; // Ok
     // const b: typeof INCREMENT = 'INCREMENT'; // Error
-    const increment = createAction(INCREMENT);
-    const decrement = createAction(Symbol(2));
+    const increment = createActionDeprecated(INCREMENT);
+    const decrement = createActionDeprecated(Symbol(2));
 
     const action: { type: typeof INCREMENT } = increment();
     expect(action).toEqual({ type: INCREMENT });

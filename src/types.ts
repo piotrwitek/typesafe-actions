@@ -67,39 +67,35 @@ export type B<T> = { v: T };
 /** @private */
 export type U<T extends B<any>> = T['v'];
 /** @private */
-export type NoArgCreator<Type extends StringType> = () => EmptyAction<Type>;
+export type NoArgCreator<T extends StringType> = () => EmptyAction<T>;
 /** @private */
-export type PayloadCreator<Type extends StringType, Payload> = (
-  payload: Payload
-) => PayloadAction<Type, Payload>;
+export type PayloadCreator<T extends StringType, P> = (payload: P) => PayloadAction<T, P>;
 /** @private */
-export type PayloadMetaCreator<Type extends StringType, Payload, Meta> = (
-  payload: Payload,
-  meta?: Meta
-) => PayloadMetaAction<Type, Payload, Meta>;
+export type PayloadMetaCreator<T extends StringType, P, M> = (
+  payload: P,
+  meta?: M
+) => PayloadMetaAction<T, P, M>;
 /** @private */
-export type FsaActionCreator<
-  Type extends StringType,
-  Payload extends B<any> = B<void>,
-  Meta extends B<any> = B<void>
-> = Payload extends B<void>
-  ? NoArgCreator<Type>
-  : Meta extends B<void>
-    ? PayloadCreator<Type, U<Payload>>
-    : PayloadMetaCreator<Type, U<Payload>, U<Meta>>;
+export type FsaBuilder<
+  T extends StringType,
+  P extends B<any> = B<void>,
+  M extends B<any> = B<void>
+> = P extends B<void>
+  ? NoArgCreator<T>
+  : M extends B<void> ? PayloadCreator<T, U<P>> : PayloadMetaCreator<T, U<P>, U<M>>;
 /** @private */
-export type MapperActionCreator<
-  Type extends StringType,
-  Arg extends B<any> = B<void>,
-  Payload extends B<any> = B<void>,
-  Meta extends B<any> = B<void>
-> = Arg extends B<void>
-  ? Meta extends B<void>
-    ? () => PayloadAction<Type, U<Payload>>
-    : () => PayloadMetaAction<Type, U<Payload>, U<Meta>>
-  : Meta extends B<void>
-    ? (payload: U<Arg>) => PayloadAction<Type, U<Payload>>
-    : (payload: U<Arg>) => PayloadMetaAction<Type, U<Payload>, U<Meta>>;
+export type MapBuilder<
+  T extends StringType,
+  R extends B<any>,
+  P extends B<any> = B<void>,
+  M extends B<any> = B<void>
+> = M extends B<void>
+  ? P extends B<void>
+    ? () => MapAction<{ type: T } & U<R>>
+    : (payload: U<P>) => MapAction<{ type: T } & U<R>>
+  : (payload: U<P>, meta: U<M>) => MapAction<{ type: T } & U<R>>;
+/** @private */
+export type MapAction<R extends { type: any }> = R;
 /** @private */
 export type ActionCreator = (...args: any[]) => {};
 /** @private */
