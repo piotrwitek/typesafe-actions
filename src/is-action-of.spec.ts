@@ -1,25 +1,21 @@
-import { createAction, isActionOf } from '.';
+import { buildAction, isActionOf } from '.';
 
 describe('isActionOf', () => {
   // fixtures
-  const increment = createAction('INCREMENT');
-  const decrement = createAction('DECREMENT');
-  const add = createAction('ADD', (amount: number) => ({ type: 'ADD', payload: amount }));
-  const multiply = createAction('MULTIPLY', (amount: number) => ({
-    type: 'MULTIPLY',
-    payload: amount,
+  const increment = buildAction('INCREMENT')();
+  const decrement = buildAction('DECREMENT')();
+  const add = buildAction('ADD').map((payload: number) => ({ payload }));
+  const multiply = buildAction('MULTIPLY').map((payload: number) => ({
+    payload,
   }));
-  const divide = createAction('DIVIDE', (amount: number) => ({ type: 'DIVIDE', payload: amount }));
-
-  // TODO: #3
-  // should error when missing argument
-  // should error when passed invalid arguments
-  // check object, empty array, primitives
+  const divide = buildAction('DIVIDE').map((payload: number, meta: string) => ({
+    payload,
+    meta,
+  }));
 
   it('should succeed on action with correct type', () => {
     const isActionOfIncrement = isActionOf(increment);
     expect(isActionOfIncrement(increment())).toBeTruthy();
-
     const isActionOfIncrementOrAdd = isActionOf([increment, add]);
     expect(isActionOfIncrementOrAdd(increment())).toBeTruthy();
     expect(isActionOfIncrementOrAdd(add(2))).toBeTruthy();
@@ -179,4 +175,9 @@ describe('isActionOf', () => {
       done();
     }
   });
+
+  // TODO: #3
+  // should error when missing argument
+  // should error when passed invalid arguments
+  // check object, empty array, primitives
 });

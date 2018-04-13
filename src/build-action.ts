@@ -1,18 +1,11 @@
-import { StringType, B, FsaActionCreator, MapperActionCreator, withType } from './';
+import { StringType, B, FsaBuilder, MapBuilder, withType } from './';
 
 /**
  * @description create an action creator of a given function that contains hidden "type" metadata
  */
-export interface BuildAction<Type extends StringType> {
-  withTypes<Payload, Meta>(): FsaActionCreator<Type, B<Payload>, B<Meta>>;
-  withMappers<Payload, Meta = void>(
-    payloadCreator: () => Payload,
-    metaCreator?: () => Meta
-  ): MapperActionCreator<Type, B<void>, B<Payload>, B<Meta>>;
-  withMappers<Arg, Payload, Meta = void>(
-    payloadCreator: (payload: Arg) => Payload,
-    metaCreator?: (payload: Arg) => Meta
-  ): MapperActionCreator<Type, B<Arg>, B<Payload>, B<Meta>>;
+export interface BuildAction<T extends StringType> {
+  <P = void, M = void>(): FsaBuilder<T, B<P>, B<M>>;
+  map<R, P = void, M = void>(fn: (payload?: P, meta?: M) => R): MapBuilder<T, B<R>, B<P>, B<M>>;
 }
 
 /** implementation */
@@ -25,25 +18,22 @@ export function buildAction<T extends StringType>(actionType: T): BuildAction<T>
     }
   }
 
-  function createWithTypes<P, M = void>(): FsaActionCreator<T, B<P>, B<M>> {
-    const ac = (payload: P) => ({ type: actionType, payload });
-    return withType(actionType, ac) as FsaActionCreator<T, B<P>, B<M>>;
-  }
-
-  function createWithMappers<P, M, A>(
-    payloadCreator: (a?: A) => P,
-    metaCreator?: (a?: A) => M
-  ): MapperActionCreator<T, B<A>, B<P>, B<M>> {
-    const ac = (payload?: A) => ({
+  function map<R, P, M>(fn: (payload?: P, meta?: M) => R): MapBuilder<T, B<R>, B<P>, B<M>> {
+    const creator = (payload?: P, meta?: M) => ({
       type: actionType,
-      payload: payloadCreator != null ? payloadCreator(payload) : undefined,
-      meta: metaCreator != null ? metaCreator(payload) : undefined,
+      ...(fn(payload, meta) as {}),
     });
-    return withType(actionType, ac) as MapperActionCreator<T, B<A>, B<P>, B<M>>;
+    return withType(actionType, creator) as MapBuilder<T, B<R>, B<P>, B<M>>;
   }
 
-  return {
-    withTypes: createWithTypes,
-    withMappers: createWithMappers,
-  };
+  function constructor<P, M = void>(): FsaBuilder<T, B<P>, B<M>> {
+    const creator = (payload?: P, meta?: M) => ({
+      type: actionType,
+      payload,
+      meta,
+    });
+    return withType(actionType, creator) as FsaBuilder<T, B<P>, B<M>>;
+  }
+
+  return Object.assign(constructor, { map });
 }

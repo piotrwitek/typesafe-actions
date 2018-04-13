@@ -10,7 +10,7 @@ export interface FSA<T extends StringType, P = {}, M = {}, E = boolean> {
 /**
  * @description create an action creator of a given function that contains hidden "type" metadata
  */
-export function createAction<T extends StringType, AC extends (...args: any[]) => FSA<T>>(
+export function createActionDeprecated<T extends StringType, AC extends (...args: any[]) => FSA<T>>(
   actionType: T | symbol,
   creatorFunction: AC
 ): AC & TypeMeta<T>;
@@ -18,14 +18,14 @@ export function createAction<T extends StringType, AC extends (...args: any[]) =
 /**
  * @description create an action creator of a given function that contains hidden "type" metadata
  */
-export function createAction<T extends StringType, AC extends () => { type: T }>(
+export function createActionDeprecated<T extends StringType, AC extends () => { type: T }>(
   actionType: T | symbol
 ): AC & TypeMeta<T>;
 
 /**
  *  implementation
  */
-export function createAction<T extends StringType, AC extends (...args: any[]) => FSA<T>>(
+export function createActionDeprecated<T extends StringType, AC extends (...args: any[]) => FSA<T>>(
   actionType: T | symbol,
   creatorFunction?: AC
 ): AC & TypeMeta<T> {

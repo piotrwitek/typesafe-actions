@@ -1,81 +1,45 @@
-import { createAction, getType } from '.';
+import { buildAction, getType } from '.';
 
 describe('getType', () => {
-  // TODO: #3
-  // should error when missing argument
-  // should error when passed invalid arguments
-  // check object, empty array, primitives
-
   it('no payload', () => {
-    const increment = createAction('INCREMENT');
-
+    const increment = buildAction('INCREMENT')();
     const type: 'INCREMENT' = getType(increment);
     expect(type).toBe('INCREMENT');
   });
 
   it('no payload alternative', () => {
-    const increment = createAction('INCREMENT', () => ({ type: 'INCREMENT' }));
-
+    const increment = buildAction('INCREMENT')<void>();
     const type: 'INCREMENT' = getType(increment);
     expect(type).toBe('INCREMENT');
   });
 
   it('with payload', () => {
-    const add = createAction('ADD', (amount: number) => ({ type: 'ADD', payload: amount }));
-
+    const add = buildAction('ADD')<number>();
     const type: 'ADD' = getType(add);
     expect(type).toBe('ADD');
   });
 
-  it('with payload and meta', () => {
-    const notify = createAction('NOTIFY', (username: string, message: string) => ({
-      type: 'NOTIFY',
-      payload: { message: `${username}: ${message}` },
-      meta: { username, message },
+  it('with map', () => {
+    const showNotification = buildAction('SHOW_NOTIFICATION').map(() => ({
+      payload: 'hardcoded message',
     }));
-
-    const type: 'NOTIFY' = getType(notify);
-    expect(type).toBe('NOTIFY');
-  });
-
-  it('with payload and no params', () => {
-    const showNotification = createAction('SHOW_NOTIFICATION', () => ({
-      type: 'SHOW_NOTIFICATION',
-      payload: 'default message',
-    }));
-
     const type: 'SHOW_NOTIFICATION' = getType(showNotification);
     expect(type).toBe('SHOW_NOTIFICATION');
   });
 
-  it('with payload and optional param', () => {
-    const showNotification = createAction('SHOW_NOTIFICATION', (message?: string) => ({
-      type: 'SHOW_NOTIFICATION',
-      payload: message,
-    }));
-
-    const type: 'SHOW_NOTIFICATION' = getType(showNotification);
-    expect(type).toBe('SHOW_NOTIFICATION');
+  it('with symbol as action type', () => {
+    enum Increment {}
+    const INCREMENT = (Symbol(1) as any) as Increment & string;
+    const a: string = INCREMENT; // Ok
+    // const b: typeof INCREMENT = 'INCREMENT'; // Error
+    const increment = buildAction(INCREMENT)();
+    const type: typeof INCREMENT = getType(increment);
+    expect(type).toBe(INCREMENT);
+    expect(type).not.toBe('INCREMENT');
   });
 
-  it('with meta and no params', () => {
-    const showError = createAction('SHOW_ERROR', () => ({
-      type: 'SHOW_ERROR',
-      meta: { type: 'error' },
-    }));
-
-    const type: 'SHOW_ERROR' = getType(showError);
-    expect(type).toBe('SHOW_ERROR');
-  });
-
-  it('with meta and optional param', () => {
-    const showError = createAction('SHOW_ERROR', (message?: string) => ({
-      type: 'SHOW_ERROR',
-      payload: message,
-      meta: { type: 'error' },
-    }));
-
-    const type: 'SHOW_ERROR' = getType(showError);
-    expect(type).toBe('SHOW_ERROR');
-  });
+  // TODO: #3
+  // should error when missing argument
+  // should error when passed invalid arguments
+  // check object, empty array, primitives
 });
