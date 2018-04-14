@@ -145,7 +145,13 @@ describe('isActionOf', () => {
   });
 
   it('should correctly assert array with five actions', done => {
-    const isActionOfFive = isActionOf([increment, decrement, add, multiply, divide]);
+    const isActionOfFive = isActionOf([
+      increment,
+      decrement,
+      add,
+      multiply,
+      divide,
+    ]);
 
     const action = { type: 'FALSE' };
     if (isActionOfFive(action)) {

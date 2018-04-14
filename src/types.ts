@@ -60,7 +60,9 @@ export interface FluxStandardAction<T extends StringType, P = void, M = void> {
  */
 export type ActionsUnion<ACOrACsObject> = ACOrACsObject extends ActionCreator
   ? ReturnType<ACOrACsObject>
-  : ACOrACsObject extends object ? ActionCreatorsMap<ACOrACsObject>[keyof ACOrACsObject] : never;
+  : ACOrACsObject extends object
+    ? ActionCreatorsMap<ACOrACsObject>[keyof ACOrACsObject]
+    : never;
 
 /** @private */
 export type B<T> = { v: T };
@@ -69,7 +71,9 @@ export type U<T extends B<any>> = T['v'];
 /** @private */
 export type NoArgCreator<T extends StringType> = () => EmptyAction<T>;
 /** @private */
-export type PayloadCreator<T extends StringType, P> = (payload: P) => PayloadAction<T, P>;
+export type PayloadCreator<T extends StringType, P> = (
+  payload: P
+) => PayloadAction<T, P>;
 /** @private */
 export type PayloadMetaCreator<T extends StringType, P, M> = (
   payload: P,
@@ -82,7 +86,9 @@ export type FsaBuilder<
   M extends B<any> = B<void>
 > = P extends B<void>
   ? NoArgCreator<T>
-  : M extends B<void> ? PayloadCreator<T, U<P>> : PayloadMetaCreator<T, U<P>, U<M>>;
+  : M extends B<void>
+    ? PayloadCreator<T, U<P>>
+    : PayloadMetaCreator<T, U<P>, U<M>>;
 /** @private */
 export type MapBuilder<
   T extends StringType,

@@ -1,7 +1,8 @@
 // tslint:disable:max-line-length
-import { TypeMeta } from './';
+import { TypeMeta } from '.';
 
-export type AC<T extends { type: string }> = ((...args: any[]) => T) & TypeMeta<T['type']>;
+export type AC<T extends { type: string }> = ((...args: any[]) => T) &
+  TypeMeta<T['type']>;
 export type ACs<
   T1 extends { type: string },
   T2 extends { type: string } = any,
@@ -51,7 +52,12 @@ export function isActionOf<
 >(
   actionOrActions:
     | AC<T1>
-    | (ACs<T1> | ACs<T1, T2> | ACs<T1, T2, T3> | ACs<T1, T2, T3, T4> | ACs<T1, T2, T3, T4, T5>)
+    | (
+        | ACs<T1>
+        | ACs<T1, T2>
+        | ACs<T1, T2, T3>
+        | ACs<T1, T2, T3, T4>
+        | ACs<T1, T2, T3, T4, T5>)
 ) {
   return (action: A): action is [T1, T2, T3, T4, T5][number] => {
     if (actionOrActions == null) {
@@ -60,7 +66,9 @@ export function isActionOf<
 
     if (!Array.isArray(actionOrActions)) {
       if (actionOrActions.getType == null) {
-        throw new Error('first argument is not an instance of "typesafe-actions"');
+        throw new Error(
+          'first argument is not an instance of "typesafe-actions"'
+        );
       }
     }
 
