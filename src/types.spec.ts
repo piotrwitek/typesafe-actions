@@ -1,4 +1,4 @@
-import { buildAction, getType, ActionsUnion } from './';
+import { buildAction, getType, ActionsUnion } from '.';
 
 describe('ActionsUnion', () => {
   it('with buildAction', () => {
@@ -25,7 +25,9 @@ describe('ActionsUnion', () => {
         }
       }
     }
-    expect(reducer(actions.very.deep.onlyType())).toEqual({ type: 'INCREMENT' });
+    expect(reducer(actions.very.deep.onlyType())).toEqual({
+      type: 'INCREMENT',
+    });
     expect(reducer(actions.payload(2))).toEqual({ type: 'ADD', payload: 2 });
     expect(reducer(actions.payloadMeta('payloadValue', 'metaValue'))).toEqual({
       type: 'NOTIFY',

@@ -1,4 +1,4 @@
-import { StringType, SymbolType } from './';
+import { StringType, SymbolType } from '.';
 
 export interface TypeMeta<T extends StringType | SymbolType> {
   getType?: () => T;
@@ -22,9 +22,8 @@ export function getType<T extends StringType | SymbolType>(
 }
 
 export function withType<T extends StringType | SymbolType, AC>(
-  actionType: T,
-  ac: AC & TypeMeta<T>
+  type: T,
+  fn: (type: T) => AC
 ): AC {
-  ac.getType = () => actionType;
-  return ac;
+  return Object.assign(fn(type), { getType: () => type });
 }

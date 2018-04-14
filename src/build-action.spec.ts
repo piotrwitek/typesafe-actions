@@ -1,4 +1,4 @@
-import { buildAction, getType, ActionsUnion } from './';
+import { buildAction, getType, ActionsUnion } from '.';
 
 describe('buildAction', () => {
   describe('constructor', () => {
@@ -46,11 +46,17 @@ describe('buildAction', () => {
 
     it('with primitives union payload', () => {
       const union = buildAction('UNION')<string | null | number>();
-      const action: { type: 'UNION'; payload: string | null | number } = union('foo');
+      const action: { type: 'UNION'; payload: string | null | number } = union(
+        'foo'
+      );
       expect(action).toEqual({ type: 'UNION', payload: 'foo' });
-      const action2: { type: 'UNION'; payload: string | null | number } = union(null);
+      const action2: { type: 'UNION'; payload: string | null | number } = union(
+        null
+      );
       expect(action2).toEqual({ type: 'UNION', payload: null });
-      const action3: { type: 'UNION'; payload: string | null | number } = union(3);
+      const action3: { type: 'UNION'; payload: string | null | number } = union(
+        3
+      );
       expect(action3).toEqual({ type: 'UNION', payload: 3 });
     });
   });
@@ -60,7 +66,10 @@ describe('buildAction', () => {
       const showNotification = buildAction('SHOW_NOTIFICATION').map(() => ({
         payload: 'hardcoded message',
       }));
-      const action: { type: 'SHOW_NOTIFICATION'; payload: string } = showNotification();
+      const action: {
+        type: 'SHOW_NOTIFICATION';
+        payload: string;
+      } = showNotification();
       expect(action).toEqual({
         type: 'SHOW_NOTIFICATION',
         payload: 'hardcoded message',
@@ -68,12 +77,15 @@ describe('buildAction', () => {
     });
 
     it('with payload and param', () => {
-      const showNotification = buildAction('SHOW_NOTIFICATION').map((payload: string) => ({
-        payload,
-      }));
-      const action: { type: 'SHOW_NOTIFICATION'; payload: string } = showNotification(
-        'info message'
+      const showNotification = buildAction('SHOW_NOTIFICATION').map(
+        (payload: string) => ({
+          payload,
+        })
       );
+      const action: {
+        type: 'SHOW_NOTIFICATION';
+        payload: string;
+      } = showNotification('info message');
       expect(action).toEqual({
         type: 'SHOW_NOTIFICATION',
         payload: 'info message',
@@ -114,10 +126,12 @@ describe('buildAction', () => {
 
     it('with payload and meta', () => {
       type Notification = { username: string; message?: string };
-      const notify = buildAction('NOTIFY').map(({ username, message }: Notification) => ({
-        payload: `${username}: ${message || ''}`,
-        meta: { username, message },
-      }));
+      const notify = buildAction('NOTIFY').map(
+        ({ username, message }: Notification) => ({
+          payload: `${username}: ${message || ''}`,
+          meta: { username, message },
+        })
+      );
       const action: {
         type: 'NOTIFY';
         payload: string;
@@ -152,9 +166,11 @@ describe('buildAction', () => {
         payload: message,
         meta: { severity: 'error' },
       }));
-      const action: { type: 'SHOW_ERROR'; payload: string; meta: { severity: string } } = showError(
-        'error message'
-      );
+      const action: {
+        type: 'SHOW_ERROR';
+        payload: string;
+        meta: { severity: string };
+      } = showError('error message');
       expect(action).toEqual({
         type: 'SHOW_ERROR',
         payload: 'error message',

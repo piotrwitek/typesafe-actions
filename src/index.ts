@@ -4,10 +4,13 @@
  * @license MIT
  */
 
-export * from './types';
-export * from './get-type';
-export * from './is-action-of';
-
+// creators
+export * from './action';
 export * from './build-action';
 export * from './create-symbol-action';
+// utils
+export * from './types';
+export * from './type-meta';
+export * from './is-action-of';
+// deprecated
 export * from './create-action-deprecated';

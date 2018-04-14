@@ -16,7 +16,9 @@ describe('createAction', () => {
   });
 
   it('no payload alternative', () => {
-    const increment = createActionDeprecated('INCREMENT', () => ({ type: 'INCREMENT' }));
+    const increment = createActionDeprecated('INCREMENT', () => ({
+      type: 'INCREMENT',
+    }));
 
     const action: { type: 'INCREMENT' } = increment();
     expect(action).toEqual({ type: 'INCREMENT' });
@@ -37,11 +39,14 @@ describe('createAction', () => {
   });
 
   it('with payload and meta', () => {
-    const notify = createActionDeprecated('NOTIFY', (username: string, message: string) => ({
-      type: 'NOTIFY',
-      payload: { message: `${username}: ${message}` },
-      meta: { username, message },
-    }));
+    const notify = createActionDeprecated(
+      'NOTIFY',
+      (username: string, message: string) => ({
+        type: 'NOTIFY',
+        payload: { message: `${username}: ${message}` },
+        meta: { username, message },
+      })
+    );
 
     const action: {
       type: 'NOTIFY';
@@ -58,12 +63,18 @@ describe('createAction', () => {
   });
 
   it('with payload and no params', () => {
-    const showNotification = createActionDeprecated('SHOW_NOTIFICATION', () => ({
-      type: 'SHOW_NOTIFICATION',
-      payload: 'default message',
-    }));
+    const showNotification = createActionDeprecated(
+      'SHOW_NOTIFICATION',
+      () => ({
+        type: 'SHOW_NOTIFICATION',
+        payload: 'default message',
+      })
+    );
 
-    const action: { type: 'SHOW_NOTIFICATION'; payload: string } = showNotification();
+    const action: {
+      type: 'SHOW_NOTIFICATION';
+      payload: string;
+    } = showNotification();
     expect(action).toEqual({
       type: 'SHOW_NOTIFICATION',
       payload: 'default message',
@@ -73,12 +84,18 @@ describe('createAction', () => {
   });
 
   it('with payload and optional param', () => {
-    const showNotification = createActionDeprecated('SHOW_NOTIFICATION', (message?: string) => ({
-      type: 'SHOW_NOTIFICATION',
-      payload: message,
-    }));
+    const showNotification = createActionDeprecated(
+      'SHOW_NOTIFICATION',
+      (message?: string) => ({
+        type: 'SHOW_NOTIFICATION',
+        payload: message,
+      })
+    );
 
-    const action: { type: 'SHOW_NOTIFICATION'; payload: string | undefined } = showNotification();
+    const action: {
+      type: 'SHOW_NOTIFICATION';
+      payload: string | undefined;
+    } = showNotification();
     expect(action).toEqual({
       type: 'SHOW_NOTIFICATION',
       payload: undefined,
@@ -103,11 +120,14 @@ describe('createAction', () => {
   });
 
   it('with meta and optional param', () => {
-    const showError = createActionDeprecated('SHOW_ERROR', (message?: string) => ({
-      type: 'SHOW_ERROR',
-      payload: message,
-      meta: { type: 'error' },
-    }));
+    const showError = createActionDeprecated(
+      'SHOW_ERROR',
+      (message?: string) => ({
+        type: 'SHOW_ERROR',
+        payload: message,
+        meta: { type: 'error' },
+      })
+    );
 
     const action: {
       type: 'SHOW_ERROR';

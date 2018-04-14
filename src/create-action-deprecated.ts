@@ -1,4 +1,4 @@
-import { StringType, TypeMeta } from './';
+import { StringType, TypeMeta } from '.';
 
 export interface FSA<T extends StringType, P = {}, M = {}, E = boolean> {
   type: T;
@@ -10,25 +10,26 @@ export interface FSA<T extends StringType, P = {}, M = {}, E = boolean> {
 /**
  * @description create an action creator of a given function that contains hidden "type" metadata
  */
-export function createActionDeprecated<T extends StringType, AC extends (...args: any[]) => FSA<T>>(
-  actionType: T | symbol,
-  creatorFunction: AC
-): AC & TypeMeta<T>;
+export function createActionDeprecated<
+  T extends StringType,
+  AC extends (...args: any[]) => FSA<T>
+>(actionType: T | symbol, creatorFunction: AC): AC & TypeMeta<T>;
 
 /**
  * @description create an action creator of a given function that contains hidden "type" metadata
  */
-export function createActionDeprecated<T extends StringType, AC extends () => { type: T }>(
-  actionType: T | symbol
-): AC & TypeMeta<T>;
+export function createActionDeprecated<
+  T extends StringType,
+  AC extends () => { type: T }
+>(actionType: T | symbol): AC & TypeMeta<T>;
 
 /**
  *  implementation
  */
-export function createActionDeprecated<T extends StringType, AC extends (...args: any[]) => FSA<T>>(
-  actionType: T | symbol,
-  creatorFunction?: AC
-): AC & TypeMeta<T> {
+export function createActionDeprecated<
+  T extends StringType,
+  AC extends (...args: any[]) => FSA<T>
+>(actionType: T | symbol, creatorFunction?: AC): AC & TypeMeta<T> {
   let actionCreator: AC & TypeMeta<T>;
 
   if (creatorFunction != null) {
