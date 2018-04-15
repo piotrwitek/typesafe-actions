@@ -2,19 +2,19 @@ import { buildAction, getType, ActionsUnion } from '.';
 
 describe('buildAction', () => {
   describe('constructor', () => {
-    it('only type', () => {
+    it('with type only', () => {
       const increment = buildAction('INCREMENT')();
       const action: { type: 'INCREMENT' } = increment();
       expect(action).toEqual({ type: 'INCREMENT' });
     });
 
-    it('only type alternative', () => {
+    it('with type only - alternative', () => {
       const increment = buildAction('INCREMENT')<void>();
       const action: { type: 'INCREMENT' } = increment();
       expect(action).toEqual({ type: 'INCREMENT' });
     });
 
-    it('only type as symbol', () => {
+    it('with type as symbol', () => {
       enum Increment {}
       const INCREMENT = (Symbol(1) as any) as Increment & string;
       const a: string = INCREMENT; // Ok

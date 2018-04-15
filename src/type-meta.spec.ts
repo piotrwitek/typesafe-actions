@@ -1,6 +1,6 @@
 import { buildAction, getType, withType, action } from '.';
 
-describe('utils', () => {
+describe('type-meta', () => {
   describe('getType', () => {
     it('only type', () => {
       const increment = buildAction('INCREMENT')();
