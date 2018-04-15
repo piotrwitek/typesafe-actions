@@ -17,14 +17,15 @@ export type ACs<
   | [AC<T1>, AC<T2>, AC<T3>, AC<T4>, AC<T5>];
 
 /**
- * @description create the assert function that will assert a given action of `any` type to the specific "action type" if matching the specified action creator(s)
+ * @description create assert function for given action creator(s) (will assert wider union type to a more specific type)
  */
 export function isActionOf<A extends { type: string }, T1 extends A>(
   actionOrActions: AC<T1>
 ): (action: A) => action is T1;
 
 /**
- * @description create the assert function that will assert a given action of `any` type to the specific "action type" if matching the specified action creator(s)
+ * @description create assert function for given action creator(s) (will assert wider union type to a more specific type)
+ * If someone ever need more than 5 arguments, they should probably use switch
  */
 export function isActionOf<
   A extends { type: string },
@@ -42,6 +43,9 @@ export function isActionOf<
     | ACs<T1, T2, T3, T4, T5>
 ): (action: A) => action is [T1, T2, T3, T4, T5][number];
 
+/** implementation */
+// alias to: getActionAssert
+// complement with: if(actionOfEq(increment, action)) {}
 export function isActionOf<
   A extends { type: string },
   T1 extends A,
