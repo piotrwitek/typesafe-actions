@@ -17,15 +17,8 @@ export type ACs<
   | [AC<T1>, AC<T2>, AC<T3>, AC<T4>, AC<T5>];
 
 /**
- * @description create assert function for given action creator(s) (will assert wider union type to a more specific type)
- */
-export function isActionOf<A extends { type: string }, T1 extends A>(
-  actionOrActions: AC<T1>
-): (action: A) => action is T1;
-
-/**
- * @description create assert function for given action creator(s) (will assert wider union type to a more specific type)
- * If someone ever need more than 5 arguments, they should probably use switch
+ * @description (curried assert function) Check if action is an instance of given action creator(s) (will assert wider union type to a more specific type)
+ * If you need more than 5 arguments -> use switch
  */
 export function isActionOf<
   A extends { type: string },
@@ -35,7 +28,36 @@ export function isActionOf<
   T4 extends A,
   T5 extends A
 >(
-  actionOrActions:
+  actionCreators:
+    | ACs<T1>
+    | ACs<T1, T2>
+    | ACs<T1, T2, T3>
+    | ACs<T1, T2, T3, T4>
+    | ACs<T1, T2, T3, T4, T5>,
+  action: { type: string }
+): action is [T1, T2, T3, T4, T5][number];
+
+/**
+ * @description (curried assert function) Check if action is an instance of given action creator(s) (will assert wider union type to a more specific type)
+ */
+export function isActionOf<A extends { type: string }, T1 extends A>(
+  actionCreator: AC<T1>,
+  action: { type: string }
+): action is T1;
+
+/**
+ * @description (curried assert function) Check if action is an instance of given action creator(s) (will assert wider union type to a more specific type)
+ * If you need more than 5 arguments -> use switch
+ */
+export function isActionOf<
+  A extends { type: string },
+  T1 extends A,
+  T2 extends A,
+  T3 extends A,
+  T4 extends A,
+  T5 extends A
+>(
+  actionCreators:
     | ACs<T1>
     | ACs<T1, T2>
     | ACs<T1, T2, T3>
@@ -43,9 +65,14 @@ export function isActionOf<
     | ACs<T1, T2, T3, T4, T5>
 ): (action: A) => action is [T1, T2, T3, T4, T5][number];
 
+/**
+ * @description (curried assert function) Check if action is an instance of given action creator(s) (will assert wider union type to a more specific type)
+ */
+export function isActionOf<A extends { type: string }, T1 extends A>(
+  actionCreator: AC<T1>
+): (action: A) => action is T1;
+
 /** implementation */
-// alias to: getActionAssert
-// complement with: if(actionOfEq(increment, action)) {}
 export function isActionOf<
   A extends { type: string },
   T1 extends A,
@@ -54,38 +81,47 @@ export function isActionOf<
   T4 extends A,
   T5 extends A
 >(
-  actionOrActions:
+  creatorOrCreators:
     | AC<T1>
     | (
         | ACs<T1>
         | ACs<T1, T2>
         | ACs<T1, T2, T3>
         | ACs<T1, T2, T3, T4>
-        | ACs<T1, T2, T3, T4, T5>)
+        | ACs<T1, T2, T3, T4, T5>),
+  actionOrNil?: A
 ) {
-  return (action: A): action is [T1, T2, T3, T4, T5][number] => {
-    if (actionOrActions == null) {
-      throw new Error('first argument is missing');
-    }
+  if (creatorOrCreators == null) {
+    throw new Error('first argument is missing');
+  }
 
-    if (!Array.isArray(actionOrActions)) {
-      if (actionOrActions.getType == null) {
-        throw new Error(
-          'first argument is not an instance of "typesafe-actions"'
-        );
+  if (Array.isArray(creatorOrCreators)) {
+    (creatorOrCreators as any[]).forEach((actionCreator, index) => {
+      if (actionCreator.getType == null) {
+        throw new Error(`first argument contains element
+        that is not created with "typesafe-actions" at index [${index}]`);
       }
+    });
+  } else {
+    if (creatorOrCreators.getType == null) {
+      throw new Error('first argument is not created with "typesafe-actions"');
     }
+  }
 
-    const actionCreators: any[] = Array.isArray(actionOrActions)
-      ? actionOrActions
-      : [actionOrActions];
+  const assertFn = (action: A): action is [T1, T2, T3, T4, T5][number] => {
+    const actionCreators: any[] = Array.isArray(creatorOrCreators)
+      ? creatorOrCreators
+      : [creatorOrCreators];
 
     return actionCreators.some((actionCreator, index) => {
-      if (actionCreator.getType == null) {
-        throw new Error(`element of the first argument with index [${index}]
-          is not an instance of "typesafe-actions"`);
-      }
       return actionCreator.getType() === action.type;
     });
   };
+
+  // on 2 args return result of executed assert fn
+  if (actionOrNil != null) {
+    return assertFn(actionOrNil);
+  }
+  // on 1 arg return assert fn
+  return assertFn;
 }
