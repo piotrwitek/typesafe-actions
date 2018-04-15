@@ -10,7 +10,7 @@ export * from './build-action';
 export * from './create-symbol-action';
 // utils
 export * from './types';
-export * from './type-meta';
+export * from './utils';
 export * from './is-action-of';
 // deprecated
 export * from './create-action-deprecated';
