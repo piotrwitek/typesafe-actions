@@ -77,7 +77,7 @@ export type PayloadCreator<T extends StringType, P> = (
 /** @private */
 export type PayloadMetaCreator<T extends StringType, P, M> = (
   payload: P,
-  meta?: M
+  meta: M
 ) => PayloadMetaAction<T, P, M>;
 /** @private */
 export type FsaBuilder<

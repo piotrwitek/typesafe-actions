@@ -2,19 +2,19 @@ import { buildAction, getType, withType, action } from '.';
 
 describe('type-meta', () => {
   describe('getType', () => {
-    it('only type', () => {
-      const increment = buildAction('INCREMENT')();
-      const typeLiteral: 'INCREMENT' = getType(increment);
-      expect(typeLiteral).toBe('INCREMENT');
+    it('with type only', () => {
+      const increment = buildAction('WITH_TYPE_ONLY')();
+      const typeLiteral: 'WITH_TYPE_ONLY' = getType(increment);
+      expect(typeLiteral).toBe('WITH_TYPE_ONLY');
     });
 
-    it('only type alternative', () => {
-      const increment = buildAction('INCREMENT')<void>();
-      const typeLiteral: 'INCREMENT' = getType(increment);
-      expect(typeLiteral).toBe('INCREMENT');
+    it('with type only', () => {
+      const increment = buildAction('WITH_TYPE_ONLY')<void>();
+      const typeLiteral: 'WITH_TYPE_ONLY' = getType(increment);
+      expect(typeLiteral).toBe('WITH_TYPE_ONLY');
     });
 
-    it('only type as symbol', () => {
+    it('with type as symbol', () => {
       enum Increment {}
       const INCREMENT = (Symbol(1) as any) as Increment & string;
       const a: string = INCREMENT; // Ok
@@ -22,16 +22,16 @@ describe('type-meta', () => {
       const increment = buildAction(INCREMENT)();
       const typeLiteral: typeof INCREMENT = getType(increment);
       expect(typeLiteral).toBe(INCREMENT);
-      expect(typeLiteral).not.toBe('INCREMENT');
+      expect(typeLiteral).not.toBe('WITH_TYPE_ONLY');
     });
 
     it('with payload', () => {
-      const add = buildAction('ADD')<number>();
-      const typeLiteral: 'ADD' = getType(add);
-      expect(typeLiteral).toBe('ADD');
+      const add = buildAction('WITH_MAPPED_PAYLOAD')<number>();
+      const typeLiteral: 'WITH_MAPPED_PAYLOAD' = getType(add);
+      expect(typeLiteral).toBe('WITH_MAPPED_PAYLOAD');
     });
 
-    it('with payload map', () => {
+    it('with mapped payload', () => {
       const showNotification = buildAction('SHOW_NOTIFICATION').map(() => ({
         payload: 'hardcoded message',
       }));
@@ -42,9 +42,9 @@ describe('type-meta', () => {
 
   describe('withType', () => {
     it('only type', () => {
-      const increment = withType('INCREMENT', type => () => action(type));
-      const typeLiteral: 'INCREMENT' = getType(increment);
-      expect(typeLiteral).toBe('INCREMENT');
+      const increment = withType('WITH_TYPE_ONLY', type => () => action(type));
+      const typeLiteral: 'WITH_TYPE_ONLY' = getType(increment);
+      expect(typeLiteral).toBe('WITH_TYPE_ONLY');
     });
 
     it('only type as symbol', () => {
@@ -55,15 +55,15 @@ describe('type-meta', () => {
       const increment = withType(INCREMENT, type => () => action(type));
       const typeLiteral: typeof INCREMENT = getType(increment);
       expect(typeLiteral).toBe(INCREMENT);
-      expect(typeLiteral).not.toBe('INCREMENT');
+      expect(typeLiteral).not.toBe('WITH_TYPE_ONLY');
     });
 
     it('with payload', () => {
-      const add = withType('ADD', type => (amount: number) =>
+      const add = withType('WITH_MAPPED_PAYLOAD', type => (amount: number) =>
         action(type, amount)
       );
-      const typeLiteral: 'ADD' = getType(add);
-      expect(typeLiteral).toBe('ADD');
+      const typeLiteral: 'WITH_MAPPED_PAYLOAD' = getType(add);
+      expect(typeLiteral).toBe('WITH_MAPPED_PAYLOAD');
     });
 
     it('with payload and meta', () => {
@@ -75,6 +75,7 @@ describe('type-meta', () => {
       expect(typeLiteral).toBe('SHOW_NOTIFICATION');
     });
 
+    // docs example
     // const newCreateAction = withType(
     //   'GET_TODO',
     //   type => (token: string, id: string) => ({
@@ -89,8 +90,4 @@ describe('type-meta', () => {
     //   type => (token: string, id: string) => action(type, id, token)
     // );
   });
-  // TODO: #3
-  // should error when missing argument
-  // should error when passed invalid arguments
-  // check object, empty array, primitives
 });

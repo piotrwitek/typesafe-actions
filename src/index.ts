@@ -4,13 +4,15 @@
  * @license MIT
  */
 
+/** Public API */
 // creators
 export * from './action';
 export * from './build-action';
-export * from './create-symbol-action';
-// utils
+// guards
 export * from './types';
 export * from './type-meta';
 export * from './is-action-of';
+// experimental
+export * from './create-symbol-action';
 // deprecated
 export * from './create-action-deprecated';

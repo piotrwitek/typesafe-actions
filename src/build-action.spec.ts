@@ -26,9 +26,9 @@ describe('buildAction', () => {
     });
 
     it('with number payload', () => {
-      const add = buildAction('ADD')<number>();
-      const action: { type: 'ADD'; payload: number } = add(10);
-      expect(action).toEqual({ type: 'ADD', payload: 10 });
+      const add = buildAction('WITH_MAPPED_PAYLOAD')<number>();
+      const action: { type: 'WITH_MAPPED_PAYLOAD'; payload: number } = add(10);
+      expect(action).toEqual({ type: 'WITH_MAPPED_PAYLOAD', payload: 10 });
     });
 
     it('with boolean payload', () => {
@@ -126,19 +126,19 @@ describe('buildAction', () => {
 
     it('with payload and meta', () => {
       type Notification = { username: string; message?: string };
-      const notify = buildAction('NOTIFY').map(
+      const notify = buildAction('WITH_PAYLOAD_META').map(
         ({ username, message }: Notification) => ({
           payload: `${username}: ${message || ''}`,
           meta: { username, message },
         })
       );
       const action: {
-        type: 'NOTIFY';
+        type: 'WITH_PAYLOAD_META';
         payload: string;
         meta: Notification;
       } = notify({ username: 'Piotr', message: 'Hello!' });
       expect(action).toEqual({
-        type: 'NOTIFY',
+        type: 'WITH_PAYLOAD_META',
         payload: 'Piotr: Hello!',
         meta: { username: 'Piotr', message: 'Hello!' },
       });
