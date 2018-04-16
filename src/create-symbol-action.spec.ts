@@ -32,7 +32,7 @@ describe('createSymbolAction', () => {
   //     expect(type).not.toBe('ADD');
   //   });
 
-  //   it('should correctly discriminate union type', (done) => {
+  //   it('should correctly discriminate union type', () => {
   //     const actions = {
   //       increment: increment,
   //       add: add,
