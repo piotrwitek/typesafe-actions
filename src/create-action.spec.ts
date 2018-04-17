@@ -1,7 +1,7 @@
-import { createActionDeprecated, withType, action } from '.';
+import { action, actionCreator, createActionDeprecated } from '.';
 
 const deprecatedCreateAction = createActionDeprecated;
-const newCreateAction = withType(
+const newCreateAction = actionCreator(
   'GET_TODO',
   type => (token: string, id: string) => ({
     type,
@@ -10,7 +10,7 @@ const newCreateAction = withType(
   })
 );
 
-const newCreateActionPlus = withType(
+const newCreateActionPlus = actionCreator(
   'GET_TODO',
   type => (token: string, id: string) => action(type, id, token)
 );

@@ -1,14 +1,23 @@
 /**
- * @desc Represent action-type of string
+ * @private
+ * @desc Representing action-type of string
  */
 export type StringType = string;
 
 /**
- * @desc Represent action-type of symbol
+ * @private
+ * @desc Representing action-type of symbol
  */
 export type SymbolType = symbol;
 
 /**
+ * @private
+ * @desc Representing generic action-type
+ */
+export type ActionType = StringType | SymbolType;
+
+/**
+ * @private
  * @desc Action without Payload
  * @type T - ActionType
  */
@@ -17,6 +26,7 @@ export type EmptyAction<T extends StringType> = {
 };
 
 /**
+ * @private
  * @desc Action with Payload
  * @type T - ActionType
  * @type P - Payload
@@ -27,6 +37,7 @@ export type PayloadAction<T extends StringType, P> = {
 };
 
 /**
+ * @private
  * @desc Action with Payload and Meta
  * @type T - ActionType
  * @type P - Payload
@@ -39,6 +50,7 @@ export type PayloadMetaAction<T extends StringType, P, M> = {
 };
 
 /**
+ * @private
  * @desc Flux Standard Action
  * @type T - ActionType
  * @type P - Payload
@@ -50,19 +62,6 @@ export interface FluxStandardAction<T extends StringType, P = void, M = void> {
   meta: M;
   error?: true;
 }
-
-/**
- * @desc Create a union type from action-creators map object
- * @type T - ActionType
- * @type P - Payload
- * @type M - Meta
- * @type E - Error
- */
-export type ActionsUnion<ACOrACsObject> = ACOrACsObject extends ActionCreator
-  ? ReturnType<ACOrACsObject>
-  : ACOrACsObject extends object
-    ? ActionCreatorsMap<ACOrACsObject>[keyof ACOrACsObject]
-    : never;
 
 /** @private */
 export type B<T> = { v: T };
@@ -103,6 +102,23 @@ export type MapBuilder<
 /** @private */
 export type MapAction<R extends { type: any }> = R;
 /** @private */
-export type ActionCreator = (...args: any[]) => {};
+export type ActionCreator<T extends StringType = StringType> = (
+  ...args: any[]
+) => { type: T };
 /** @private */
 export type ActionCreatorsMap<T> = { [K in keyof T]: ActionsUnion<T[K]> };
+
+/** PUBLIC */
+
+/**
+ * @desc Create a union type from action-creators map object
+ * @type T - ActionType
+ * @type P - Payload
+ * @type M - Meta
+ * @type E - Error
+ */
+export type ActionsUnion<ACOrACsObject> = ACOrACsObject extends ActionCreator
+  ? ReturnType<ACOrACsObject>
+  : ACOrACsObject extends object
+    ? ActionCreatorsMap<ACOrACsObject>[keyof ACOrACsObject]
+    : never;
