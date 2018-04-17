@@ -1,29 +1,34 @@
-import { StringType, SymbolType } from '.';
+import { ActionCreator, ActionType, StringType } from '.';
 
-export interface TypeMeta<T extends StringType | SymbolType> {
+export interface TypeMeta<T extends ActionType> {
   getType?: () => T;
 }
 
 /**
  * @description get the "type literal" of a given action creator
  */
-export function getType<T extends StringType | SymbolType>(
-  actionCreator: ((...args: any[]) => { type: T }) & TypeMeta<T>
+export function getType<T extends StringType>(
+  creator: ActionCreator<T> & TypeMeta<T>
 ): T {
-  if (actionCreator == null) {
+  if (creator == null) {
     throw new Error('first argument is missing');
   }
 
-  if (actionCreator.getType == null) {
+  if (creator.getType == null) {
     throw new Error('first argument is not an instance of "typesafe-actions"');
   }
 
-  return actionCreator.getType();
+  return creator.getType();
 }
 
-export function withType<T extends StringType | SymbolType, AC>(
-  type: T,
-  fn: (type: T) => AC
-): AC {
-  return Object.assign(fn(type), { getType: () => type });
+/**
+ * @description create a type-safe action creator
+ */
+export function actionCreator<
+  T extends StringType,
+  AC extends ActionCreator<T>
+>(type: T, callback?: (type: T) => AC): AC {
+  const creator: AC =
+    callback != null ? callback(type) : ((() => ({ type })) as AC);
+  return Object.assign(creator, { getType: () => type });
 }

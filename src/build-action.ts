@@ -1,4 +1,4 @@
-import { StringType, B, FsaBuilder, MapBuilder, withType } from '.';
+import { StringType, B, FsaBuilder, MapBuilder, actionCreator } from '.';
 
 /**
  * @description create an action creator of a given function that contains hidden "type" metadata
@@ -25,14 +25,14 @@ export function buildAction<T extends StringType>(
   function map<R, P, M>(
     fn: (payload?: P, meta?: M) => R
   ): MapBuilder<T, B<R>, B<P>, B<M>> {
-    return withType(actionType, type => (payload?: P, meta?: M) => ({
+    return actionCreator(actionType, type => (payload?: P, meta?: M) => ({
       type,
       ...(fn(payload, meta) as {}),
     })) as MapBuilder<T, B<R>, B<P>, B<M>>;
   }
 
   function constructor<P, M = void>(): FsaBuilder<T, B<P>, B<M>> {
-    return withType(actionType, type => (payload?: P, meta?: M) => ({
+    return actionCreator(actionType, type => (payload?: P, meta?: M) => ({
       type,
       payload,
       meta,
