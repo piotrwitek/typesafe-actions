@@ -10,7 +10,17 @@ Simple functional API that's specifically designed to reduce **verbosity** (no e
 and **complexity** (retain "type soundness" and easily discriminate union types)
 of type annotations.
 
-The main goal of this library is to limit the developers using the actions to incorrectly use them by strictly checking if the input parameters are correct. (for instance when you do **not** provide payload creator function, this means that your action creator will not accept any parameters and show error when someone will try to do that)
+### Goals
+
+* have complete type-safety for payload operations in reducer with switch cases and conditional statements (TODO: link)
+* have complete type-safety for payload operations in `redux-observable` epics and any other functional api with `filter` method (TODO: link)
+* strictly check arguments of given payload when invoking action creators in view layer (TODO: link)
+
+### Features
+
+* super small and focused - (min + gzip < 1kb)
+* secure - no external dependencies
+* thoroughly tested for runtime and type safety
 
 ---
 
@@ -20,7 +30,7 @@ The main goal of this library is to limit the developers using the actions to in
 * [Motivation](#motivation)
 * [Tutorial](#tutorial)
 * [API](#api)
-  * [`ActionsUnion`](#actionsunion)
+  * [`ActionsUnion`](#actionsunion) (static-type)
   * [`buildAction`](#buildaction)
   * [`createAction`](#createaction)
   * [`getType`](#gettype)
@@ -35,13 +45,13 @@ The main goal of this library is to limit the developers using the actions to in
 For NPM users
 
 ```bash
-$ npm install --save typesafe-actions
+npm install --save typesafe-actions
 ```
 
 For Yarn users
 
 ```bash
-$ yarn add typesafe-actions
+yarn add typesafe-actions
 ```
 
 [⇧ back to top](#table-of-contents)
@@ -50,11 +60,13 @@ $ yarn add typesafe-actions
 
 ## Motivation
 
-While trying to use [redux-actions](https://redux-actions.js.org/) with TypeScript I was dissapointed by it's "unsoundness" with static-typing [(more info here)](#redux-actions).
+First I was trying to use [redux-actions](https://redux-actions.js.org/) with TypeScript but I really couldn't accept the incorrect type signatures and broken type-inference cascading throughout the entire code-base [(click here to read more detailed comparison)](#redux-actions).
 
-Moreover **alternative solutions** in the wild have been either too verbose, used classes (which hinders readability) or was too "explicitly typed" instead of leveraging incredible type-inference ("implicit types").
+Moreover alternative solutions in the wild have been either **too verbose enforcing redundant type annotations** or **used classes** (which hinders readability and enforce you to use **new** keyword 😱) instead of leveraging incredible **type-inference** 💪.
 
-**That's why in `typesafe-actions` I created an API specifically designed to only use "type-inference" and provide a clean functional interface without a need to provide explicit generic type arguments, so that it feels like an expressive and idiomatic JavaScript.**
+That's why `typesafe-actions` was created specifically designed to only use "type-inference" and provide a clean functional interface without a need to provide redundant type arguments, so that it feels like idiomatic JavaScript.\*\*
+
+**From v2.0 added a complementary API leveraging generic type arguments to provide a very concise and expressive way to use bag objects as payload/meta and cut the boilerplate to basically one-liners**
 
 [⇧ back to top](#table-of-contents)
 
@@ -62,9 +74,11 @@ Moreover **alternative solutions** in the wild have been either too verbose, use
 
 ## Tutorial
 
-To highlight the benefits of type inference leveraged in this solution, let me show you how to handle the most common use-cases found in Redux Architecture:
+To showcase the power of **type-safety** provided by this library, let me show you how to build a typical todo app in a type-safe Redux Architecture:
 
-### create union type of actions (a.k.a. `RootAction`)
+Here is a link to completed todo-app in codesandbox:
+
+### start with creating actions (a.k.a. `RootAction`)
 
 ```ts
 import { buildAction, ActionsUnion } from 'typesafe-actions';
@@ -80,9 +94,10 @@ export const todosActions = { ... };
 export type RootAction = ActionsUnion<typeof counterActions>;
 ```
 
-> **PRO-TIP:** merge with third-party actions to create a complete Action Type
+> **PRO-TIP:** merge with third-party action types to model a complete representation of all possible actions at runtime
 
 ```ts
+// example of including `react-router` action types
 import { RouterAction, LocationChangeAction } from 'react-router';
 type ReactRouterAction = RouterAction | LocationChangeAction;
 
@@ -93,19 +108,36 @@ export type AppAction = RootAction | ReactRouterAction;
 
 ### reducer switch cases
 
-Use `getType` function to reduce common boilerplate and discriminate union type of `RootAction` to a specific action.
+Use `getType` function to reduce boilerplate and mitigate the trouble of tossing "type constants" across the application layers (use only action creators everywhere).
+Moreover it will discriminate union type of `RootAction` to a specific action (like a type-guard).
 
 ```ts
 import { getType } from 'typesafe-actions';
 
-import { RootState, RootAction } from '@src/redux';
+import { RootAction } from '@src/redux';
 import { add } from './actions';
 
-const reducer = (state: RootState, action: RootAction) => {
+const reducer = (state: number = 0, action: RootAction) => {
   switch (action.type) {
     case getType(add):
       return state + action.payload; // action is narrowed to a type of "add" action (payload: number)
   ...
+```
+
+* alternative for conditional statements
+
+```ts
+import { isActionOf } from 'typesafe-actions';
+...
+const reducer = (state: number = 0, action: RootAction) => {
+  if (isActionOf(add, action)) {
+      return state + action.payload; // action is narrowed to a type of "add" action (payload: number)
+  }
+// can accept array for multiple actions
+const fetchReducer = (state: boolean = false, action: RootAction) => {
+  if (isActionOf([fetchArticles, fetchComment, fetchRating], action)) {
+      return true; // action is narrowed to a type of "add" action (payload: number)
+  }
 ```
 
 [⇧ back to top](#table-of-contents)
@@ -279,7 +311,7 @@ const logTodoAction: Epic<RootAction, RootState> =
 
 ## Compare to others
 
-Here you can find out the differences compared to other solutions.
+Here you can find out a detailed comparison of `typesafe-actions` to other solutions.
 
 ### `redux-actions`
 
@@ -318,9 +350,11 @@ const notify1 = createAction('NOTIFY');
 * redux-actions
 
 ```ts
-const notify2 = createAction('NOTIFY', (username: string, message?: string) => ({
-  message: `${username}: ${message || ''}`,
-}));
+const notify2 = createAction('NOTIFY',
+  (username: string, message?: string) => ({
+    message: `${username}: ${message || 'Empty!'}`,
+  })
+);
 // resulting type:
 // const notify2: (t1: string) => {
 //   type: string;
@@ -334,12 +368,12 @@ const notify2 = createAction('NOTIFY', (username: string, message?: string) => (
 * typesafe-actions
 
 ```ts
-const notify2 = createAction('NOTIFY',
-  (username: string, message?: string) => ({
-    type: 'NOTIFY'
-    payload: { message: `${username}: ${message || ''}` },
-  })
-)
+const notify2 = createAction('NOTIFY', type =>
+  (username: string, message?: string) => action(
+    type,
+    { message: `${username}: ${message || 'Empty!'}` },
+  )
+);
 // resulting type:
 // const notify2: (username: string, message?: string | undefined) => {
 //   type: "NOTIFY";
@@ -347,17 +381,16 @@ const notify2 = createAction('NOTIFY',
 // }
 ```
 
-> `typesafe-actions` retain complete type soundness
+> `typesafe-actions` retain very precise resulting type
 
 #### with payload and meta
 
 * redux-actions
 
 ```ts
-const notify3 = createAction(
-  'NOTIFY',
+const notify3 = createAction('NOTIFY',
   (username: string, message?: string) => ({
-    message: `${username}: ${message || ''}`,
+    message: `${username}: ${message || 'Empty!'}`,
   }),
   (username: string, message?: string) => ({ username, message })
 );
@@ -370,16 +403,18 @@ const notify3 = createAction(
 // }
 ```
 
-> notice complete loss of arguments arity and types in resulting function, moreover action `type` property is again widened to string with nullable `payload` and `error`
+> notice complete loss of arguments arity and types in resulting function, moreover action `type` property type is again widened to string with and `payload` and `error` is nullable (but why?)
 
 * typesafe-actions
 
 ```ts
-const notify3 = createAction('NOTIFY', (username: string, message?: string) => ({
-  type: 'NOTIFY',
-  payload: { message: `${username}: ${message || ''}` },
-  meta: { username, message },
-}));
+const notify3 = createAction('NOTIFY', type =>
+  (username: string, message?: string) => action(
+    type,
+    { message: `${username}: ${message || 'Empty!'}` },
+    { username, message },
+  )
+);
 // resulting type:
 // const notify3: (username: string, message?: string | undefined) => {
 //   type: "NOTIFY";
@@ -388,7 +423,7 @@ const notify3 = createAction('NOTIFY', (username: string, message?: string) => (
 // }
 ```
 
-> `typesafe-actions` makes 🐼 happy once again
+> `typesafe-actions` makes 🐼 very happy with type-safe result
 
 [⇧ back to top](#table-of-contents)
 

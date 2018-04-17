@@ -87,7 +87,7 @@ describe('type-meta', () => {
 
     // const newCreateActionPlus = withType(
     //   'GET_TODO',
-    //   type => (token: string, id: string) => action(type, id, token)
+    //   type => (id: string, token?: string) => action(type, id, { token })
     // );
   });
 });
