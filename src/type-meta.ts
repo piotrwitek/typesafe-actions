@@ -1,7 +1,28 @@
 import { ActionCreator, ActionType, StringType } from '.';
 
+/**
+ * @private
+ * @internal
+ */
 export interface TypeMeta<T extends ActionType> {
   getType?: () => T;
+}
+
+/**
+ * @private
+ * @internal
+ * @description decorate any action creator to make it compatible with `typesafe-actions`
+ * @description (works with third-party libs)
+ */
+export function withType<T extends StringType, AC extends ActionCreator<T>>(
+  type: T,
+  constructorFunction?: (type: T) => AC
+): AC {
+  const actionCreator: AC =
+    constructorFunction != null
+      ? constructorFunction(type)
+      : ((() => ({ type })) as AC);
+  return Object.assign(actionCreator, { getType: () => type });
 }
 
 /**
@@ -19,16 +40,4 @@ export function getType<T extends StringType>(
   }
 
   return creator.getType();
-}
-
-/**
- * @description create a type-safe action creator
- */
-export function actionCreator<
-  T extends StringType,
-  AC extends ActionCreator<T>
->(type: T, callback?: (type: T) => AC): AC {
-  const creator: AC =
-    callback != null ? callback(type) : ((() => ({ type })) as AC);
-  return Object.assign(creator, { getType: () => type });
 }

@@ -1,5 +1,5 @@
-import { ActionsUnion, buildAction, isActionOf } from '.';
-import { actions, testType } from './utils';
+import { isActionOf } from './is-action-of';
+import { actions, testType } from './test-utils';
 const {
   withTypeOnly,
   withPayload,
@@ -8,77 +8,80 @@ const {
   withMappedPayloadMeta,
 } = actions;
 
+/** FIXTURES */
+const typeOnlyAction = withTypeOnly();
+const typeOnlyExpected = { type: 'WITH_TYPE_ONLY' };
+const payloadAction = withPayload(2);
+const payloadExpected = { type: 'WITH_PAYLOAD', payload: 2 };
+const payloadMetaAction = withPayloadMeta(2, 'metaValue');
+const payloadMetaExpected = {
+  type: 'WITH_PAYLOAD_META',
+  payload: 2,
+  meta: 'metaValue',
+};
+const mappedPayloadAction = withMappedPayload(2);
+const mappedPayloadExpected = { type: 'WITH_MAPPED_PAYLOAD', payload: 2 };
+const mappedPayloadMetaAction = withMappedPayloadMeta(2, 'metaValue');
+const mappedPayloadMetaExpected = {
+  type: 'WITH_MAPPED_PAYLOAD_META',
+  payload: 2,
+  meta: 'metaValue',
+};
+
+const $action = [
+  typeOnlyAction,
+  payloadAction,
+  payloadMetaAction,
+  mappedPayloadAction,
+  mappedPayloadMetaAction,
+];
+
 describe('isActionOf', () => {
-  it('should work with actions from buildAction with type only', () => {
-    expect(isActionOf(withTypeOnly)(withTypeOnly())).toBeTruthy();
-    expect(isActionOf(withTypeOnly, withTypeOnly())).toBeTruthy();
-    expect(isActionOf([withTypeOnly])(withTypeOnly())).toBeTruthy();
-    expect(isActionOf([withTypeOnly], withTypeOnly())).toBeTruthy();
-    expect(isActionOf(withTypeOnly)(withPayload(2))).toBeFalsy();
-    expect(isActionOf(withTypeOnly, withPayload(2))).toBeFalsy();
-    expect(isActionOf([withTypeOnly])(withPayload(2))).toBeFalsy();
-    expect(isActionOf([withTypeOnly], withPayload(2))).toBeFalsy();
+  it('should work with type only actions', () => {
+    expect(isActionOf(withTypeOnly)(typeOnlyAction)).toBeTruthy();
+    expect(isActionOf(withTypeOnly, typeOnlyAction)).toBeTruthy();
+    expect(isActionOf([withTypeOnly])(typeOnlyAction)).toBeTruthy();
+    expect(isActionOf([withTypeOnly], typeOnlyAction)).toBeTruthy();
+    expect(isActionOf(withTypeOnly)(payloadAction)).toBeFalsy();
+    expect(isActionOf(withTypeOnly, payloadAction)).toBeFalsy();
+    expect(isActionOf([withTypeOnly])(payloadAction)).toBeFalsy();
+    expect(isActionOf([withTypeOnly], payloadAction)).toBeFalsy();
   });
 
-  it('should work with actions from buildAction with map', () => {
-    expect(isActionOf(withMappedPayload)(withMappedPayload(2))).toBeTruthy();
-    expect(isActionOf(withMappedPayload, withMappedPayload(2))).toBeTruthy();
-    expect(isActionOf([withMappedPayload])(withMappedPayload(2))).toBeTruthy();
-    expect(isActionOf([withMappedPayload], withMappedPayload(2))).toBeTruthy();
-    expect(isActionOf(withMappedPayload)(withTypeOnly())).toBeFalsy();
-    expect(isActionOf(withMappedPayload, withTypeOnly())).toBeFalsy();
-    expect(isActionOf([withMappedPayload])(withTypeOnly())).toBeFalsy();
-    expect(isActionOf([withMappedPayload], withTypeOnly())).toBeFalsy();
+  it('should work with with mapped actions', () => {
+    expect(isActionOf(withMappedPayload)(mappedPayloadAction)).toBeTruthy();
+    expect(isActionOf(withMappedPayload, mappedPayloadAction)).toBeTruthy();
+    expect(isActionOf([withMappedPayload])(mappedPayloadAction)).toBeTruthy();
+    expect(isActionOf([withMappedPayload], mappedPayloadAction)).toBeTruthy();
+    expect(isActionOf(withMappedPayload)(typeOnlyAction)).toBeFalsy();
+    expect(isActionOf(withMappedPayload, typeOnlyAction)).toBeFalsy();
+    expect(isActionOf([withMappedPayload])(typeOnlyAction)).toBeFalsy();
+    expect(isActionOf([withMappedPayload], typeOnlyAction)).toBeFalsy();
   });
 
-  it('should work with actions from buildAction mixed', () => {
+  it('should work with array of mixed actions', () => {
     expect(
-      isActionOf([withTypeOnly, withPayload])(withTypeOnly())
+      isActionOf([withTypeOnly, withPayload])(typeOnlyAction)
     ).toBeTruthy();
     expect(
-      isActionOf([withTypeOnly, withPayload], withTypeOnly())
+      isActionOf([withTypeOnly, withPayload], typeOnlyAction)
     ).toBeTruthy();
+    expect(isActionOf([withTypeOnly, withPayload])(payloadAction)).toBeTruthy();
+    expect(isActionOf([withTypeOnly, withPayload], payloadAction)).toBeTruthy();
     expect(
-      isActionOf([withTypeOnly, withPayload])(withPayload(2))
-    ).toBeTruthy();
-    expect(
-      isActionOf([withTypeOnly, withPayload], withPayload(2))
-    ).toBeTruthy();
-    expect(
-      isActionOf([withTypeOnly, withPayload])(withMappedPayload(2))
+      isActionOf([withTypeOnly, withPayload])(mappedPayloadAction)
     ).toBeFalsy();
     expect(
-      isActionOf([withTypeOnly, withPayload], withMappedPayload(2))
+      isActionOf([withTypeOnly, withPayload], mappedPayloadAction)
     ).toBeFalsy();
   });
-
-  const actual0 = withTypeOnly();
-  const expected0 = { type: 'WITH_TYPE_ONLY' };
-  const actual1 = withPayload(2);
-  const expected1 = { type: 'WITH_PAYLOAD', payload: 2 };
-  const actual2 = withPayloadMeta(2, 'metaValue');
-  const expected2 = {
-    type: 'WITH_PAYLOAD_META',
-    payload: 2,
-    meta: 'metaValue',
-  };
-  const actual3 = withMappedPayload(2);
-  const expected3 = { type: 'WITH_MAPPED_PAYLOAD', payload: 2 };
-  const actual4 = withMappedPayloadMeta(2, 'metaValue');
-  const expected4 = {
-    type: 'WITH_MAPPED_PAYLOAD_META',
-    payload: 2,
-    meta: 'metaValue',
-  };
-
-  const $action = [actual0, actual1, actual2, actual3, actual4];
 
   it('should correctly assert for array with one actionCreator', () => {
     const actual: Array<{ type: 'WITH_TYPE_ONLY' }> = $action.filter(
       isActionOf([withTypeOnly])
     );
     expect(actual).toHaveLength(1);
-    expect(actual).toEqual([expected0]);
+    expect(actual).toEqual([typeOnlyExpected]);
   });
 
   it('should correctly assert for array with two actionCreators', () => {
@@ -86,7 +89,7 @@ describe('isActionOf', () => {
       { type: 'WITH_TYPE_ONLY' } | { type: 'WITH_PAYLOAD'; payload: number }
     > = $action.filter(isActionOf([withTypeOnly, withPayload]));
     expect(actual).toHaveLength(2);
-    expect(actual).toEqual([expected0, expected1]);
+    expect(actual).toEqual([typeOnlyExpected, payloadExpected]);
   });
 
   it('should correctly assert for array with three actionCreators', () => {
@@ -98,7 +101,11 @@ describe('isActionOf', () => {
       isActionOf([withTypeOnly, withPayload, withPayloadMeta])
     );
     expect(actual).toHaveLength(3);
-    expect(actual).toEqual([expected0, expected1, expected2]);
+    expect(actual).toEqual([
+      typeOnlyExpected,
+      payloadExpected,
+      payloadMetaExpected,
+    ]);
   });
 
   it('should correctly assert for array with four actionCreators', () => {
@@ -115,7 +122,12 @@ describe('isActionOf', () => {
         withMappedPayload,
       ])
     );
-    expect(actual).toEqual([expected0, expected1, expected2, expected3]);
+    expect(actual).toEqual([
+      typeOnlyExpected,
+      payloadExpected,
+      payloadMetaExpected,
+      mappedPayloadExpected,
+    ]);
   });
 
   it('should correctly assert for array with five actionCreators', () => {
@@ -139,11 +151,11 @@ describe('isActionOf', () => {
     );
     expect(actual).toHaveLength(5);
     expect(actual).toEqual([
-      expected0,
-      expected1,
-      expected2,
-      expected3,
-      expected4,
+      typeOnlyExpected,
+      payloadExpected,
+      payloadMetaExpected,
+      mappedPayloadExpected,
+      mappedPayloadMetaExpected,
     ]);
   });
 });

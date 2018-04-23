@@ -1,8 +1,6 @@
-import { StringType, B, FsaBuilder, MapBuilder, actionCreator } from '.';
+import { StringType, B, FsaBuilder, MapBuilder, withType } from '.';
+import { validateActionType } from './utils';
 
-/**
- * @description create an action creator of a given function that contains hidden "type" metadata
- */
 export interface BuildAction<T extends StringType> {
   <P = void, M = void>(): FsaBuilder<T, B<P>, B<M>>;
   map<R, P = void, M = void>(
@@ -10,29 +8,25 @@ export interface BuildAction<T extends StringType> {
   ): MapBuilder<T, B<R>, B<P>, B<M>>;
 }
 
-/** implementation */
+/**
+ * @description create an action creator of a given function that contains hidden "type" metadata
+ */
 export function buildAction<T extends StringType>(
   actionType: T
 ): BuildAction<T> {
-  if (actionType == null) {
-    throw new Error('first argument is missing');
-  } else {
-    if (typeof actionType !== 'string' && typeof actionType !== 'symbol') {
-      throw new Error('first argument should be type of: string | symbol');
-    }
-  }
+  validateActionType(actionType);
 
   function map<R, P, M>(
     fn: (payload?: P, meta?: M) => R
   ): MapBuilder<T, B<R>, B<P>, B<M>> {
-    return actionCreator(actionType, type => (payload?: P, meta?: M) => ({
+    return withType(actionType, type => (payload?: P, meta?: M) => ({
       type,
       ...(fn(payload, meta) as {}),
     })) as MapBuilder<T, B<R>, B<P>, B<M>>;
   }
 
   function constructor<P, M = void>(): FsaBuilder<T, B<P>, B<M>> {
-    return actionCreator(actionType, type => (payload?: P, meta?: M) => ({
+    return withType(actionType, type => (payload?: P, meta?: M) => ({
       type,
       payload,
       meta,
