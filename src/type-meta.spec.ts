@@ -1,4 +1,4 @@
-import { buildAction, getType, actionCreator, action } from '.';
+import { buildAction, getType, withType } from '.';
 
 describe('type-meta', () => {
   describe('getType', () => {
@@ -42,9 +42,9 @@ describe('type-meta', () => {
 
   describe('withType', () => {
     it('only type', () => {
-      const increment = actionCreator('WITH_TYPE_ONLY', type => () =>
-        action(type)
-      );
+      const increment = withType('WITH_TYPE_ONLY', type => {
+        return () => ({ type });
+      });
       const typeLiteral: 'WITH_TYPE_ONLY' = getType(increment);
       expect(typeLiteral).toBe('WITH_TYPE_ONLY');
     });
@@ -54,43 +54,32 @@ describe('type-meta', () => {
       const INCREMENT = (Symbol(1) as any) as Increment & string;
       const a: string = INCREMENT; // Ok
       // const b: typeof INCREMENT = 'INCREMENT'; // Error
-      const increment = actionCreator(INCREMENT, type => () => action(type));
+      const increment = withType(INCREMENT, type => () => ({ type }));
       const typeLiteral: typeof INCREMENT = getType(increment);
       expect(typeLiteral).toBe(INCREMENT);
       expect(typeLiteral).not.toBe('WITH_TYPE_ONLY');
     });
 
     it('with payload', () => {
-      const add = actionCreator(
-        'WITH_MAPPED_PAYLOAD',
-        type => (amount: number) => action(type, amount)
-      );
+      const add = withType('WITH_MAPPED_PAYLOAD', type => {
+        return (amount: number) => ({ type, payload: amount });
+      });
+
       const typeLiteral: 'WITH_MAPPED_PAYLOAD' = getType(add);
       expect(typeLiteral).toBe('WITH_MAPPED_PAYLOAD');
     });
 
     it('with payload and meta', () => {
-      const showNotification = actionCreator(
+      const showNotification = withType(
         'SHOW_NOTIFICATION',
-        type => (message: string, scope: string) => action(type, message, scope)
+        type => (message: string, scope: string) => ({
+          type,
+          payload: message,
+          meta: scope,
+        })
       );
       const typeLiteral: 'SHOW_NOTIFICATION' = getType(showNotification);
       expect(typeLiteral).toBe('SHOW_NOTIFICATION');
     });
-
-    // docs example
-    // const newCreateAction = withType(
-    //   'GET_TODO',
-    //   type => (token: string, id: string) => ({
-    //     type,
-    //     payload: id,
-    //     meta: token,
-    //   })
-    // );
-
-    // const newCreateActionPlus = withType(
-    //   'GET_TODO',
-    //   type => (id: string, token?: string) => action(type, id, { token })
-    // );
   });
 });

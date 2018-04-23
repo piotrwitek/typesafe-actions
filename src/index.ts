@@ -11,8 +11,9 @@ export * from './build-action';
 // guards
 export * from './types';
 export * from './type-meta';
+export * from './is-of-type';
 export * from './is-action-of';
 // experimental
-export * from './create-symbol-action';
+
 // deprecated
 export * from './create-action-deprecated';

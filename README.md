@@ -187,14 +187,14 @@ WIP v2.0.0
 
 [⇧ back to top](#table-of-contents)
 
-### createAction
+### withType
 
 > create the action creator of a given function that contains private "type" metadata
 
 [> Advanced Usage](src/create-action.spec.ts)
 
 ```ts
-function createAction(typeString: T, creatorFunction?: CF): CF;
+function withType(typeString: T, creatorFunction?: CF): CF;
 
 // CF extends (...args: any[]) => { type: T, payload?: P, meta?: M, error?: boolean }
 ```
@@ -203,7 +203,7 @@ Examples:
 
 ```ts
 // no payload
-const increment = createAction('INCREMENT');
+const increment = withType('INCREMENT');
 // same as:
 // const increment = createAction('INCREMENT', () => ({ type: 'INCREMENT' }));
 
@@ -243,9 +243,7 @@ expect(notify('Piotr', 'Hello!')).toEqual({
 [> Advanced Usage](src/get-type.spec.ts)
 
 ```ts
-function getType(actionCreator: AC<T>): T;
-
-// AC<T> extends (...args: any[]) => { type: T }
+function getType(actionCreator: (...args) => T): T;
 ```
 
 Examples:
@@ -271,22 +269,24 @@ switch (action.type) {
 
 ### isActionOf
 
-> create the assert function for specified action creator(s) - resulting function will then assert (true/false) maching actions  
-> (it will discriminate union type to specified action creator(s))
+> (curried assert function) Check if action is an instance of given action creator(s)
+> it will discriminate actions union to a specific action
 
 [> Advanced Usage](src/is-action-of.spec.ts)
 
 ```ts
-function isActionOf(actionCreator: AC<T>): (action: any) => action is T;
-function isActionOf(actionCreators: Array<AC<T>>): (action: any) => action is T;
-
-// AC<T> extends (...args: any[]) => T
+// can be used as a binary function
+isActionOf(actionCreator: (...args) => T, action: any): action is T;
+isActionOf([actionCreator]: Array<(...args) => T>, action: any): action is T;
+// or as a curried function
+isActionOf(actionCreator: (...args) => T): (action: any) => action is T;
+isActionOf([actionCreator]: Array<(...args) => T>): (action: any) => action is T;
 ```
 
 Examples:
 
 ```ts
-// in epics, with single action
+// epics with single action
 import { addTodo } from './actions';
 const addTodoToast: Epic<RootAction, RootState> =
   (action$, store) => action$
@@ -295,7 +295,7 @@ const addTodoToast: Epic<RootAction, RootState> =
       const toast = `Added new todo: ${action.payload}`;
 ...
 
-// with multiple actions
+// epics with multiple actions
 import { addTodo, toggleTodo } from './actions';
 const logTodoAction: Epic<RootAction, RootState> =
   (action$, store) => action$
@@ -303,6 +303,13 @@ const logTodoAction: Epic<RootAction, RootState> =
     .concatMap((action) => { // action is asserted as: { type: "ADD_TODO", payload: string } | { type: "TOGGLE_TODO", payload: string }
       const log = `Dispatched action: ${action.type}`;
 ...
+
+// any place where you need a type guard
+import { addTodo } from './actions';
+...
+if(isActionOf(addTodo, action)) {
+  operationThatNeedsPayload(action.payload) // action is asserted as: { type: "ADD_TODO", payload: string }
+}
 ```
 
 [⇧ back to top](#table-of-contents)
@@ -314,88 +321,94 @@ const logTodoAction: Epic<RootAction, RootState> =
 Here you can find out a detailed comparison of `typesafe-actions` to other solutions.
 
 ### `redux-actions`
+Lets compare the 3 most common action-creators variants (type only, with payload, with payload and meta)
 
 > tested with "@types/redux-actions": "2.2.3"
 
-#### no payload
-
-* redux-actions
+#### - type only (no payload)
 
 ```ts
+/**
+ * redux-actions
+ */
 const notify1 = createAction('NOTIFY');
 // resulting type:
-// const notify1: () => {
+// () => {
 //   type: string;
 //   payload: void | undefined;
 //   error: boolean | undefined;
 // }
 ```
 
-> with `redux-actions` notice excess "nullable" properties `payload` and `error`, also the action `type` property is widened to string (🐼 is really sad!)
-
-* typesafe-actions
+> with `redux-actions` you can notice the redundant nullable `payload` property and literal type of `type` property is lost (discrimination would not be possible) (🐼 is really sad!)
 
 ```ts
-const notify1 = createAction('NOTIFY');
+/**
+ * typesafe-actions
+ */
+const notify1 = () => action('NOTIFY');
 // resulting type:
-// const notify1: () => {
+// () => {
 //   type: "NOTIFY";
 // }
 ```
 
-> with `typesafe-actions` there is no nullable types, only the data that is really there, also the action "type" property is correct narrowed to literal type (great success!)
+> with `typesafe-actions` there is no excess nullable types, only the data that is really there, also the action "type" property is containing precise literal type
 
-#### with payload
-
-* redux-actions
+#### - with payload
 
 ```ts
+/**
+ * redux-actions
+ */
 const notify2 = createAction('NOTIFY',
   (username: string, message?: string) => ({
     message: `${username}: ${message || 'Empty!'}`,
   })
 );
 // resulting type:
-// const notify2: (t1: string) => {
+// (t1: string) => {
 //   type: string;
 //   payload: { message: string; } | undefined;
 //   error: boolean | undefined;
 // }
 ```
 
-> notice the missing optional `message` parameter in resulting function also `username` param name is changed to `t1`, action `type` property is widened to string and incorrect nullable properties
-
-* typesafe-actions
+> first the optional `message` parameter is lost, `username` param name is changed to some generic `t1`, literal type of `type` property is lost again and `payload` is nullable because of broken inference
 
 ```ts
-const notify2 = createAction('NOTIFY', type =>
-  (username: string, message?: string) => action(
-    type,
-    { message: `${username}: ${message || 'Empty!'}` },
-  )
+/**
+ * typesafe-actions
+ */
+const notify2 = (username: string, message?: string) => action(
+  'NOTIFY',
+  { message: `${username}: ${message || 'Empty!'}` },
 );
 // resulting type:
-// const notify2: (username: string, message?: string | undefined) => {
+// (username: string, message?: string | undefined) => {
 //   type: "NOTIFY";
 //   payload: { message: string; };
 // }
 ```
 
-> `typesafe-actions` retain very precise resulting type
+> `typesafe-actions` still retain very precise resulting type
 
-#### with payload and meta
-
-* redux-actions
+#### - with payload and meta
 
 ```ts
+/**
+ * redux-actions
+ */
 const notify3 = createAction('NOTIFY',
-  (username: string, message?: string) => ({
-    message: `${username}: ${message || 'Empty!'}`,
-  }),
-  (username: string, message?: string) => ({ username, message })
+  (username: string, message?: string) => (
+    { message: `${username}: ${message || 'Empty!'}` }
+  ),
+  (username: string, message?: string) => (
+    { username, message }
+  )
 );
 // resulting type:
-// const notify3: (...args: any[]) => {
+// (...args: any[]) => {
 //   type: string;
 //   payload: { message: string; } | undefined;
 //   meta: { username: string; message: string | undefined; };
@@ -403,27 +416,26 @@ const notify3 = createAction('NOTIFY',
 // }
 ```
 
-> notice complete loss of arguments arity and types in resulting function, moreover action `type` property type is again widened to string with and `payload` and `error` is nullable (but why?)
-
-* typesafe-actions
+> this time we got a complete loss of arguments arity with falling back to `any` type with all the remaining issues as before
 
 ```ts
-const notify3 = createAction('NOTIFY', type =>
-  (username: string, message?: string) => action(
-    type,
-    { message: `${username}: ${message || 'Empty!'}` },
-    { username, message },
-  )
+/**
+ * typesafe-actions
+ */
+const notify3 = (username: string, message?: string) => action(
+  'NOTIFY',
+  { message: `${username}: ${message || 'Empty!'}` },
+  { username, message },
 );
 // resulting type:
-// const notify3: (username: string, message?: string | undefined) => {
+// (username: string, message?: string | undefined) => {
 //   type: "NOTIFY";
 //   payload: { message: string; };
 //   meta: { username: string; message: string | undefined; };
 // }
 ```
 
-> `typesafe-actions` makes 🐼 very happy with type-safe result
+> `typesafe-actions` never fail to `any` type (🐼 is impressed by completely type-safe results)
 
 [⇧ back to top](#table-of-contents)
 
