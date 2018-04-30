@@ -54,6 +54,7 @@
       "check-format",
       "allow-pascal-case",
       "allow-leading-underscore"
-    ]
+    ],
+    "no-shadowed-variable": true
   }
 }

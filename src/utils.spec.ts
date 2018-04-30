@@ -1,11 +1,10 @@
 import { validateActionType } from './utils';
-
-const expectToThrowError = (cb: () => void, message: string) => {
+const expectToThrowError = (cb: () => void, expectedMessage: string) => {
   try {
     cb();
     expect(false).toBeTruthy();
   } catch ({ message }) {
-    expect(message).toEqual(message);
+    expect(message).toEqual(expectedMessage);
   }
 };
 
@@ -27,10 +26,10 @@ describe('utils.validateActionType()', () => {
   const INVALID_TYPE =
     'action type argument should be type of: string | symbol';
 
-  it('throws an error when number is given as action type', () =>
+  it('throws an error when number is given as an action type', () =>
     expectToThrowError(() => validateActionType(4), INVALID_TYPE));
 
-  it('throws an error when object is given as action type', () =>
+  it('throws an error when object is given as an action type', () =>
     expectToThrowError(() => validateActionType({}), INVALID_TYPE));
 
   it('throws no error when symbol is given', () =>
