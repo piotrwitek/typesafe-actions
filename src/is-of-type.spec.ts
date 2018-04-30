@@ -1,4 +1,4 @@
-import { isOfType } from './has-type';
+import { isOfType } from './is-of-type';
 import { types, actions, testType } from './test-utils';
 const {
   withTypeOnly,

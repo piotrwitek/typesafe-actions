@@ -1,4 +1,4 @@
-import { createSymbolAction, getType } from '.';
+import { getType } from '.';
 import { ActionsUnion } from '.';
 
 describe('createSymbolAction', () => {
