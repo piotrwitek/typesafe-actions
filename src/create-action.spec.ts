@@ -12,17 +12,31 @@ import { getType } from '.';
 
 // const newApi = (token: string, id: string) => action('GET_TODO', id, token);
 
-// const newApiWithHelpers = typesafeAction('GET_TODO', action => {
-//   return (id: string, token: string) => action(id, token);
+// const getTodoVariadic = createAction('GET_TODO', withPayloadMeta => {
+//   return (id: string, token: string) => withPayloadMeta(id, token);
 // });
 
-// const newApiBag = createTypedAction('GET_TODO')<{ id: string }, { token: string }>();
-// const newApiBagMap = createTypedAction('GET_TODO').map(
+// const getTodoUnary = createUnaryAction('GET_TODO')<{ id: string, token: string }>();
+// const getTodoUnaryMap = createUnaryAction('GET_TODO').map(
 //   ({ token, id }: { token: string; id: string }) => ({
 //     payload: id,
 //     meta: token,
 //   })
 // );
+
+// const getTodoAsync = createAsyncAction(
+//   'GET_TODO_REQUEST',
+//   'GET_TODO_SUCCESS',
+//   'GET_TODO_FAILURE'
+// )<{ token: string; id: string }, Todo, Error>();
+// const getTodoAsyncMap = createAsyncAction(
+//   'GET_TODO_REQUEST',
+//   'GET_TODO_SUCCESS',
+//   'GET_TODO_FAILURE'
+// ).map(({ token, id }: { token: string; id: string }) => ({
+//   payload: id,
+//   meta: token,
+// }));
 
 describe('typesafeAction', () => {
   it('only type', () => {
