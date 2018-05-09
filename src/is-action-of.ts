@@ -1,5 +1,4 @@
-// tslint:disable:max-line-length
-import { TypeMeta } from '.';
+import { TypeMeta } from './types';
 
 export type AC<T extends { type: string }> = ((...args: any[]) => T) &
   TypeMeta<T['type']>;

@@ -1,15 +1,16 @@
-import { buildAction, getType, ActionsUnion } from '.';
+import { createStandardAction } from './create-standard-action';
+import { getType, ActionsUnion } from '.';
 
-describe('buildAction', () => {
+describe('createStandardAction', () => {
   describe('constructor', () => {
     it('with type only', () => {
-      const increment = buildAction('INCREMENT')();
+      const increment = createStandardAction('INCREMENT')();
       const action: { type: 'INCREMENT' } = increment();
       expect(action).toEqual({ type: 'INCREMENT' });
     });
 
     it('with type only - alternative', () => {
-      const increment = buildAction('INCREMENT')<void>();
+      const increment = createStandardAction('INCREMENT')<void>();
       const action: { type: 'INCREMENT' } = increment();
       expect(action).toEqual({ type: 'INCREMENT' });
     });
@@ -19,33 +20,33 @@ describe('buildAction', () => {
       const INCREMENT = (Symbol(1) as any) as Increment & string;
       const a: string = INCREMENT; // Ok
       // const b: typeof INCREMENT = 'INCREMENT'; // Error
-      const increment = buildAction(INCREMENT)();
+      const increment = createStandardAction(INCREMENT)();
       const action: { type: typeof INCREMENT } = increment();
       expect(action).toEqual({ type: INCREMENT });
       expect(action).not.toEqual({ type: 'INCREMENT' });
     });
 
     it('with number payload', () => {
-      const add = buildAction('WITH_MAPPED_PAYLOAD')<number>();
+      const add = createStandardAction('WITH_MAPPED_PAYLOAD')<number>();
       const action: { type: 'WITH_MAPPED_PAYLOAD'; payload: number } = add(10);
       expect(action).toEqual({ type: 'WITH_MAPPED_PAYLOAD', payload: 10 });
     });
 
     it('with boolean payload', () => {
-      const set = buildAction('SET')<boolean>();
+      const set = createStandardAction('SET')<boolean>();
       const action: { type: 'SET'; payload: boolean } = set(true);
       expect(action).toEqual({ type: 'SET', payload: true });
     });
 
     it('with literals union payload', () => {
       type NetStatus = 'up' | 'down' | 'unknown';
-      const set = buildAction('SET')<NetStatus>();
+      const set = createStandardAction('SET')<NetStatus>();
       const action: { type: 'SET'; payload: NetStatus } = set('up');
       expect(action).toEqual({ type: 'SET', payload: 'up' });
     });
 
     it('with primitives union payload', () => {
-      const union = buildAction('UNION')<string | null | number>();
+      const union = createStandardAction('UNION')<string | null | number>();
       const action: { type: 'UNION'; payload: string | null | number } = union(
         'foo'
       );
@@ -63,9 +64,11 @@ describe('buildAction', () => {
 
   describe('map', () => {
     it('with payload and no params', () => {
-      const showNotification = buildAction('SHOW_NOTIFICATION').map(() => ({
-        payload: 'hardcoded message',
-      }));
+      const showNotification = createStandardAction('SHOW_NOTIFICATION').map(
+        () => ({
+          payload: 'hardcoded message',
+        })
+      );
       const action: {
         type: 'SHOW_NOTIFICATION';
         payload: string;
@@ -77,7 +80,7 @@ describe('buildAction', () => {
     });
 
     it('with payload and param', () => {
-      const showNotification = buildAction('SHOW_NOTIFICATION').map(
+      const showNotification = createStandardAction('SHOW_NOTIFICATION').map(
         (payload: string) => ({
           payload,
         })
@@ -93,7 +96,7 @@ describe('buildAction', () => {
     });
 
     it('with payload and union param', () => {
-      const showNotification = buildAction('SHOW_NOTIFICATION').map(
+      const showNotification = createStandardAction('SHOW_NOTIFICATION').map(
         (payload: string | null | number) => ({
           payload,
         })
@@ -126,7 +129,7 @@ describe('buildAction', () => {
 
     it('with payload and meta', () => {
       type Notification = { username: string; message?: string };
-      const notify = buildAction('WITH_PAYLOAD_META').map(
+      const notify = createStandardAction('WITH_PAYLOAD_META').map(
         ({ username, message }: Notification) => ({
           payload: `${username}: ${message || ''}`,
           meta: { username, message },
@@ -145,7 +148,7 @@ describe('buildAction', () => {
     });
 
     it('with payload and meta and no params', () => {
-      const showError = buildAction('SHOW_ERROR').map(() => ({
+      const showError = createStandardAction('SHOW_ERROR').map(() => ({
         payload: 'hardcoded error',
         meta: { severity: 'error' },
       }));
@@ -162,10 +165,12 @@ describe('buildAction', () => {
     });
 
     it('with payload and meta and param', () => {
-      const showError = buildAction('SHOW_ERROR').map((message: string) => ({
-        payload: message,
-        meta: { severity: 'error' },
-      }));
+      const showError = createStandardAction('SHOW_ERROR').map(
+        (message: string) => ({
+          payload: message,
+          meta: { severity: 'error' },
+        })
+      );
       const action: {
         type: 'SHOW_ERROR';
         payload: string;

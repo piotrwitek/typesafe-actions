@@ -36,7 +36,7 @@ const $action = [
   mappedPayloadMetaAction,
 ];
 
-describe('hasType', () => {
+describe('isOfType', () => {
   it('should work with type only actions', () => {
     expect(isOfType(types.WITH_TYPE_ONLY)(typeOnlyAction)).toBeTruthy();
     expect(isOfType(types.WITH_TYPE_ONLY, typeOnlyAction)).toBeTruthy();

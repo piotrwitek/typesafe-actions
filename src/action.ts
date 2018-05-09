@@ -1,4 +1,4 @@
-import { StringType } from '.';
+import { StringType } from './types';
 
 /**
  * @description flux standard action factory

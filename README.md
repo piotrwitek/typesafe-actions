@@ -4,37 +4,47 @@
 
 > #### This lib is a part of [React & Redux TypeScript Guide](https://github.com/piotrwitek/react-redux-typescript-guide)
 
-### _New API ([link to API docs](../../issues/22)) thanks to a new language feature ([conditional types](https://github.com/Microsoft/TypeScript/pull/21847)) coming to TypesScript in v2.8)_
-
-Simple functional API that's specifically designed to reduce **verbosity** (no explicit generic type arguments in the API, type inference FTW!)
-and **complexity** (retain "type soundness" and easily discriminate union types)
-of type annotations.
+Simple functional API that's specifically designed to reduce types **verbosity** (especially maintainability concerns)
+and **complexity** (powerful helpers hiding types complexity).
 
 ### Goals
 
-* have complete type-safety for payload operations in reducer with switch cases and conditional statements (TODO: link)
-* have complete type-safety for payload operations in `redux-observable` epics and any other functional api with `filter` method (TODO: link)
-* strictly check arguments of given payload when invoking action creators in view layer (TODO: link)
+* complete type-safety for payload operations in reducer with switch cases and conditional statements (TODO: [link])
+* easy discrimination of union types for `redux-observable` epics but also in any other functional api with `filter` method (TODO: [link])
+* strictly check arguments of given payload when invoking action creators in view layer (TODO: [link])
 
 ### Features
 
-* super small and focused - (min + gzip < 1kb)
-* secure - no external dependencies
-* thoroughly tested for runtime and type safety
+* __small and focused__ - (min + gzip < **1kb**)
+* __secure__ - no external dependencies
+* __tested__ - complete test-suite with tests for type soundness
+
+## Motivation
+
+When I was first trying to use [redux-actions](https://redux-actions.js.org/) with TypeScript I was intimidated by incorrect type signatures and broken type-inference cascading throughout the entire code-base [(click here to read more detailed comparison)](#redux-actions).
+
+Moreover alternative solutions in the wild have been either **too verbose because of excess type annotations** (primary maintainability concern) or **used classes** (hinders readability and enforce to use a **new** keyword 😱).
+
+That's why I created `typesafe-actions` with the core idea to lean on incredible **type-inference** 💪. to reduce the maintainability costs of type signatures and also to make it feel like simple idiomatic JavaScript because of reduced explicit types annotations to minimum.\*\*
+
+**From v2.0 we added a complementary API leveraging generic type arguments to provide a very concise and expressive way to use a "bag object" as payload argument and cut the boilerplate to one-liner**
 
 ---
 
 ## Table of Contents
 
 * [Installation](#installation)
-* [Motivation](#motivation)
 * [Tutorial](#tutorial)
 * [API](#api)
-  * [`ActionsUnion`](#actionsunion) (static-type)
-  * [`buildAction`](#buildaction)
+  * [`ActionsUnion`](#actionsunion) (RootAction type-helper)
+  * [`action`](#action)
   * [`createAction`](#createaction)
+  * [`createStandardAction`](#createstandardaction)
+  * [`createAsyncAction`](#createasyncaction)
   * [`getType`](#gettype)
   * [`isActionOf`](#isactionof)
+  * [`isOfType`](#isoftype)
+* [Migration Guide](#migration-guide)
 * [Compare to others](#compare-to-others)
   * [redux-actions](#redux-actions)
 
@@ -42,31 +52,13 @@ of type annotations.
 
 ## Installation
 
-For NPM users
-
 ```bash
+// NPM
 npm install --save typesafe-actions
-```
 
-For Yarn users
-
-```bash
+// YARN
 yarn add typesafe-actions
 ```
-
-[⇧ back to top](#table-of-contents)
-
----
-
-## Motivation
-
-First I was trying to use [redux-actions](https://redux-actions.js.org/) with TypeScript but I really couldn't accept the incorrect type signatures and broken type-inference cascading throughout the entire code-base [(click here to read more detailed comparison)](#redux-actions).
-
-Moreover alternative solutions in the wild have been either **too verbose enforcing redundant type annotations** or **used classes** (which hinders readability and enforce you to use **new** keyword 😱) instead of leveraging incredible **type-inference** 💪.
-
-That's why `typesafe-actions` was created specifically designed to only use "type-inference" and provide a clean functional interface without a need to provide redundant type arguments, so that it feels like idiomatic JavaScript.\*\*
-
-**From v2.0 added a complementary API leveraging generic type arguments to provide a very concise and expressive way to use bag objects as payload/meta and cut the boilerplate to basically one-liners**
 
 [⇧ back to top](#table-of-contents)
 
@@ -76,22 +68,25 @@ That's why `typesafe-actions` was created specifically designed to only use "typ
 
 To showcase the power of **type-safety** provided by this library, let me show you how to build a typical todo app in a type-safe Redux Architecture:
 
-Here is a link to completed todo-app in codesandbox:
+Here is a link to completed todo-app in codesandbox: [TODO: link]
 
-### start with creating actions (a.k.a. `RootAction`)
+### - the actions (a.k.a. `RootAction`)
 
 ```ts
-import { buildAction, ActionsUnion } from 'typesafe-actions';
+// counter-actions.ts
+import { createStandardAction, ActionsUnion } from 'typesafe-actions';
 
-export const counterActions = {
-  increment: buildAction('INCREMENT').empty(),
-  add: buildAction('ADD').payload<number>(),
-};
+export const add = createStandardAction('todos/ADD')<Todo>();
+export const toggle = createStandardAction('todos/TOGGLE')<string>();
 
-export const todosActions = { ... };
+// merge all actions object for convenience
+import * as todos from './todos-actions';
+import * as toasts from './toasts-actions';
 
-// all actions merged for convenience
-export type RootAction = ActionsUnion<typeof counterActions>;
+export const actions = { todos, toasts };
+// then you can use: dispatch(actions.todos.add({...}))
+
+export type RootAction = ActionsUnion<typeof actions>;
 ```
 
 > **PRO-TIP:** merge with third-party action types to model a complete representation of all possible actions at runtime
@@ -106,67 +101,94 @@ export type AppAction = RootAction | ReactRouterAction;
 
 [⇧ back to top](#table-of-contents)
 
-### reducer switch cases
+### - reducer switch cases
 
-Use `getType` function to reduce boilerplate and mitigate the trouble of tossing "type constants" across the application layers (use only action creators everywhere).
-Moreover it will discriminate union type of `RootAction` to a specific action (like a type-guard).
+Use `getType` function to reduce boilerplate and mitigate the trouble of importing "type constants" across the application layers (the principle is to use action creators instead).
+Moreover **it's a type-guard** so it will discriminate union type of `RootAction` to a specific action withing a code block.
 
 ```ts
 import { getType } from 'typesafe-actions';
 
-import { RootAction } from '@src/redux';
-import { add } from './actions';
+import { RootAction } from '../types';
+import { add } from './todos-actions';
 
-const reducer = (state: number = 0, action: RootAction) => {
+const reducer = (state: Todo[] = [], action: RootAction) => {
   switch (action.type) {
-    case getType(add):
-      return state + action.payload; // action is narrowed to a type of "add" action (payload: number)
-  ...
-```
-
-* alternative for conditional statements
-
-```ts
-import { isActionOf } from 'typesafe-actions';
-...
-const reducer = (state: number = 0, action: RootAction) => {
-  if (isActionOf(add, action)) {
-      return state + action.payload; // action is narrowed to a type of "add" action (payload: number)
-  }
-// can accept array for multiple actions
-const fetchReducer = (state: boolean = false, action: RootAction) => {
-  if (isActionOf([fetchArticles, fetchComment, fetchRating], action)) {
-      return true; // action is narrowed to a type of "add" action (payload: number)
-  }
+    case getType(add): // TIP: if you prefer you could still use a regular "type constants" here
+      // action is narrowed as: { type: "todos/ADD", payload: Todo }
+      return [...state, action.payload];
+    ...
 ```
 
 [⇧ back to top](#table-of-contents)
 
-### epics from `redux-observable`
+### - composite actions for async network requests
 
-Use `isActionOf` function to filter actions and discriminate union type of `RootAction` to a specific action(s) down the stream.
+```ts
+// WIP
+```
+
+[⇧ back to top](#table-of-contents)
+
+### - side-effects with `redux-observable`
+
+Use `isActionOf` function to use action creator function to filter actions and to narrow (discriminate) union type of `RootAction` to a specific action(s) down the stream.
 
 ```ts
 import { isActionOf } from 'typesafe-actions';
 
-import { RootState, RootAction } from '@src/redux';
-import { addTodo, toggleTodo } from './actions';
+import { RootState, RootAction, Services } from '../types';
+import { add, toggle } from './todos-actions';
 
 // with single action
-const addTodoToast: Epic<RootAction, RootState> =
-  (action$, store) => action$
-    .filter(isActionOf(addTodo))
-    .concatMap((action) => { // action is asserted as: { type: "ADD_TODO", payload: string }
-      const toast = `Added new todo: ${action.payload}`;
-...
+const addTodoToast: Epic<RootAction, RootState, Services> =
+  (action$, store, { toastService }) => action$
+    .filter(isActionOf(add))
+    .do((action) => {
+      // action is narrowed as: { type: "todos/ADD", payload: Todo }
+      toastService.success(`Added new todo: ${action.payload}`);
+    })
+    .ignoreElements();
+```
 
-// with multiple actions
-const logTodoAction: Epic<RootAction, RootState> =
-  (action$, store) => action$
-    .filter(isActionOf([addTodo, toggleTodo]))
-    .switchMap((action) => { // action is asserted as: { type: "ADD_TODO", payload: string } | { type: "TOGGLE_TODO", payload: string }
-      const log = `Dispatched action (${action.type}: ${action.payload})`;
-...
+> **PRO-TIP:** it works with multiple actions in array
+```ts
+const logTodoAction: Epic<RootAction, RootState, Services> =
+  (action$, store, { logService }) => action$
+    .filter(isActionOf([add, toggle]))
+    .do((action) => { // action is narrowed as:
+      // { type: "todos/ADD", payload: Todo } | { type: "todos/TOGGLE", payload: string }
+      ...
+```
+
+Alternatively if you prefer to use type constants there is a `isOfType` function to use with constants instead of action creators 
+
+```ts
+import { isOfType } from 'typesafe-actions';
+
+import { RootState, RootAction, Services } from '../types';
+import { ADD } from './todos-types';
+
+// with single action
+const addTodoToast: Epic<RootAction, RootState, Services> =
+  (action$, store, { toastService }) => action$
+    .filter(isTypeOf(ADD))
+    .do((action) => {
+      // action is narrowed as: { type: "todos/ADD", payload: Todo }
+      ...
+```
+
+> **PRO-TIP:** you can use it for conditional statements
+```ts
+import { isActionOf, isOfType } from 'typesafe-actions';
+
+if (isActionOf(actions.add, action)) {
+  // action is narrowed as: { type: "todos/ADD", payload: Todo }
+}
+// or with type constants
+if (isOfType(types.ADD, action)) {
+  // action is narrowed as: { type: "todos/ADD", payload: Todo }
+}
 ```
 
 [⇧ back to top](#table-of-contents)
@@ -177,53 +199,87 @@ const logTodoAction: Epic<RootAction, RootState> =
 
 ### ActionsUnion
 
-WIP v2.0.0
-
-[⇧ back to top](#table-of-contents)
-
-### buildAction
-
-WIP v2.0.0
-
-[⇧ back to top](#table-of-contents)
-
-### withType
-
-> create the action creator of a given function that contains private "type" metadata
-
-[> Advanced Usage](src/create-action.spec.ts)
+> powerful type helper that will infer union type from various nested objects or arrays with action creators
 
 ```ts
-function withType(typeString: T, creatorFunction?: CF): CF;
+import { ActionsUnion } from 'typesafe-actions';
 
-// CF extends (...args: any[]) => { type: T, payload?: P, meta?: M, error?: boolean }
+const actions = {
+  action1: createAction('action1'),
+  nested: {
+    action2: createAction('action2'),
+    moreNested: {
+      action3: createAction('action3'),
+    }
+  }
+};
+
+export type RootAction = ActionsUnion<typeof actions>;
+// RootAction: { type: 'action1' } | { type: 'action2' } | { type: 'action3' }
+```
+
+[⇧ back to top](#table-of-contents)
+
+---
+
+### action
+
+> simple action factory function, to create typed action
+
+```ts
+function action(type: T, payload?: P, meta?: M): { type: T, payload?: P, meta?: M }
 ```
 
 Examples:
 
-```ts
-// no payload
-const increment = withType('INCREMENT');
-// same as:
-// const increment = createAction('INCREMENT', () => ({ type: 'INCREMENT' }));
+[> Advanced Usage Examples](src/action.spec.ts)
 
+```ts
+const createUser = (id: number, name: string) =>
+  action('CREATE_USER', { id, name });
+// { type: 'CREATE_USER'; payload: { id: number; name: string } }
+```
+
+[⇧ back to top](#table-of-contents)
+
+---
+
+### createAction
+
+> create the action creator of a typesafe compatible action
+
+```ts
+function createAction(type: T, creatorHandler?: (actionCallback: (payload, meta) => Action<T>) => AC<T>): AC<T>;
+```
+
+Examples:
+
+[> Advanced Usage Examples](src/create-action.spec.ts)
+
+```ts
+import { createAction } from 'typesafe-actions';
+
+// no payload
+const increment = createAction('INCREMENT');
+// same as:
+// const increment = createAction('INCREMENT', actionCallback => {
+//   return () => actionCallback());
+// });
 expect(increment()).toEqual({ type: 'INCREMENT' });
 
 // with payload
-const add = createAction('ADD', (amount: number) => ({
-  type: 'ADD',
-  payload: amount,
-}));
-
+const add = createAction('ADD', actionCallback => {
+  return (amount: number) => actionCallback(amount);
+});
 expect(add(10)).toEqual({ type: 'ADD', payload: 10 });
 
 // with payload and meta
-const notify = createAction('NOTIFY', (username: string, message: string) => ({
-  type: 'NOTIFY',
-  payload: { message: `${username}: ${message}` },
-  meta: { username, message },
-}));
-
+const notify = createAction('NOTIFY', actionCallback => {
+  return (username: string, message: string) => actionCallback(
+    { message: `${username}: ${message}` },
+    { username, message }
+  );
+});
 expect(notify('Piotr', 'Hello!')).toEqual({
   type: 'NOTIFY',
   payload: { message: 'Piotr: Hello!' },
@@ -235,16 +291,104 @@ expect(notify('Piotr', 'Hello!')).toEqual({
 
 ---
 
+### createStandardAction
+
+> simple creator compatible with "Flux Standard Action" to reduce boilerplate and enforce convention
+
+```ts
+function createAction(type: T): <P, M>() => AC<T, P, M>;
+function createAction(type: T): { map: (arg: any) => AC<T, P, M> };
+```
+
+Examples:
+
+[> Advanced Usage Examples](src/create-standard-action.spec.ts)
+
+```ts
+import { createAction } from 'typesafe-actions';
+
+// no payload
+const increment = createStandardAction('INCREMENT')<void>();
+expect(increment()).toEqual({ type: 'INCREMENT' });
+
+// with payload
+const add = createStandardAction('ADD')<number>();
+expect(add(10)).toEqual({ type: 'ADD', payload: 10 });
+
+// with payload and meta
+const notify = createStandardAction('NOTIFY').map(
+  ({ username, message }}: Notification) => ({
+    payload: `${username}: ${message || ''}`,
+    meta: { username, message }, 
+  })
+);
+expect(notify('Piotr', 'Hello!')).toEqual({
+  type: 'NOTIFY',
+  payload: 'Piotr: Hello!',
+  meta: { username: 'Piotr', message: 'Hello!' },
+});
+```
+
+[⇧ back to top](#table-of-contents)
+
+---
+
+### createAsyncAction
+
+> create a composite action creator containing three action handlers for async flow (e.g. network request - request/success/failure)
+
+```ts
+function createAsyncAction(requestType: T1, successType: T2, failureType: T3): <P1, P2, P3>() => {
+  request: AC<T1, P1>,
+  success: AC<T2, P2>,
+  failure: AC<T3, P3>,
+};
+```
+
+Examples:
+
+[> Advanced Usage Examples](src/create-async-action.spec.ts)
+
+```ts
+import { createAsyncAction } from 'typesafe-actions';
+
+const fetchUserTypes = createAsyncAction(
+  'FETCH_USER_REQUEST',
+  'FETCH_USER_SUCCESS',
+  'FETCH_USER_FAILURE'
+)<void, User, Error>();
+
+const requestResult = fetchUserTypes.request();
+expect(requestResult).toEqual({ type: 'FETCH_USER_REQUEST' });
+
+const successResult =
+  fetchUserTypes.success({ firstName: 'Piotr', lastName: 'Witek' });
+expect(successResult).toEqual({
+  type: 'FETCH_USER_SUCCESS',
+  payload: { firstName: 'Piotr', lastName: 'Witek' },
+});
+
+const failureResult = fetchUserTypes.failure(Error('Failure reason'));
+expect(failureResult).toEqual({
+  type: 'FETCH_USER_FAILURE',
+  payload: Error('Failure reason'),
+});
+```
+
+[⇧ back to top](#table-of-contents)
+
+---
+
 ### getType
 
 > get the "type" property of a given action creator  
-> (It will infer literal type of action)
-
-[> Advanced Usage](src/get-type.spec.ts)
+> contains properly narrowed literal type
 
 ```ts
-function getType(actionCreator: (...args) => T): T;
+function getType(actionCreator: (...args) => T): T
 ```
+
+[> Advanced Usage Examples](src/get-type.spec.ts)
 
 Examples:
 
@@ -270,49 +414,119 @@ switch (action.type) {
 ### isActionOf
 
 > (curried assert function) Check if action is an instance of given action creator(s)
-> it will discriminate actions union to a specific action
-
-[> Advanced Usage](src/is-action-of.spec.ts)
+> it will narrow actions union to a specific action
 
 ```ts
 // can be used as a binary function
-isActionOf(actionCreator: (...args) => T, action: any): action is T;
-isActionOf([actionCreator]: Array<(...args) => T>, action: any): action is T;
-// or as a curried function
-isActionOf(actionCreator: (...args) => T): (action: any) => action is T;
-isActionOf([actionCreator]: Array<(...args) => T>): (action: any) => action is T;
+isActionOf(actionCreator: ActionCreator<T>, action: any): action is T
+isActionOf([actionCreator]: Array<ActionCreator<T>>, action: any): action is T
+// or curried function
+isActionOf(actionCreator: ActionCreator<T>): (action: any) => action is T
+isActionOf([actionCreator]: Array<ActionCreator<T>>): (action: any) => action is T
 ```
 
 Examples:
 
+[> Advanced Usage Examples](src/is-action-of.spec.ts)
+
 ```ts
-// epics with single action
-import { addTodo } from './actions';
+import { addTodo } from './todos-actions';
+
 const addTodoToast: Epic<RootAction, RootState> =
   (action$, store) => action$
     .filter(isActionOf(addTodo))
     .concatMap((action) => { // action is asserted as: { type: "ADD_TODO", payload: string }
       const toast = `Added new todo: ${action.payload}`;
-...
 
 // epics with multiple actions
-import { addTodo, toggleTodo } from './actions';
+import { addTodo, toggleTodo } from './todos-actions';
+
 const logTodoAction: Epic<RootAction, RootState> =
   (action$, store) => action$
     .filter(isActionOf([addTodo, toggleTodo]))
     .concatMap((action) => { // action is asserted as: { type: "ADD_TODO", payload: string } | { type: "TOGGLE_TODO", payload: string }
       const log = `Dispatched action: ${action.type}`;
-...
 
-// any place where you need a type guard
+// conditionals where you need a type guard
 import { addTodo } from './actions';
-...
+
 if(isActionOf(addTodo, action)) {
   operationThatNeedsPayload(action.payload) // action is asserted as: { type: "ADD_TODO", payload: string }
 }
 ```
 
 [⇧ back to top](#table-of-contents)
+
+---
+
+### isOfType
+
+> (curried assert function) Check if action type equals given type constant
+> it will narrow actions union to a specific action
+
+```ts
+// can be used as a binary function
+isOfType(type: T, action: any): action is Action<T>
+// or curried function
+isOfType(type: T): (action: any) => action is T
+```
+
+Examples:
+
+[> Advanced Usage Examples](src/is-of-type.spec.ts)
+
+```ts
+import { ADD } from './todos-types';
+
+const addTodoToast: Epic<RootAction, RootState, Services> =
+  (action$, store, { toastService }) => action$
+    .filter(isOfType(ADD))
+    .do((action) => {
+      // action is narrowed as: { type: "todos/ADD", payload: Todo }
+      toastService.success(`Added new todo: ${action.payload}`);
+    })
+    .ignoreElements();
+
+// conditionals where you need a type guard
+import { ADD } from './todos-types';
+
+if(isOfType(ADD, action)) {
+  return functionThatAcceptsTodo(action.payload) // action: { type: "todos/ADD", payload: Todo }
+}
+```
+
+[⇧ back to top](#table-of-contents)
+
+---
+
+## Migration Guide
+
+### v1.x.x to v2.x.x
+
+```ts
+const deprecatedApi = createActionDeprecated('GET_TODO',
+  (token: string, id: string) => ({
+    type: 'GET_TODO',
+    payload: id,
+    meta: token,
+  })
+);
+
+const getTodoSimple = (token: string, id: string) => action('GET_TODO', id, token);
+
+const getTodoVariadic = createAction('GET_TODO', action => {
+  return (id: string, token: string) => action(id, token);
+});
+
+const getTodoStandard = createStandardAction('GET_TODO')<{ id: string; token: string; }>();
+
+const getTodoStandardMap = createStandardAction('GET_TODO').map(
+  ({ id, token }: { id: string; token: string; }) => ({
+    payload: id,
+    meta: token,
+  })
+);
+```
 
 ---
 

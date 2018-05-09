@@ -63,6 +63,13 @@ export interface FluxStandardAction<T extends StringType, P = void, M = void> {
   error?: true;
 }
 
+/**
+ * @private
+ */
+export interface TypeMeta<T extends ActionType> {
+  getType?: () => T;
+}
+
 /** @private */
 export type B<T> = { v: T };
 /** @private */

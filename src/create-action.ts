@@ -1,14 +1,12 @@
-import { StringType, ActionCreator, action } from '.';
+import { StringType, ActionCreator } from './types';
+import { action } from './';
 
 /**
  * @description typesafe action creator factory
  */
-export function typesafeAction<
-  T extends StringType,
-  AC extends ActionCreator<T>
->(
+export function createAction<T extends StringType, AC extends ActionCreator<T>>(
   type: T,
-  constructorFunction: (
+  creatorHandler: (
     action: <P = void, M = void>(
       payload?: P,
       meta?: M
@@ -19,6 +17,6 @@ export function typesafeAction<
         : { type: T; payload: P; meta: M }
   ) => AC
 ): AC {
-  const actionCreator: AC = constructorFunction(action.bind(null, type));
+  const actionCreator: AC = creatorHandler(action.bind(null, type));
   return Object.assign(actionCreator, { getType: () => type });
 }

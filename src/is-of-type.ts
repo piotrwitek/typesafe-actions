@@ -1,4 +1,4 @@
-import { StringType } from '.';
+import { StringType } from './types';
 import { validateActionType } from './utils';
 /**
  * @description (curried assert function) check if action type equals given "type literal"

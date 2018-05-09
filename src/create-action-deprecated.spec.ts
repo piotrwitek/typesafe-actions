@@ -1,6 +1,6 @@
-import { createActionDeprecated, getType } from '.';
+import { createActionDeprecated, getType } from './';
 
-describe('createAction', () => {
+describe('createActionDeprecated', () => {
   // TODO: #3
   // should error when missing argument
   // should error when passed invalid arguments

@@ -1,9 +1,15 @@
+import { createStandardAction, createAsyncAction } from './';
+
 /**
  * Fixtures
  */
-import { buildAction } from './';
+
+export type User = { firstName: string; lastName: string };
 
 export namespace types {
+  // Symbol
+  export const WITH_SYMBOL_TYPE = (Symbol(1) as any) as 'WITH_SYMBOL_TYPE';
+  // String Literal
   export const VERY_DEEP_WITH_TYPE_ONLY = 'VERY_DEEP_WITH_TYPE_ONLY';
   export const WITH_TYPE_ONLY = 'WITH_TYPE_ONLY';
   export const WITH_PAYLOAD = 'WITH_PAYLOAD';
@@ -13,19 +19,29 @@ export namespace types {
 }
 
 export const actions = {
+  withSymbolType: createStandardAction(types.WITH_SYMBOL_TYPE)(),
   very: {
-    deep: { withTypeOnly: buildAction(types.VERY_DEEP_WITH_TYPE_ONLY)() },
+    deep: {
+      withTypeOnly: createStandardAction(types.VERY_DEEP_WITH_TYPE_ONLY)(),
+    },
   },
-  withTypeOnly: buildAction(types.WITH_TYPE_ONLY)<void>(),
-  withPayload: buildAction(types.WITH_PAYLOAD)<number>(),
-  withPayloadMeta: buildAction(types.WITH_PAYLOAD_META)<number, string>(),
-  withMappedPayload: buildAction(types.WITH_MAPPED_PAYLOAD).map(
+  withTypeOnly: createStandardAction(types.WITH_TYPE_ONLY)<void>(),
+  withPayload: createStandardAction(types.WITH_PAYLOAD)<number>(),
+  withPayloadMeta: createStandardAction(types.WITH_PAYLOAD_META)<
+    number,
+    string
+  >(),
+  withMappedPayload: createStandardAction(types.WITH_MAPPED_PAYLOAD).map(
     (payload: number) => ({ payload })
   ),
-  withMappedPayloadMeta: buildAction(types.WITH_MAPPED_PAYLOAD_META).map(
-    (payload: number, meta: string) => ({ payload, meta })
-  ),
-  // todo: add actionCreator
+  withMappedPayloadMeta: createStandardAction(
+    types.WITH_MAPPED_PAYLOAD_META
+  ).map((payload: number, meta: string) => ({ payload, meta })),
+  asyncAction: createAsyncAction(
+    'FETCH_USER_REQUEST',
+    'FETCH_USER_SUCCESS',
+    'FETCH_USER_FAILURE'
+  )<void, User, Error>(),
 };
 
 /**

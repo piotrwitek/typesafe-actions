@@ -1,4 +1,4 @@
-import { action } from '.';
+import { action } from './';
 
 describe('action', () => {
   it('should create a simple payload action', () => {

@@ -6,14 +6,14 @@
 
 /** Public API */
 // creators
-export * from './action';
-export * from './build-action';
+export { action } from './action';
+export { createAction } from './create-action';
+export { createStandardAction } from './create-standard-action';
+export { createAsyncAction } from './create-async-action';
 // guards
-export * from './types';
-export * from './type-meta';
-export * from './is-of-type';
-export * from './is-action-of';
-// experimental
-
+export { ActionsUnion } from './types';
+export { getType } from './get-type';
+export { isOfType } from './is-of-type';
+export { isActionOf } from './is-action-of';
 // deprecated
-export * from './create-action-deprecated';
+export { createActionDeprecated } from './create-action-deprecated';

@@ -1,7 +1,7 @@
-import { StringType, B, FsaBuilder, MapBuilder, withType } from '.';
-import { validateActionType } from './utils';
+import { StringType, B, FsaBuilder, MapBuilder } from './types';
+import { validateActionType, withType } from './utils';
 
-export interface BuildAction<T extends StringType> {
+export interface CreateStandardAction<T extends StringType> {
   <P = void, M = void>(): FsaBuilder<T, B<P>, B<M>>;
   map<R, P = void, M = void>(
     fn: (payload?: P, meta?: M) => R
@@ -11,9 +11,9 @@ export interface BuildAction<T extends StringType> {
 /**
  * @description create an action creator of a given function that contains hidden "type" metadata
  */
-export function buildAction<T extends StringType>(
+export function createStandardAction<T extends StringType>(
   actionType: T
-): BuildAction<T> {
+): CreateStandardAction<T> {
   validateActionType(actionType);
 
   function map<R, P, M>(

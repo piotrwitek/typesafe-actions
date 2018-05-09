@@ -1,4 +1,4 @@
-import { StringType, TypeMeta } from '.';
+import { StringType, TypeMeta } from './types';
 
 export interface FSA<T extends StringType, P = {}, M = {}, E = boolean> {
   type: T;
