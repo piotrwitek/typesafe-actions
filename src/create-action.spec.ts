@@ -16,8 +16,8 @@ import { getType } from '.';
 //   return (id: string, token: string) => withPayloadMeta(id, token);
 // });
 
-// const getTodoUnary = createUnaryAction('GET_TODO')<{ id: string, token: string }>();
-// const getTodoUnaryMap = createUnaryAction('GET_TODO').map(
+// const getTodoUnary = createPayloadAction('GET_TODO')<{ id: string, token: string }>();
+// const getTodoUnaryMap = createPayloadAction('GET_TODO').map(
 //   ({ token, id }: { token: string; id: string }) => ({
 //     payload: id,
 //     meta: token,

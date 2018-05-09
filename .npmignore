@@ -4,4 +4,5 @@
 jest.config.json
 tslint.json
 tsconfig.json
+tsconfig.spec.json
 yarn.lock
