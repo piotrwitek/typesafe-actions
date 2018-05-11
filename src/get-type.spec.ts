@@ -1,95 +1,27 @@
-import { createAction, getType } from '.';
+import { getType } from './';
+import { actions, types } from './test-utils';
 
 describe('getType', () => {
-
-  // TODO: #3
-  // should error when missing argument
-  // should error when passed invalid arguments
-  // check object, empty array, primitives
-
-  it('no payload', () => {
-    const increment = createAction('INCREMENT');
-
-    const type: 'INCREMENT' = getType(increment);
-    expect(type).toBe('INCREMENT');
+  it('with type only', () => {
+    const typeLiteral: 'WITH_TYPE_ONLY' = getType(actions.withTypeOnly);
+    expect(typeLiteral).toBe('WITH_TYPE_ONLY');
   });
 
-  it('no payload alternative', () => {
-    const increment = createAction('INCREMENT', () => ({ type: 'INCREMENT' }));
-
-    const type: 'INCREMENT' = getType(increment);
-    expect(type).toBe('INCREMENT');
+  it('with type as symbol', () => {
+    const typeLiteral: 'WITH_SYMBOL_TYPE' = getType(actions.withSymbolType);
+    expect(typeLiteral).toBe(types.WITH_SYMBOL_TYPE);
+    expect(typeLiteral).not.toBe('WITH_SYMBOL_TYPE');
   });
 
   it('with payload', () => {
-    const add = createAction('ADD',
-      (amount: number) => ({ type: 'ADD', payload: amount }),
-    );
-
-    const type: 'ADD' = getType(add);
-    expect(type).toBe('ADD');
+    const typeLiteral: 'WITH_PAYLOAD' = getType(actions.withPayload);
+    expect(typeLiteral).toBe('WITH_PAYLOAD');
   });
 
-  it('with payload and meta', () => {
-    const notify = createAction('NOTIFY',
-      (username: string, message: string) => ({
-        type: 'NOTIFY',
-        payload: { message: `${username}: ${message}` },
-        meta: { username, message },
-      }),
+  it('with mapped payload', () => {
+    const typeLiteral: 'WITH_MAPPED_PAYLOAD' = getType(
+      actions.withMappedPayload
     );
-
-    const type: 'NOTIFY' = getType(notify);
-    expect(type).toBe('NOTIFY');
+    expect(typeLiteral).toBe('WITH_MAPPED_PAYLOAD');
   });
-
-  it('with payload and no params', () => {
-    const showNotification = createAction('SHOW_NOTIFICATION',
-      () => ({
-        type: 'SHOW_NOTIFICATION',
-        payload: 'default message',
-      }),
-    );
-
-    const type: 'SHOW_NOTIFICATION' = getType(showNotification);
-    expect(type).toBe('SHOW_NOTIFICATION');
-  });
-
-  it('with payload and optional param', () => {
-    const showNotification = createAction('SHOW_NOTIFICATION',
-      (message?: string) => ({
-        type: 'SHOW_NOTIFICATION',
-        payload: message,
-      }),
-    );
-
-    const type: 'SHOW_NOTIFICATION' = getType(showNotification);
-    expect(type).toBe('SHOW_NOTIFICATION');
-  });
-
-  it('with meta and no params', () => {
-    const showError = createAction('SHOW_ERROR',
-      () => ({
-        type: 'SHOW_ERROR',
-        meta: { type: 'error' },
-      }),
-    );
-
-    const type: 'SHOW_ERROR' = getType(showError);
-    expect(type).toBe('SHOW_ERROR');
-  });
-
-  it('with meta and optional param', () => {
-    const showError = createAction('SHOW_ERROR',
-      (message?: string) => ({
-        type: 'SHOW_ERROR',
-        payload: message,
-        meta: { type: 'error' },
-      }),
-    );
-
-    const type: 'SHOW_ERROR' = getType(showError);
-    expect(type).toBe('SHOW_ERROR');
-  });
-
 });

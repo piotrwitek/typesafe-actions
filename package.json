@@ -1,48 +1,58 @@
 {
   "name": "typesafe-actions",
-  "version": "1.1.3",
+  "version": "2.0.0-rc.0",
   "description": "Typesafe Action Creators for Redux / Flux Architectures (in TypeScript)",
   "author": "Piotr Witek <piotrek.witek@gmail.com> (http://piotrwitek.github.io)",
   "repository": "https://github.com/piotrwitek/typesafe-actions",
   "homepage": "https://github.com/piotrwitek/typesafe-actions",
   "license": "MIT",
-  "types": "es5-commonjs/index.d.ts",
-  "main": "es5-commonjs/index.js",
-  "module": "es5-module/index.js",
-  "jsnext:main": "jsnext/index.js",
+  "types": "dist/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "browser": "dist/index.umd.js",
   "engines": {
     "node": ">= 4"
   },
   "scripts": {
-    "reinstall": "rm -rf node_modules/ && yarn install",
-    "clean": "rm -rf es5-commonjs/ es5-module/ jsnext/",
+    "reinstall": "rm -rf node_modules/ && npm install",
+    "clean": "rm -rf dist/",
     "tsc": "tsc -p . --noEmit",
     "tsc:watch": "tsc -p . --noEmit -w",
-    "build": "npm run build:commonjs & npm run build:module & npm run build:jsnext",
-    "build:commonjs": "rm -rf es5-commonjs/ && tsc -p . --outDir es5-commonjs/",
-    "build:module": "rm -rf es5-module/ && tsc -p . --outDir es5-module/ -m 'ES2015'",
-    "build:jsnext": "rm -rf jsnext/ && tsc -p . --outDir jsnext/ -t 'ES2015'",
+    "prebuild": "rm -rf dist/ && tsc -p ./tsconfig.declaration.json",
+    "build": "tsc -p . && rollup -c",
+    "postbuild": "rm -rf out",
+    "prelint": "prettier --write 'src/**/*'",
     "lint": "tslint --project './tsconfig.json'",
     "pretest": "tsc -p ./tsconfig.spec.json --noEmit",
     "test": "jest --config jest.config.json ./src",
     "test:watch": "jest --config jest.config.json ./src --watch",
-    "precommit": "npm run lint",
-    "prepush": "npm run test",
-    "prepublishOnly": "npm run clean && npm run reinstall && npm run lint && npm run tsc && npm run test && npm run build"
+    "prepush": "npm run lint & npm run test",
+    "prepublishOnly": "npm run reinstall && npm run lint && npm run tsc && npm run test && npm run build"
   },
   "dependencies": {
-    "tslib": "1.8.1"
+    "tslib": "1.9.0"
   },
   "devDependencies": {
-    "@types/jest": "21.1.9",
-    "@types/node": "6.0.95",
+    "@types/jest": "22.2.3",
     "husky": "0.14.3",
-    "jest-cli": "22.0.4",
-    "redux": "^3.7.2",
-    "ts-jest": "22.0.0",
-    "ts-node": "4.1.0",
-    "tslint": "5.8.0",
-    "typescript": "2.6.2"
+    "jest": "22.4.3",
+    "prettier": "1.12.1",
+    "redux": "4.0.0",
+    "rollup": "0.58.2",
+    "rollup-plugin-commonjs": "9.1.3",
+    "rollup-plugin-filesize": "1.5.0",
+    "rollup-plugin-node-resolve": "3.3.0",
+    "rollup-plugin-sourcemaps": "0.4.2",
+    "rollup-plugin-uglify": "3.0.0",
+    "ts-jest": "22.4.5",
+    "tslint": "5.10.0",
+    "typescript": "2.8.3"
+  },
+  "prettier": {
+    "printWidth": 80,
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "semi": true
   },
   "keywords": [
     "typescript",

@@ -4,8 +4,16 @@
  * @license MIT
  */
 
-export * from './redux-types';
-
-export * from './get-type';
-export * from './is-action-of';
-export * from './create-action';
+/** Public API */
+// creators
+export { action } from './action';
+export { createAction } from './create-action';
+export { createStandardAction } from './create-standard-action';
+export { createAsyncAction } from './create-async-action';
+// guards
+export { ActionsUnion } from './types';
+export { getType } from './get-type';
+export { isOfType } from './is-of-type';
+export { isActionOf } from './is-action-of';
+// deprecated
+export { createActionDeprecated } from './create-action-deprecated';

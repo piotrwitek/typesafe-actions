@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "module": "esnext",
+    "noUnusedLocals": true,
+    "outDir": "./dist/"
+  },
+  "include": ["src/index.ts"],
+  "exclude": ["node_modules"]
+}

@@ -1,55 +1,22 @@
-import {
-  EmptyAction,
-  FluxStandardAction,
-  TypeGetter,
-} from './';
+import { StringType, ActionCreator } from './types';
+import { action } from './action';
 
 /**
- * @description create the action creator of a given function that contains hidden "type" metadata
+ * @description typesafe action creator factory
  */
-export function createAction<T extends string,
-  AC extends (...args: any[]) => FluxStandardAction<T>
-  >(
-  typeString: T,
-  creatorFunction: AC,
-): AC & TypeGetter<T>;
-
-/**
- * @description create the action creator of a given function that contains hidden "type" metadata
- */
-export function createAction<T extends string,
-  AC extends () => { type: T }
-  >(
-  typeString: T,
-): AC & TypeGetter<T>;
-
-export function createAction<T extends string,
-  AC extends (...args: any[]) => FluxStandardAction<T>
-  >(
-  typeString: T,
-  creatorFunction?: AC,
-): AC & TypeGetter<T> {
-  let actionCreator: AC & TypeGetter<T>;
-
-  if (creatorFunction != null) {
-    if (typeof creatorFunction !== 'function') {
-      throw new Error('second argument is not a function');
-    }
-
-    actionCreator = creatorFunction as (AC & TypeGetter<T>);
-  } else {
-    actionCreator = (() => ({ type: typeString })) as (AC & TypeGetter<T>);
-  }
-
-  if (typeString != null) {
-    if (typeof typeString !== 'string') {
-      throw new Error('first argument is not a type string');
-    }
-
-    (actionCreator as TypeGetter<T>).getType = () => typeString;
-  } else {
-    throw new Error('first argument is missing');
-  }
-
-  return actionCreator;
+export function createAction<T extends StringType, AC extends ActionCreator<T>>(
+  type: T,
+  creatorHandler: (
+    action: <P = void, M = void>(
+      payload?: P,
+      meta?: M
+    ) => P extends void
+      ? { type: T }
+      : M extends void
+        ? { type: T; payload: P }
+        : { type: T; payload: P; meta: M }
+  ) => AC
+): AC {
+  const actionCreator: AC = creatorHandler(action.bind(null, type));
+  return Object.assign(actionCreator, { getType: () => type });
 }
