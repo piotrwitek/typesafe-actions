@@ -1,11 +1,18 @@
 import { createStandardAction, createAsyncAction } from './';
 
+/** @internal */
+export function testType<T>(a: T): T {
+  return a;
+}
+
 /**
  * Fixtures
  */
 
+/** @internal */
 export type User = { firstName: string; lastName: string };
 
+/** @internal */
 export namespace types {
   // Symbol
   export const WITH_SYMBOL_TYPE = (Symbol(1) as any) as 'WITH_SYMBOL_TYPE';
@@ -18,6 +25,7 @@ export namespace types {
   export const WITH_MAPPED_PAYLOAD_META = 'WITH_MAPPED_PAYLOAD_META';
 }
 
+/** @internal */
 export const actions = {
   withSymbolType: createStandardAction(types.WITH_SYMBOL_TYPE)(),
   very: {
@@ -43,10 +51,3 @@ export const actions = {
     'FETCH_USER_FAILURE'
   )<void, User, Error>(),
 };
-
-/**
- *  Utils
- */
-export function testType<T>(a: T): T {
-  return a;
-}

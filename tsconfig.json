@@ -5,7 +5,6 @@
     "outDir": "out/", // target for compiled files
     "allowSyntheticDefaultImports": true, // no errors on commonjs default import
     "allowJs": false, // include js files
-    "declaration": true, // don't emit declarations
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
@@ -26,8 +25,7 @@
     "strictNullChecks": true,
     "pretty": true,
     "removeComments": true,
-    "stripInternal": true,
-    "sourceMap": true
+    "stripInternal": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "src/**/*.spec.ts"]

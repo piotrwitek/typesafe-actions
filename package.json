@@ -8,9 +8,9 @@
   "repository": "https://github.com/piotrwitek/typesafe-actions",
   "homepage": "https://github.com/piotrwitek/typesafe-actions",
   "license": "MIT",
-  "types": "dist/cjs/index.d.ts",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
+  "types": "dist/index.d.ts",
+  "main": "dist/main/index.js",
+  "module": "dist/module/index.js",
   "jsnext:main": "dist/jsnext/index.js",
   "engines": {
     "node": ">= 4"
@@ -20,9 +20,11 @@
     "clean": "rm -rf dist/",
     "tsc": "tsc -p . --noEmit",
     "tsc:watch": "tsc -p . --noEmit -w",
-    "build": "npm run build:cjs & npm run build:esm & npm run build:jsnext",
-    "build:cjs": "rm -rf dist/cjs/ && tsc -p . --outFile dist/cjs/index.js",
-    "build:esm": "rm -rf dist/esm/ && tsc -p . --outDir dist/esm/ -m 'ES2015'",
+    "prebuild": "tsc -p ./tsconfig.declaration.json",
+    "build": "npm run build:main & npm run build:module & npm run build:jsnext",
+    "build:main": "rm -rf dist/main/ && tsc -p . --outDir dist/main/",
+    "build:module":
+      "rm -rf dist/module/ && tsc -p . --outDir dist/module/ -m 'ES2015'",
     "build:jsnext":
       "rm -rf dist/jsnext/ && tsc -p . --outDir dist/jsnext/ -t 'ES2015'",
     "prelint": "prettier --write 'src/**/*'",
