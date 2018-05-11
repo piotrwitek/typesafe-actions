@@ -1,10 +1,8 @@
 {
   "name": "typesafe-actions",
-  "version": "2.0.0-1",
-  "description":
-    "Typesafe Action Creators for Redux / Flux Architectures (in TypeScript)",
-  "author":
-    "Piotr Witek <piotrek.witek@gmail.com> (http://piotrwitek.github.io)",
+  "version": "2.0.0-test.0",
+  "description": "Typesafe Action Creators for Redux / Flux Architectures (in TypeScript)",
+  "author": "Piotr Witek <piotrek.witek@gmail.com> (http://piotrwitek.github.io)",
   "repository": "https://github.com/piotrwitek/typesafe-actions",
   "homepage": "https://github.com/piotrwitek/typesafe-actions",
   "license": "MIT",
@@ -29,8 +27,7 @@
     "test": "jest --config jest.config.json ./src",
     "test:watch": "jest --config jest.config.json ./src --watch",
     "prepush": "npm run lint & npm run test",
-    "prepare":
-      "npm run reinstall && npm run lint && npm run tsc && npm run test && npm run build"
+    "prepublishOnly": "npm run reinstall && npm run lint && npm run tsc && npm run test && npm run build"
   },
   "dependencies": {
     "tslib": "1.9.0"
