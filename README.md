@@ -4,13 +4,16 @@
 
 > #### This lib is a part of [React & Redux TypeScript Guide](https://github.com/piotrwitek/react-redux-typescript-guide)
 
+> #### Reference implementation of Todo App with `typesafe-actions`: https://codesandbox.io/s/v8k8y3j837
+
 Simple functional API that's specifically designed to reduce types **verbosity** (especially maintainability concerns)
-and **complexity** (powerful helpers hiding types complexity).
+and **complexity** (thanks to powerful helpers).
 
 ### Goals
 
-* complete type-safety for payload operations in reducer with switch cases and conditional statements (TODO: [link])
-* easy discrimination of union types for `redux-observable` epics but also in any other functional api with `filter` method (TODO: [link])
+* complete type-safety for payload operations in reducer with switch cases and conditional statements ([docs](#reducer-switch-cases))
+* simplify handling async flow of network requests with multistep composite actions ([docs](#handling-async-flow-of-network-requests))
+* simplify discrimination of union types for `redux-observable` epics but works as well for any other libraries thanks to wide set of helpers ([docs](#side-effects-with-redux-observable))
 * strictly check arguments of given payload when invoking action creators in view layer (TODO: [link])
 
 ### Features
@@ -122,7 +125,7 @@ const reducer = (state: Todo[] = [], action: RootAction) => {
 
 [⇧ back to top](#table-of-contents)
 
-### - composite actions for async network requests
+### - handling async flow of network requests
 
 ```ts
 // WIP
