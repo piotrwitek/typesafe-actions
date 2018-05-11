@@ -11,7 +11,7 @@
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
-  "browser": "dist/index.browser.js",
+  "browser": "dist/index.umd.js",
   "engines": {
     "node": ">= 4"
   },
@@ -20,8 +20,8 @@
     "clean": "rm -rf dist/",
     "tsc": "tsc -p . --noEmit",
     "tsc:watch": "tsc -p . --noEmit -w",
-    "prebuild": "rm -rf dist/ && tsc -p . & tsc -p ./tsconfig.declaration.json",
-    "build": "rollup -c",
+    "prebuild": "rm -rf dist/ && tsc -p ./tsconfig.declaration.json",
+    "build": "tsc -p . && rollup -c",
     "postbuild": "rm -rf out",
     "prelint": "prettier --write 'src/**/*'",
     "lint": "tslint --project './tsconfig.json'",
@@ -29,8 +29,8 @@
     "test": "jest --config jest.config.json ./src",
     "test:watch": "jest --config jest.config.json ./src --watch",
     "prepush": "npm run lint & npm run test",
-    "prepublishOnly":
-      "npm run clean && npm run reinstall && npm run lint && npm run tsc && npm run test && npm run build"
+    "prepare":
+      "npm run reinstall && npm run lint && npm run tsc && npm run test && npm run build"
   },
   "dependencies": {
     "tslib": "1.9.0"
