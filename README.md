@@ -15,8 +15,8 @@ and **complexity** (powerful helpers hiding types complexity).
 
 ### Features
 
-* __small and focused__ - (min + gzip < **1kb**)
-* __secure__ - no external dependencies
+* __small and focused__ - (Bundle size: 2.72 KB, Gzipped size: 879 B)
+* __secure__ - no external dependencies for browser (`tslib` in case of cjs/esm modules)
 * __tested__ - complete test-suite with tests for type soundness
 
 ## Motivation

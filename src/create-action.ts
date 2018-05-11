@@ -1,5 +1,5 @@
 import { StringType, ActionCreator } from './types';
-import { action } from './';
+import { action } from './action';
 
 /**
  * @description typesafe action creator factory
