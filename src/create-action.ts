@@ -1,4 +1,4 @@
-import { StringType, ActionCreator, NoArgCreator } from './types';
+import { StringType, ActionCreator } from './types';
 import { action } from './action';
 
 /**
