@@ -252,7 +252,23 @@ const createUser = (id: number, name: string) =>
 > create the action creator of a typesafe compatible action
 
 ```ts
-function createAction(type: T, creatorHandler?: (actionCallback: (payload, meta) => Action<T>) => AC<T>): AC<T>;
+// type only
+function createAction(type: T): () => { type: T };
+// createAction('INCREMENT');
+
+// with payload
+function createAction(type: T, executor): (...args) => { type: T, payload: P };
+const executor = (resolve) => (...args) => resolve(payload: P)
+// createAction('ADD', resolve => {
+//   return (amount: number) => resolve(amount);
+// });
+
+// with payload and meta
+function createAction(type: T, executor): (...args) => { type: T, payload: P, meta: M };
+const executor = (resolve) => (...args) => resolve(payload: P, meta: M)
+// createAction('GET_TODO', resolve => {
+//   return (id: string, token: string) => resolve(id, token);
+// });
 ```
 
 Examples:
@@ -262,32 +278,24 @@ Examples:
 ```ts
 import { createAction } from 'typesafe-actions';
 
-// no payload
+// type only
 const increment = createAction('INCREMENT');
-// same as:
-// const increment = createAction('INCREMENT', actionCallback => {
-//   return () => actionCallback());
-// });
-expect(increment()).toEqual({ type: 'INCREMENT' });
+expect(increment())
+  .toEqual({ type: 'INCREMENT' });
 
 // with payload
-const add = createAction('ADD', actionCallback => {
-  return (amount: number) => actionCallback(amount);
+const add = createAction('ADD', resolve => {
+  return (amount: number) => resolve(amount);
 });
-expect(add(10)).toEqual({ type: 'ADD', payload: 10 });
+expect(add(10))
+  .toEqual({ type: 'ADD', payload: 10 });
 
 // with payload and meta
-const notify = createAction('NOTIFY', actionCallback => {
-  return (username: string, message: string) => actionCallback(
-    { message: `${username}: ${message}` },
-    { username, message }
-  );
+const getTodo = createAction('GET_TODO', resolve => {
+  return (id: string, token: string) => resolve(id, token);
 });
-expect(notify('Piotr', 'Hello!')).toEqual({
-  type: 'NOTIFY',
-  payload: { message: 'Piotr: Hello!' },
-  meta: { username: 'Piotr', message: 'Hello!' },
-});
+expect(getTodo('fake_id', 'fake_token'))
+  .toEqual({ type: 'ADD', payload: 'fake_id', meta: 'fake_token' });
 ```
 
 [⇧ back to top](#table-of-contents)
@@ -299,8 +307,8 @@ expect(notify('Piotr', 'Hello!')).toEqual({
 > simple creator compatible with "Flux Standard Action" to reduce boilerplate and enforce convention
 
 ```ts
-function createAction(type: T): <P, M>() => AC<T, P, M>;
-function createAction(type: T): { map: (arg: any) => AC<T, P, M> };
+function createStandardAction(type: T): <P, M>() => { type: T, payload?: P, meta?: M };
+function createStandardAction(type: T): { map: (arg: object) => { type: T, payload?: P, meta?: M };
 ```
 
 Examples:
@@ -310,7 +318,7 @@ Examples:
 ```ts
 import { createAction } from 'typesafe-actions';
 
-// no payload
+// type only
 const increment = createStandardAction('INCREMENT')<void>();
 expect(increment()).toEqual({ type: 'INCREMENT' });
 
@@ -325,7 +333,7 @@ const notify = createStandardAction('NOTIFY').map(
     meta: { username, message }, 
   })
 );
-expect(notify('Piotr', 'Hello!')).toEqual({
+expect(notify({ username: 'Piotr', message: 'Hello!' })).toEqual({
   type: 'NOTIFY',
   payload: 'Piotr: Hello!',
   meta: { username: 'Piotr', message: 'Hello!' },
@@ -362,7 +370,9 @@ const fetchUserTypes = createAsyncAction(
 )<void, User, Error>();
 
 const requestResult = fetchUserTypes.request();
-expect(requestResult).toEqual({ type: 'FETCH_USER_REQUEST' });
+expect(requestResult).toEqual({
+  type: 'FETCH_USER_REQUEST',
+});
 
 const successResult =
   fetchUserTypes.success({ firstName: 'Piotr', lastName: 'Witek' });
@@ -517,8 +527,8 @@ const deprecatedApi = createActionDeprecated('GET_TODO',
 
 const getTodoSimple = (token: string, id: string) => action('GET_TODO', id, token);
 
-const getTodoVariadic = createAction('GET_TODO', action => {
-  return (id: string, token: string) => action(id, token);
+const getTodoVariadic = createAction('GET_TODO', resolve => {
+  return (id: string, token: string) => resolve(id, token);
 });
 
 const getTodoStandard = createStandardAction('GET_TODO')<{ id: string; token: string; }>();
