@@ -57,7 +57,7 @@ That's why I created `typesafe-actions` with the core idea to lean on incredible
 
 ```bash
 // NPM
-npm install --save typesafe-actions
+npm install typesafe-actions
 
 // YARN
 yarn add typesafe-actions
@@ -511,6 +511,8 @@ if(isOfType(ADD, action)) {
 ---
 
 ## Migration Guide
+
+> NOTE: `typesafe-actions@1.x.x` are best used with `utility-types@1.x.x` which contains `$call` utility that was removed in `v2.x.x`
 
 ### v1.x.x to v2.x.x
 
