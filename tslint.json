@@ -31,7 +31,7 @@
     "prefer-method-signature": false,
     "prefer-template": [true, "allow-single-concat"],
     "quotemark": [true, "single", "jsx-double"],
-    "semicolon": [true, "always"],
+    "semicolon": [true, "always", "ignore-bound-class-methods"],
     "trailing-comma": [
       true,
       {
@@ -54,7 +54,6 @@
       "check-format",
       "allow-pascal-case",
       "allow-leading-underscore"
-    ],
-    "no-shadowed-variable": true
+    ]
   }
 }

@@ -48,12 +48,6 @@
     "tslint": "5.10.0",
     "typescript": "2.8.3"
   },
-  "prettier": {
-    "printWidth": 80,
-    "trailingComma": "es5",
-    "singleQuote": true,
-    "semi": true
-  },
   "keywords": [
     "typescript",
     "typesafe",
