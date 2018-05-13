@@ -4,7 +4,7 @@
 
 > #### This lib is a part of [React & Redux TypeScript Guide](https://github.com/piotrwitek/react-redux-typescript-guide)
 
-> #### Reference implementation of Todo App with `typesafe-actions`: https://codesandbox.io/s/v8k8y3j837
+> #### Reference implementation of Todo-App with `typesafe-actions`: https://codesandbox.io/s/github/piotrwitek/typesafe-actions-todo-app
 
 Simple functional API that's specifically designed to reduce types **verbosity** (especially maintainability concerns)
 and **complexity** (thanks to powerful helpers).
@@ -24,7 +24,7 @@ and **complexity** (thanks to powerful helpers).
 
 ## Motivation
 
-When I was first trying to use [redux-actions](https://redux-actions.js.org/) with TypeScript I was intimidated by incorrect type signatures and broken type-inference cascading throughout the entire code-base [(click here to read more detailed comparison)](#redux-actions).
+When I was first trying to use [redux-actions](https://redux-actions.js.org/) with TypeScript I was intimidated by incorrect type signatures and broken type-inference cascading throughout the entire code-base [(read more detailed comparison)](#redux-actions).
 
 Moreover alternative solutions in the wild have been either **too verbose because of excess type annotations** (primary maintainability concern) or **used classes** (hinders readability and enforce to use a **new** keyword 😱).
 
@@ -70,8 +70,6 @@ yarn add typesafe-actions
 ## Tutorial
 
 To showcase the power of **type-safety** provided by this library, let me show you how to build a typical todo app in a type-safe Redux Architecture:
-
-Here is a link to completed todo-app in codesandbox: [TODO: link]
 
 ### - the actions (a.k.a. `RootAction`)
 
