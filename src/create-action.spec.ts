@@ -2,9 +2,7 @@ import { createAction, getType } from './';
 
 describe('createAction', () => {
   it('only type', () => {
-    const increment = createAction('WITH_TYPE_ONLY', action => {
-      return () => action();
-    });
+    const increment = createAction('WITH_TYPE_ONLY');
     const typeLiteral: 'WITH_TYPE_ONLY' = getType(increment);
     expect(typeLiteral).toBe('WITH_TYPE_ONLY');
   });
@@ -14,8 +12,8 @@ describe('createAction', () => {
     const INCREMENT = (Symbol(1) as any) as Increment & string;
     const a: string = INCREMENT; // Ok
     // const b: typeof INCREMENT = 'INCREMENT'; // Error
-    const increment = createAction(INCREMENT, action => {
-      return () => action();
+    const increment = createAction(INCREMENT, resolve => {
+      return () => resolve();
     });
     const typeLiteral: typeof INCREMENT = getType(increment);
     expect(typeLiteral).toBe(INCREMENT);
@@ -23,20 +21,18 @@ describe('createAction', () => {
   });
 
   it('with payload', () => {
-    const add = createAction('WITH_PAYLOAD', action => {
-      return (amount: number) => action(amount);
+    const add = createAction('WITH_PAYLOAD', resolve => {
+      return (amount: number) => resolve(amount);
     });
-
     const typeLiteral: 'WITH_PAYLOAD' = getType(add);
     expect(typeLiteral).toBe('WITH_PAYLOAD');
   });
 
   it('with payload and meta', () => {
-    const showNotification = createAction(
-      'SHOW_NOTIFICATION',
-      action => (message: string, scope: string) => action(message, scope)
-    );
-    const typeLiteral: 'SHOW_NOTIFICATION' = getType(showNotification);
-    expect(typeLiteral).toBe('SHOW_NOTIFICATION');
+    const getTodo = createAction('GET_TODO', resolve => {
+      return (id: string, token: string) => resolve(id, token);
+    });
+    const typeLiteral: 'GET_TODO' = getType(getTodo);
+    expect(typeLiteral).toBe('GET_TODO');
   });
 });

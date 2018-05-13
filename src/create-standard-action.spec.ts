@@ -1,5 +1,5 @@
 import { createStandardAction } from './create-standard-action';
-import { getType, ActionsUnion } from '.';
+import { getType, ActionsUnion } from './';
 
 describe('createStandardAction', () => {
   describe('constructor', () => {
