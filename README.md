@@ -11,9 +11,9 @@ and **complexity** (thanks to powerful helpers).
 
 ### Goals
 
-* complete type-safety for payload operations in reducer with switch cases and conditional statements ([docs](#reducer-switch-cases))
-* simplify handling async flow of network requests with multistep composite actions ([docs](#handling-async-flow-of-network-requests))
-* simplify discrimination of union types for `redux-observable` epics but works as well for any other libraries thanks to wide set of helpers ([docs](#side-effects-with-redux-observable))
+* complete type-safety for payload operations in reducer with switch cases and conditional statements ([docs](#--reducer-switch-cases))
+* simplify handling async flow of network requests with multistep composite actions ([docs](#--handling-async-flow-of-network-requests))
+* simplify discrimination of union types for `redux-observable` epics but works as well for any other libraries thanks to wide set of helpers ([docs](#--side-effects-with-redux-observable))
 * strictly check arguments of given payload when invoking action creators in view layer (TODO: [link])
 
 ### Features
