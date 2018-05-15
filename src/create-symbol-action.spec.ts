@@ -1,5 +1,5 @@
 import { getType } from '.';
-import { ActionsUnion } from '.';
+import { ActionUnion } from '.';
 
 describe('createSymbolAction', () => {
   // fixtures
@@ -38,7 +38,7 @@ describe('createSymbolAction', () => {
   //       add: add,
   //     };
 
-  //     type RootAction = ActionsUnion<typeof actions>;
+  //     type RootAction = ActionUnion<typeof actions>;
 
   //     const reducer = (state = 0, action: RootAction) => {
   //       switch (action.type) {

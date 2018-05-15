@@ -2,7 +2,7 @@ import { StringType, ActionCreator } from './types';
 import { action } from './action';
 
 /**
- * @description typesafe action creator factory
+ * @description typesafe action-creator factory
  */
 export function createAction<
   T extends StringType,

@@ -14,7 +14,7 @@ and **complexity** (thanks to powerful helpers).
 * complete type-safety for payload operations in reducer with switch cases and conditional statements ([docs](#--reducer-switch-cases))
 * simplify handling async flow of network requests with multistep composite actions ([docs](#--handling-async-flow-of-network-requests))
 * simplify discrimination of union types for `redux-observable` epics but works as well for any other libraries thanks to wide set of helpers ([docs](#--side-effects-with-redux-observable))
-* strictly check arguments of given payload when invoking action creators in view layer (TODO: [link])
+* strictly check arguments of given payload when invoking action-creator in view layer (TODO: [link])
 
 ### Features
 
@@ -39,7 +39,7 @@ That's why I created `typesafe-actions` with the core idea to lean on incredible
 * [Installation](#installation)
 * [Tutorial](#tutorial)
 * [API](#api)
-  * [`ActionsUnion`](#actionsunion) (RootAction type-helper)
+  * [`ActionUnion`](#actionsunion) (RootAction type-helper)
   * [`action`](#action)
   * [`createAction`](#createaction)
   * [`createStandardAction`](#createstandardaction)
@@ -75,7 +75,7 @@ To showcase the power of **type-safety** provided by this library, let me show y
 
 ```ts
 // counter-actions.ts
-import { createStandardAction, ActionsUnion } from 'typesafe-actions';
+import { createStandardAction, ActionUnion } from 'typesafe-actions';
 
 export const add = createStandardAction('todos/ADD')<Todo>();
 export const toggle = createStandardAction('todos/TOGGLE')<string>();
@@ -87,7 +87,7 @@ import * as toasts from './toasts-actions';
 export const actions = { todos, toasts };
 // then you can use: dispatch(actions.todos.add({...}))
 
-export type RootAction = ActionsUnion<typeof actions>;
+export type RootAction = ActionUnion<typeof actions>;
 ```
 
 > **PRO-TIP:** merge with third-party action types to model a complete representation of all possible actions at runtime
@@ -104,7 +104,7 @@ export type AppAction = RootAction | ReactRouterAction;
 
 ### - reducer switch cases
 
-Use `getType` function to reduce boilerplate and mitigate the trouble of importing "type constants" across the application layers (the principle is to use action creators instead).
+Use `getType` function to reduce boilerplate and mitigate the trouble of importing "type constants" across the application layers (the principle is to use action-creator instead).
 Moreover **it's a type-guard** so it will discriminate union type of `RootAction` to a specific action withing a code block.
 
 ```ts
@@ -133,7 +133,7 @@ const reducer = (state: Todo[] = [], action: RootAction) => {
 
 ### - side-effects with `redux-observable`
 
-Use `isActionOf` function to use action creator function to filter actions and to narrow (discriminate) union type of `RootAction` to a specific action(s) down the stream.
+Use `isActionOf` function to use action-creator function to filter actions and to narrow (discriminate) union type of `RootAction` to a specific action(s) down the stream.
 
 ```ts
 import { isActionOf } from 'typesafe-actions';
@@ -162,7 +162,7 @@ const logTodoAction: Epic<RootAction, RootState, Services> =
       ...
 ```
 
-Alternatively if you prefer to use type constants there is a `isOfType` function to use with constants instead of action creators 
+Alternatively if you prefer to use type constants there is a `isOfType` function to use with constants instead of action-creator 
 
 ```ts
 import { isOfType } from 'typesafe-actions';
@@ -198,12 +198,12 @@ if (isOfType(types.ADD, action)) {
 
 ## API
 
-### ActionsUnion
+### ActionUnion
 
-> powerful type helper that will infer union type from various nested objects or arrays with action creators
+> powerful type helper that will infer union type from various nested objects or arrays with action-creator
 
 ```ts
-import { ActionsUnion } from 'typesafe-actions';
+import { ActionUnion } from 'typesafe-actions';
 
 const actions = {
   action1: createAction('action1'),
@@ -215,7 +215,7 @@ const actions = {
   }
 };
 
-export type RootAction = ActionsUnion<typeof actions>;
+export type RootAction = ActionUnion<typeof actions>;
 // RootAction: { type: 'action1' } | { type: 'action2' } | { type: 'action3' }
 ```
 
@@ -247,7 +247,7 @@ const createUser = (id: number, name: string) =>
 
 ### createAction
 
-> create the action creator of a typesafe compatible action
+> create the action-creator of a typesafe compatible action
 
 ```ts
 // type only
@@ -344,7 +344,7 @@ expect(notify({ username: 'Piotr', message: 'Hello!' })).toEqual({
 
 ### createAsyncAction
 
-> create a composite action creator containing three action handlers for async flow (e.g. network request - request/success/failure)
+> create a composite action-creator containing three action handlers for async flow (e.g. network request - request/success/failure)
 
 ```ts
 function createAsyncAction(requestType: T1, successType: T2, failureType: T3): <P1, P2, P3>() => {
@@ -392,7 +392,7 @@ expect(failureResult).toEqual({
 
 ### getType
 
-> get the "type" property of a given action creator  
+> get the "type" property of a given action-creator  
 > contains properly narrowed literal type
 
 ```ts
@@ -424,7 +424,7 @@ switch (action.type) {
 
 ### isActionOf
 
-> (curried assert function) Check if action is an instance of given action creator(s)
+> (curried assert function) Check if action is an instance of given action-creator(s)
 > it will narrow actions union to a specific action
 
 ```ts
@@ -548,7 +548,7 @@ const getTodoStandardMap = createStandardAction('GET_TODO').map(
 Here you can find out a detailed comparison of `typesafe-actions` to other solutions.
 
 ### `redux-actions`
-Lets compare the 3 most common action-creators variants (type only, with payload, with payload and meta)
+Lets compare the 3 most common action-creator variants (type only, with payload, with payload and meta)
 
 > tested with "@types/redux-actions": "2.2.3"
 

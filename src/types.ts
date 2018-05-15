@@ -113,19 +113,19 @@ export type ActionCreator<T extends StringType = StringType> = (
   ...args: any[]
 ) => { type: T };
 /** @private */
-export type ActionCreatorsMap<T> = { [K in keyof T]: ActionsUnion<T[K]> };
+export type ActionCreatorMap<T> = { [K in keyof T]: ActionUnion<T[K]> };
 
 /** PUBLIC */
 
 /**
- * @desc Create a union type from action-creators map object
+ * @desc Create a union type from action-creator map object
  * @type T - ActionType
  * @type P - Payload
  * @type M - Meta
  * @type E - Error
  */
-export type ActionsUnion<ACOrACsObject> = ACOrACsObject extends ActionCreator
+export type ActionUnion<ACOrACsObject> = ACOrACsObject extends ActionCreator
   ? ReturnType<ACOrACsObject>
   : ACOrACsObject extends object
-    ? ActionCreatorsMap<ACOrACsObject>[keyof ACOrACsObject]
+    ? ActionCreatorMap<ACOrACsObject>[keyof ACOrACsObject]
     : never;
