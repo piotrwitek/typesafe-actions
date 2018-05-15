@@ -118,11 +118,7 @@ export type ActionCreatorMap<T> = { [K in keyof T]: InferAction<T[K]> };
 /** PUBLIC */
 
 /**
- * @desc Create a union type from action-creator map object
- * @type T - ActionType
- * @type P - Payload
- * @type M - Meta
- * @type E - Error
+ * @desc Infers Action union-type from action-creator map object
  */
 export type InferAction<
   ActionCreatorOrMap
@@ -130,4 +126,15 @@ export type InferAction<
   ? ReturnType<ActionCreatorOrMap>
   : ActionCreatorOrMap extends object
     ? ActionCreatorMap<ActionCreatorOrMap>[keyof ActionCreatorOrMap]
+    : never;
+
+/**
+ * @desc Infers State object from reducer map object
+ */
+export type InferState<ReducerOrMap> = ReducerOrMap extends (
+  ...args: any[]
+) => any
+  ? ReturnType<ReducerOrMap>
+  : ReducerOrMap extends object
+    ? { [K in keyof ReducerOrMap]: InferState<ReducerOrMap[K]> }
     : never;
