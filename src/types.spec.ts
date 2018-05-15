@@ -1,5 +1,5 @@
 import { getType, isOfType, isActionOf } from './';
-import { ActionUnion } from './types';
+import { InferAction } from './types';
 import { types, actions, testType, User } from './test-utils';
 const {
   withSymbolType,
@@ -11,8 +11,8 @@ const {
   asyncAction,
 } = actions;
 
-describe('ActionUnion', () => {
-  type RootAction = ActionUnion<typeof actions>;
+describe('InferAction', () => {
+  type RootAction = InferAction<typeof actions>;
 
   function switchReducer(action: RootAction): RootAction | undefined {
     switch (action.type) {

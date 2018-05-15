@@ -11,7 +11,7 @@ export { createAction } from './create-action';
 export { createStandardAction } from './create-standard-action';
 export { createAsyncAction } from './create-async-action';
 // guards
-export { ActionUnion } from './types';
+export { InferAction } from './types';
 export { getType } from './get-type';
 export { isOfType } from './is-of-type';
 export { isActionOf } from './is-action-of';

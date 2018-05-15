@@ -39,7 +39,7 @@ That's why I created `typesafe-actions` with the core idea to lean on incredible
 * [Installation](#installation)
 * [Tutorial](#tutorial)
 * [API](#api)
-  * [`ActionUnion`](#actionsunion) (RootAction type-helper)
+  * [`InferAction`](#inferaction) (RootAction type-helper)
   * [`action`](#action)
   * [`createAction`](#createaction)
   * [`createStandardAction`](#createstandardaction)
@@ -75,7 +75,7 @@ To showcase the power of **type-safety** provided by this library, let me show y
 
 ```ts
 // counter-actions.ts
-import { createStandardAction, ActionUnion } from 'typesafe-actions';
+import { createStandardAction, InferAction } from 'typesafe-actions';
 
 export const add = createStandardAction('todos/ADD')<Todo>();
 export const toggle = createStandardAction('todos/TOGGLE')<string>();
@@ -87,7 +87,7 @@ import * as toasts from './toasts-actions';
 export const actions = { todos, toasts };
 // then you can use: dispatch(actions.todos.add({...}))
 
-export type RootAction = ActionUnion<typeof actions>;
+export type RootAction = InferAction<typeof actions>;
 ```
 
 > **PRO-TIP:** merge with third-party action types to model a complete representation of all possible actions at runtime
@@ -198,12 +198,12 @@ if (isOfType(types.ADD, action)) {
 
 ## API
 
-### ActionUnion
+### InferAction
 
 > powerful type helper that will infer union type from various nested objects or arrays with action-creator
 
 ```ts
-import { ActionUnion } from 'typesafe-actions';
+import { InferAction } from 'typesafe-actions';
 
 const actions = {
   action1: createAction('action1'),
@@ -215,7 +215,7 @@ const actions = {
   }
 };
 
-export type RootAction = ActionUnion<typeof actions>;
+export type RootAction = InferAction<typeof actions>;
 // RootAction: { type: 'action1' } | { type: 'action2' } | { type: 'action3' }
 ```
 
