@@ -1,7 +1,7 @@
 import { StringType, ActionCreator, TypeMeta } from './types';
 
 /**
- * @description get the "type literal" of a given action creator
+ * @description get the "type literal" of a given action-creator
  */
 export function getType<T extends StringType>(
   creator: ActionCreator<T> & TypeMeta<T>

@@ -1,5 +1,5 @@
 import { isActionOf } from './is-action-of';
-import { actions, testType } from './test-utils';
+import { actions } from './test-utils';
 const {
   withTypeOnly,
   withPayload,

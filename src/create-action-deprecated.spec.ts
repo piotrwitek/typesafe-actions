@@ -1,4 +1,5 @@
-import { createActionDeprecated, getType } from './';
+import { createActionDeprecated } from './';
+import { testType } from './test-utils';
 
 describe('createActionDeprecated', () => {
   // TODO: #3
@@ -143,13 +144,26 @@ describe('createActionDeprecated', () => {
     expect(type).toBe('SHOW_ERROR');
   });
 
-  it('should work at runtime with symbol as action type', () => {
-    enum Increment {}
-    const INCREMENT = (Symbol(1) as any) as Increment & string;
-    const a: string = INCREMENT; // Ok
-    // const b: typeof INCREMENT = 'INCREMENT'; // Error
+  it('should work with symbol as action type', () => {
+    const INCREMENT = Symbol(1);
+    testType<symbol>(INCREMENT); // Ok
+    // testType<typeof INCREMENT>('INCREMENT'); // Error
     const increment = createActionDeprecated(INCREMENT);
-    const decrement = createActionDeprecated(Symbol(2));
+
+    const action: { type: string } = increment();
+    expect(action).toEqual({ type: INCREMENT });
+    expect(action).not.toEqual({ type: 'INCREMENT' });
+    const type: string = increment.getType!();
+    expect(type).toBe(INCREMENT);
+    expect(type).not.toBe('INCREMENT');
+  });
+
+  it('should work with symbol nominal-type pattern as action type', () => {
+    enum Increment {}
+    const INCREMENT = (Symbol(1) as any) as Increment & string; // nominal-type workaround
+    testType<string>(INCREMENT); // Ok
+    // testType<typeof INCREMENT>('INCREMENT'); // Error
+    const increment = createActionDeprecated(INCREMENT);
 
     const action: { type: typeof INCREMENT } = increment();
     expect(action).toEqual({ type: INCREMENT });

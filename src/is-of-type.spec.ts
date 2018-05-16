@@ -1,5 +1,5 @@
 import { isOfType } from './is-of-type';
-import { types, actions, testType } from './test-utils';
+import { types, actions } from './test-utils';
 const {
   withTypeOnly,
   withPayload,
@@ -12,21 +12,21 @@ const {
 const typeOnlyAction = withTypeOnly();
 const typeOnlyExpected = { type: 'WITH_TYPE_ONLY' };
 const payloadAction = withPayload(2);
-const payloadExpected = { type: 'WITH_PAYLOAD', payload: 2 };
+// const payloadExpected = { type: 'WITH_PAYLOAD', payload: 2 };
 const payloadMetaAction = withPayloadMeta(2, 'metaValue');
-const payloadMetaExpected = {
-  type: 'WITH_PAYLOAD_META',
-  payload: 2,
-  meta: 'metaValue',
-};
+// const payloadMetaExpected = {
+//   type: 'WITH_PAYLOAD_META',
+//   payload: 2,
+//   meta: 'metaValue',
+// };
 const mappedPayloadAction = withMappedPayload(2);
-const mappedPayloadExpected = { type: 'WITH_MAPPED_PAYLOAD', payload: 2 };
+// const mappedPayloadExpected = { type: 'WITH_MAPPED_PAYLOAD', payload: 2 };
 const mappedPayloadMetaAction = withMappedPayloadMeta(2, 'metaValue');
-const mappedPayloadMetaExpected = {
-  type: 'WITH_MAPPED_PAYLOAD_META',
-  payload: 2,
-  meta: 'metaValue',
-};
+// const mappedPayloadMetaExpected = {
+//   type: 'WITH_MAPPED_PAYLOAD_META',
+//   payload: 2,
+//   meta: 'metaValue',
+// };
 
 const $action = [
   typeOnlyAction,

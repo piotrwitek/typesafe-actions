@@ -14,37 +14,36 @@
     "node": ">= 4"
   },
   "scripts": {
-    "reinstall": "rm -rf node_modules/ && npm install",
-    "clean": "rm -rf dist/",
+    "reinstall": "rm -rf node_modules/ dist/ && npm install",
+    "check": "npm run lint & npm run tsc & npm run test",
+    "prelint": "prettier --write 'src/**/*.ts'",
+    "lint": "tslint --project './tsconfig.json'",
     "tsc": "tsc -p . --noEmit",
     "tsc:watch": "tsc -p . --noEmit -w",
+    "pretest": "tsc -p ./tsconfig.spec.json --noEmit",
+    "test": "jest --config jest.config.json ./src",
+    "test:watch": "jest --config jest.config.json --watch ./src",
     "prebuild": "rm -rf dist/ && tsc -p ./tsconfig.declaration.json",
     "build": "tsc -p . && rollup -c",
     "postbuild": "rm -rf out",
-    "prelint": "prettier --write 'src/**/*'",
-    "lint": "tslint --project './tsconfig.json'",
-    "pretest": "tsc -p ./tsconfig.spec.json --noEmit",
-    "test": "jest --config jest.config.json ./src",
-    "test:watch": "jest --config jest.config.json ./src --watch",
-    "prepush": "npm run lint & npm run test",
-    "prepublishOnly": "npm run reinstall && npm run lint && npm run tsc && npm run test && npm run build"
+    "prepush": "npm run check",
+    "prepublishOnly": "npm run reinstall && npm run check && npm run build"
   },
   "dependencies": {
-    "tslib": "1.9.0"
+    "tslib": "1.9.1"
   },
   "devDependencies": {
     "@types/jest": "22.2.3",
     "husky": "0.14.3",
     "jest": "22.4.3",
     "prettier": "1.12.1",
-    "redux": "4.0.0",
-    "rollup": "0.58.2",
+    "rollup": "0.59.1",
     "rollup-plugin-commonjs": "9.1.3",
     "rollup-plugin-filesize": "1.5.0",
     "rollup-plugin-node-resolve": "3.3.0",
     "rollup-plugin-sourcemaps": "0.4.2",
     "rollup-plugin-uglify": "3.0.0",
-    "ts-jest": "22.4.5",
+    "ts-jest": "22.4.6",
     "tslint": "5.10.0",
     "typescript": "2.8.3"
   },
@@ -52,7 +51,7 @@
     "typescript",
     "typesafe",
     "actions",
-    "action-creators",
+    "action-creator",
     "redux",
     "flux",
     "redux-actions",

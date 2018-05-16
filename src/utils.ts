@@ -15,8 +15,8 @@ export function validateActionType(actionType: any): void {
 
 /**
  * @internal
- * @description decorate any action creator to make it compatible with `typesafe-actions`
- * @description (usefull to make third-party action-creators compatible)
+ * @description decorate any action-creator to make it compatible with `typesafe-actions`
+ * @description (usefull to make third-party action-creator compatible)
  */
 export function withType<T extends StringType, AC extends ActionCreator<T>>(
   type: T,

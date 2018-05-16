@@ -1,17 +1,15 @@
 import { createAction, getType } from './';
 
 describe('createAction', () => {
-  it('only type', () => {
+  it('with type only', () => {
     const increment = createAction('WITH_TYPE_ONLY');
     const typeLiteral: 'WITH_TYPE_ONLY' = getType(increment);
     expect(typeLiteral).toBe('WITH_TYPE_ONLY');
   });
 
-  it('only type as symbol', () => {
+  it('with type only using symbol nominal-type pattern', () => {
     enum Increment {}
     const INCREMENT = (Symbol(1) as any) as Increment & string;
-    const a: string = INCREMENT; // Ok
-    // const b: typeof INCREMENT = 'INCREMENT'; // Error
     const increment = createAction(INCREMENT, resolve => {
       return () => resolve();
     });

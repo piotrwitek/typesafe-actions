@@ -16,7 +16,7 @@ export type ACs<
   | [AC<T1>, AC<T2>, AC<T3>, AC<T4>, AC<T5>];
 
 /**
- * @description (curried assert function) check if an action is the instance of given action creator(s)
+ * @description (curried assert function) check if an action is the instance of given action-creator(s)
  * @description it works with discriminated union types
  * @inner If you need more than 5 arguments -> use switch
  */
@@ -38,7 +38,7 @@ export function isActionOf<
 ): action is [T1, T2, T3, T4, T5][number];
 
 /**
- * @description (curried assert function) check if an action is the instance of given action creator(s)
+ * @description (curried assert function) check if an action is the instance of given action-creator(s)
  * @description it works with discriminated union types
  */
 export function isActionOf<A extends { type: string }, T1 extends A>(
@@ -47,7 +47,7 @@ export function isActionOf<A extends { type: string }, T1 extends A>(
 ): action is T1;
 
 /**
- * @description (curried assert function) check if an action is the instance of given action creator(s)
+ * @description (curried assert function) check if an action is the instance of given action-creator(s)
  * @description it works with discriminated union types
  * @inner If you need more than 5 arguments -> use switch
  */
@@ -68,7 +68,7 @@ export function isActionOf<
 ): (action: A) => action is [T1, T2, T3, T4, T5][number];
 
 /**
- * @description (curried assert function) check if an action is the instance of given action creator(s)
+ * @description (curried assert function) check if an action is the instance of given action-creator(s)
  * @description it works with discriminated union types
  */
 export function isActionOf<A extends { type: string }, T1 extends A>(

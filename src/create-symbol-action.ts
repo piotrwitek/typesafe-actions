@@ -5,7 +5,7 @@ import { SymbolType, TypeMeta } from './types';
 // check in repo issues why
 
 /**
- * @description create an action creator of a given function that contains hidden "type" metadata
+ * @description create an action-creator of a given function that contains hidden "type" metadata
  */
 export declare function createSymbolAction<T extends SymbolType>(
   actionType: T
@@ -16,7 +16,7 @@ export declare function createSymbolAction<T extends SymbolType, P>(
 ): ((payload: P) => { type: T; payload: P }) & TypeMeta<T>;
 
 /**
- * @description create an action creator of a given function that contains hidden "type" metadata
+ * @description create an action-creator of a given function that contains hidden "type" metadata
  */
 // export function createSymbolAction<T extends SymbolType, P>(
 //   actionType: T,

@@ -42,7 +42,7 @@ describe('utils.validateActionType', () => {
 });
 
 describe('utils.withType', () => {
-  it('only type', () => {
+  it('with type only', () => {
     const increment = withType('WITH_TYPE_ONLY', type => {
       return () => ({ type });
     });
@@ -50,7 +50,7 @@ describe('utils.withType', () => {
     expect(typeLiteral).toBe('WITH_TYPE_ONLY');
   });
 
-  it('only type as symbol', () => {
+  it('with type only using symbol nominal-type pattern', () => {
     enum Increment {}
     const INCREMENT = (Symbol(1) as any) as Increment & string;
     const increment = withType(INCREMENT, type => () => ({ type }));

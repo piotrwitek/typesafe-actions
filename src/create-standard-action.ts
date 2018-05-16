@@ -9,7 +9,7 @@ export interface CreateStandardAction<T extends StringType> {
 }
 
 /**
- * @description create an action creator of a given function that contains hidden "type" metadata
+ * @description create an action-creator of a given function that contains hidden "type" metadata
  */
 export function createStandardAction<T extends StringType>(
   actionType: T
