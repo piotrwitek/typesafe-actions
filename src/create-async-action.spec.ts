@@ -1,39 +1,43 @@
 import { createAsyncAction } from './create-async-action';
 
-type User = { firstName: string; lastName: string };
+type Todo = { firstName: string; lastName: string };
 describe('createAsyncAction', () => {
   it('should create an async action with types', () => {
     // NOTE: with `void` type you can make it explicit that no arguments are accepted by the action-creator function
-    const fetchUserTypes = createAsyncAction(
-      'FETCH_USER_REQUEST',
-      'FETCH_USER_SUCCESS',
-      'FETCH_USER_FAILURE'
-    )<void, User, Error>();
+    const fetchTodos = createAsyncAction(
+      'FETCH_TODOS_REQUEST',
+      'FETCH_TODOS_SUCCESS',
+      'FETCH_TODOS_FAILURE'
+    )<void, Todo[], Error>();
 
     const requestResult: {
-      type: 'FETCH_USER_REQUEST';
-    } = fetchUserTypes.request();
-    expect(requestResult).toEqual({ type: 'FETCH_USER_REQUEST' });
+      type: 'FETCH_TODOS_REQUEST';
+    } = fetchTodos.request();
+    expect(requestResult).toEqual({ type: 'FETCH_TODOS_REQUEST' });
     const successResult: {
-      type: 'FETCH_USER_SUCCESS';
-      payload: User;
-    } = fetchUserTypes.success({
-      firstName: 'Piotr',
-      lastName: 'Witek',
-    });
-    expect(successResult).toEqual({
-      type: 'FETCH_USER_SUCCESS',
-      payload: {
+      type: 'FETCH_TODOS_SUCCESS';
+      payload: Todo[];
+    } = fetchTodos.success([
+      {
         firstName: 'Piotr',
         lastName: 'Witek',
       },
+    ]);
+    expect(successResult).toEqual({
+      type: 'FETCH_TODOS_SUCCESS',
+      payload: [
+        {
+          firstName: 'Piotr',
+          lastName: 'Witek',
+        },
+      ],
     });
     const failureResult: {
-      type: 'FETCH_USER_FAILURE';
+      type: 'FETCH_TODOS_FAILURE';
       payload: Error;
-    } = fetchUserTypes.failure(Error('reason'));
+    } = fetchTodos.failure(Error('reason'));
     expect(failureResult).toEqual({
-      type: 'FETCH_USER_FAILURE',
+      type: 'FETCH_TODOS_FAILURE',
       payload: Error('reason'),
     });
   });

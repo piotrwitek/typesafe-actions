@@ -14,15 +14,8 @@
 
 > #### Reference implementation of Todo-App with `typesafe-actions`: https://codesandbox.io/s/github/piotrwitek/typesafe-actions-todo-app
 
-Simple functional API that's specifically designed to reduce types **verbosity** (especially maintainability concerns)
+Flexible functional API that's specifically designed to reduce types **verbosity** (especially maintainability concerns)
 and **complexity** (thanks to powerful helpers).
-
-### Goals
-
-* complete type-safety for payload operations in reducer with switch cases and conditional statements ([docs](#--reducer-switch-cases))
-* simplify handling async flow of network requests with multistep composite actions ([docs](#--handling-async-flow-of-network-requests))
-* simplify discrimination of union types for `redux-observable` epics but works as well for any other libraries thanks to wide set of helpers ([docs](#--side-effects-with-redux-observable))
-* strictly check arguments of given payload when invoking action-creator in view layer (TODO: [link])
 
 ### Features
 
@@ -32,30 +25,205 @@ and **complexity** (thanks to powerful helpers).
 
 ## Motivation
 
-When I was first trying to use [redux-actions](https://redux-actions.js.org/) with TypeScript I was intimidated by incorrect type signatures and broken type-inference cascading throughout the entire code-base [(read more detailed comparison)](#redux-actions).
+When I was first starting with Redux and TypeScript I was trying to use [redux-actions](https://redux-actions.js.org/) to simplify maintainability of **action-creators**. I was struggling and results were intimidating: incorrect type signatures and broken type-inference cascading throughout the entire code-base [(read more detailed comparison)](#redux-actions).
 
 Moreover alternative solutions in the wild have been either **too verbose because of excess type annotations** (primary maintainability concern) or **used classes** (hinders readability and enforce to use a **new** keyword 😱).
 
-That's why I created `typesafe-actions` with the core idea to lean on incredible **type-inference** 💪. to reduce the maintainability costs of type signatures and also to make it feel like simple idiomatic JavaScript because of reduced explicit types annotations to minimum.\*\*
+The solution for all the above pain points is finally here: `typesafe-actions`.
+The core idea was to design and API that would harness the power of incredible **type-inference** 💪. and lift the "maintainability burden" of type annotations. In addition I wanted to make it look and feel as close as possible to idiomatic JavaScript we all know and love ❤️ (maybe sometimes we hate but anyway...).\*\*
 
-**From v2.0 we added a complementary API leveraging generic type arguments to provide a very concise and expressive way to use a "bag object" as payload argument and cut the boilerplate to one-liner**
+## Behold the Mighty "Tutorial"
+
+To showcase flexibility and the power of **type-safety** provided by this library, lets build together the common parts of a typical todo-app following Redux architecture:
+
+> WARNING: Please make sure that you understand the following concepts of programming languages to be able to follow along with me: [Type Inference](https://www.typescriptlang.org/docs/handbook/type-inference.html), [Control flow analysis](https://github.com/Microsoft/TypeScript/wiki/What%27s-new-in-TypeScript#control-flow-based-type-analysis), [Tagged union types](https://github.com/Microsoft/TypeScript/wiki/What%27s-new-in-TypeScript#tagged-union-types), [Generics](https://www.typescriptlang.org/docs/handbook/generics.html) and some [Advanced Types](https://www.typescriptlang.org/docs/handbook/advanced-types.html).
+
+### - The Actions
+> Different projects have different needs and conventions vary across teams this is why `typesafe-actions` was designed and build with flexibility in mind and it provides 3 different factory functions, so you can choose what would be the best fit for your project. 
+
+#### 1. classic JS style with constants FTW!
+Using this simple function we'll have complete type-safety with minimal type declaration effort, but we're constrained to use constants (as in regular JS applications) because some of advanced **action-helpers** (`getType`, `isActionOf`) will not work with such action-creator. This is still very compelling option especially for refactoring existing projects.
+```ts
+import { action } from 'typesafe-actions';
+import { ADD, TOGGLE } from './constants';
+
+export const toggle = (id: string) => action(TOGGLE, id);
+// (id: string) => { type: 'todos/TOGGLE'; payload: string; }
+
+export const add = (title: string) => action(ADD, { title, id: cuid(), completed: false } as Todo);
+// (title: string) => { type: 'todos/ADD'; payload: Todo }
+```
+#### 2. opinionated without need for constants
+This approach will give us access for all the **action-helpers** and eliminate to use constants in the application, but it's opinionated and will always accept 2 arguments (1st is payload, and 2nd is meta). It also have very usefull `map` chain method for an extra flexibility.
+```ts
+import { createStandardAction } from 'typesafe-actions';
+
+export const toggle = createStandardAction('todos/TOGGLE')<string>();
+// (payload: string) => { type: 'todos/TOGGLE'; payload: string; }
+
+export const add = createStandardAction(ADD).map(
+  ({ title }: { title: string }) => ({
+    payload: { title, id: cuid(), completed: false } as Todo,
+  })
+);
+// ({ title: string }) => { type: 'todos/ADD'; payload: Todo }
+```
+#### 3. most flexible with all helpers
+This approach will gives us the best of both worlds: all the **action-helpers** will work and we have the flexibility of providing variadic amount of named parameters like with regular functions.
+```ts
+import { createAction } from 'typesafe-actions';
+
+export const toggle = createAction('todos/TOGGLE', resolve => {
+  return (id: string) => resolve(id);
+});
+// (id: string) => { type: 'todos/TOGGLE'; payload: string; }
+
+export const add = createAction('todos/ADD', resolve => {
+  return (title: string) => resolve({ title, id: cuid(), completed: false } as Todo);
+});
+// (title: string) => { type: 'todos/ADD'; payload: Todo }
+```
+
+> For more examples check the [API Docs](#table-of-contents), there are plenty!
+
+### - The Reducer
+
+Here we'll start by generating an **tagged union type** of actions (TodosAction). It's very easy to do using TS type-inference and `ActionType` utility-type provided by `typesafe-actions`.
+```ts
+import { ActionType, getType } from 'typesafe-actions';
+
+import * as todos from './actions';
+export type TodosAction = ActionType<typeof todos>;
+```
+Now we define a regular reducer function by annotating `state` and `action` arguments with their respective types (use `TodosAction` for action type)
+```ts
+export default (state: Todo[] = [], action: TodosAction) => {
+```
+With static types in place we can finally leverage **tagged union types**. Using switch-cases on common `type` property of action we can distinguish and narrow union type of `TodosAction` to a single specific action type valid for the corresponding code block.
+```ts
+  switch (action.type) {
+    case getType(todos.add): 
+      // below action type is narrowed to: { type: "todos/ADD", payload: Todo }
+      return [...state, action.payload];
+    ...
+```
+Notice we are using `getType` action-helper with respective action-creator as an argument to handle corresponding switch case. This will help to reduce boilerplate and completely remove the need of using **type-constants** in our application.
+> Note: If your team prefer to use regular "type constants", no problem. You can still use them with `typesafe-actions`.
+
+> **PRO-TIP:** I can recommend to create a `RootAction` in the cenral point of your redux store - it will model a complete representation of all possible action types in your application, you can even merge it with existing third-party declarations like it's shown below.
+```ts
+// types.d.ts
+// example of including `react-router` actions in `RootAction`
+import { RouterAction, LocationChangeAction } from 'react-router-redux';
+type ReactRouterAction = RouterAction | LocationChangeAction;
+import { TodosAction } from '../features/todos';
+
+export type RootAction =
+  | ReactRouterAction
+  | TodosAction;
+```
+
+### - The Async-Flow
+To handle async-flow of request to a remote resource, we will use `createAsyncAction` function to simplify the creation of necessary action-creators with a nice common interface `{ request: ... , success: ... , failure: ... }`.
+This will mitigate redux verbosity and greatly reduce the maintenance cost of type annotations for these action-creators, that otherwise we would have to write by hand.
+
+```ts
+// actions.ts
+import { createAsyncAction } from 'typesafe-actions';
+
+const fetchTodos = createAsyncAction(
+  'FETCH_TODOS_REQUEST',
+  'FETCH_TODOS_SUCCESS',
+  'FETCH_TODOS_FAILURE'
+)<void, Todo[], Error>();
+
+// epics.ts
+import { fetchTodos } from './actions';
+
+const fetchTodosFlow: Epic<RootAction, RootState, Services> = (action$, store, { todosApi }) =>
+  action$.pipe(
+    filter(isActionOf(fetchTodos.request)),
+    switchMap(action =>
+      of(todosApi.getAll(...)).pipe(
+        map(fetchTodos.success),
+        catchError(pipe(fetchTodos.failure, of))
+      )
+    );
+```
+
+### - The Side-Effects
+> Starring `redux-observable`!
+
+With `isActionOf` function we can use **action-creators** again to filter actions and to narrow **tagged union type** of all actions (here we're using `RootAction`) to a specific action _(or actions!)_ down the pipe in epics.
+```ts
+// epics.ts
+import { isActionOf } from 'typesafe-actions';
+
+import { add, toggle } from './actions';
+
+const addTodoToast: Epic<RootAction, RootState, Services> = (action$, store, { toastService }) =>
+  action$.pipe(
+    filter(isActionOf(add)),
+    tap(action => {
+      // here action type is narrowed to: { type: "todos/ADD", payload: Todo }
+    ...
+```
+
+> **PRO-TIP:** It works with multiple actions in array
+```ts
+filter(isActionOf([add, toggle]))
+// here action is narrowed to a new union type:
+// { type: "todos/ADD", payload: Todo } | { type: "todos/TOGGLE", payload: string }
+```
+
+**ALTERNATIVE:** But if your team prefer to use **type-constants** what then? I still got you covered! We have equivalent `isOfType` function that will work with **type-constants** instead of action-creators.
+```ts
+// epics.ts
+import { isOfType } from 'typesafe-actions';
+
+import { ADD } from './constants';
+
+const addTodoToast: Epic<RootAction, RootState, Services> = (action$, store, { toastService }) =>
+  action$.pipe(
+    filter(isTypeOf(ADD)),
+    tap(action => {
+      // here action type is narrowed to: { type: "todos/ADD", payload: Todo }
+    ...
+```
+
+> **PRO-TIP:** Both helper above prove usefull in all conditional statements
+```ts
+import { isActionOf, isOfType } from 'typesafe-actions';
+
+if (isActionOf(actions.add, action)) {
+  // here action is narrowed to: { type: "todos/ADD", payload: Todo }
+}
+// or with type constants
+if (isOfType(types.ADD, action)) {
+  // here action is narrowed to: { type: "todos/ADD", payload: Todo }
+}
+```
+
+> _PS: If you're wondering what the `Services` type is in the epics signature and how to declare it in your application to easily inject statically typed API clients to your epics also ensuring for easy mocking while testing resulting in clean architecture, please create an issue for it and perhaps I'll find some time in the future to write an article about it._
 
 ---
 
 ## Table of Contents
 
 * [Installation](#installation)
-* [Tutorial](#tutorial)
-* [API](#api)
-  * [`ActionType`](#actiontype) (RootAction type-helper)
-  * [`StateType`](#statetype) (RootState type-helper)
-  * [`action`](#action)
-  * [`createAction`](#createaction)
-  * [`createStandardAction`](#createstandardaction)
-  * [`createAsyncAction`](#createasyncaction)
-  * [`getType`](#gettype)
-  * [`isActionOf`](#isactionof)
-  * [`isOfType`](#isoftype)
+* [API Docs](#api-docs)
+  * utility-types
+    * [`ActionType`](#actiontype) (RootAction type-helper)
+    * [`StateType`](#statetype) (RootState type-helper)
+  * action-creators
+    * [`action`](#action)
+    * [`createAction`](#createaction)
+    * [`createStandardAction`](#createstandardaction)
+    * [`createAsyncAction`](#createasyncaction)
+  * action-helpers
+    * [`getType`](#gettype)
+    * [`isActionOf`](#isactionof)
+    * [`isOfType`](#isoftype)
 * [Migration Guide](#migration-guide)
 * [Compare to others](#compare-to-others)
   * [redux-actions](#redux-actions)
@@ -76,141 +244,7 @@ yarn add typesafe-actions
 
 ---
 
-## Tutorial
-
-To showcase the power of **type-safety** provided by this library, let me show you how to build a typical todo app in a type-safe Redux Architecture:
-
-### - the actions
-
-```ts
-// actions.ts
-import { createStandardAction, InferAction } from 'typesafe-actions';
-
-export const add = createStandardAction('todos/ADD')<Todo>();
-export const toggle = createStandardAction('todos/TOGGLE')<string>();
-```
-
-[⇧ back to top](#table-of-contents)
-
-### - reducer switch cases
-
-Use `getType` function to reduce boilerplate and mitigate the trouble of importing **type-constants** across the application layers (recommended approach is use action-creators instead).
-Moreover **it's a type-guard** so it will discriminate union type of `RootAction` to a specific action inside a corresponding code block.
-
-```ts
-// reducer.ts
-import { getType } from 'typesafe-actions';
-
-import * as todos from './actions';
-export type TodosAction = InferAction<typeof todos>;
-
-const todosReducer = (state: Todo[] = [], action: TodosAction) => {
-  switch (action.type) {
-    case getType(todos.add): // TIP: if you prefer you could still use a regular "type constants" here
-      // action is narrowed as: { type: "todos/ADD", payload: Todo }
-      return [...state, action.payload];
-    ...
-```
-
-> **PRO-TIP:** I recommend to create a `RootAction` - it will model a complete representation of all possible action types in your application, you can even merge it with third-party declarations (you'll see it's usage in the following sections)
-
-```ts
-// types.d.ts
-// example of including `react-router` actions in `RootAction`
-import { RouterAction, LocationChangeAction } from 'react-router-redux';
-import { TodosAction } from '../features/todos';
-
-type ReactRouterAction = RouterAction | LocationChangeAction;
-export type RootAction = ReactRouterAction | TodosAction;
-```
-
-[⇧ back to top](#table-of-contents)
-
-### - handling async flow of network requests
-
-```ts
-// actions.ts
-import { createAsyncAction } from 'typesafe-actions';
-
-const fetchUsers = createAsyncAction(
-  'FETCH_USERS_REQUEST',
-  'FETCH_USERS_SUCCESS',
-  'FETCH_USERS_FAILURE'
-)<void, User[], Error>();
-
-// epics.ts
-import { fetchUsers } from './actions';
-
-const fetchUsers: Epic<RootAction, RootState, Services> = (action$, store, { toastService }) =>
-  action$.pipe(
-    filter(isActionOf(fetchUsers.request)),
-    switchMap(action =>
-      of(fetch(...)).pipe(
-        map(fetchUsers.success),
-        catchError(err => of(fetchUsers.failure(err)))
-      )
-    );
-```
-
-[⇧ back to top](#table-of-contents)
-
-### - side-effects with `redux-observable`
-
-With `isActionOf` function you can use **action-creators** instead of type-constants to filter actions and to narrow (discriminate) union type of all actions (`RootAction`) to a specific action(s) down the pipe in epic.
-
-```ts
-// epics.ts
-import { isActionOf } from 'typesafe-actions';
-
-import { add, toggle } from './actions';
-
-const addTodoToast: Epic<RootAction, RootState, Services> = (action$, store, { toastService }) =>
-  action$.pipe(
-    filter(isActionOf(add)),
-    tap(action => { // action is narrowed as: { type: "todos/ADD", payload: Todo }
-    ...
-```
-
-> **PRO-TIP:** it works with multiple actions in array
-```ts
-filter(isActionOf([add, toggle]))
-// action will be narrowed as:
-// { type: "todos/ADD", payload: Todo } | { type: "todos/TOGGLE", payload: string }
-```
-
-**ALTERNATIVE:** But if you prefer to use **type-constants** there is a `isOfType` function that you can use with constants instead of action-creators.
-
-```ts
-// epics.ts
-import { isOfType } from 'typesafe-actions';
-
-import { ADD } from './constants';
-
-const addTodoToast: Epic<RootAction, RootState, Services> = (action$, store, { toastService }) =>
-  action$.pipe(
-    filter(isTypeOf(ADD)),
-    tap(action => { // action is narrowed as: { type: "todos/ADD", payload: Todo }
-    ...
-```
-
-> **PRO-TIP:** they both prove usefull in regular conditional statements as well
-```ts
-import { isActionOf, isOfType } from 'typesafe-actions';
-
-if (isActionOf(actions.add, action)) {
-  // action is narrowed as: { type: "todos/ADD", payload: Todo }
-}
-// or with type constants
-if (isOfType(types.ADD, action)) {
-  // action is narrowed as: { type: "todos/ADD", payload: Todo }
-}
-```
-
-[⇧ back to top](#table-of-contents)
-
----
-
-## API
+## API Docs
 
 ### ActionType
 
@@ -613,7 +647,7 @@ const notify1 = createAction('NOTIFY');
 // }
 ```
 
-> with `redux-actions` you can notice the redundant nullable `payload` property and literal type of `type` property is lost (discrimination would not be possible) (🐼 is really sad!)
+> with `redux-actions` you can notice the redundant nullable `payload` property and literal type of `type` property is lost (discrimination of union type would not be possible) (🐼 is really sad!)
 
 ```ts
 /**
