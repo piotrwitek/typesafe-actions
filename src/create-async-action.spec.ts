@@ -3,7 +3,7 @@ import { createAsyncAction } from './create-async-action';
 type User = { firstName: string; lastName: string };
 describe('createAsyncAction', () => {
   it('should create an async action with types', () => {
-    // NOTE: with `void` type you can make explicit no arguments needed for this action-creator
+    // NOTE: with `void` type you can make it explicit that no arguments are accepted by the action-creator function
     const fetchUserTypes = createAsyncAction(
       'FETCH_USER_REQUEST',
       'FETCH_USER_SUCCESS',

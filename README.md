@@ -40,6 +40,7 @@ That's why I created `typesafe-actions` with the core idea to lean on incredible
 * [Tutorial](#tutorial)
 * [API](#api)
   * [`InferAction`](#inferaction) (RootAction type-helper)
+  * [`InferState`](#inferstate) (RootState type-helper)
   * [`action`](#action)
   * [`createAction`](#createaction)
   * [`createStandardAction`](#createstandardaction)
@@ -71,54 +72,48 @@ yarn add typesafe-actions
 
 To showcase the power of **type-safety** provided by this library, let me show you how to build a typical todo app in a type-safe Redux Architecture:
 
-### - the actions (a.k.a. `RootAction`)
+### - the actions
 
 ```ts
-// counter-actions.ts
+// actions.ts
 import { createStandardAction, InferAction } from 'typesafe-actions';
 
 export const add = createStandardAction('todos/ADD')<Todo>();
 export const toggle = createStandardAction('todos/TOGGLE')<string>();
-
-// merge all actions object for convenience
-import * as todos from './todos-actions';
-import * as toasts from './toasts-actions';
-
-export const actions = { todos, toasts };
-// then you can use: dispatch(actions.todos.add({...}))
-
-export type RootAction = InferAction<typeof actions>;
-```
-
-> **PRO-TIP:** merge with third-party action types to model a complete representation of all possible actions at runtime
-
-```ts
-// example of including `react-router` action types
-import { RouterAction, LocationChangeAction } from 'react-router';
-type ReactRouterAction = RouterAction | LocationChangeAction;
-
-export type AppAction = RootAction | ReactRouterAction;
 ```
 
 [⇧ back to top](#table-of-contents)
 
 ### - reducer switch cases
 
-Use `getType` function to reduce boilerplate and mitigate the trouble of importing "type constants" across the application layers (the principle is to use action-creator instead).
-Moreover **it's a type-guard** so it will discriminate union type of `RootAction` to a specific action withing a code block.
+Use `getType` function to reduce boilerplate and mitigate the trouble of importing **type-constants** across the application layers (recommended approach is use action-creators instead).
+Moreover **it's a type-guard** so it will discriminate union type of `RootAction` to a specific action inside a corresponding code block.
 
 ```ts
+// reducer.ts
 import { getType } from 'typesafe-actions';
 
-import { RootAction } from '../types';
-import { add } from './todos-actions';
+import * as todos from './actions';
+export type TodosAction = InferAction<typeof todos>;
 
-const reducer = (state: Todo[] = [], action: RootAction) => {
+const reducer = (state: Todo[] = [], action: TodosAction) => {
   switch (action.type) {
-    case getType(add): // TIP: if you prefer you could still use a regular "type constants" here
+    case getType(todos.add): // TIP: if you prefer you could still use a regular "type constants" here
       // action is narrowed as: { type: "todos/ADD", payload: Todo }
       return [...state, action.payload];
     ...
+```
+
+> **PRO-TIP:** I recommend to create a `RootAction` - it will model a complete representation of all possible action types in your application, you can even merge it with third-party declarations (you'll see it's usage in the following sections)
+
+```ts
+// types.d.ts
+// example of including `react-router` actions in `RootAction`
+import { RouterAction, LocationChangeAction } from 'react-router-redux';
+import { TodosAction } from '../features/todos';
+
+type ReactRouterAction = RouterAction | LocationChangeAction;
+export type RootAction = ReactRouterAction | TodosAction;
 ```
 
 [⇧ back to top](#table-of-contents)
@@ -126,60 +121,71 @@ const reducer = (state: Todo[] = [], action: RootAction) => {
 ### - handling async flow of network requests
 
 ```ts
-// WIP
+// actions.ts
+import { createAsyncAction } from 'typesafe-actions';
+
+const fetchUsers = createAsyncAction(
+  'FETCH_USERS_REQUEST',
+  'FETCH_USERS_SUCCESS',
+  'FETCH_USERS_FAILURE'
+)<void, User[], Error>();
+
+// epics.ts
+import { fetchUsers } from './actions';
+
+const fetchUsers: Epic<RootAction, RootState, Services> = (action$, store, { toastService }) =>
+  action$.pipe(
+    filter(isActionOf(fetchUsers.request)),
+    switchMap(action =>
+      of(fetch(...)).pipe(
+        map(fetchUsers.success),
+        catchError(err => of(fetchUsers.failure(err)))
+      )
+    );
 ```
 
 [⇧ back to top](#table-of-contents)
 
 ### - side-effects with `redux-observable`
 
-Use `isActionOf` function to use action-creator function to filter actions and to narrow (discriminate) union type of `RootAction` to a specific action(s) down the stream.
+With `isActionOf` function you can use **action-creators** instead of type-constants to filter actions and to narrow (discriminate) union type of all actions (`RootAction`) to a specific action(s) down the pipe in epic.
 
 ```ts
+// epics.ts
 import { isActionOf } from 'typesafe-actions';
 
-import { RootState, RootAction, Services } from '../types';
-import { add, toggle } from './todos-actions';
+import { add, toggle } from './actions';
 
-// with single action
-const addTodoToast: Epic<RootAction, RootState, Services> =
-  (action$, store, { toastService }) => action$
-    .filter(isActionOf(add))
-    .do((action) => {
-      // action is narrowed as: { type: "todos/ADD", payload: Todo }
-      toastService.success(`Added new todo: ${action.payload}`);
-    })
-    .ignoreElements();
+const addTodoToast: Epic<RootAction, RootState, Services> = (action$, store, { toastService }) =>
+  action$.pipe(
+    filter(isActionOf(add)),
+    tap(action => { // action is narrowed as: { type: "todos/ADD", payload: Todo }
+    ...
 ```
 
 > **PRO-TIP:** it works with multiple actions in array
 ```ts
-const logTodoAction: Epic<RootAction, RootState, Services> =
-  (action$, store, { logService }) => action$
-    .filter(isActionOf([add, toggle]))
-    .do((action) => { // action is narrowed as:
-      // { type: "todos/ADD", payload: Todo } | { type: "todos/TOGGLE", payload: string }
-      ...
+filter(isActionOf([add, toggle]))
+// action will be narrowed as:
+// { type: "todos/ADD", payload: Todo } | { type: "todos/TOGGLE", payload: string }
 ```
 
-Alternatively if you prefer to use type constants there is a `isOfType` function to use with constants instead of action-creator 
+**ALTERNATIVE:** But if you prefer to use **type-constants** there is a `isOfType` function that you can use with constants instead of action-creators.
 
 ```ts
+// epics.ts
 import { isOfType } from 'typesafe-actions';
 
-import { RootState, RootAction, Services } from '../types';
-import { ADD } from './todos-types';
+import { ADD } from './constants';
 
-// with single action
-const addTodoToast: Epic<RootAction, RootState, Services> =
-  (action$, store, { toastService }) => action$
-    .filter(isTypeOf(ADD))
-    .do((action) => {
-      // action is narrowed as: { type: "todos/ADD", payload: Todo }
-      ...
+const addTodoToast: Epic<RootAction, RootState, Services> = (action$, store, { toastService }) =>
+  action$.pipe(
+    filter(isTypeOf(ADD)),
+    tap(action => { // action is narrowed as: { type: "todos/ADD", payload: Todo }
+    ...
 ```
 
-> **PRO-TIP:** you can use it for conditional statements
+> **PRO-TIP:** they both prove usefull in regular conditional statements as well
 ```ts
 import { isActionOf, isOfType } from 'typesafe-actions';
 
@@ -200,7 +206,7 @@ if (isOfType(types.ADD, action)) {
 
 ### InferAction
 
-> powerful type helper that will infer union type from various nested objects or arrays with action-creator
+> powerful type helper that will infer union type from various nested map objects or arrays with action-creators
 
 ```ts
 import { InferAction } from 'typesafe-actions';
@@ -361,27 +367,26 @@ Examples:
 ```ts
 import { createAsyncAction } from 'typesafe-actions';
 
-const fetchUserTypes = createAsyncAction(
-  'FETCH_USER_REQUEST',
-  'FETCH_USER_SUCCESS',
-  'FETCH_USER_FAILURE'
-)<void, User, Error>();
+const fetchUsers = createAsyncAction(
+  'FETCH_USERS_REQUEST',
+  'FETCH_USERS_SUCCESS',
+  'FETCH_USERS_FAILURE'
+)<void, User[], Error>();
 
-const requestResult = fetchUserTypes.request();
+const requestResult = fetchUsers.request();
 expect(requestResult).toEqual({
-  type: 'FETCH_USER_REQUEST',
+  type: 'FETCH_USERS_REQUEST',
 });
 
-const successResult =
-  fetchUserTypes.success({ firstName: 'Piotr', lastName: 'Witek' });
+const successResult = fetchUsers.success([{ firstName: 'Piotr', lastName: 'Witek' }]);
 expect(successResult).toEqual({
-  type: 'FETCH_USER_SUCCESS',
-  payload: { firstName: 'Piotr', lastName: 'Witek' },
+  type: 'FETCH_USERS_SUCCESS',
+  payload: [{ firstName: 'Piotr', lastName: 'Witek' }],
 });
 
-const failureResult = fetchUserTypes.failure(Error('Failure reason'));
+const failureResult = fetchUsers.failure(Error('Failure reason'));
 expect(failureResult).toEqual({
-  type: 'FETCH_USER_FAILURE',
+  type: 'FETCH_USERS_FAILURE',
   payload: Error('Failure reason'),
 });
 ```
@@ -424,7 +429,7 @@ switch (action.type) {
 
 ### isActionOf
 
-> (curried assert function) Check if action is an instance of given action-creator(s)
+> (curried assert function) check if action is an instance of given action-creator(s)
 > it will narrow actions union to a specific action
 
 ```ts
@@ -472,7 +477,7 @@ if(isActionOf(addTodo, action)) {
 
 ### isOfType
 
-> (curried assert function) Check if action type equals given type constant
+> (curried assert function) check if action type is equal given type-constant
 > it will narrow actions union to a specific action
 
 ```ts

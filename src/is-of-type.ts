@@ -1,7 +1,7 @@
 import { StringType } from './types';
 import { validateActionType } from './utils';
 /**
- * @description (curried assert function) check if action type equals given "type literal"
+ * @description (curried assert function) check if action type is equal given type-constant
  * @description it works with discriminated union types
  */
 export function isOfType<T extends StringType, A extends { type: StringType }>(
@@ -10,7 +10,7 @@ export function isOfType<T extends StringType, A extends { type: StringType }>(
 ): action is A extends { type: T } ? A : never;
 
 /**
- * @description (curried assert function) check if action type equals given "type literal"
+ * @description (curried assert function) check if action type is equal given type-constant
  * @description it works with discriminated union types
  */
 export function isOfType<T extends StringType>(
