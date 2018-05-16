@@ -29,8 +29,8 @@ When I was first starting with Redux and TypeScript I was trying to use [redux-a
 
 Moreover alternative solutions in the wild have been either **too verbose because of excess type annotations** (primary maintainability concern) or **used classes** (hinders readability and enforce to use a **new** keyword 😱).
 
-The solution for all the above pain points is finally here: `typesafe-actions`.
-The core idea was to design and API that would harness the power of incredible **type-inference** 💪. and lift the "maintainability burden" of type annotations. In addition I wanted to make it look and feel as close as possible to idiomatic JavaScript we all know and love ❤️ (maybe sometimes we hate but anyway...).\*\*
+The solution for all the above pain points is finally here, the `typesafe-actions`.
+The core idea was to design and API that would harness the power of incredible **type-inference** 💪 to lift the "maintainability burden" of type annotations. In addition I wanted to make it "look and feel" as close as possible to idiomatic JavaScript we all know and love ❤️, maybe sometimes we even hate but anyway...
 
 ## Behold the Mighty "Tutorial"
 
