@@ -1,5 +1,4 @@
 import { createStandardAction } from './create-standard-action';
-import { getType, InferAction } from './';
 
 describe('createStandardAction', () => {
   describe('constructor', () => {
@@ -15,11 +14,9 @@ describe('createStandardAction', () => {
       expect(action).toEqual({ type: 'INCREMENT' });
     });
 
-    it('with type as symbol', () => {
+    it('with type only using symbol nominal-type pattern', () => {
       enum Increment {}
       const INCREMENT = (Symbol(1) as any) as Increment & string;
-      const a: string = INCREMENT; // Ok
-      // const b: typeof INCREMENT = 'INCREMENT'; // Error
       const increment = createStandardAction(INCREMENT)();
       const action: { type: typeof INCREMENT } = increment();
       expect(action).toEqual({ type: INCREMENT });

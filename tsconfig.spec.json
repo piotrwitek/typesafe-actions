@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "noUnusedLocals": false
+    "noUnusedLocals": true
   },
   "include": ["src/**/*.spec.ts"],
   "exclude": ["node_modules"]

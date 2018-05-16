@@ -14,7 +14,7 @@ export type SymbolType = symbol;
  * @private
  * @desc Representing generic action-type
  */
-export type ActionType = StringType | SymbolType;
+export type StringOrSymbol = StringType | SymbolType;
 
 /**
  * @private
@@ -66,7 +66,7 @@ export interface FluxStandardAction<T extends StringType, P = void, M = void> {
 /**
  * @private
  */
-export interface TypeMeta<T extends ActionType> {
+export interface TypeMeta<T extends StringOrSymbol> {
   getType?: () => T;
 }
 
@@ -113,14 +113,14 @@ export type ActionCreator<T extends StringType = StringType> = (
   ...args: any[]
 ) => { type: T };
 /** @private */
-export type ActionCreatorMap<T> = { [K in keyof T]: InferAction<T[K]> };
+export type ActionCreatorMap<T> = { [K in keyof T]: ActionType<T[K]> };
 
 /** PUBLIC */
 
 /**
  * @desc Infers Action union-type from action-creator map object
  */
-export type InferAction<
+export type ActionType<
   ActionCreatorOrMap
 > = ActionCreatorOrMap extends ActionCreator
   ? ReturnType<ActionCreatorOrMap>
@@ -131,10 +131,10 @@ export type InferAction<
 /**
  * @desc Infers State object from reducer map object
  */
-export type InferState<ReducerOrMap> = ReducerOrMap extends (
+export type StateType<ReducerOrMap> = ReducerOrMap extends (
   ...args: any[]
 ) => any
   ? ReturnType<ReducerOrMap>
   : ReducerOrMap extends object
-    ? { [K in keyof ReducerOrMap]: InferState<ReducerOrMap[K]> }
+    ? { [K in keyof ReducerOrMap]: StateType<ReducerOrMap[K]> }
     : never;

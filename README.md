@@ -39,8 +39,8 @@ That's why I created `typesafe-actions` with the core idea to lean on incredible
 * [Installation](#installation)
 * [Tutorial](#tutorial)
 * [API](#api)
-  * [`InferAction`](#inferaction) (RootAction type-helper)
-  * [`InferState`](#inferstate) (RootState type-helper)
+  * [`ActionType`](#actiontype) (RootAction type-helper)
+  * [`StateType`](#statetype) (RootState type-helper)
   * [`action`](#action)
   * [`createAction`](#createaction)
   * [`createStandardAction`](#createstandardaction)
@@ -96,7 +96,7 @@ import { getType } from 'typesafe-actions';
 import * as todos from './actions';
 export type TodosAction = InferAction<typeof todos>;
 
-const reducer = (state: Todo[] = [], action: TodosAction) => {
+const todosReducer = (state: Todo[] = [], action: TodosAction) => {
   switch (action.type) {
     case getType(todos.add): // TIP: if you prefer you could still use a regular "type constants" here
       // action is narrowed as: { type: "todos/ADD", payload: Todo }
@@ -204,12 +204,18 @@ if (isOfType(types.ADD, action)) {
 
 ## API
 
-### InferAction
+### ActionType
 
-> powerful type helper that will infer union type from various nested map objects or arrays with action-creators
+> powerful type helper that will infer union type from "action-creator map" object or "module import"
+
+_NB: This is an equivalent of TypeScript `ReturnType` accepting typeof "action-creators" module "import *" or "action-creator map" type instead of function/expression type_
 
 ```ts
-import { InferAction } from 'typesafe-actions';
+import { ActionType } from 'typesafe-actions';
+
+import * as todos from './actions';
+export type TodosAction = ActionType<typeof todos>;
+
 
 const actions = {
   action1: createAction('action1'),
@@ -220,9 +226,36 @@ const actions = {
     }
   }
 };
-
-export type RootAction = InferAction<typeof actions>;
+export type RootAction = ActionType<typeof actions>;
 // RootAction: { type: 'action1' } | { type: 'action2' } | { type: 'action3' }
+```
+
+[⇧ back to top](#table-of-contents)
+
+---
+
+### StateType
+
+> powerful type helper that will infer state object type from "reducer function" or "nested/combined reducers"
+
+_NB: This is an equivalent of TypeScript `ReturnType` accepting typeof "reducer function" or "nested/combined reducers" (result of `combineReducers`) instead of function/expression type_
+
+```ts
+import { StateType } from 'typesafe-actions';
+
+// 
+const todosReducer = (state: Todo[] = [], action: TodosAction) => {
+  switch (action.type) {
+    case getType(todos.add):
+      return [...state, action.payload];
+    ...
+export type TodosState = StateType<typeof todosReducer>;
+
+const rootReducer = combineReducers({
+  router: routerReducer,
+  counters: countersReducer,
+});
+export type RootState = StateType<typeof rootReducer>;
 ```
 
 [⇧ back to top](#table-of-contents)

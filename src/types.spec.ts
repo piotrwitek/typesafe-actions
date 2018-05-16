@@ -1,5 +1,4 @@
-import { getType, isOfType, isActionOf } from './';
-import { InferAction } from './types';
+import { getType, isOfType, isActionOf, ActionType, StateType } from './';
 import { types, actions, testType, User } from './test-utils';
 const {
   withSymbolType,
@@ -11,8 +10,26 @@ const {
   asyncAction,
 } = actions;
 
-describe('InferAction', () => {
-  type RootAction = InferAction<typeof actions>;
+describe('StateType', () => {
+  const reducer = (
+    state: boolean = false,
+    action: ActionType<typeof withTypeOnly>
+  ) => {
+    switch (action.type) {
+      case getType(withTypeOnly):
+        return true;
+      default:
+        return false;
+    }
+  };
+
+  type ReducerState = StateType<typeof reducer>;
+  testType<ReducerState>(true);
+  expect(reducer(undefined, withTypeOnly())).toBe(true);
+});
+
+describe('ActionType', () => {
+  type RootAction = ActionType<typeof actions>;
 
   function switchReducer(action: RootAction): RootAction | undefined {
     switch (action.type) {
