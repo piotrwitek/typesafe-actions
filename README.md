@@ -5,8 +5,8 @@
 [![NPM Downloads](https://img.shields.io/npm/dm/typesafe-actions.svg)](https://www.npmjs.com/package/typesafe-actions)
 
 [ ![Codeship Status for piotrwitek/typesafe-actions](https://app.codeship.com/projects/d8776810-3b42-0136-36f6-4aa2219ea767/status?branch=master)](https://app.codeship.com/projects/290301)
-[![Dependency Status](https://img.shields.io/david/piotrwitek/typesafe-actions.svg)](https://david-dm.org/piotrwitek/typesafe-actions)
-[![peerDependency Status](https://img.shields.io/david/peer/piotrwitek/typesafe-actions.svg)](https://david-dm.org/piotrwitek/typesafe-actions#info=devDependencies)
+[![dependencies Status](https://david-dm.org/piotrwitek/typesafe-actions/status.svg)](https://david-dm.org/piotrwitek/typesafe-actions)
+[![peerDependencies Status](https://david-dm.org/piotrwitek/typesafe-actions/peer-status.svg)](https://david-dm.org/piotrwitek/typesafe-actions?type=peer)
 
 ### Typesafe "Action Creators" for Redux / Flux Architectures (in TypeScript)
 
