@@ -19,9 +19,9 @@ and **complexity** (thanks to powerful helpers).
 
 ### Features
 
-* __small and focused__ - according to `rollup-plugin-filesize` (Bundle size: 2.75 KB, Gzipped size: 887 B) check also on [bundlephobia](https://bundlephobia.com/result?p=typesafe-actions)
-* __secure__ - no external dependencies for browser (umd bundle) (in case of cjs/esm modules just `tslib`)
-* __tested__ - complete test-suite with tests for type soundness
+* __small and focused__ - according to `rollup-plugin-filesize` (Bundle size: 2.6 KB, Gzipped size: 808 B) check also on [bundlephobia](https://bundlephobia.com/result?p=typesafe-actions)
+* __secure and optimized__ - no external dependencies with 3 different bundle types (`cjs`, `esm` and `umd` for browser)
+* __solid as a rock__ - complete test-suite for entire API surface with extra tests for static-types
 
 ## Motivation
 
