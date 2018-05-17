@@ -124,8 +124,11 @@ export type RootAction =
 ```
 
 ### - The Async-Flow
-To handle async-flow of request to a remote resource, we will use `createAsyncAction` function to simplify the creation of necessary action-creators with a nice common interface `{ request: ... , success: ... , failure: ... }`.
-This will mitigate redux verbosity and greatly reduce the maintenance cost of type annotations for these action-creators, that otherwise we would have to write by hand.
+> Starring `redux-observable` epics
+
+To handle async-flow of request to a remote resource in our application, we'll implement an `epic` that'll call a remote API using injected `todosApi` client returning a Promise.
+To help us simplify the creation process of necessary action-creators we'll use `createAsyncAction` function providing us with a nice common interface `{ request: ... , success: ... , failure: ... }` that will nicely fit with the functional API of `RxJS`.
+This will mitigate **redux verbosity** and greatly reduce the maintenance cost of type annotations for actions objects and action-creators, that otherwise we would have to write by hand.
 
 ```ts
 // actions.ts
@@ -152,9 +155,10 @@ const fetchTodosFlow: Epic<RootAction, RootState, Services> = (action$, store, {
 ```
 
 ### - The Side-Effects
-> Starring `redux-observable`!
+> Starring `redux-observable` epics
 
-With `isActionOf` function we can use **action-creators** again to filter actions and to narrow **tagged union type** of all actions (here we're using `RootAction`) to a specific action _(or actions!)_ down the pipe in epics.
+To showcase handling of various side-effects in our application we'll implement an `epic` responsible of showing a notification when the user adds a new todo.
+In the **async-flow** section above we have already seen the usage of `isActionOf` function. We used it to help us filter actions coming from the source stream using **action-creators** as an argument. It's also a **type-guard** so it'll narrow **tagged union type** of all actions (here we're using `RootAction`) to a specific action down the pipe in epics.
 ```ts
 // epics.ts
 import { isActionOf } from 'typesafe-actions';
@@ -164,16 +168,17 @@ import { add, toggle } from './actions';
 const addTodoToast: Epic<RootAction, RootState, Services> = (action$, store, { toastService }) =>
   action$.pipe(
     filter(isActionOf(add)),
-    tap(action => {
-      // here action type is narrowed to: { type: "todos/ADD", payload: Todo }
+    tap(action => { // here action type is narrowed to: { type: "todos/ADD", payload: Todo }
+      toastService.success(...);
+    })
     ...
 ```
 
-> **PRO-TIP:** It works with multiple actions in array
+> **PRO-TIP:** It also works with multiple actions as an array argument
 ```ts
-filter(isActionOf([add, toggle]))
-// here action is narrowed to a new union type:
-// { type: "todos/ADD", payload: Todo } | { type: "todos/TOGGLE", payload: string }
+  action$.pipe(
+    filter(isActionOf([add, toggle])) // here action type is narrowed to a smaller union:
+    // { type: "todos/ADD", payload: Todo } | { type: "todos/TOGGLE", payload: string }
 ```
 
 **ALTERNATIVE:** But if your team prefer to use **type-constants** what then? I still got you covered! We have equivalent `isOfType` function that will work with **type-constants** instead of action-creators.
@@ -186,8 +191,7 @@ import { ADD } from './constants';
 const addTodoToast: Epic<RootAction, RootState, Services> = (action$, store, { toastService }) =>
   action$.pipe(
     filter(isTypeOf(ADD)),
-    tap(action => {
-      // here action type is narrowed to: { type: "todos/ADD", payload: Todo }
+    tap(action => { // here action type is narrowed to: { type: "todos/ADD", payload: Todo }
     ...
 ```
 
