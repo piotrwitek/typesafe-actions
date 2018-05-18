@@ -8,14 +8,17 @@
 [![dependencies Status](https://david-dm.org/piotrwitek/typesafe-actions/status.svg)](https://david-dm.org/piotrwitek/typesafe-actions)
 [![peerDependencies Status](https://david-dm.org/piotrwitek/typesafe-actions/peer-status.svg)](https://david-dm.org/piotrwitek/typesafe-actions?type=peer)
 
-### Typesafe "Action Creators" for Redux / Flux Architectures (in TypeScript)
-
-> #### This lib is a part of [React & Redux TypeScript Guide](https://github.com/piotrwitek/react-redux-typescript-guide)
-
-> #### Reference implementation of Todo-App with `typesafe-actions`: https://codesandbox.io/s/github/piotrwitek/typesafe-actions-todo-app
-
+## Typesafe "Action Creators" for Redux / Flux Architectures (in TypeScript)
 Flexible functional API that's specifically designed to reduce types **verbosity** (especially maintainability concerns)
 and **complexity** (thanks to powerful helpers).
+
+> #### _Found it usefull? Want more updates?_ [**Show your support by giving a :star:**](https://github.com/piotrwitek/typesafe-actions/stargazers)  
+
+> _This lib is an integral part of [React & Redux TypeScript Guide](https://github.com/piotrwitek/react-redux-typescript-guide)_ :book:  
+
+> _Reference implementation of Todo-App with `typesafe-actions`: https://codesandbox.io/s/github/piotrwitek/typesafe-actions-todo-app_ :computer:  
+
+> _Now compatible with **TypeScript v2.8.3** (rewritten using conditional types)_ :tada:  
 
 ### Features
 
