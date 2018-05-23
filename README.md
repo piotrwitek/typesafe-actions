@@ -150,7 +150,7 @@ const fetchTodosFlow: Epic<RootAction, RootState, Services> = (action$, store, {
   action$.pipe(
     filter(isActionOf(fetchTodos.request)),
     switchMap(action =>
-      of(todosApi.getAll(...)).pipe(
+      from(todosApi.getAll(...)).pipe(
         map(fetchTodos.success),
         catchError(pipe(fetchTodos.failure, of))
       )
