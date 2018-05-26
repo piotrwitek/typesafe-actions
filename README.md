@@ -303,11 +303,12 @@ const todosReducer = (state: Todo[] = [], action: TodosAction) => {
     ...
 export type TodosState = StateType<typeof todosReducer>;
 
-const rootReducer = combineReducers({
+const root = {
   router: routerReducer,
   counters: countersReducer,
-});
-export type RootState = StateType<typeof rootReducer>;
+};
+const rootReducer = combineReducers(root);
+export type RootState = StateType<typeof root>;
 ```
 
 [⇧ back to top](#table-of-contents)
