@@ -260,7 +260,7 @@ yarn add typesafe-actions
 
 > powerful type helper that will infer union type from "action-creator map" object or "module import"
 
-_NB: This is an equivalent of TypeScript `ReturnType` accepting typeof "action-creators" module "import *" or "action-creator map" type instead of function/expression type_
+_NB: This helper works similar to `ReturnType` but instead of function type paramerer it will accept "typeof action-creators" (it can be "import *" from module or "action-creators map")_
 
 ```ts
 import { ActionType } from 'typesafe-actions';
@@ -290,9 +290,13 @@ export type RootAction = ActionType<typeof actions>;
 
 > powerful type helper that will infer state object type from "reducer function" or "nested/combined reducers"
 
-_NB: This is an equivalent of TypeScript `ReturnType` accepting typeof "reducer function" or "nested/combined reducers" (result of `combineReducers`) instead of function/expression type_
+
+_NB: This helper works similar to `ReturnType` but instead of function type paramerer it will accept "typeof reducer" or "nested/combined reducers map" (result of `combineReducers`)_
+
+> _Redux Combatibility: working with redux@4+ types_
 
 ```ts
+import { combineReducers } from 'redux';
 import { StateType } from 'typesafe-actions';
 
 // 
