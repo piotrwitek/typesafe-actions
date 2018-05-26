@@ -1,14 +1,12 @@
 import { ActionCreator, StringType } from './types';
 
 /** @internal */
-export function validateActionType(actionType: any): void {
-  if (actionType == null) {
-    throw new Error('action type argument is missing');
+export function validateActionType(arg: any, idx: number = 1): void {
+  if (arg == null) {
+    throw new Error(`Argument (#${idx}) is missing`);
   } else {
-    if (typeof actionType !== 'string' && typeof actionType !== 'symbol') {
-      throw new Error(
-        'action type argument should be type of: string | symbol'
-      );
+    if (typeof arg !== 'string' && typeof arg !== 'symbol') {
+      throw new Error(`Argument (#${idx}) should be of type: string | symbol`);
     }
   }
 }
