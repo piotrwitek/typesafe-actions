@@ -57,7 +57,7 @@ export const toggle = (id: string) => action(TOGGLE, id);
 // (id: string) => { type: 'todos/TOGGLE'; payload: string; }
 
 export const add = (title: string) => action(ADD, { title, id: cuid(), completed: false } as Todo);
-// (title: string) => { type: 'todos/ADD'; payload: Todo }
+// (title: string) => { type: 'todos/ADD'; payload: Todo; }
 ```
 #### 2. opinionated without need for constants
 This approach will give us access for all the **action-helpers** and eliminate to use constants in the application, but it's opinionated and will always accept 2 arguments (1st is payload, and 2nd is meta). It also have very usefull `map` chain method for an extra flexibility.
@@ -72,7 +72,7 @@ export const add = createStandardAction(ADD).map(
     payload: { title, id: cuid(), completed: false } as Todo,
   })
 );
-// ({ title: string }) => { type: 'todos/ADD'; payload: Todo }
+// ({ title: string }) => { type: 'todos/ADD'; payload: Todo; }
 ```
 #### 3. most flexible with all helpers
 This approach will gives us the best of both worlds: all the **action-helpers** will work and we have the flexibility of providing variadic amount of named parameters like with regular functions.
@@ -87,7 +87,7 @@ export const toggle = createAction('todos/TOGGLE', resolve => {
 export const add = createAction('todos/ADD', resolve => {
   return (title: string) => resolve({ title, id: cuid(), completed: false } as Todo);
 });
-// (title: string) => { type: 'todos/ADD'; payload: Todo }
+// (title: string) => { type: 'todos/ADD'; payload: Todo; }
 ```
 
 > For more examples check the [API Docs](#table-of-contents), there are plenty!
@@ -109,7 +109,7 @@ With static types in place we can finally leverage **tagged union types**. Using
 ```ts
   switch (action.type) {
     case getType(todos.add): 
-      // below action type is narrowed to: { type: "todos/ADD", payload: Todo }
+      // below action type is narrowed to: { type: "todos/ADD"; payload: Todo; }
       return [...state, action.payload];
     ...
 ```
@@ -174,7 +174,7 @@ import { add, toggle } from './actions';
 const addTodoToast: Epic<RootAction, RootState, Services> = (action$, store, { toastService }) =>
   action$.pipe(
     filter(isActionOf(add)),
-    tap(action => { // here action type is narrowed to: { type: "todos/ADD", payload: Todo }
+    tap(action => { // here action type is narrowed to: { type: "todos/ADD"; payload: Todo; }
       toastService.success(...);
     })
     ...
@@ -184,7 +184,7 @@ const addTodoToast: Epic<RootAction, RootState, Services> = (action$, store, { t
 ```ts
   action$.pipe(
     filter(isActionOf([add, toggle])) // here action type is narrowed to a smaller union:
-    // { type: "todos/ADD", payload: Todo } | { type: "todos/TOGGLE", payload: string }
+    // { type: "todos/ADD"; payload: Todo; } | { type: "todos/TOGGLE"; payload: string; }
 ```
 
 **ALTERNATIVE:** But if your team prefer to use **type-constants** what then? I still got you covered! We have equivalent `isOfType` function that will work with **type-constants** instead of action-creators.
@@ -197,7 +197,7 @@ import { ADD } from './constants';
 const addTodoToast: Epic<RootAction, RootState, Services> = (action$, store, { toastService }) =>
   action$.pipe(
     filter(isTypeOf(ADD)),
-    tap(action => { // here action type is narrowed to: { type: "todos/ADD", payload: Todo }
+    tap(action => { // here action type is narrowed to: { type: "todos/ADD"; payload: Todo; }
     ...
 ```
 
@@ -206,11 +206,11 @@ const addTodoToast: Epic<RootAction, RootState, Services> = (action$, store, { t
 import { isActionOf, isOfType } from 'typesafe-actions';
 
 if (isActionOf(actions.add, action)) {
-  // here action is narrowed to: { type: "todos/ADD", payload: Todo }
+  // here action is narrowed to: { type: "todos/ADD"; payload: Todo; }
 }
 // or with type constants
 if (isOfType(types.ADD, action)) {
-  // here action is narrowed to: { type: "todos/ADD", payload: Todo }
+  // here action is narrowed to: { type: "todos/ADD"; payload: Todo; }
 }
 ```
 
@@ -331,9 +331,15 @@ Examples:
 [> Advanced Usage Examples](src/action.spec.ts)
 
 ```ts
+// type with payload
 const createUser = (id: number, name: string) =>
   action('CREATE_USER', { id, name });
-// { type: 'CREATE_USER'; payload: { id: number; name: string } }
+// { type: 'CREATE_USER'; payload: { id: number; name: string }; }
+
+// type with meta
+const getUsers = (meta: string) =>
+  action('GET_USERS', undefined, meta);
+// { type: 'GET_USERS'; meta: string; }
 ```
 
 [⇧ back to top](#table-of-contents)
@@ -349,18 +355,25 @@ const createUser = (id: number, name: string) =>
 function createAction(type: T): () => { type: T };
 // createAction('INCREMENT');
 
-// with payload
+// type with payload
 function createAction(type: T, executor): (...args) => { type: T, payload: P };
 const executor = (resolve) => (...args) => resolve(payload: P)
 // createAction('ADD', resolve => {
 //   return (amount: number) => resolve(amount);
 // });
 
-// with payload and meta
+// type with meta
+function createAction(type: T, executor): (...args) => { type: T, meta: M };
+const executor = (resolve) => (...args) => resolve(payload: undefined, meta: M)
+// createAction('ADD', resolve => {
+//   return (meta: string) => resolve(undefined, meta);
+// });
+
+// type with payload and meta
 function createAction(type: T, executor): (...args) => { type: T, payload: P, meta: M };
 const executor = (resolve) => (...args) => resolve(payload: P, meta: M)
 // createAction('GET_TODO', resolve => {
-//   return (id: string, token: string) => resolve(id, token);
+//   return (id: string, meta: string) => resolve(id, meta);
 // });
 ```
 
@@ -376,19 +389,26 @@ const increment = createAction('INCREMENT');
 expect(increment())
   .toEqual({ type: 'INCREMENT' });
 
-// with payload
+// type with payload
 const add = createAction('ADD', resolve => {
   return (amount: number) => resolve(amount);
 });
 expect(add(10))
   .toEqual({ type: 'ADD', payload: 10 });
 
-// with payload and meta
-const getTodo = createAction('GET_TODO', resolve => {
-  return (id: string, token: string) => resolve(id, token);
+// type with meta
+const getTodos = createAction('GET_TODOS', resolve => {
+  return (meta: string) => resolve(undefined, meta);
 });
-expect(getTodo('fake_id', 'fake_token'))
-  .toEqual({ type: 'ADD', payload: 'fake_id', meta: 'fake_token' });
+expect(getTodos('some_meta'))
+  .toEqual({ type: 'GET_TODOS', meta: 'some_meta' });
+
+// type with payload and meta
+const getTodo = createAction('GET_TODO', resolve => {
+  return (id: string, meta: string) => resolve(id, meta);
+});
+expect(getTodo('some_id', 'some_meta'))
+  .toEqual({ type: 'GET_TODO', payload: 'some_id', meta: 'some_meta' });
 ```
 
 [⇧ back to top](#table-of-contents)
@@ -400,8 +420,8 @@ expect(getTodo('fake_id', 'fake_token'))
 > simple creator compatible with "Flux Standard Action" to reduce boilerplate and enforce convention
 
 ```ts
-function createStandardAction(type: T): <P, M>() => ({ payload: P, meta: M }) => { type: T, payload: P, meta: M };
-function createStandardAction(type: T): { map: ({ payload: P, meta: M }) => { type: T, payload: P, meta: M } };
+function createStandardAction(type: T): <P, M>() => (payload: P, meta: M) => { type: T, payload: P, meta: M };
+function createStandardAction(type: T): { map: (payload: P, meta: M): { ...anything } => (...args) => { type: T, ...anything } };
 ```
 
 Examples:
@@ -415,11 +435,15 @@ import { createAction } from 'typesafe-actions';
 const increment = createStandardAction('INCREMENT')<void>();
 expect(increment()).toEqual({ type: 'INCREMENT' });
 
-// with payload
+// type with payload
 const add = createStandardAction('ADD')<number>();
 expect(add(10)).toEqual({ type: 'ADD', payload: 10 });
 
-// with payload and meta
+// type with meta
+const getData = createStandardAction('GET_DATA')<void, string>();
+expect(getData(undefined, 'meta')).toEqual({ type: 'GET_DATA', meta: 'meta' });
+
+// type with payload and meta
 const notify = createStandardAction('NOTIFY').map(
   ({ username, message }}: Notification) => ({
     payload: `${username}: ${message || ''}`,
@@ -540,7 +564,7 @@ import { addTodo } from './todos-actions';
 const addTodoToast: Epic<RootAction, RootState> =
   (action$, store) => action$
     .filter(isActionOf(addTodo))
-    .concatMap((action) => { // action is asserted as: { type: "ADD_TODO", payload: string }
+    .concatMap((action) => { // action is asserted as: { type: "ADD_TODO"; payload: string; }
       const toast = `Added new todo: ${action.payload}`;
 
 // epics with multiple actions
@@ -549,14 +573,14 @@ import { addTodo, toggleTodo } from './todos-actions';
 const logTodoAction: Epic<RootAction, RootState> =
   (action$, store) => action$
     .filter(isActionOf([addTodo, toggleTodo]))
-    .concatMap((action) => { // action is asserted as: { type: "ADD_TODO", payload: string } | { type: "TOGGLE_TODO", payload: string }
+    .concatMap((action) => { // action is asserted as: { type: "ADD_TODO"; payload: string; } | { type: "TOGGLE_TODO"; payload: string; }
       const log = `Dispatched action: ${action.type}`;
 
 // conditionals where you need a type guard
 import { addTodo } from './actions';
 
 if(isActionOf(addTodo, action)) {
-  operationThatNeedsPayload(action.payload) // action is asserted as: { type: "ADD_TODO", payload: string }
+  operationThatNeedsPayload(action.payload) // action is asserted as: { type: "ADD_TODO"; payload: string; }
 }
 ```
 
@@ -587,7 +611,7 @@ const addTodoToast: Epic<RootAction, RootState, Services> =
   (action$, store, { toastService }) => action$
     .filter(isOfType(ADD))
     .do((action) => {
-      // action is narrowed as: { type: "todos/ADD", payload: Todo }
+      // action is narrowed as: { type: "todos/ADD"; payload: Todo; }
       toastService.success(`Added new todo: ${action.payload}`);
     })
     .ignoreElements();
@@ -596,7 +620,7 @@ const addTodoToast: Epic<RootAction, RootState, Services> =
 import { ADD } from './todos-types';
 
 if(isOfType(ADD, action)) {
-  return functionThatAcceptsTodo(action.payload) // action: { type: "todos/ADD", payload: Todo }
+  return functionThatAcceptsTodo(action.payload) // action: { type: "todos/ADD"; payload: Todo; }
 }
 ```
 
@@ -611,26 +635,31 @@ if(isOfType(ADD, action)) {
 ### v1.x.x to v2.x.x
 
 ```ts
-const deprecatedApi = createActionDeprecated('GET_TODO',
-  (token: string, id: string) => ({
+// target action creator
+getTodo('some_id', 'some_meta'); // { type: 'GET_TODO', payload: 'some_id', meta: 'some_meta' }
+
+// deprecated API
+const getTodo = createActionDeprecated('GET_TODO',
+  (id: string, meta: string) => ({
     type: 'GET_TODO',
     payload: id,
-    meta: token,
+    meta: meta,
   })
 );
 
-const getTodoSimple = (token: string, id: string) => action('GET_TODO', id, token);
+// new API equivalent (we offer 4 different styles - choose your preference)
+const getTodoSimple = (id: string, meta: string) => action('GET_TODO', id, meta);
 
 const getTodoVariadic = createAction('GET_TODO', resolve => {
-  return (id: string, token: string) => resolve(id, token);
+  return (id: string, meta: string) => resolve(id, meta);
 });
 
-const getTodoStandard = createStandardAction('GET_TODO')<{ id: string; token: string; }>();
+const getTodoStandard = createStandardAction('GET_TODO')<string, string>();
 
-const getTodoStandardMap = createStandardAction('GET_TODO').map(
-  ({ id, token }: { id: string; token: string; }) => ({
+const getTodoStandardWithMap = createStandardAction('GET_TODO').map(
+  ({ id, meta }: { id: string; meta: string; }) => ({
     payload: id,
-    meta: token,
+    meta,
   })
 );
 ```

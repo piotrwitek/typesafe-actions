@@ -12,12 +12,12 @@ export function testType<T>(a: T): T {
 /** @internal */
 export type User = { firstName: string; lastName: string };
 /** @internal */
-enum SymbolType {}
+// enum SymbolType {}
 
 /** @internal */
 export namespace types {
   // Symbol Types
-  export const WITH_SYMBOL_TYPE = (Symbol(1) as any) as SymbolType & string;
+  // export const WITH_SYMBOL_TYPE = (Symbol(1) as any) as SymbolType & string;
   // String Literal Types
   export const VERY_DEEP_WITH_TYPE_ONLY = 'VERY_DEEP_WITH_TYPE_ONLY';
   export const WITH_TYPE_ONLY = 'WITH_TYPE_ONLY';
@@ -32,7 +32,7 @@ export type TypesKeys = keyof typeof types;
 
 /** @internal */
 export const actions = {
-  withSymbolType: createStandardAction(types.WITH_SYMBOL_TYPE)(),
+  // withSymbolType: createStandardAction(types.WITH_SYMBOL_TYPE)(),
   very: {
     deep: {
       withTypeOnly: createStandardAction(types.VERY_DEEP_WITH_TYPE_ONLY)(),

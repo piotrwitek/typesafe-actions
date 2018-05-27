@@ -1,15 +1,7 @@
 import { getType } from './';
-import { actions, types } from './test-utils';
+import { actions } from './test-utils';
 
 describe('getType', () => {
-  it('with type as symbol', () => {
-    const typeLiteral: typeof types.WITH_SYMBOL_TYPE = getType(
-      actions.withSymbolType
-    );
-    expect(typeLiteral).toBe(types.WITH_SYMBOL_TYPE);
-    expect(typeLiteral).not.toBe('WITH_SYMBOL_TYPE');
-  });
-
   it('with type as string', () => {
     const typeLiteral: 'WITH_TYPE_ONLY' = getType(actions.withTypeOnly);
     expect(typeLiteral).toBe('WITH_TYPE_ONLY');

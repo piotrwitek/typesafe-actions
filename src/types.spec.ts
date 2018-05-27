@@ -1,7 +1,6 @@
 import { getType, isOfType, isActionOf, ActionType, StateType } from './';
 import { types, actions, testType, User } from './test-utils';
 const {
-  withSymbolType,
   withTypeOnly,
   withPayload,
   withPayloadMeta,
@@ -35,9 +34,6 @@ describe('ActionType', () => {
     switch (action.type) {
       case getType(actions.very.deep.withTypeOnly): {
         return testType<{ type: 'VERY_DEEP_WITH_TYPE_ONLY' }>(action);
-      }
-      case getType(withSymbolType): {
-        return testType<{ type: 'WITH_SYMBOL_TYPE' }>(action);
       }
       case getType(withTypeOnly): {
         return testType<{ type: 'WITH_TYPE_ONLY' }>(action);
@@ -90,8 +86,6 @@ describe('ActionType', () => {
   function ifReducer(action: RootAction): RootAction | undefined {
     if (isActionOf(actions.very.deep.withTypeOnly, action)) {
       return testType<{ type: 'VERY_DEEP_WITH_TYPE_ONLY' }>(action);
-    } else if (isActionOf(withSymbolType, action)) {
-      return testType<{ type: 'WITH_SYMBOL_TYPE' }>(action);
     } else if (isActionOf(withTypeOnly, action)) {
       return testType<{ type: 'WITH_TYPE_ONLY' }>(action);
     } else if (isActionOf(withPayload, action)) {
@@ -122,8 +116,6 @@ describe('ActionType', () => {
   function ifReducerCurried(action: RootAction): RootAction | undefined {
     if (isActionOf(actions.very.deep.withTypeOnly)(action)) {
       return testType<{ type: 'VERY_DEEP_WITH_TYPE_ONLY' }>(action);
-    } else if (isActionOf(withSymbolType)(action)) {
-      return testType<{ type: 'WITH_SYMBOL_TYPE' }>(action);
     } else if (isActionOf(withTypeOnly)(action)) {
       return testType<{ type: 'WITH_TYPE_ONLY' }>(action);
     } else if (isActionOf(withPayload)(action)) {
@@ -154,8 +146,6 @@ describe('ActionType', () => {
   function ifReducerArray(action: RootAction): RootAction | undefined {
     if (isActionOf([actions.very.deep.withTypeOnly])(action)) {
       return testType<{ type: 'VERY_DEEP_WITH_TYPE_ONLY' }>(action);
-    } else if (isActionOf([withSymbolType])(action)) {
-      return testType<{ type: 'WITH_SYMBOL_TYPE' }>(action);
     } else if (isActionOf([withTypeOnly])(action)) {
       return testType<{ type: 'WITH_TYPE_ONLY' }>(action);
     } else if (isActionOf([withTypeOnly])(action)) {
@@ -188,8 +178,6 @@ describe('ActionType', () => {
   function hasReducer(action: RootAction): RootAction | undefined {
     if (isOfType(types.VERY_DEEP_WITH_TYPE_ONLY, action)) {
       return testType<{ type: 'VERY_DEEP_WITH_TYPE_ONLY' }>(action);
-    } else if (isOfType(types.WITH_SYMBOL_TYPE, action)) {
-      return testType<{ type: 'WITH_SYMBOL_TYPE' }>(action);
     } else if (isOfType(types.WITH_TYPE_ONLY, action)) {
       return testType<{ type: 'WITH_TYPE_ONLY' }>(action);
     } else if (isOfType(types.WITH_PAYLOAD, action)) {
@@ -218,8 +206,6 @@ describe('ActionType', () => {
   function hasReducerCurried(action: RootAction): RootAction | undefined {
     if (isOfType(types.VERY_DEEP_WITH_TYPE_ONLY)(action)) {
       return testType<{ type: 'VERY_DEEP_WITH_TYPE_ONLY' }>(action);
-    } else if (isOfType(types.WITH_SYMBOL_TYPE)(action)) {
-      return testType<{ type: 'WITH_SYMBOL_TYPE' }>(action);
     } else if (isOfType(types.WITH_TYPE_ONLY)(action)) {
       return testType<{ type: 'WITH_TYPE_ONLY' }>(action);
     } else if (isOfType(types.WITH_PAYLOAD)(action)) {
@@ -246,17 +232,6 @@ describe('ActionType', () => {
   }
 
   describe('with createStandardAction', () => {
-    it('should return action with symbol type', () => {
-      const actual = withSymbolType();
-      const expected = { type: types.WITH_SYMBOL_TYPE };
-      expect(switchReducer(actual)).toEqual(expected);
-      expect(ifReducer(actual)).toEqual(expected);
-      expect(ifReducerCurried(actual)).toEqual(expected);
-      expect(ifReducerArray(actual)).toEqual(expected);
-      expect(hasReducer(actual)).toEqual(expected);
-      expect(hasReducerCurried(actual)).toEqual(expected);
-    });
-
     it('should return action with type only', () => {
       const actual = withTypeOnly();
       const expected = { type: 'WITH_TYPE_ONLY' };
