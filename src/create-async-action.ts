@@ -1,5 +1,5 @@
 import { StringType, B, MapBuilder, FsaBuilder } from './types';
-import { withType } from './utils';
+import { validateActionType, withType } from './utils';
 
 export interface CreateAsyncAction<
   T1 extends StringType,
@@ -55,13 +55,7 @@ export function createAsyncAction<
   failureType: T3
 ): CreateAsyncAction<T1, T2, T3> {
   [requestType, successType, failureType].forEach((arg, idx) => {
-    if (arg == null) {
-      throw new Error(`Argument (${idx}) is missing`);
-    } else {
-      if (typeof arg !== 'string' && typeof arg !== 'symbol') {
-        throw new Error(`Argument (${idx}) should be of type: string | symbol`);
-      }
-    }
+    validateActionType(arg, idx + 1);
   });
 
   function constructor<P1, P2, P3>(): AsyncActionBuilder<

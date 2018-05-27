@@ -16,20 +16,20 @@ export function createStandardAction<T extends StringType>(
 ): CreateStandardAction<T> {
   validateActionType(actionType);
 
-  function map<R, P, M>(
-    fn: (payload?: P, meta?: M) => R
-  ): MapBuilder<T, B<R>, B<P>, B<M>> {
-    return withType(actionType, type => (payload?: P, meta?: M) =>
-      Object.assign(fn(payload, meta), { type })
-    ) as MapBuilder<T, B<R>, B<P>, B<M>>;
-  }
-
   function constructor<P, M = void>(): FsaBuilder<T, B<P>, B<M>> {
     return withType(actionType, type => (payload?: P, meta?: M) => ({
       type,
       payload,
       meta,
     })) as FsaBuilder<T, B<P>, B<M>>;
+  }
+
+  function map<R, P, M>(
+    fn: (payload?: P, meta?: M) => R
+  ): MapBuilder<T, B<R>, B<P>, B<M>> {
+    return withType(actionType, type => (payload?: P, meta?: M) =>
+      Object.assign(fn(payload, meta), { type })
+    ) as MapBuilder<T, B<R>, B<P>, B<M>>;
   }
 
   return Object.assign(constructor, { map });

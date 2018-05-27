@@ -1,4 +1,5 @@
-import { StringType, ActionCreator } from './types';
+import { StringType, ActionCreator, PayloadMetaAction } from './types';
+import { validateActionType } from './utils';
 import { action } from './action';
 
 /**
@@ -8,22 +9,22 @@ export function createAction<
   T extends StringType,
   AC extends ActionCreator<T> = () => { type: T }
 >(
-  type: T,
+  actionType: T,
   creatorHandler?: (
-    action: <P = void, M = void>(
+    action: <P = undefined, M = undefined>(
       payload?: P,
       meta?: M
-    ) => P extends void
-      ? { type: T }
-      : M extends void
-        ? { type: T; payload: P }
-        : { type: T; payload: P; meta: M }
+    ) => PayloadMetaAction<T, P, M>
   ) => AC
 ): AC {
+  validateActionType(actionType);
+
   const actionCreator: AC =
     creatorHandler == null
-      ? ((() => action(type)) as AC)
-      : creatorHandler(action.bind(null, type));
+      ? ((() => action(actionType)) as AC)
+      : creatorHandler(action.bind(null, actionType));
 
-  return Object.assign(actionCreator, { getType: () => type });
+  return Object.assign(actionCreator, {
+    getType: () => actionType,
+  });
 }

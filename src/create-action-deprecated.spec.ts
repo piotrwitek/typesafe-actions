@@ -2,11 +2,6 @@ import { createActionDeprecated } from './';
 import { testType } from './test-utils';
 
 describe('createActionDeprecated', () => {
-  // TODO: #3
-  // should error when missing argument
-  // should error when passed invalid arguments
-  // check object, empty array, primitives
-
   it('no payload', () => {
     const increment = createActionDeprecated('INCREMENT');
 

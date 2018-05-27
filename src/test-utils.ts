@@ -11,23 +11,28 @@ export function testType<T>(a: T): T {
 
 /** @internal */
 export type User = { firstName: string; lastName: string };
+/** @internal */
+// enum SymbolType {}
 
 /** @internal */
 export namespace types {
-  // Symbol
-  export const WITH_SYMBOL_TYPE = (Symbol(1) as any) as 'WITH_SYMBOL_TYPE';
-  // String Literal
+  // Symbol Types
+  // export const WITH_SYMBOL_TYPE = (Symbol(1) as any) as SymbolType & string;
+  // String Literal Types
   export const VERY_DEEP_WITH_TYPE_ONLY = 'VERY_DEEP_WITH_TYPE_ONLY';
   export const WITH_TYPE_ONLY = 'WITH_TYPE_ONLY';
   export const WITH_PAYLOAD = 'WITH_PAYLOAD';
+  export const WITH_META = 'WITH_META';
   export const WITH_PAYLOAD_META = 'WITH_PAYLOAD_META';
   export const WITH_MAPPED_PAYLOAD = 'WITH_MAPPED_PAYLOAD';
+  export const WITH_MAPPED_META = 'WITH_MAPPED_META';
   export const WITH_MAPPED_PAYLOAD_META = 'WITH_MAPPED_PAYLOAD_META';
 }
+export type TypesKeys = keyof typeof types;
 
 /** @internal */
 export const actions = {
-  withSymbolType: createStandardAction(types.WITH_SYMBOL_TYPE)(),
+  // withSymbolType: createStandardAction(types.WITH_SYMBOL_TYPE)(),
   very: {
     deep: {
       withTypeOnly: createStandardAction(types.VERY_DEEP_WITH_TYPE_ONLY)(),
@@ -35,12 +40,16 @@ export const actions = {
   },
   withTypeOnly: createStandardAction(types.WITH_TYPE_ONLY)<void>(),
   withPayload: createStandardAction(types.WITH_PAYLOAD)<number>(),
+  withMeta: createStandardAction(types.WITH_META)<string>(),
   withPayloadMeta: createStandardAction(types.WITH_PAYLOAD_META)<
     number,
     string
   >(),
   withMappedPayload: createStandardAction(types.WITH_MAPPED_PAYLOAD).map(
     (payload: number) => ({ payload })
+  ),
+  withMappedMeta: createStandardAction(types.WITH_MAPPED_META).map(
+    (meta: string) => ({ meta })
   ),
   withMappedPayloadMeta: createStandardAction(
     types.WITH_MAPPED_PAYLOAD_META
