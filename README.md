@@ -400,8 +400,8 @@ expect(getTodo('fake_id', 'fake_token'))
 > simple creator compatible with "Flux Standard Action" to reduce boilerplate and enforce convention
 
 ```ts
-function createStandardAction(type: T): <P, M>() => { type: T, payload?: P, meta?: M };
-function createStandardAction(type: T): { map: (arg: object) => { type: T, payload?: P, meta?: M };
+function createStandardAction(type: T): <P, M>() => ({ payload: P, meta: M }) => { type: T, payload: P, meta: M };
+function createStandardAction(type: T): { map: ({ payload: P, meta: M }) => { type: T, payload: P, meta: M } };
 ```
 
 Examples:
