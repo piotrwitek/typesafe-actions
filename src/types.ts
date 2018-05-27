@@ -43,11 +43,9 @@ export type PayloadAction<T extends StringType, P> = {
  * @type P - Payload
  * @type M - Meta
  */
-export type PayloadMetaAction<T extends StringType, P, M> = {
-  type: T;
-  payload: P;
-  meta: M;
-};
+export type PayloadMetaAction<T extends StringType, P, M> = P extends void
+  ? M extends void ? { type: T } : { type: T; meta: M }
+  : M extends void ? { type: T; payload: P } : { type: T; payload: P; meta: M };
 
 /**
  * @private
@@ -90,11 +88,9 @@ export type FsaBuilder<
   T extends StringType,
   P extends B<any> = B<void>,
   M extends B<any> = B<void>
-> = P extends B<void>
-  ? NoArgCreator<T>
-  : M extends B<void>
-    ? PayloadCreator<T, U<P>>
-    : PayloadMetaCreator<T, U<P>, U<M>>;
+> = M extends B<void>
+  ? P extends B<void> ? NoArgCreator<T> : PayloadCreator<T, U<P>>
+  : PayloadMetaCreator<T, U<P>, U<M>>;
 /** @private */
 export type MapBuilder<
   T extends StringType,
