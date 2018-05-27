@@ -22,9 +22,10 @@
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noUnusedLocals": true,
-    "strictNullChecks": true,
     "pretty": true,
     "removeComments": true,
+    "strict": true,
+    "strictFunctionTypes": true,
     "stripInternal": true,
     "sourceMap": true
   },
