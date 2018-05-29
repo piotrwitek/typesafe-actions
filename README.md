@@ -793,4 +793,4 @@ const notify3 = (username: string, message?: string) => action(
 
 MIT License
 
-Copyright (c) 2017 Piotr Witek <mailto:piotrek.witek@gmail.com> (http://piotrwitek.github.io)
+Copyright (c) 2017 Piotr Witek <piotrek.witek@gmail.com> (http://piotrwitek.github.io)
