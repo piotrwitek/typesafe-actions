@@ -45,12 +45,11 @@ To showcase flexibility and the power of **type-safety** provided by this librar
 > **WARNING:** Please make sure that you understand the following concepts of programming languages to be able to follow along with me: [Type Inference](https://www.typescriptlang.org/docs/handbook/type-inference.html), [Control flow analysis](https://github.com/Microsoft/TypeScript/wiki/What%27s-new-in-TypeScript#control-flow-based-type-analysis), [Tagged union types](https://github.com/Microsoft/TypeScript/wiki/What%27s-new-in-TypeScript#tagged-union-types), [Generics](https://www.typescriptlang.org/docs/handbook/generics.html) and some [Advanced Types](https://www.typescriptlang.org/docs/handbook/advanced-types.html).
 
 ### - The Actions
-> Different projects have different needs and conventions vary across teams this is why `typesafe-actions` was designed and build with flexibility in mind and it provides 3 different factory functions, so you can choose what would be the best fit for your project. 
+
+> Different projects have different needs and conventions vary across teams this is why `typesafe-actions` was designed and build with flexibility in mind and it provides 3 different factory functions, so you can choose what would be the best fit for your project.
 
 #### 1. classic JS style with constants FTW!
 Using this simple function we'll have complete type-safety with minimal type declaration effort, but we're constrained to use constants (as in regular JS applications) because some of advanced **action-helpers** (`getType`, `isActionOf`) will not work with such action-creator. This is still very compelling option especially for refactoring existing projects.
-
-> **WARNING:** When using string constants for action `type`, please be sure to use simple string literals. Don't do string concatenation or template strings because your `type` will loose the type safety (this is how TypeScript works)  
 
 ```ts
 import { action } from 'typesafe-actions';
@@ -63,6 +62,19 @@ export const toggle = (id: string) => action(TOGGLE, id);
 export const add = (title: string) => action(ADD, { title, id: cuid(), completed: false } as Todo);
 // (title: string) => { type: 'todos/ADD'; payload: Todo; }
 ```
+
+> **WARNING:** When using string constants for action `type`, please be sure to use simple string literals. Don't use string concatenation, template strings or object map because your `type` will loose the type information, widening to it's supertype `string` (this is how TypeScript works)
+
+```ts
+// example './constants.js' file
+export const ADD = '@prefix/ADD'; // type literal => '@prefix/ADD'
+export const TOGGLE = '@prefix/TOGGLE'; // type literal => '@prefix/TOGGLE'
+
+// Below will NOT work!!!
+// export const ADD = `${prefix}/ADD`; // widened to string
+// export default { ADD: '@prefix/ADD' } // widened to string
+```
+
 #### 2. opinionated without need for constants
 This approach will give us access for all the **action-helpers** and eliminate to use constants in the application, but it's opinionated and will always accept 2 arguments (1st is payload, and 2nd is meta). It also have very usefull `map` chain method for an extra flexibility.
 ```ts
