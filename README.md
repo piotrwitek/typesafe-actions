@@ -132,7 +132,7 @@ With static types in place we can finally leverage **tagged union types**. Using
 Notice we are using `getType` action-helper with respective action-creator as an argument to handle corresponding switch case. This will help to reduce boilerplate and completely remove the need of using **type-constants** in our application.
 > Note: If your team prefer to use regular "type constants", no problem. You can still use them with `typesafe-actions`.
 
-> **PRO-TIP:** I can recommend to create a `RootAction` in the cenral point of your redux store - it will model a complete representation of all possible action types in your application, you can even merge it with existing third-party declarations like it's shown below.
+> **PRO-TIP:** I can recommend to create a `RootAction` in the central point of your redux store - it will model a complete representation of all possible action types in your application, you can even merge it with existing third-party declarations like it's shown below.
 ```ts
 // types.d.ts
 // example of including `react-router` actions in `RootAction`
