@@ -165,7 +165,7 @@ const fetchTodos = createAsyncAction(
 // epics.ts
 import { fetchTodos } from './actions';
 
-const fetchTodosFlow: Epic<RootAction, RootState, Services> = (action$, store, { todosApi }) =>
+const fetchTodosFlow: Epic<RootAction, RootAction, RootState, Services> = (action$, store, { todosApi }) =>
   action$.pipe(
     filter(isActionOf(fetchTodos.request)),
     switchMap(action =>
@@ -187,7 +187,7 @@ import { isActionOf } from 'typesafe-actions';
 
 import { add, toggle } from './actions';
 
-const addTodoToast: Epic<RootAction, RootState, Services> = (action$, store, { toastService }) =>
+const addTodoToast: Epic<RootAction, RootAction, RootState, Services> = (action$, store, { toastService }) =>
   action$.pipe(
     filter(isActionOf(add)),
     tap(action => { // here action type is narrowed to: { type: "todos/ADD"; payload: Todo; }
@@ -210,7 +210,7 @@ import { isOfType } from 'typesafe-actions';
 
 import { ADD } from './constants';
 
-const addTodoToast: Epic<RootAction, RootState, Services> = (action$, store, { toastService }) =>
+const addTodoToast: Epic<RootAction, RootAction, RootState, Services> = (action$, store, { toastService }) =>
   action$.pipe(
     filter(isTypeOf(ADD)),
     tap(action => { // here action type is narrowed to: { type: "todos/ADD"; payload: Todo; }
@@ -577,7 +577,7 @@ Examples:
 ```ts
 import { addTodo } from './todos-actions';
 
-const addTodoToast: Epic<RootAction, RootState> =
+const addTodoToast: Epic<RootAction, RootAction, RootState> =
   (action$, store) => action$
     .filter(isActionOf(addTodo))
     .concatMap((action) => { // action is asserted as: { type: "ADD_TODO"; payload: string; }
@@ -586,7 +586,7 @@ const addTodoToast: Epic<RootAction, RootState> =
 // epics with multiple actions
 import { addTodo, toggleTodo } from './todos-actions';
 
-const logTodoAction: Epic<RootAction, RootState> =
+const logTodoAction: Epic<RootAction, RootAction, RootState> =
   (action$, store) => action$
     .filter(isActionOf([addTodo, toggleTodo]))
     .concatMap((action) => { // action is asserted as: { type: "ADD_TODO"; payload: string; } | { type: "TOGGLE_TODO"; payload: string; }
@@ -623,7 +623,7 @@ Examples:
 ```ts
 import { ADD } from './todos-types';
 
-const addTodoToast: Epic<RootAction, RootState, Services> =
+const addTodoToast: Epic<RootAction, RootAction, RootState, Services> =
   (action$, store, { toastService }) => action$
     .filter(isOfType(ADD))
     .do((action) => {
