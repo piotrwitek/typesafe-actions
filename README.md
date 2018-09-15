@@ -29,6 +29,52 @@ and **complexity** (thanks to powerful helpers).
 * __secure and optimized__ - no external dependencies with 3 different bundle types (`cjs`, `esm` and `umd` for browser)
 * __solid as a rock__ - complete test-suite for entire API surface with extra tests for static-types
 
+### Sponsor
+> If you like what we're doing here, you can help us by funding the work on specific issues that you choose by using IssueHunt.io!
+> This gives you the power to prioritize our work and support project contributors. Moreover it'll guarantee the project will be updated and maintained in the long run.
+
+[![issuehunt-image](https://github.com/BoostIO/issuehunt-materials/blob/master/issuehunt-badge@1x.png?raw=true)](https://issuehunt.io/repos/76996763)
+
+---
+
+## Table of Contents
+
+* [Installation](#installation)
+* [Motivation](#motivation)
+* [Behold the Mighty "Tutorial"](#behold-the-mighty-"tutorial")
+* [API Docs](#api-docs)
+  * utility-types
+    * [`ActionType`](#actiontype) (RootAction type-helper)
+    * [`StateType`](#statetype) (RootState type-helper)
+  * action-creators
+    * [`action`](#action)
+    * [`createAction`](#createaction)
+    * [`createStandardAction`](#createstandardaction)
+    * [`createAsyncAction`](#createasyncaction)
+  * action-helpers
+    * [`getType`](#gettype)
+    * [`isActionOf`](#isactionof)
+    * [`isOfType`](#isoftype)
+* [Migration Guide](#migration-guide)
+* [Compare to others](#compare-to-others)
+  * [redux-actions](#redux-actions)
+
+---
+
+## Installation
+
+```bash
+// NPM
+npm install typesafe-actions
+
+// YARN
+yarn add typesafe-actions
+```
+
+[⇧ back to top](#table-of-contents)
+
+---
+
 ## Motivation
 
 When I was first starting with Redux and TypeScript I was trying to use [redux-actions](https://redux-actions.js.org/) to simplify maintainability of **action-creators**. I was struggling and results were intimidating: incorrect type signatures and broken type-inference cascading throughout the entire code-base [(read more detailed comparison)](#redux-actions).
@@ -38,11 +84,17 @@ Moreover alternative solutions in the wild have been either **too verbose becaus
 The solution for all the above pain points is finally here, the `typesafe-actions`.
 The core idea was to design an API that would harness the power of incredible **type-inference** 💪 to lift the "maintainability burden" of type annotations. In addition I wanted to make it "look and feel" as close as possible to idiomatic JavaScript we all know and love ❤️, maybe sometimes we even hate but anyway...
 
+[⇧ back to top](#table-of-contents)
+
+---
+
 ## Behold the Mighty "Tutorial"
 
 To showcase flexibility and the power of **type-safety** provided by this library, let's build together the common parts of a typical todo-app following Redux architecture:
 
 > **WARNING:** Please make sure that you understand the following concepts of programming languages to be able to follow along with me: [Type Inference](https://www.typescriptlang.org/docs/handbook/type-inference.html), [Control flow analysis](https://github.com/Microsoft/TypeScript/wiki/What%27s-new-in-TypeScript#control-flow-based-type-analysis), [Tagged union types](https://github.com/Microsoft/TypeScript/wiki/What%27s-new-in-TypeScript#tagged-union-types), [Generics](https://www.typescriptlang.org/docs/handbook/generics.html) and some [Advanced Types](https://www.typescriptlang.org/docs/handbook/advanced-types.html).
+
+[⇧ back to top](#table-of-contents)
 
 ### - The Actions
 
@@ -108,6 +160,8 @@ export const add = createAction('todos/ADD', resolve => {
 
 > For more examples check the [API Docs](#table-of-contents), there are plenty!
 
+[⇧ back to top](#table-of-contents)
+
 ### - The Reducer
 
 Here we'll start by generating a **tagged union type** of actions (TodosAction). It's very easy to do using TS type-inference and `ActionType` utility-type provided by `typesafe-actions`.
@@ -145,6 +199,8 @@ export type RootAction =
   | TodosAction;
 ```
 
+[⇧ back to top](#table-of-contents)
+
 ### - The Async-Flow
 > Starring `redux-observable` epics
 
@@ -175,6 +231,8 @@ const fetchTodosFlow: Epic<RootAction, RootState, Services> = (action$, store, {
       )
     );
 ```
+
+[⇧ back to top](#table-of-contents)
 
 ### - The Side-Effects
 > Starring `redux-observable` epics
@@ -231,40 +289,6 @@ if (isOfType(types.ADD, action)) {
 ```
 
 > _PS: If you're wondering what the `Services` type is in the epics signature and how to declare it in your application to easily inject statically typed API clients to your epics also ensuring for easy mocking while testing resulting in clean architecture, please create an issue for it and perhaps I'll find some time in the future to write an article about it._
-
----
-
-## Table of Contents
-
-* [Installation](#installation)
-* [API Docs](#api-docs)
-  * utility-types
-    * [`ActionType`](#actiontype) (RootAction type-helper)
-    * [`StateType`](#statetype) (RootState type-helper)
-  * action-creators
-    * [`action`](#action)
-    * [`createAction`](#createaction)
-    * [`createStandardAction`](#createstandardaction)
-    * [`createAsyncAction`](#createasyncaction)
-  * action-helpers
-    * [`getType`](#gettype)
-    * [`isActionOf`](#isactionof)
-    * [`isOfType`](#isoftype)
-* [Migration Guide](#migration-guide)
-* [Compare to others](#compare-to-others)
-  * [redux-actions](#redux-actions)
-
----
-
-## Installation
-
-```bash
-// NPM
-npm install typesafe-actions
-
-// YARN
-yarn add typesafe-actions
-```
 
 [⇧ back to top](#table-of-contents)
 
@@ -679,6 +703,8 @@ const getTodoStandardWithMap = createStandardAction('GET_TODO').map(
   })
 );
 ```
+
+[⇧ back to top](#table-of-contents)
 
 ---
 
