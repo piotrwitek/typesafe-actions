@@ -46,6 +46,7 @@ This gives you the power to prioritize our work and support project contributors
 ## Table of Contents
 
 * [Installation](#installation)
+* [Compatibility](#compatibility)
 * [Motivation](#motivation)
 * [Behold the Mighty "Tutorial"](#behold-the-mighty-"tutorial")
 * [API Docs](#api-docs)
@@ -76,6 +77,17 @@ npm install typesafe-actions
 // YARN
 yarn add typesafe-actions
 ```
+
+[⇧ back to top](#table-of-contents)
+
+---
+
+## Compatibility
+If you support older browsers (e.g. IE < 11) and mobile devices please provide this polyfill:
+- [Object.assign](https://developer.mozilla.org/pl/docs/Web/JavaScript/Referencje/Obiekty/Object/assign#Polyfill)
+
+You could also consider including a global polyfill in your bundled application, such as core-js or babel-polyfill.
+You can check `React` guidelines on how to do that specifically: https://reactjs.org/docs/javascript-environment-requirements.html
 
 [⇧ back to top](#table-of-contents)
 
