@@ -29,9 +29,19 @@ and **complexity** (thanks to powerful helpers).
 * __secure and optimized__ - no external dependencies with 3 different bundle types (`cjs`, `esm` and `umd` for browser)
 * __solid as a rock__ - complete test-suite for entire API surface with extra tests for static-types
 
-### Sponsor
-> If you like what we're doing here, you can help us by funding the work on specific issues that you choose by using IssueHunt.io!
-> This gives you the power to prioritize our work and support project contributors. Moreover it'll guarantee the project will be updated and maintained in the long run.
+---
+
+## Contribution Guide
+If you're planning to contribute please make sure to read the contribution guide: [CONTRIBUTION.md](/CONTRIBUTION.md)
+
+---
+
+## Sponsor
+If you like what we're doing here, you can help us by funding the work on specific issues that you choose by using IssueHunt.io!
+
+This gives you the power to prioritize our work and support project contributors. Moreover it'll guarantee the project will be updated and maintained in the long run.
+
+> If you're a sponsor and want your logo to be featured in this repo under the sponsors section, please contact me at: piotrek.witek@gmail.com
 
 [![issuehunt-image](https://github.com/BoostIO/issuehunt-materials/blob/master/issuehunt-badge@1x.png?raw=true)](https://issuehunt.io/repos/110746954)
 
