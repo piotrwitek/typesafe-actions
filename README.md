@@ -29,12 +29,8 @@ and **complexity** (thanks to powerful helpers).
 * __secure and optimized__ - no external dependencies with 3 different bundle types (`cjs`, `esm` and `umd` for browser)
 * __solid as a rock__ - complete test-suite for entire API surface with extra tests for static-types
 
----
-
 ## Contribution Guide
 If you're planning to contribute please make sure to read the contribution guide: [CONTRIBUTION.md](/CONTRIBUTION.md)
-
----
 
 ## Sponsor
 If you like what we're doing here, you can help us by funding the work on specific issues that you choose by using IssueHunt.io!
