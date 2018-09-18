@@ -1,6 +1,6 @@
 ---
-name: Custom issue template
-about: Describe this issue template's purpose here
+name: Question
+about: Have a question? Checkout our gitter channel.
 
 ---
 
