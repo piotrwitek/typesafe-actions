@@ -23,7 +23,7 @@ Steps to reproduce the behavior:
 <!-- How could we solve this bug. What changes would need to be made. -->
 
 ## CodeSandbox Link
-Use this as a base: https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/examples/starter
+> Please use this as a base for your CodeSandbox: https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/examples/starter
 
 ## Project Dependencies
 - Typesafe-Actions Version: X.X.X
