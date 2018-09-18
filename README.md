@@ -32,6 +32,9 @@ and **complexity** (thanks to powerful helpers).
 ## Contributing Guide
 If you're planning to contribute please make sure to read the contributing guide: [CONTRIBUTING.md](/CONTRIBUTING.md)
 
+## Bug Report CodeSandbox
+You can use this CodeSandbox to reproduce bug reports: https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/examples/starter
+
 ## Sponsor
 If you like what we're doing here, you can help us by funding the work on specific issues that you choose by using IssueHunt.io!
 
