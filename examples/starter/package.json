@@ -1,6 +1,6 @@
 {
-  "name": "typesafe-actions-todo-app",
-  "description": "Reference implementation of Todo-App for \"react-redux-typescript-guide\"",
+  "name": "typesafe-actions-bug-report-sandbox",
+  "description": "Typesafe-Actions Bug Report Sandbox",
   "version": "0.1.0",
   "private": true,
   "author": "Piotr Witek <piotrek.witek@gmail.com> (http://piotrwitek.github.io/)",

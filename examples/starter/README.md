@@ -1,1 +1,1 @@
-# "typesafe-actions" Bug Report Starter
+# Typesafe-Actions Bug Report Sandbox
