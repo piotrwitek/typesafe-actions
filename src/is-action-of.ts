@@ -20,20 +20,8 @@ export type ACs<
  * @description it works with discriminated union types
  * @inner If you need more than 5 arguments -> use switch
  */
-export function isActionOf<
-  A extends { type: string },
-  U extends Array<AC<A>>
-  // T2 extends A,
-  // T3 extends A,
-  // T4 extends A,
-  // T5 extends A
->(
+export function isActionOf<A extends { type: string }, U extends Array<AC<A>>>(
   [...actionCreators]: U,
-  // | ACs<T1>
-  // | ACs<T1, T2>
-  // | ACs<T1, T2, T3>
-  // | ACs<T1, T2, T3, T4>
-  // | ACs<T1, T2, T3, T4, T5>,
   action: { type: string }
 ): action is U[number] extends AC<infer K> ? K : any;
 
@@ -51,18 +39,9 @@ export function isActionOf<A extends { type: string }, T1 extends A>(
  * @description it works with discriminated union types
  * @inner If you need more than 5 arguments -> use switch
  */
-export function isActionOf<
-  A extends { type: string },
-  U extends Array<AC<A>>
-  // T2 extends A,
-  // T3 extends A,
-  // T4 extends A,
-  // T5 extends A
->([...actionCreators]: U): // | ACs<T1>
-// | ACs<T1, T2>
-// | ACs<T1, T2, T3>
-// | ACs<T1, T2, T3, T4>
-// | ACs<T1, T2, T3, T4, T5>
+export function isActionOf<A extends { type: string }, U extends Array<AC<A>>>([
+  ...actionCreators
+]: U): // | ACs<T1>
 (action: A) => action is U[number] extends AC<infer K> ? K : any;
 
 /**
@@ -74,20 +53,8 @@ export function isActionOf<A extends { type: string }, T1 extends A>(
 ): (action: A) => action is T1;
 
 /** implementation */
-export function isActionOf<
-  A extends { type: string },
-  U extends Array<AC<A>>
-  // T2 extends A,
-  // T3 extends A,
-  // T4 extends A,
-  // T5 extends A
->(
+export function isActionOf<A extends { type: string }, U extends Array<AC<A>>>(
   creatorOrCreators: AC<A> | U,
-  // | ACs<T1>
-  // | ACs<T1, T2>
-  // | ACs<T1, T2, T3>
-  // | ACs<T1, T2, T3, T4>
-  // | ACs<T1, T2, T3, T4, T5>),
   actionOrNil?: A
 ) {
   if (creatorOrCreators == null) {
