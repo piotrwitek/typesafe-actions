@@ -22,20 +22,20 @@ export type ACs<
  */
 export function isActionOf<
   A extends { type: string },
-  T1 extends A,
-  T2 extends A,
-  T3 extends A,
-  T4 extends A,
-  T5 extends A
+  U extends Array<AC<A>>
+  // T2 extends A,
+  // T3 extends A,
+  // T4 extends A,
+  // T5 extends A
 >(
-  actionCreators:
-    | ACs<T1>
-    | ACs<T1, T2>
-    | ACs<T1, T2, T3>
-    | ACs<T1, T2, T3, T4>
-    | ACs<T1, T2, T3, T4, T5>,
+  [...actionCreators]: U,
+  // | ACs<T1>
+  // | ACs<T1, T2>
+  // | ACs<T1, T2, T3>
+  // | ACs<T1, T2, T3, T4>
+  // | ACs<T1, T2, T3, T4, T5>,
   action: { type: string }
-): action is [T1, T2, T3, T4, T5][number];
+): action is U[number] extends AC<infer K> ? K : any;
 
 /**
  * @description (curried assert function) check if an action is the instance of given action-creator(s)
@@ -53,19 +53,17 @@ export function isActionOf<A extends { type: string }, T1 extends A>(
  */
 export function isActionOf<
   A extends { type: string },
-  T1 extends A,
-  T2 extends A,
-  T3 extends A,
-  T4 extends A,
-  T5 extends A
->(
-  actionCreators:
-    | ACs<T1>
-    | ACs<T1, T2>
-    | ACs<T1, T2, T3>
-    | ACs<T1, T2, T3, T4>
-    | ACs<T1, T2, T3, T4, T5>
-): (action: A) => action is [T1, T2, T3, T4, T5][number];
+  U extends Array<AC<A>>
+  // T2 extends A,
+  // T3 extends A,
+  // T4 extends A,
+  // T5 extends A
+>([...actionCreators]: U): // | ACs<T1>
+// | ACs<T1, T2>
+// | ACs<T1, T2, T3>
+// | ACs<T1, T2, T3, T4>
+// | ACs<T1, T2, T3, T4, T5>
+(action: A) => action is U[number] extends AC<infer K> ? K : any;
 
 /**
  * @description (curried assert function) check if an action is the instance of given action-creator(s)
@@ -78,20 +76,18 @@ export function isActionOf<A extends { type: string }, T1 extends A>(
 /** implementation */
 export function isActionOf<
   A extends { type: string },
-  T1 extends A,
-  T2 extends A,
-  T3 extends A,
-  T4 extends A,
-  T5 extends A
+  U extends Array<AC<A>>
+  // T2 extends A,
+  // T3 extends A,
+  // T4 extends A,
+  // T5 extends A
 >(
-  creatorOrCreators:
-    | AC<T1>
-    | (
-        | ACs<T1>
-        | ACs<T1, T2>
-        | ACs<T1, T2, T3>
-        | ACs<T1, T2, T3, T4>
-        | ACs<T1, T2, T3, T4, T5>),
+  creatorOrCreators: AC<A> | U,
+  // | ACs<T1>
+  // | ACs<T1, T2>
+  // | ACs<T1, T2, T3>
+  // | ACs<T1, T2, T3, T4>
+  // | ACs<T1, T2, T3, T4, T5>),
   actionOrNil?: A
 ) {
   if (creatorOrCreators == null) {
@@ -111,7 +107,9 @@ export function isActionOf<
     }
   }
 
-  const assertFn = (action: A): action is [T1, T2, T3, T4, T5][number] => {
+  const assertFn = (
+    action: A
+  ): action is U[number] extends AC<infer K> ? K : any => {
     const actionCreators: any[] = Array.isArray(creatorOrCreators)
       ? creatorOrCreators
       : [creatorOrCreators];

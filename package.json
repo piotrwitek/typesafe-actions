@@ -43,7 +43,7 @@
     "rollup-plugin-uglify": "3.0.0",
     "ts-jest": "22.4.6",
     "tslint": "5.10.0",
-    "typescript": "2.8.3"
+    "typescript": "^3.0.3"
   },
   "keywords": [
     "typescript",

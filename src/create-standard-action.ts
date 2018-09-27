@@ -4,7 +4,7 @@ import { validateActionType, withType } from './utils';
 export interface CreateStandardAction<T extends StringType> {
   <P = void, M = void>(): FsaBuilder<T, B<P>, B<M>>;
   map<R, P = void, M = void>(
-    fn: (payload?: P, meta?: M) => R
+    fn: (...args: [P, M]) => R
   ): MapBuilder<T, B<R>, B<P>, B<M>>;
 }
 
@@ -25,9 +25,9 @@ export function createStandardAction<T extends StringType>(
   }
 
   function map<R, P, M>(
-    fn: (payload?: P, meta?: M) => R
+    fn: (...args: [P, M]) => R
   ): MapBuilder<T, B<R>, B<P>, B<M>> {
-    return withType(actionType, type => (payload?: P, meta?: M) =>
+    return withType(actionType, type => (payload: P, meta: M) =>
       Object.assign(fn(payload, meta), { type })
     ) as MapBuilder<T, B<R>, B<P>, B<M>>;
   }

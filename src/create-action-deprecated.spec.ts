@@ -158,7 +158,7 @@ describe('createActionDeprecated', () => {
     const INCREMENT = (Symbol(1) as any) as Increment & string; // nominal-type workaround
     testType<string>(INCREMENT); // Ok
     // testType<typeof INCREMENT>('INCREMENT'); // Error
-    const increment = createActionDeprecated(INCREMENT);
+    const increment = createActionDeprecated(INCREMENT as any); // Should this be fixed?
 
     const action: { type: typeof INCREMENT } = increment();
     expect(action).toEqual({ type: INCREMENT });
