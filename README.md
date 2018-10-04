@@ -383,6 +383,8 @@ export type RootState = StateType<typeof rootReducer>;
 
 > simple action factory function, to create typed action
 
+**Warning**: this action creator does not let you use action helpers such as `getType` and `isActionOf`
+
 ```ts
 function action(type: T, payload?: P, meta?: M): { type: T, payload?: P, meta?: M }
 ```
@@ -574,6 +576,9 @@ expect(failureResult).toEqual({
 > get the "type" property of a given action-creator  
 > contains properly narrowed literal type
 
+
+**Warning**: This does not work for the [action](#action) actionCreator
+
 ```ts
 function getType(actionCreator: (...args) => T): T
 ```
@@ -605,6 +610,9 @@ switch (action.type) {
 
 > (curried assert function) check if action is an instance of given action-creator(s)
 > it will narrow actions union to a specific action
+
+
+**Warning**: This does not work for the [action](#action) actionCreator
 
 ```ts
 // can be used as a binary function
