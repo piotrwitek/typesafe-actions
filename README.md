@@ -577,10 +577,11 @@ expect(failureResult).toEqual({
 > contains properly narrowed literal type
 
 
-**Warning**: This does not work for the [action](#action) actionCreator
+**NOTE**: ActionCreator type is generated from the `createAction` API. Simple [action](#action) creators throw a `RuntimeError`
+
 
 ```ts
-function getType(actionCreator: (...args) => T): T
+function getType(actionCreator: ActionCreator<T>): T
 ```
 
 [> Advanced Usage Examples](src/get-type.spec.ts)
@@ -612,7 +613,7 @@ switch (action.type) {
 > it will narrow actions union to a specific action
 
 
-**Warning**: This does not work for the [action](#action) actionCreator
+**NOTE**: ActionCreator type is generated from the `createAction` API. Simple [action](#action) creators throw a `RuntimeError`
 
 ```ts
 // can be used as a binary function
