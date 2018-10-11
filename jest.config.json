@@ -1,20 +1,12 @@
 {
-  "verbose": true,
-  "transform": {
-    ".(ts|tsx)": "./node_modules/ts-jest/preprocessor.js"
-  },
-  "testRegex": "(/spec/.*|\\.(spec))\\.(ts|tsx|js)$",
-  "moduleFileExtensions": [
-    "ts",
-    "tsx",
-    "js"
+  "preset": "ts-jest",
+  "testMatch": [
+    "<rootDir>/src/?(*.)+(spec|test).ts?(x)"
   ],
   "globals": {
     "window": {},
     "ts-jest": {
-      "tsConfigFile": "./tsconfig.json"
+      "tsConfig": "tsconfig.spec.json"
     }
-  },
-  "setupFiles": [
-  ]
+  }
 }
