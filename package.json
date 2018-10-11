@@ -15,8 +15,8 @@
   },
   "scripts": {
     "reinstall": "rm -rf node_modules/ dist/ && npm install",
-    "check": "npm run lint & npm run tsc & npm run test",
-    "prelint": "prettier --write 'src/**/*.ts'",
+    "check": "npm run prettier && npm run lint & npm run tsc & npm run test",
+    "prettier": "prettier --write 'src/**/*.ts'",
     "lint": "tslint --project './tsconfig.json'",
     "tsc": "tsc -p . --noEmit",
     "tsc:watch": "tsc -p . --noEmit -w",
@@ -26,6 +26,7 @@
     "prebuild": "rm -rf dist/ && tsc -p ./tsconfig.declaration.json",
     "build": "tsc -p . && rollup -c",
     "postbuild": "rm -rf out",
+    "precommit": "npm run prettier",
     "prepush": "npm run check",
     "prepublishOnly": "npm run reinstall && npm run check && npm run build"
   },
