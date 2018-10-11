@@ -1,4 +1,4 @@
-import { StringType } from './types';
+import { StringType, Unboxed } from './types';
 import { validateActionType } from './utils';
 /**
  * @description (curried assert function) check if action type is equal given type-constant
@@ -13,20 +13,44 @@ export function isOfType<T extends StringType, A extends { type: StringType }>(
  * @description (curried assert function) check if action type is equal given type-constant
  * @description it works with discriminated union types
  */
+export function isOfType<
+  T extends K[],
+  K extends StringType,
+  A extends { type: StringType }
+>(type: T, action: A): action is A extends { type: Unboxed<T> } ? A : never;
+
+/**
+ * @description (curried assert function) check if action type is equal given type-constant
+ * @description it works with discriminated union types
+ */
 export function isOfType<T extends StringType>(
   type: T
 ): <A extends { type: StringType }>(
   action: A
 ) => action is A extends { type: T } ? A : never;
 
-/** implementation */
-export function isOfType<T extends StringType, A extends { type: StringType }>(
-  actionType: T,
-  actionOrNil?: A
-) {
-  validateActionType(actionType);
+/**
+ * @description (curried assert function) check if action type is equal given type-constant
+ * @description it works with discriminated union types
+ */
+export function isOfType<T extends K[], K extends StringType>(
+  type: T
+): <A extends { type: StringType }>(
+  action: A
+) => action is A extends { type: Unboxed<T> } ? A : never;
 
-  const assertFn = (action: A) => action.type === actionType;
+/** implementation */
+export function isOfType<
+  T extends StringType | StringType[],
+  A extends { type: StringType }
+>(actionType: T, actionOrNil?: A) {
+  Array.isArray(actionType)
+    ? actionType.forEach(type => validateActionType(type))
+    : validateActionType(actionType);
+
+  const assertFn = Array.isArray(actionType)
+    ? (action: A) => actionType.includes(action.type)
+    : (action: A) => action.type === actionType;
 
   // with 1 arg return assertFn
   if (actionOrNil == null) {
