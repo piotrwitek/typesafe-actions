@@ -1,4 +1,4 @@
-import { createStandardAction, createAsyncAction } from './';
+import { action, createStandardAction, createAsyncAction } from './';
 
 /** @internal */
 export function testType<T>(a: T): T {
@@ -27,6 +27,10 @@ export namespace types {
   export const WITH_MAPPED_PAYLOAD = 'WITH_MAPPED_PAYLOAD';
   export const WITH_MAPPED_META = 'WITH_MAPPED_META';
   export const WITH_MAPPED_PAYLOAD_META = 'WITH_MAPPED_PAYLOAD_META';
+  export const SIMPLE_WITH_TYPE_ONLY = 'SIMPLE_WITH_TYPE_ONLY';
+  export const SIMPLE_WITH_PAYLOAD = 'SIMPLE_WITH_PAYLOAD';
+  export const SIMPLE_WITH_META = 'SIMPLE_WITH_META';
+  export const SIMPLE_WITH_PAYLOAD_META = 'SIMPLE_WITH_PAYLOAD_META';
 }
 export type TypesKeys = keyof typeof types;
 
@@ -40,7 +44,7 @@ export const actions = {
   },
   withTypeOnly: createStandardAction(types.WITH_TYPE_ONLY)<void>(),
   withPayload: createStandardAction(types.WITH_PAYLOAD)<number>(),
-  withMeta: createStandardAction(types.WITH_META)<string>(),
+  withMeta: createStandardAction(types.WITH_META)<void, string>(),
   withPayloadMeta: createStandardAction(types.WITH_PAYLOAD_META)<
     number,
     string
@@ -59,4 +63,10 @@ export const actions = {
     'FETCH_USER_SUCCESS',
     'FETCH_USER_FAILURE'
   )<void, User, Error>(),
+  simpleWithTypeOnly: () => action(types.SIMPLE_WITH_TYPE_ONLY),
+  simpleWithPayload: (int: number) => action(types.SIMPLE_WITH_PAYLOAD, int),
+  simpleWithMeta: (str: string) =>
+    action(types.SIMPLE_WITH_META, undefined, str),
+  simpleWithPayloadMeta: (int: number, str: string) =>
+    action(types.SIMPLE_WITH_PAYLOAD_META, int, str),
 };
