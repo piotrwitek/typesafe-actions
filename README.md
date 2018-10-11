@@ -490,7 +490,7 @@ Examples:
 [> Advanced Usage Examples](src/create-standard-action.spec.ts)
 
 ```ts
-import { createAction } from 'typesafe-actions';
+import { createStandardAction } from 'typesafe-actions';
 
 // type only
 const increment = createStandardAction('INCREMENT')<void>();
