@@ -668,6 +668,10 @@ if(isActionOf(addTodo, action)) {
 isOfType(type: T, action: any): action is Action<T>
 // or curried function
 isOfType(type: T): (action: any) => action is T
+// it also accepts an array of types to check against
+isOfType(type: T[], action: any): action is Action<T>
+// and also works as curried function
+isOfType(type: T[]): (action: any) => action is T
 ```
 
 Examples:
@@ -685,6 +689,17 @@ const addTodoToast: Epic<RootAction, RootState, Services> =
       toastService.success(`Added new todo: ${action.payload}`);
     })
     .ignoreElements();
+// Filter against array of actions
+import { ADD, REMOVE } from './todos-types';
+
+const addOrRemove: Epic<RootAction, RootState, Services> =
+  (action$, store, { toastService }) => action$
+    .filter(isOfType([ADD, REMOVE]))
+    .do((action) => {
+      // action is narrowed as: { type: "todos/ADD"; payload: Todo; } | { type: "todos/REMOVE"; payload: Todo; }
+      toastService.update(action.payload);
+    })
+    .ignoreElements();
 
 // conditionals where you need a type guard
 import { ADD } from './todos-types';
@@ -692,6 +707,12 @@ import { ADD } from './todos-types';
 if(isOfType(ADD, action)) {
   return functionThatAcceptsTodo(action.payload) // action: { type: "todos/ADD"; payload: Todo; }
 }
+// or
+
+if(isOfType([ADD, REMOVE], action)) {
+  return functionThatAcceptsTodo(action.payload) // action:  { type: "todos/ADD"; payload: Todo; } | { type: "todos/REMOVE"; payload: Todo; }
+}
+
 ```
 
 [⇧ back to top](#table-of-contents)
