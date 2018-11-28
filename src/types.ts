@@ -44,8 +44,12 @@ export type PayloadAction<T extends StringType, P> = {
  * @type M - Meta
  */
 export type PayloadMetaAction<T extends StringType, P, M> = P extends void
-  ? M extends void ? { type: T } : { type: T; meta: M }
-  : M extends void ? { type: T; payload: P } : { type: T; payload: P; meta: M };
+  ? M extends void
+    ? { type: T }
+    : { type: T; meta: M }
+  : M extends void
+  ? { type: T; payload: P }
+  : { type: T; payload: P; meta: M };
 
 /**
  * @private
@@ -89,7 +93,9 @@ export type FsaBuilder<
   P extends B<any> = B<void>,
   M extends B<any> = B<void>
 > = M extends B<void>
-  ? P extends B<void> ? NoArgCreator<T> : PayloadCreator<T, U<P>>
+  ? P extends B<void>
+    ? NoArgCreator<T>
+    : PayloadCreator<T, U<P>>
   : PayloadMetaCreator<T, U<P>, U<M>>;
 /** @private */
 export type MapBuilder<
@@ -121,8 +127,8 @@ export type ActionType<
 > = ActionCreatorOrMap extends ActionCreator
   ? ReturnType<ActionCreatorOrMap>
   : ActionCreatorOrMap extends object
-    ? ActionCreatorMap<ActionCreatorOrMap>[keyof ActionCreatorOrMap]
-    : never;
+  ? ActionCreatorMap<ActionCreatorOrMap>[keyof ActionCreatorOrMap]
+  : never;
 
 /**
  * @desc Infers State object from reducer map object
@@ -132,5 +138,5 @@ export type StateType<ReducerOrMap> = ReducerOrMap extends (
 ) => any
   ? ReturnType<ReducerOrMap>
   : ReducerOrMap extends object
-    ? { [K in keyof ReducerOrMap]: StateType<ReducerOrMap[K]> }
-    : never;
+  ? { [K in keyof ReducerOrMap]: StateType<ReducerOrMap[K]> }
+  : never;

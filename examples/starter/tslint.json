@@ -1,10 +1,9 @@
 {
-  "extends": ["tslint:recommended", "tslint-react"],
+  "extends": ["tslint:latest", "tslint-react"],
   "rules": {
     "arrow-parens": false,
     "arrow-return-shorthand": [false],
     "comment-format": [true, "check-space"],
-    "import-blacklist": [true, "rxjs"],
     "interface-over-type-literal": false,
     "interface-name": false,
     "max-line-length": [true, 120],
@@ -55,6 +54,8 @@
       "allow-pascal-case",
       "allow-leading-underscore"
     ],
+    "no-implicit-dependencies": [true, ["MyTypes"]],
+    "whitespace": [true, "check-branch", "check-operator"],
     // tslint-react
     "jsx-no-multiline-js": false,
     "jsx-no-lambda": false

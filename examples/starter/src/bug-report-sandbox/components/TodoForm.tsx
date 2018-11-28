@@ -1,24 +1,25 @@
+import { RootState } from 'MyTypes';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { RootState } from '../../store';
-import { actions } from '../';
+import { actions } from '..';
 
-type Props = {
+interface Props {
   addItem: (title: string) => any;
-};
+}
+
 type State = {
   title: string;
 };
 
-class ExampleForm extends React.Component<Props, State> {
-  readonly state: Readonly<State> = { title: '' };
+class TodoForm extends React.Component<Props, State> {
+  readonly state = { title: '' };
 
   handleTitleChange: React.ReactEventHandler<HTMLInputElement> = ev => {
     this.setState({ title: ev.currentTarget.value });
   };
 
-  handleAdd = () => {
+  handleAddClick = () => {
     this.props.addItem(this.state.title);
     this.setState({ title: '' });
   };
@@ -27,7 +28,7 @@ class ExampleForm extends React.Component<Props, State> {
     const { title } = this.state;
 
     return (
-      <form >
+      <form>
         <input
           style={{ width: 450 }}
           type="text"
@@ -36,7 +37,7 @@ class ExampleForm extends React.Component<Props, State> {
           onChange={this.handleTitleChange}
         />
         &nbsp;
-        <button type="button" onClick={this.handleAdd} disabled={!title}>
+        <button type="button" onClick={this.handleAddClick} disabled={!title}>
           Add
         </button>
       </form>
@@ -46,6 +47,9 @@ class ExampleForm extends React.Component<Props, State> {
 
 const mapStateToProps = (state: RootState) => ({});
 
-export default connect(mapStateToProps, {
-  addItem: (title: string) => actions.add({ title }),
-})(ExampleForm);
+export default connect(
+  mapStateToProps,
+  {
+    addItem: (title: string) => actions.addTodo({ title }),
+  }
+)(TodoForm);

@@ -1,20 +1,21 @@
+import { RootState } from 'MyTypes';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { RootState } from '../../store';
-import { models, selectors } from '../';
-import ExampleItem from './ExampleItem';
+import { models, selectors } from '..';
+
+import TodoItem from './TodoItem';
 
 interface Props {
-  items: models.SandboxItem[];
+  todos: models.Todo[];
 }
 
-function ExampleList({ items = [] }: Props) {
+function TodoList({ todos = [] }: Props) {
   return (
     <ul style={getStyle()}>
-      {items.map(todo => (
+      {todos.map(todo => (
         <li key={todo.id}>
-          <ExampleItem item={todo} />
+          <TodoItem item={todo} />
         </li>
       ))}
     </ul>
@@ -28,7 +29,7 @@ const getStyle = (): React.CSSProperties => ({
 });
 
 const mapStateToProps = (state: RootState) => ({
-  items: selectors.getItems(state.sandbox),
+  todos: selectors.getTodos(state.sandbox),
 });
 
-export default connect(mapStateToProps)(ExampleList);
+export default connect(mapStateToProps)(TodoList);

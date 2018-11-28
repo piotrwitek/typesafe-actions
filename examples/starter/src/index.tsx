@@ -1,5 +1,8 @@
 // tslint:disable-next-line:no-import-side-effect
 import 'tslib';
+// tslint:disable-next-line:no-import-side-effect
+import './env';
+
 import * as React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';

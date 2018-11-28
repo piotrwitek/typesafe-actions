@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 import { StateType } from 'typesafe-actions';
 
-import { sandboxReducer } from '../bug-report-sandbox';
+import sandboxReducer from '../bug-report-sandbox/reducer';
 
 const rootReducer = combineReducers({
   router: routerReducer,
