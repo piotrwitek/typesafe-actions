@@ -6,6 +6,4 @@ const rootService = {
   },
 };
 
-export type RootService = typeof rootService;
-
 export default rootService;

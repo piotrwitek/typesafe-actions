@@ -1,11 +1,10 @@
-import { RootState } from 'MyTypes';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { actions } from '..';
+import { addTodo } from '../actions';
 
 interface Props {
-  addItem: (title: string) => any;
+  addItem: (title: string) => void;
 }
 
 type State = {
@@ -45,11 +44,9 @@ class TodoForm extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: RootState) => ({});
-
 export default connect(
-  mapStateToProps,
+  null,
   {
-    addItem: (title: string) => actions.addTodo({ title }),
+    addItem: (title: string) => addTodo({ title }),
   }
 )(TodoForm);

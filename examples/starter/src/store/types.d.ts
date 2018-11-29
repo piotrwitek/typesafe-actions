@@ -1,5 +1,7 @@
 declare module 'MyTypes' {
-  export type RootState = import('./root-reducer').RootState;
-  export type RootAction = import('./root-action').RootAction;
-  export type RootService = import('./root-service').RootService;
+  import { StateType, ActionType } from 'typesafe-actions';
+  export type Store = StateType<typeof import('.').default>;
+  export type RootAction = ActionType<typeof import('./root-action').default>;
+  export type RootState = StateType<typeof import('./root-reducer').default>;
+  export type RootService = typeof import('./root-service').default;
 }

@@ -1,13 +1,22 @@
-import { models } from '..';
+import { Todo } from '../models';
 
-const todos: models.Todo[] = [
-  { id: '0', title: `YOLO dude, so let's build some real sh**!` },
+let todos: Todo[] = [
+  { id: '0', title: `YOLO dude, your snapshot was loaded successfully!` },
 ];
 
-export function getAll(): Promise<typeof todos> {
+export function loadSnapshot(): Promise<Todo[]> {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve(todos);
+    }, 500);
+  });
+}
+
+export function saveSnapshot(data: Todo[]): Promise<void> {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      todos = data;
+      resolve();
     }, 500);
   });
 }

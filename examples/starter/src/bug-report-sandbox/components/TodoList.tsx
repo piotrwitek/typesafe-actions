@@ -2,12 +2,13 @@ import { RootState } from 'MyTypes';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { models, selectors } from '..';
+import { Todo } from '../models';
+import * as selectors from '../selectors';
 
 import TodoItem from './TodoItem';
 
 interface Props {
-  todos: models.Todo[];
+  todos: Todo[];
 }
 
 function TodoList({ todos = [] }: Props) {

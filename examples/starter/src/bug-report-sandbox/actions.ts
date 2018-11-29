@@ -14,8 +14,14 @@ export const addTodo = createStandardAction(ADD).map(
   })
 );
 
-export const fetchTodos = createAsyncAction(
-  'FETCH_TODOS_REQUEST',
-  'FETCH_TODOS_SUCCESS',
-  'FETCH_TODOS_FAILURE'
+export const loadTodosAsync = createAsyncAction(
+  'LOAD_TODOS_REQUEST',
+  'LOAD_TODOS_SUCCESS',
+  'LOAD_TODOS_FAILURE'
 )<void, Todo[], string>();
+
+export const saveTodosAsync = createAsyncAction(
+  'SAVE_TODOS_REQUEST',
+  'SAVE_TODOS_SUCCESS',
+  'SAVE_TODOS_FAILURE'
+)<void, void, string>();

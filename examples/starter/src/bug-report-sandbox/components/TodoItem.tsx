@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-import { models } from '..';
+import { Todo } from '../models';
 
 interface Props {
-  item: models.Todo;
+  item: Todo;
 }
 
 function TodoItem({ item }: Props) {
