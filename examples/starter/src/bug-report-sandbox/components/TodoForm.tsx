@@ -3,6 +3,10 @@ import { connect } from 'react-redux';
 
 import { addTodo } from '../actions';
 
+const dispatchProps = {
+  addItem: (title: string) => addTodo({ title }),
+};
+
 interface Props {
   addItem: (title: string) => void;
 }
@@ -46,7 +50,5 @@ class TodoForm extends React.Component<Props, State> {
 
 export default connect(
   null,
-  {
-    addItem: (title: string) => addTodo({ title }),
-  }
+  dispatchProps
 )(TodoForm);

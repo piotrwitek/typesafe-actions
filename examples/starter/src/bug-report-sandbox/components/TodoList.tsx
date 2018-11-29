@@ -7,6 +7,10 @@ import * as selectors from '../selectors';
 
 import TodoItem from './TodoItem';
 
+const mapStateToProps = (state: RootState) => ({
+  todos: selectors.getTodos(state.sandbox),
+});
+
 interface Props {
   todos: Todo[];
 }
@@ -27,10 +31,6 @@ const getStyle = (): React.CSSProperties => ({
   textAlign: 'left',
   margin: 'auto',
   maxWidth: 500,
-});
-
-const mapStateToProps = (state: RootState) => ({
-  todos: selectors.getTodos(state.sandbox),
 });
 
 export default connect(mapStateToProps)(TodoList);
