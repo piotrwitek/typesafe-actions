@@ -3,9 +3,7 @@ import { createStandardAction, createAsyncAction } from 'typesafe-actions';
 
 import { Todo } from './models';
 
-const ADD = 'ADD_TODO';
-
-export const addTodo = createStandardAction(ADD).map(
+export const addTodo = createStandardAction('ADD_TODO').map(
   ({ title }: { title: string }): { payload: Todo } => ({
     payload: {
       title,
@@ -13,6 +11,8 @@ export const addTodo = createStandardAction(ADD).map(
     },
   })
 );
+
+export const removeTodo = createStandardAction('REMOVE_TODO')<string>();
 
 export const loadTodosAsync = createAsyncAction(
   'LOAD_TODOS_REQUEST',

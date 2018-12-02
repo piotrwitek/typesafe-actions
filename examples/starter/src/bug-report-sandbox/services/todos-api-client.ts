@@ -1,7 +1,7 @@
 import { Todo } from '../models';
 
 let todos: Todo[] = [
-  { id: '0', title: `YOLO dude, your snapshot was loaded successfully!` },
+  { id: '0', title: `Yo, your snapshot has been loaded successfully!` },
 ];
 
 export function loadSnapshot(): Promise<Todo[]> {

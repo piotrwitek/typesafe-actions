@@ -119,7 +119,24 @@ To showcase flexibility and the power of **type-safety** provided by this librar
 
 ### - The Actions
 
-> Different projects have different needs and conventions vary across teams this is why `typesafe-actions` was designed and built with flexibility in mind. It provides 3 different factory functions so you can choose what would be the best fit for your project.
+Different projects have different needs and conventions vary across teams this is why `typesafe-actions` was designed and built with flexibility in mind. It provides 3 different factory functions so you can choose what would be the best fit for your project.
+
+> **String constants warning:** When using *string constants* for action `type`, please make sure to use static literals. Don't use dynamic string generation like string concatenation and template strings because your `type` will widen to it's supertype `string` (this is how TypeScript works) and discriminated unions will not work. The same limitation applies to object used as dictionary.
+
+```ts
+// example './constants.ts'
+
+// Correct usage
+export const ADD = '@prefix/ADD'; // type literal => '@prefix/ADD'
+export const TOGGLE = '@prefix/TOGGLE'; // type literal => '@prefix/TOGGLE'
+
+// Incorrect usage!!!
+export const ADD = prefix + 'ADD'; // => string
+export const ADD = `${prefix}/ADD`; // => string
+export default {
+   ADD: '@prefix/ADD', // => string
+}
+```
 
 #### 1. Classic JS style with constants FTW!
 Using this simple function we'll have complete type-safety with minimal type declaration effort, but we're constrained to use constants (as in regular JS applications) because some of advanced **action-helpers** (`getType`, `isActionOf`) will not work with such action-creator. This is still a very compelling option, especially for refactoring existing projects.
@@ -134,18 +151,6 @@ export const toggle = (id: string) => action(TOGGLE, id);
 
 export const add = (title: string) => action(ADD, { title, id: cuid(), completed: false } as Todo);
 // (title: string) => { type: 'todos/ADD'; payload: Todo; }
-```
-
-> **WARNING:** When using string constants for action `type`, please be sure to use simple string literals. Don't use string concatenation, template strings or object map because your `type` will lose the type information, widening to it's supertype `string` (this is how TypeScript works).
-
-```ts
-// example './constants.js' file
-export const ADD = '@prefix/ADD'; // type literal => '@prefix/ADD'
-export const TOGGLE = '@prefix/TOGGLE'; // type literal => '@prefix/TOGGLE'
-
-// Below will NOT work!!!
-// export const ADD = `${prefix}/ADD`; // widened to string
-// export default { ADD: '@prefix/ADD' } // widened to string
 ```
 
 #### 2. Opinionated without need for constants

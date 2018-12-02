@@ -18,6 +18,7 @@
     "no-namespace": false,
     "no-null-keyword": false,
     "no-require-imports": false,
+    "no-shadowed-variable": false,
     "no-submodule-imports": [true, "@src", "rxjs"],
     "no-this-assignment": [true, { "allow-destructuring": true }],
     "no-trailing-whitespace": true,

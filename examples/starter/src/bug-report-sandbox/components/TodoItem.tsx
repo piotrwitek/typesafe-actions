@@ -1,13 +1,22 @@
 import * as React from 'react';
 
-import { Todo } from '../models';
-
 interface Props {
-  item: Todo;
+  title: string;
+  onRemoveClick: () => void;
 }
 
-function TodoItem({ item }: Props) {
-  return <div style={getStyle()}>{item.title}</div>;
+function TodoItem({ title, onRemoveClick }: Props) {
+  return (
+    <div style={getStyle()}>
+      {title}
+      <div
+        style={{ color: 'darkred', float: 'right', cursor: 'pointer' }}
+        onClick={onRemoveClick}
+      >
+        X
+      </div>
+    </div>
+  );
 }
 
 const getStyle = (): React.CSSProperties => ({

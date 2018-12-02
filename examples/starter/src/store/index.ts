@@ -18,19 +18,18 @@ export const epicMiddleware = createEpicMiddleware<
   dependencies: rootService,
 });
 
-function configureStore(initialState?: {}) {
-  epicMiddleware.run(rootEpic);
+// configure middlewares
+const middlewares = [epicMiddleware];
+// compose enhancers
+const enhancer = composeEnhancers(applyMiddleware(...middlewares));
 
-  // configure middlewares
-  const middlewares = [epicMiddleware];
-  // compose enhancers
-  const enhancer = composeEnhancers(applyMiddleware(...middlewares));
-  // create store
-  return createStore(rootReducer, initialState!, enhancer);
-}
+// rehydrate state on app start
+const initialState = {};
 
-// pass an optional param to rehydrate state on app start
-const store = configureStore();
+// create store
+const store = createStore(rootReducer, initialState, enhancer);
+
+epicMiddleware.run(rootEpic);
 
 // export store singleton instance
 export default store;

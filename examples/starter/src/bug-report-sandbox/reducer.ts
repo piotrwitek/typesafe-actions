@@ -13,13 +13,10 @@ export default combineReducers<SandboxState, import('MyTypes').RootAction>({
   isLoadingTodos: (state = false, action) => {
     switch (action.type) {
       case getType(actions.loadTodosAsync.request):
-      case getType(actions.saveTodosAsync.request):
         return true;
 
       case getType(actions.loadTodosAsync.success):
       case getType(actions.loadTodosAsync.failure):
-      case getType(actions.saveTodosAsync.success):
-      case getType(actions.saveTodosAsync.failure):
         return false;
 
       default:
@@ -30,8 +27,7 @@ export default combineReducers<SandboxState, import('MyTypes').RootAction>({
     state = [
       {
         id: '0',
-        title:
-          'Please add todos using the form or load snapshot from server...',
+        title: 'You can add new todos using the form or load saved snapshot...',
       },
     ],
     action
@@ -39,6 +35,9 @@ export default combineReducers<SandboxState, import('MyTypes').RootAction>({
     switch (action.type) {
       case getType(actions.addTodo):
         return [...state, action.payload];
+
+      case getType(actions.removeTodo):
+        return state.filter(i => i.id !== action.payload);
 
       case getType(actions.loadTodosAsync.success):
         return action.payload;
