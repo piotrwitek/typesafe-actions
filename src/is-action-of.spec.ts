@@ -160,7 +160,7 @@ describe('isActionOf', () => {
   });
 
   it('should correctly resolve assertions', () => {
-    const action = withMappedPayload(1234);
+    const action: any = withMappedPayload(1234);
     if (isActionOf([withMappedPayload, withMappedPayloadMeta], action)) {
       expect(action.payload).toBe(1234);
     } else {
