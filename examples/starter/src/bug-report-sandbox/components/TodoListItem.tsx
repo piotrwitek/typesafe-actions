@@ -5,7 +5,7 @@ interface Props {
   onRemoveClick: () => void;
 }
 
-function TodoItem({ title, onRemoveClick }: Props) {
+function TodoListItem({ title, onRemoveClick }: Props) {
   return (
     <div style={getStyle()}>
       {title}
@@ -24,4 +24,4 @@ const getStyle = (): React.CSSProperties => ({
   textOverflow: 'ellipsis',
 });
 
-export default TodoItem;
+export default TodoListItem;

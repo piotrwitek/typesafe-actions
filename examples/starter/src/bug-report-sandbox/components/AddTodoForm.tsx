@@ -7,15 +7,13 @@ const dispatchProps = {
   addItem: (title: string) => addTodo({ title }),
 };
 
-interface Props {
-  addItem: (title: string) => void;
-}
+type Props = typeof dispatchProps;
 
 type State = {
   title: string;
 };
 
-class TodoForm extends React.Component<Props, State> {
+class AddTodoForm extends React.Component<Props, State> {
   readonly state = { title: '' };
 
   handleTitleChange: React.ReactEventHandler<HTMLInputElement> = ev => {
@@ -51,4 +49,4 @@ class TodoForm extends React.Component<Props, State> {
 export default connect(
   null,
   dispatchProps
-)(TodoForm);
+)(AddTodoForm);

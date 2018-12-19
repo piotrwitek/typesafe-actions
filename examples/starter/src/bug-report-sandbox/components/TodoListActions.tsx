@@ -7,17 +7,12 @@ import { RootState } from 'MyTypes';
 const mapStateToProps = (state: RootState) => ({
   isLoading: state.sandbox.isLoadingTodos,
 });
-
 const dispatchProps = {
   loadTodos: loadTodosAsync.request,
   saveTodos: saveTodosAsync.request,
 };
 
-interface Props {
-  isLoading: boolean;
-  loadTodos: () => void;
-  saveTodos: () => void;
-}
+type Props = ReturnType<typeof mapStateToProps> & typeof dispatchProps;
 
 type State = {};
 

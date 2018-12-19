@@ -2,25 +2,20 @@ import { RootState } from 'MyTypes';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { Todo } from '../models';
 import * as selectors from '../selectors';
 import { removeTodo } from '../actions';
 
-import TodoItem from './TodoItem';
+import TodoListItem from './TodoListItem';
 
 const mapStateToProps = (state: RootState) => ({
   isLoading: state.sandbox.isLoadingTodos,
   todos: selectors.getTodos(state.sandbox),
 });
-
 const dispatchProps = {
   removeTodo,
 };
 
-type Props = typeof dispatchProps & {
-  isLoading: boolean;
-  todos: Todo[];
-};
+type Props = ReturnType<typeof mapStateToProps> & typeof dispatchProps;
 
 function TodoList({ isLoading, todos = [], removeTodo }: Props) {
   if (isLoading) {
@@ -31,7 +26,7 @@ function TodoList({ isLoading, todos = [], removeTodo }: Props) {
     <ul style={getStyle()}>
       {todos.map(todo => (
         <li key={todo.id}>
-          <TodoItem
+          <TodoListItem
             title={todo.title}
             onRemoveClick={() => removeTodo(todo.id)}
           />
