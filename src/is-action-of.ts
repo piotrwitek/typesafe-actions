@@ -2,24 +2,43 @@ import { TypeMeta } from './types';
 
 export type AC<T extends { type: string }> = ((...args: any[]) => T) &
   TypeMeta<T['type']>;
-export type ACs<
-  T1 extends { type: string },
-  T2 extends { type: string } = any,
-  T3 extends { type: string } = any,
-  T4 extends { type: string } = any,
-  T5 extends { type: string } = any
-> =
-  | [AC<T1>]
-  | [AC<T1>, AC<T2>]
-  | [AC<T1>, AC<T2>, AC<T3>]
-  | [AC<T1>, AC<T2>, AC<T3>, AC<T4>]
-  | [AC<T1>, AC<T2>, AC<T3>, AC<T4>, AC<T5>];
 
 /**
  * @description (curried assert function) check if an action is the instance of given action-creator(s)
  * @description it works with discriminated union types
  * @inner If you need more than 5 arguments -> use switch
  */
+export function isActionOf<A extends { type: string }, T1 extends A>(
+  actionCreators: [AC<T1>],
+  action: { type: string }
+): action is [T1][number];
+export function isActionOf<
+  A extends { type: string },
+  T1 extends A,
+  T2 extends A
+>(
+  actionCreators: [AC<T1>, AC<T2>],
+  action: { type: string }
+): action is [T1, T2][number];
+export function isActionOf<
+  A extends { type: string },
+  T1 extends A,
+  T2 extends A,
+  T3 extends A
+>(
+  actionCreators: [AC<T1>, AC<T2>, AC<T3>],
+  action: { type: string }
+): action is [T1, T2, T3][number];
+export function isActionOf<
+  A extends { type: string },
+  T1 extends A,
+  T2 extends A,
+  T3 extends A,
+  T4 extends A
+>(
+  actionCreators: [AC<T1>, AC<T2>, AC<T3>, AC<T4>],
+  action: { type: string }
+): action is [T1, T2, T3, T4][number];
 export function isActionOf<
   A extends { type: string },
   T1 extends A,
@@ -28,12 +47,7 @@ export function isActionOf<
   T4 extends A,
   T5 extends A
 >(
-  actionCreators:
-    | ACs<T1>
-    | ACs<T1, T2>
-    | ACs<T1, T2, T3>
-    | ACs<T1, T2, T3, T4>
-    | ACs<T1, T2, T3, T4, T5>,
+  actionCreators: [AC<T1>, AC<T2>, AC<T3>, AC<T4>, AC<T5>],
   action: { type: string }
 ): action is [T1, T2, T3, T4, T5][number];
 
@@ -51,6 +65,31 @@ export function isActionOf<A extends { type: string }, T1 extends A>(
  * @description it works with discriminated union types
  * @inner If you need more than 5 arguments -> use switch
  */
+export function isActionOf<A extends { type: string }, T1 extends A>(
+  actionCreators: [AC<T1>]
+): (action: A) => action is [T1][number];
+export function isActionOf<
+  A extends { type: string },
+  T1 extends A,
+  T2 extends A
+>(actionCreators: [AC<T1>, AC<T2>]): (action: A) => action is [T1, T2][number];
+export function isActionOf<
+  A extends { type: string },
+  T1 extends A,
+  T2 extends A,
+  T3 extends A
+>(
+  actionCreators: [AC<T1>, AC<T2>, AC<T3>]
+): (action: A) => action is [T1, T2, T3][number];
+export function isActionOf<
+  A extends { type: string },
+  T1 extends A,
+  T2 extends A,
+  T3 extends A,
+  T4 extends A
+>(
+  actionCreators: [AC<T1>, AC<T2>, AC<T3>, AC<T4>]
+): (action: A) => action is [T1, T2, T3, T4][number];
 export function isActionOf<
   A extends { type: string },
   T1 extends A,
@@ -59,12 +98,7 @@ export function isActionOf<
   T4 extends A,
   T5 extends A
 >(
-  actionCreators:
-    | ACs<T1>
-    | ACs<T1, T2>
-    | ACs<T1, T2, T3>
-    | ACs<T1, T2, T3, T4>
-    | ACs<T1, T2, T3, T4, T5>
+  actionCreators: [AC<T1>, AC<T2>, AC<T3>, AC<T4>, AC<T5>]
 ): (action: A) => action is [T1, T2, T3, T4, T5][number];
 
 /**
@@ -86,12 +120,11 @@ export function isActionOf<
 >(
   creatorOrCreators:
     | AC<T1>
-    | (
-        | ACs<T1>
-        | ACs<T1, T2>
-        | ACs<T1, T2, T3>
-        | ACs<T1, T2, T3, T4>
-        | ACs<T1, T2, T3, T4, T5>),
+    | [AC<T1>]
+    | [AC<T1>, AC<T2>]
+    | [AC<T1>, AC<T2>, AC<T3>]
+    | [AC<T1>, AC<T2>, AC<T3>, AC<T4>]
+    | [AC<T1>, AC<T2>, AC<T3>, AC<T4>, AC<T5>],
   actionOrNil?: A
 ) {
   if (creatorOrCreators == null) {
