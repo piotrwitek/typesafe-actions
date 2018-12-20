@@ -15,7 +15,7 @@
 Flexible functional API that's specifically designed to reduce types **verbosity** (especially maintainability concerns)
 and **complexity** (thanks to powerful helpers).
 
-> #### _Found it usefull? Want more updates?_ [**Show your support by giving a :star:**](https://github.com/piotrwitek/typesafe-actions/stargazers)  
+> #### _Found it useful? Want more updates?_ [**Show your support by giving a :star:**](https://github.com/piotrwitek/typesafe-actions/stargazers)  
 
 > _This lib is an integral part of [React & Redux TypeScript Guide](https://github.com/piotrwitek/react-redux-typescript-guide)_ :book:  
 
