@@ -136,7 +136,7 @@ export const add = (title: string) => action(ADD, { title, id: cuid(), completed
 // (title: string) => { type: 'todos/ADD'; payload: Todo; }
 ```
 
-> **WARNING:** When using string constants for action `type`, please be sure to use simple string literals. Don't use string concatenation, template strings or object map because your `type` will lose the type information, widening to it's supertype `string` (this is how TypeScript works).
+> **WARNING:** When using string constants for action `type`, please be sure to use simple string literals. Don't use string concatenation, template strings or object map because your `type` will lose the type information, widening to its supertype `string` (this is how TypeScript works).
 
 ```ts
 // example './constants.js' file
