@@ -2,6 +2,13 @@ import { createStandardAction } from './create-standard-action';
 
 describe('createStandardAction', () => {
   describe('constructor', () => {
+    it('toString', () => {
+      const increment = createStandardAction('INCREMENT')();
+
+      expect(increment.toString()).toBe('INCREMENT');
+      expect((increment as any) == 'INCREMENT').toBe(true);
+    });
+
     it('with type only - shorthand', () => {
       const increment = createStandardAction('INCREMENT')();
       const action: { type: 'INCREMENT' } = increment();

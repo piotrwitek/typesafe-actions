@@ -26,5 +26,7 @@ export function createAction<
 
   return Object.assign(actionCreator, {
     getType: () => actionType,
+    // redux-actions compatibility
+    toString: () => actionType,
   });
 }
