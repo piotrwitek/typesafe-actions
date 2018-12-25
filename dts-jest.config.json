@@ -1,0 +1,19 @@
+{
+  "verbose": true,
+  "testEnvironment": "node",
+  "moduleFileExtensions": ["js", "jsx", "ts", "tsx", "json"],
+  "testMatch": ["<rootDir>/src/?(*.)+(spec|test).ts?(x)"],
+  "transform": {
+    ".(ts|tsx)": "dts-jest/transform"
+  },
+  "globals": {
+    "window": {},
+    "_dts_jest_": {
+      "compiler_options": "./tsconfig.json",
+      "enclosing_declaration": true,
+      "test_value": false,
+      "transpile": false
+    }
+  },
+  "reporters": ["default", "dts-jest/reporter"]
+}
