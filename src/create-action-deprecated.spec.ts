@@ -1,4 +1,4 @@
-import { createActionDeprecated } from './';
+import { createActionDeprecated } from './create-action-deprecated';
 import { testType } from './test-utils';
 
 describe('createActionDeprecated', () => {

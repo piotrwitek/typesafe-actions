@@ -1,4 +1,8 @@
-import { getType, isOfType, isActionOf, ActionType, StateType } from './';
+import { getType } from './get-type';
+import { isOfType } from './is-of-type';
+import { isActionOf } from './is-action-of';
+import { StateType, ActionType } from './types';
+
 import { types, actions, testType, User } from './test-utils';
 const {
   withTypeOnly,

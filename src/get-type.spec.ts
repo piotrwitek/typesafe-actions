@@ -1,4 +1,4 @@
-import { getType } from './';
+import { getType } from './get-type';
 import { actions } from './test-utils';
 
 describe('getType', () => {

@@ -1,4 +1,6 @@
-import { action, createStandardAction, createAsyncAction } from './';
+import { action } from './action';
+import { createStandardAction } from './create-standard-action';
+import { createAsyncAction } from './create-async-action';
 
 /** @internal */
 export function testType<T>(a: T): T {

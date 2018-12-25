@@ -1,4 +1,4 @@
-import { createAction } from './';
+import { createAction } from './create-action';
 import { types } from './test-utils';
 
 describe('createAction', () => {

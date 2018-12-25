@@ -1,4 +1,4 @@
-import { action } from './';
+import { action } from './action';
 import { types } from './test-utils';
 
 describe('action', () => {
