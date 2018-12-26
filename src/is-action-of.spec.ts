@@ -158,4 +158,18 @@ describe('isActionOf', () => {
       mappedPayloadMetaExpected,
     ]);
   });
+
+  it('should correctly resolve assertions', () => {
+    const action: any = withMappedPayload(1234);
+    if (isActionOf([withMappedPayload, withMappedPayloadMeta], action)) {
+      expect(action.payload).toBe(1234);
+    } else {
+      fail('isActionOf assertion should work when not curried');
+    }
+    if (isActionOf([withMappedPayload, withMappedPayloadMeta])(action)) {
+      expect(action.payload).toBe(1234);
+    } else {
+      fail('isActionOf assertion should work when curried');
+    }
+  });
 });
