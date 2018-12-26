@@ -755,6 +755,12 @@ const getTodoStandardWithMap = createStandardAction('GET_TODO').map(
 );
 ```
 
+### Migrating from `redux-actions`
+
+If you're using `redux-actions`, its `createAction` can be replaced with any of the above styles. Usage of its `createActions` function will need to be replaced with individual usages of `createAction`. The resulting hash of actions does not provide inference for the individual values.
+
+Additionally, if you're migrating from JS -> TS, you can swap out action creators with `typesafe-actions` and use them with `handleActions` from `redux-actions` in JS. This is because the action creators exposed by `typesafe-actions` provide the `toString` method used by `redux-actions` to route actions to the correct reducer.
+
 [⇧ back to top](#table-of-contents)
 
 ---

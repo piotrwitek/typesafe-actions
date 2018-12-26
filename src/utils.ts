@@ -24,5 +24,9 @@ export function withType<T extends StringType, AC extends ActionCreator<T>>(
     constructorFunction != null
       ? constructorFunction(type)
       : ((() => ({ type })) as AC);
-  return Object.assign(actionCreator, { getType: () => type });
+  return Object.assign(actionCreator, {
+    getType: () => type,
+    // redux-actions compatibility
+    toString: () => type,
+  });
 }
