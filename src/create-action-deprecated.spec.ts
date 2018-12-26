@@ -7,8 +7,6 @@ describe('createActionDeprecated', () => {
 
     const action: { type: 'INCREMENT' } = increment();
     expect(action).toEqual({ type: 'INCREMENT' });
-    const type: 'INCREMENT' = increment.getType!();
-    expect(type).toBe('INCREMENT');
   });
 
   it('no payload alternative', () => {
@@ -18,8 +16,6 @@ describe('createActionDeprecated', () => {
 
     const action: { type: 'INCREMENT' } = increment();
     expect(action).toEqual({ type: 'INCREMENT' });
-    const type: 'INCREMENT' = increment.getType!();
-    expect(type).toBe('INCREMENT');
   });
 
   it('with payload', () => {
@@ -30,8 +26,6 @@ describe('createActionDeprecated', () => {
 
     const action: { type: 'ADD'; payload: number } = add(10);
     expect(action).toEqual({ type: 'ADD', payload: 10 });
-    const type: 'ADD' = add.getType!();
-    expect(type).toBe('ADD');
   });
 
   it('with payload and meta', () => {
@@ -54,8 +48,6 @@ describe('createActionDeprecated', () => {
       payload: { message: 'Piotr: Hello!' },
       meta: { username: 'Piotr', message: 'Hello!' },
     });
-    const type: 'NOTIFY' = notify.getType!();
-    expect(type).toBe('NOTIFY');
   });
 
   it('with payload and no params', () => {
@@ -75,8 +67,6 @@ describe('createActionDeprecated', () => {
       type: 'SHOW_NOTIFICATION',
       payload: 'default message',
     });
-    const type: 'SHOW_NOTIFICATION' = showNotification.getType!();
-    expect(type).toBe('SHOW_NOTIFICATION');
   });
 
   it('with payload and optional param', () => {
@@ -96,8 +86,6 @@ describe('createActionDeprecated', () => {
       type: 'SHOW_NOTIFICATION',
       payload: undefined,
     });
-    const type: 'SHOW_NOTIFICATION' = showNotification.getType!();
-    expect(type).toBe('SHOW_NOTIFICATION');
   });
 
   it('with meta and no params', () => {
@@ -111,8 +99,6 @@ describe('createActionDeprecated', () => {
       type: 'SHOW_ERROR',
       meta: { type: 'error' },
     });
-    const type: 'SHOW_ERROR' = showError.getType!();
-    expect(type).toBe('SHOW_ERROR');
   });
 
   it('with meta and optional param', () => {
@@ -135,8 +121,6 @@ describe('createActionDeprecated', () => {
       payload: undefined,
       meta: { type: 'error' },
     });
-    const type: 'SHOW_ERROR' = showError.getType!();
-    expect(type).toBe('SHOW_ERROR');
   });
 
   it('should work with symbol as action type', () => {
@@ -145,12 +129,9 @@ describe('createActionDeprecated', () => {
     // testType<typeof INCREMENT>('INCREMENT'); // Error
     const increment = createActionDeprecated(INCREMENT);
 
-    const action: { type: string } = increment();
+    const action: { type: symbol } = increment();
     expect(action).toEqual({ type: INCREMENT });
     expect(action).not.toEqual({ type: 'INCREMENT' });
-    const type: string = increment.getType!();
-    expect(type).toBe(INCREMENT);
-    expect(type).not.toBe('INCREMENT');
   });
 
   it('should work with symbol nominal-type pattern as action type', () => {
@@ -163,8 +144,5 @@ describe('createActionDeprecated', () => {
     const action: { type: typeof INCREMENT } = increment();
     expect(action).toEqual({ type: INCREMENT });
     expect(action).not.toEqual({ type: 'INCREMENT' });
-    const type: typeof INCREMENT = increment.getType!();
-    expect(type).toBe(INCREMENT);
-    expect(type).not.toBe('INCREMENT');
   });
 });

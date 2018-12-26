@@ -7,6 +7,7 @@ describe('createAction', () => {
       return () => resolve();
     });
     expect(action.toString()).toBe('WITH_TYPE_ONLY');
+    // tslint:disable-next-line:triple-equals
     expect((action as any) == 'WITH_TYPE_ONLY').toBe(true);
   });
 

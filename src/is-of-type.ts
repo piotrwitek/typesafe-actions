@@ -1,4 +1,4 @@
-import { StringType, Unboxed } from './types';
+import { StringType } from './types';
 import { validateActionType } from './utils';
 /**
  * @description (curried assert function) check if action type is equal given type-constant
@@ -17,7 +17,7 @@ export function isOfType<
   T extends K[],
   K extends StringType,
   A extends { type: StringType }
->(type: T, action: A): action is A extends { type: Unboxed<T> } ? A : never;
+>(type: T, action: A): action is A extends { type: T } ? A : never;
 
 /**
  * @description (curried assert function) check if action type is equal given type-constant
@@ -37,7 +37,7 @@ export function isOfType<T extends K[], K extends StringType>(
   type: T
 ): <A extends { type: StringType }>(
   action: A
-) => action is A extends { type: Unboxed<T> } ? A : never;
+) => action is A extends { type: T } ? A : never;
 
 /** implementation */
 export function isOfType<

@@ -1,4 +1,34 @@
 /**
+ * PUBLIC API
+ */
+
+/**
+ * @desc Infers Action union-type from action-creator map object
+ */
+export type ActionType<
+  ActionCreatorOrMap
+> = ActionCreatorOrMap extends ActionCreator
+  ? ReturnType<ActionCreatorOrMap>
+  : ActionCreatorOrMap extends object
+  ? ActionCreatorMap<ActionCreatorOrMap>[keyof ActionCreatorOrMap]
+  : never;
+
+/**
+ * @desc Infers State object from reducer map object
+ */
+export type StateType<ReducerOrMap> = ReducerOrMap extends (
+  ...args: any[]
+) => any
+  ? ReturnType<ReducerOrMap>
+  : ReducerOrMap extends object
+  ? { [K in keyof ReducerOrMap]: StateType<ReducerOrMap[K]> }
+  : never;
+
+/**
+ * INTERNAL API
+ */
+
+/**
  * @private
  * @desc Representing action-type of string
  */
@@ -27,7 +57,7 @@ export type EmptyAction<T extends StringType> = {
 
 /**
  * @private
- * @desc Action with Payload
+ * @desc Action with only Payload
  * @type T - ActionType
  * @type P - Payload
  */
@@ -38,7 +68,20 @@ export type PayloadAction<T extends StringType, P> = {
 
 /**
  * @private
- * @desc Action with Payload and Meta
+ * @desc Action with only Meta
+ * @type T - ActionType
+ * @type P - Payload
+ * @type M - Meta
+ */
+export type MetaAction<T extends StringType, P, M> = {
+  type: T;
+  meta: M;
+};
+
+// TODO: refactor to separate types, move condition to Factories
+/**
+ * @private
+ * @desc Action with both Payload and Meta
  * @type T - ActionType
  * @type P - Payload
  * @type M - Meta
@@ -52,6 +95,7 @@ export type PayloadMetaAction<T extends StringType, P, M> = P extends void
   : { type: T; payload: P; meta: M };
 
 /**
+ * TODO: NOT USED
  * @private
  * @desc Flux Standard Action
  * @type T - ActionType
@@ -65,85 +109,58 @@ export interface FluxStandardAction<T extends StringType, P = void, M = void> {
   error?: true;
 }
 
-/**
- * @private
- */
-export interface TypeMeta<T extends StringOrSymbol> {
+/** @private */
+export interface TypeMeta<T extends StringType> {
   getType?: () => T;
 }
 
 /** @private */
-export type B<T> = { v: T };
+export type Box<T> = { v: T };
+
 /** @private */
-export type U<T extends B<any>> = T['v'];
+export type Unbox<T extends Box<any>> = T['v'];
+
 /** @private */
 export type NoArgCreator<T extends StringType> = () => EmptyAction<T>;
+
 /** @private */
 export type PayloadCreator<T extends StringType, P> = (
   payload: P
 ) => PayloadAction<T, P>;
+
 /** @private */
 export type PayloadMetaCreator<T extends StringType, P, M> = (
   payload: P,
   meta: M
 ) => PayloadMetaAction<T, P, M>;
+
 /** @private */
 export type FsaBuilder<
   T extends StringType,
-  P extends B<any> = B<void>,
-  M extends B<any> = B<void>
-> = M extends B<void>
-  ? P extends B<void>
+  P extends Box<any> = Box<void>,
+  M extends Box<any> = Box<void>
+> = M extends Box<void>
+  ? P extends Box<void>
     ? NoArgCreator<T>
-    : PayloadCreator<T, U<P>>
-  : PayloadMetaCreator<T, U<P>, U<M>>;
+    : PayloadCreator<T, Unbox<P>>
+  : PayloadMetaCreator<T, Unbox<P>, Unbox<M>>;
+
 /** @private */
-export type MapBuilder<
+export type FsaMapBuilder<
   T extends StringType,
-  R extends B<any>,
-  P extends B<any> = B<void>,
-  M extends B<any> = B<void>
-> = M extends B<void>
-  ? P extends B<void>
-    ? () => MapAction<{ type: T } & U<R>>
-    : (payload: U<P>) => MapAction<{ type: T } & U<R>>
-  : (payload: U<P>, meta: U<M>) => MapAction<{ type: T } & U<R>>;
-/** @private */
-export type MapAction<R extends { type: any }> = R;
+  R extends Box<any>,
+  P extends Box<any> = Box<void>,
+  M extends Box<any> = Box<void>
+> = M extends Box<void>
+  ? P extends Box<void>
+    ? () => { type: T } & Unbox<R>
+    : (payload: Unbox<P>) => { type: T } & Unbox<R>
+  : (payload: Unbox<P>, meta: Unbox<M>) => { type: T } & Unbox<R>;
+
 /** @private */
 export type ActionCreator<T extends StringType = StringType> = (
   ...args: any[]
 ) => { type: T };
+
 /** @private */
 export type ActionCreatorMap<T> = { [K in keyof T]: ActionType<T[K]> };
-
-/** PUBLIC */
-
-/**
- * @desc Infers Action union-type from action-creator map object
- */
-export type ActionType<
-  ActionCreatorOrMap
-> = ActionCreatorOrMap extends ActionCreator
-  ? ReturnType<ActionCreatorOrMap>
-  : ActionCreatorOrMap extends object
-  ? ActionCreatorMap<ActionCreatorOrMap>[keyof ActionCreatorOrMap]
-  : never;
-
-/**
- * @desc Infers State object from reducer map object
- */
-export type StateType<ReducerOrMap> = ReducerOrMap extends (
-  ...args: any[]
-) => any
-  ? ReturnType<ReducerOrMap>
-  : ReducerOrMap extends object
-  ? { [K in keyof ReducerOrMap]: StateType<ReducerOrMap[K]> }
-  : never;
-
-/**
- * @desc Unboxes array | Tuple | Promise to it's inner type
- */
-export type Unboxed<T> = T extends Array<infer Y>
-  ? Y
-  : T extends Promise<infer V> ? V : T;

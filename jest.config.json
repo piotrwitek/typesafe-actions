@@ -9,7 +9,10 @@
   "globals": {
     "window": {},
     "ts-jest": {
-      "tsConfigFile": "./tsconfig.json"
+      "tsConfig": "./tsconfig.json",
+      "diagnostics": {
+        "ignoreCodes": [5023]
+      }
     }
   },
   "setupFiles": []
