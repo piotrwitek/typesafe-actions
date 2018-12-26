@@ -134,3 +134,10 @@ export type StateType<ReducerOrMap> = ReducerOrMap extends (
   : ReducerOrMap extends object
     ? { [K in keyof ReducerOrMap]: StateType<ReducerOrMap[K]> }
     : never;
+
+/**
+ * @desc Unboxes array | Tuple | Promise to it's inner type
+ */
+export type Unboxed<T> = T extends Array<infer Y>
+  ? Y
+  : T extends Promise<infer V> ? V : T;
