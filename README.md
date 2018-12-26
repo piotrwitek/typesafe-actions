@@ -47,7 +47,7 @@ This gives you the power to prioritize our work and support project contributors
 ## Table of Contents
 
 * [Installation](#installation)
-* [Compatibility](#compatibility)
+* [Compatibility Notes](#compatibility-notes)
 * [Motivation](#motivation)
 * [Behold the Mighty "Tutorial"](#behold-the-mighty-"tutorial")
 * [API Docs](#api-docs)
@@ -63,7 +63,9 @@ This gives you the power to prioritize our work and support project contributors
     * [`getType`](#gettype)
     * [`isActionOf`](#isactionof)
     * [`isOfType`](#isoftype)
-* [Migration Guide](#migration-guide)
+* [Migration Guides](#migration-guides)
+  * [v1.x.x to v2.x.x](#v1xx-to-v2xx)
+  * [Migrating from redux-actions](#migrating-from-redux-actions)
 * [Compare to others](#compare-to-others)
   * [redux-actions](#redux-actions)
 
@@ -83,7 +85,15 @@ yarn add typesafe-actions
 
 ---
 
-## Compatibility
+## Compatibility Notes
+
+### TypeScript support
+* `typesafe-actions@1.X.X` - minimum TS v2.7.2
+* `typesafe-actions@2.X.X` - minimum TS v2.8.1
+  - `strictFunctionTypes` is not supported, turn it to `false`
+* `typesafe-actions@3.X.X` - WIP
+
+### Browser Polyfills
 If you support older browsers (e.g. IE < 11) and mobile devices please provide this polyfill:
 - [Object.assign](https://developer.mozilla.org/pl/docs/Web/JavaScript/Referencje/Obiekty/Object/assign#Polyfill)
 
@@ -717,11 +727,10 @@ if(isOfType([ADD, REMOVE], action)) {
 
 ---
 
-## Migration Guide
-
-> NOTE: `typesafe-actions@1.x.x` are best used with `utility-types@1.x.x` which contains `$call` utility that was removed in `v2.x.x`
+## Migration Guides
 
 ### v1.x.x to v2.x.x
+> NOTE: `typesafe-actions@1.x.x` should be used with `utility-types@1.x.x` which contains `$call` utility (removed in `utility-types@2.x.x`)
 
 ```ts
 // target action creator
