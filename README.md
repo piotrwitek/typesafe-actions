@@ -1,15 +1,13 @@
 # typesafe-actions
 
+[![Build Status](https://semaphoreci.com/api/v1/piotrekwitek/typesafe-actions/branches/big-project-update-v3/shields_badge.svg)](https://semaphoreci.com/piotrekwitek/typesafe-actions)
 [![Latest Stable Version](https://img.shields.io/npm/v/typesafe-actions.svg)](https://www.npmjs.com/package/typesafe-actions)
 [![Bundlephobia Size](https://img.shields.io/bundlephobia/minzip/typesafe-actions.svg)](https://www.npmjs.com/package/typesafe-actions)
-[![NPM Downloads](https://img.shields.io/npm/dm/typesafe-actions.svg)](https://www.npmjs.com/package/typesafe-actions)
-
-[![dependencies Status](https://david-dm.org/piotrwitek/typesafe-actions/status.svg)](https://david-dm.org/piotrwitek/typesafe-actions)
-[![peerDependencies Status](https://david-dm.org/piotrwitek/typesafe-actions/peer-status.svg)](https://david-dm.org/piotrwitek/typesafe-actions?type=peer)
 [![License](https://img.shields.io/npm/l/typesafe-actions.svg?style=flat)](https://david-dm.org/piotrwitek/typesafe-actions?type=peer)
 
-[![Build Status](https://app.codeship.com/projects/d8776810-3b42-0136-36f6-4aa2219ea767/status?branch=master)](https://app.codeship.com/projects/290301)
-
+[![NPM Downloads](https://img.shields.io/npm/dm/typesafe-actions.svg)](https://www.npmjs.com/package/typesafe-actions)
+[![dependencies Status](https://david-dm.org/piotrwitek/typesafe-actions/status.svg)](https://david-dm.org/piotrwitek/typesafe-actions)
+[![peerDependencies Status](https://david-dm.org/piotrwitek/typesafe-actions/peer-status.svg)](https://david-dm.org/piotrwitek/typesafe-actions?type=peer)
 
 ## Typesafe "Action Creators" for Redux / Flux Architectures (in TypeScript)
 Flexible functional API that's specifically designed to reduce types **verbosity** (especially maintainability concerns)
