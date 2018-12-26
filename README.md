@@ -59,6 +59,7 @@ This gives you the power to prioritize our work and support project contributors
     * [`createAction`](#createaction)
     * [`createStandardAction`](#createstandardaction)
     * [`createAsyncAction`](#createasyncaction)
+    * [`withType`](#withtype)
   * action-helpers
     * [`getType`](#gettype)
     * [`isActionOf`](#isactionof)
@@ -415,7 +416,6 @@ function action(type: T, payload?: P, meta?: M): { type: T, payload?: P, meta?: 
 ```
 
 Examples:
-
 [> Advanced Usage Examples](src/action.spec.ts)
 
 ```ts
@@ -466,7 +466,6 @@ const executor = (resolve) => (...args) => resolve(payload: P, meta: M)
 ```
 
 Examples:
-
 [> Advanced Usage Examples](src/create-action.spec.ts)
 
 ```ts
@@ -513,7 +512,6 @@ function createStandardAction(type: T): { map: (payload: P, meta: M): { ...anyth
 ```
 
 Examples:
-
 [> Advanced Usage Examples](src/create-standard-action.spec.ts)
 
 ```ts
@@ -562,7 +560,6 @@ function createAsyncAction(requestType: T1, successType: T2, failureType: T3): <
 ```
 
 Examples:
-
 [> Advanced Usage Examples](src/create-async-action.spec.ts)
 
 ```ts
@@ -594,6 +591,36 @@ expect(failureResult).toEqual({
 
 [⇧ back to top](#table-of-contents)
 
+### withType
+
+> decorate any action-creator to make it compatible with `typesafe-actions` (usefull to make third-party action-creator work with typesafe helpers)
+
+```ts
+withType(type, constructorFunction): 
+```
+
+Examples:
+[> Advanced Usage Examples](src/with-type.spec.ts)
+
+```ts
+import { withType } from 'typesafe-actions';
+
+it('with payload and meta', () => {
+  const showNotification = withType(
+    'SHOW_NOTIFICATION',
+    type => (message: string, scope: string) => ({
+      type,
+      payload: message,
+      meta: scope,
+    })
+  );
+  const typeLiteral: 'SHOW_NOTIFICATION' = getType(showNotification);
+  expect(typeLiteral).toBe('SHOW_NOTIFICATION');
+});
+```
+
+[⇧ back to top](#table-of-contents)
+
 ---
 
 ### getType
@@ -612,7 +639,6 @@ function getType(actionCreator: ActionCreator<T>): T
 [> Advanced Usage Examples](src/get-type.spec.ts)
 
 Examples:
-
 ```ts
 const increment = createAction('INCREMENT');
 const type: 'INCREMENT' = getType(increment);
@@ -650,7 +676,6 @@ isActionOf([actionCreator]: Array<ActionCreator<T>>): (action: any) => action is
 ```
 
 Examples:
-
 [> Advanced Usage Examples](src/is-action-of.spec.ts)
 
 ```ts
@@ -700,7 +725,6 @@ isOfType(type: T[]): (action: any) => action is T
 ```
 
 Examples:
-
 [> Advanced Usage Examples](src/is-of-type.spec.ts)
 
 ```ts
