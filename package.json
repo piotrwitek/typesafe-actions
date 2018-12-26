@@ -16,7 +16,7 @@
   "scripts": {
     "reinstall": "rm -rf node_modules/ dist/ && npm install",
     "precheck": "npm run prettier",
-    "check": "npm run lint & npm run tsc & npm run test",
+    "ci-check": "npm run lint & npm run tsc & npm run test",
     "prettier": "prettier --list-different 'src/**/*.ts' || (echo '\nPlease run the following command to fix:\nnpm run prettier:fix\n'; exit 1)",
     "prettier:fix": "prettier --write 'src/**/*.ts'",
     "lint": "tslint --project './tsconfig.json'",
@@ -27,23 +27,23 @@
     "prebuild": "rm -rf dist/ && tsc -p ./tsconfig.declaration.json",
     "build": "tsc -p . && rollup -c",
     "postbuild": "rm -rf out",
-    "prepush": "npm run check",
-    "prepublishOnly": "npm run reinstall && npm run check && npm run build"
+    "prepush": "npm run ci-check",
+    "prepublishOnly": "npm run reinstall && npm run ci-check && npm run build"
   },
   "dependencies": {},
   "devDependencies": {
-    "@types/jest": "^23.3.5",
-    "husky": "^1.1.2",
-    "jest": "^23.6.0",
-    "prettier": "^1.14.3",
+    "@types/jest": "23.3.5",
+    "husky": "1.2.1",
+    "jest": "23.6.0",
+    "prettier": "1.15.3",
     "rollup": "0.59.1",
     "rollup-plugin-commonjs": "9.1.3",
     "rollup-plugin-filesize": "1.5.0",
     "rollup-plugin-node-resolve": "3.3.0",
     "rollup-plugin-sourcemaps": "0.4.2",
     "rollup-plugin-uglify": "3.0.0",
-    "ts-jest": "^23.10.4",
-    "tslint": "^5.11.0",
+    "ts-jest": "23.10.4",
+    "tslint": "5.12.0",
     "typescript": "2.8.3"
   },
   "keywords": [
