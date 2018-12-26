@@ -1,21 +1,19 @@
 # typesafe-actions
 
+[![Build Status](https://semaphoreci.com/api/v1/piotrekwitek/typesafe-actions/branches/big-project-update-v3/shields_badge.svg)](https://semaphoreci.com/piotrekwitek/typesafe-actions)
 [![Latest Stable Version](https://img.shields.io/npm/v/typesafe-actions.svg)](https://www.npmjs.com/package/typesafe-actions)
 [![Bundlephobia Size](https://img.shields.io/bundlephobia/minzip/typesafe-actions.svg)](https://www.npmjs.com/package/typesafe-actions)
-[![NPM Downloads](https://img.shields.io/npm/dm/typesafe-actions.svg)](https://www.npmjs.com/package/typesafe-actions)
-
-[![dependencies Status](https://david-dm.org/piotrwitek/typesafe-actions/status.svg)](https://david-dm.org/piotrwitek/typesafe-actions)
-[![peerDependencies Status](https://david-dm.org/piotrwitek/typesafe-actions/peer-status.svg)](https://david-dm.org/piotrwitek/typesafe-actions?type=peer)
 [![License](https://img.shields.io/npm/l/typesafe-actions.svg?style=flat)](https://david-dm.org/piotrwitek/typesafe-actions?type=peer)
 
-[![Build Status](https://app.codeship.com/projects/d8776810-3b42-0136-36f6-4aa2219ea767/status?branch=master)](https://app.codeship.com/projects/290301)
-
+[![NPM Downloads](https://img.shields.io/npm/dm/typesafe-actions.svg)](https://www.npmjs.com/package/typesafe-actions)
+[![dependencies Status](https://david-dm.org/piotrwitek/typesafe-actions/status.svg)](https://david-dm.org/piotrwitek/typesafe-actions)
+[![peerDependencies Status](https://david-dm.org/piotrwitek/typesafe-actions/peer-status.svg)](https://david-dm.org/piotrwitek/typesafe-actions?type=peer)
 
 ## Typesafe "Action Creators" for Redux / Flux Architectures (in TypeScript)
 Flexible functional API that's specifically designed to reduce types **verbosity** (especially maintainability concerns)
 and **complexity** (thanks to powerful helpers).
 
-> #### _Found it usefull? Want more updates?_ [**Show your support by giving a :star:**](https://github.com/piotrwitek/typesafe-actions/stargazers)  
+> #### _Found it useful? Want more updates?_ [**Show your support by giving a :star:**](https://github.com/piotrwitek/typesafe-actions/stargazers)  
 
 > _This lib is an integral part of [React & Redux TypeScript Guide](https://github.com/piotrwitek/react-redux-typescript-guide)_ :book:  
 
@@ -49,7 +47,7 @@ This gives you the power to prioritize our work and support project contributors
 ## Table of Contents
 
 * [Installation](#installation)
-* [Compatibility](#compatibility)
+* [Compatibility Notes](#compatibility-notes)
 * [Motivation](#motivation)
 * [Behold the Mighty "Tutorial"](#behold-the-mighty-"tutorial")
 * [API Docs](#api-docs)
@@ -65,7 +63,9 @@ This gives you the power to prioritize our work and support project contributors
     * [`getType`](#gettype)
     * [`isActionOf`](#isactionof)
     * [`isOfType`](#isoftype)
-* [Migration Guide](#migration-guide)
+* [Migration Guides](#migration-guides)
+  * [v1.x.x to v2.x.x](#v1xx-to-v2xx)
+  * [Migrating from redux-actions](#migrating-from-redux-actions)
 * [Compare to others](#compare-to-others)
   * [redux-actions](#redux-actions)
 
@@ -85,7 +85,15 @@ yarn add typesafe-actions
 
 ---
 
-## Compatibility
+## Compatibility Notes
+
+### TypeScript support
+* `typesafe-actions@1.X.X` - minimum TS v2.7.2
+* `typesafe-actions@2.X.X` - minimum TS v2.8.1
+  - `strictFunctionTypes` is not supported, turn it to `false`
+* `typesafe-actions@3.X.X` - WIP
+
+### Browser Polyfills
 If you support older browsers (e.g. IE < 11) and mobile devices please provide this polyfill:
 - [Object.assign](https://developer.mozilla.org/pl/docs/Web/JavaScript/Referencje/Obiekty/Object/assign#Polyfill)
 
@@ -151,6 +159,18 @@ export const toggle = (id: string) => action(TOGGLE, id);
 
 export const add = (title: string) => action(ADD, { title, id: cuid(), completed: false } as Todo);
 // (title: string) => { type: 'todos/ADD'; payload: Todo; }
+```
+
+> **WARNING:** When using string constants for action `type`, please be sure to use simple string literals. Don't use string concatenation, template strings or object map because your `type` will lose the type information, widening to its supertype `string` (this is how TypeScript works).
+
+```ts
+// example './constants.js' file
+export const ADD = '@prefix/ADD'; // type literal => '@prefix/ADD'
+export const TOGGLE = '@prefix/TOGGLE'; // type literal => '@prefix/TOGGLE'
+
+// Below will NOT work!!!
+// export const ADD = `${prefix}/ADD`; // widened to string
+// export default { ADD: '@prefix/ADD' } // widened to string
 ```
 
 #### 2. Opinionated without need for constants
@@ -673,6 +693,10 @@ if(isActionOf(addTodo, action)) {
 isOfType(type: T, action: any): action is Action<T>
 // or curried function
 isOfType(type: T): (action: any) => action is T
+// it also accepts an array of types to check against
+isOfType(type: T[], action: any): action is Action<T>
+// and also works as curried function
+isOfType(type: T[]): (action: any) => action is T
 ```
 
 Examples:
@@ -690,6 +714,17 @@ const addTodoToast: Epic<RootAction, RootAction, RootState, Services> =
       toastService.success(`Added new todo: ${action.payload}`);
     })
     .ignoreElements();
+// Filter against array of actions
+import { ADD, REMOVE } from './todos-types';
+
+const addOrRemove: Epic<RootAction, RootState, Services> =
+  (action$, store, { toastService }) => action$
+    .filter(isOfType([ADD, REMOVE]))
+    .do((action) => {
+      // action is narrowed as: { type: "todos/ADD"; payload: Todo; } | { type: "todos/REMOVE"; payload: Todo; }
+      toastService.update(action.payload);
+    })
+    .ignoreElements();
 
 // conditionals where you need a type guard
 import { ADD } from './todos-types';
@@ -697,17 +732,22 @@ import { ADD } from './todos-types';
 if(isOfType(ADD, action)) {
   return functionThatAcceptsTodo(action.payload) // action: { type: "todos/ADD"; payload: Todo; }
 }
+// or
+
+if(isOfType([ADD, REMOVE], action)) {
+  return functionThatAcceptsTodo(action.payload) // action:  { type: "todos/ADD"; payload: Todo; } | { type: "todos/REMOVE"; payload: Todo; }
+}
+
 ```
 
 [⇧ back to top](#table-of-contents)
 
 ---
 
-## Migration Guide
-
-> NOTE: `typesafe-actions@1.x.x` are best used with `utility-types@1.x.x` which contains `$call` utility that was removed in `v2.x.x`
+## Migration Guides
 
 ### v1.x.x to v2.x.x
+> NOTE: `typesafe-actions@1.x.x` should be used with `utility-types@1.x.x` which contains `$call` utility (removed in `utility-types@2.x.x`)
 
 ```ts
 // target action creator
@@ -738,6 +778,12 @@ const getTodoStandardWithMap = createStandardAction('GET_TODO').map(
   })
 );
 ```
+
+### Migrating from `redux-actions`
+
+If you're using `redux-actions`, its `createAction` can be replaced with any of the above styles. Usage of its `createActions` function will need to be replaced with individual usages of `createAction`. The resulting hash of actions does not provide inference for the individual values.
+
+Additionally, if you're migrating from JS -> TS, you can swap out action creators with `typesafe-actions` and use them with `handleActions` from `redux-actions` in JS. This is because the action creators exposed by `typesafe-actions` provide the `toString` method used by `redux-actions` to route actions to the correct reducer.
 
 [⇧ back to top](#table-of-contents)
 

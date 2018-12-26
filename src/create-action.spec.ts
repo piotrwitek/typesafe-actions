@@ -2,6 +2,14 @@ import { createAction } from './create-action';
 import { types } from './test-utils';
 
 describe('createAction', () => {
+  it('toString', () => {
+    const action = createAction(types.WITH_TYPE_ONLY, resolve => {
+      return () => resolve();
+    });
+    expect(action.toString()).toBe('WITH_TYPE_ONLY');
+    expect((action as any) == 'WITH_TYPE_ONLY').toBe(true);
+  });
+
   it('with type only - shorthand', () => {
     const action = createAction(types.WITH_TYPE_ONLY);
     const actual: { type: 'WITH_TYPE_ONLY' } = action();
