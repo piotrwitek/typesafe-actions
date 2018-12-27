@@ -59,7 +59,7 @@ This gives you the power to prioritize our work and support project contributors
     * [`createAction`](#createaction)
     * [`createStandardAction`](#createstandardaction)
     * [`createAsyncAction`](#createasyncaction)
-    * [`withType`](#withtype)
+    * [`createActionWithType`](#withtype)
   * action-helpers
     * [`getType`](#gettype)
     * [`isActionOf`](#isactionof)
@@ -436,7 +436,7 @@ const getUsers = (meta: string) =>
 
 ### createAction
 
-> create the action-creator of a typesafe compatible action
+> create custom action-creator using constructor function with injected resolver callback
 
 ```ts
 // type only
@@ -504,7 +504,7 @@ expect(getTodo('some_id', 'some_meta'))
 
 ### createStandardAction
 
-> simple creator compatible with "Flux Standard Action" to reduce boilerplate and enforce convention
+> create action-creator that will create "Flux Standard Action" compatible actions to reduce boilerplate and enforce convention
 
 ```ts
 function createStandardAction(type: T): <P, M>() => (payload: P, meta: M) => { type: T, payload: P, meta: M };
@@ -591,31 +591,48 @@ expect(failureResult).toEqual({
 
 [⇧ back to top](#table-of-contents)
 
-### withType
+### createActionWithType
 
-> decorate any action-creator to make it compatible with `typesafe-actions` (usefull to make third-party action-creator work with typesafe helpers)
+> create custom action-creator using constructor function with injected type
 
 ```ts
-withType(type, constructorFunction): 
+createActionWithType(type, constructorFunction): 
 ```
 
 Examples:
-[> Advanced Usage Examples](src/with-type.spec.ts)
+[> Advanced Usage Examples](src/create-action-with-type.spec.ts)
 
 ```ts
-import { withType } from 'typesafe-actions';
+import { createActionWithType } from 'typesafe-actions';
 
-it('with payload and meta', () => {
-  const showNotification = withType(
-    'SHOW_NOTIFICATION',
-    type => (message: string, scope: string) => ({
-      type,
-      payload: message,
-      meta: scope,
-    })
-  );
-  const typeLiteral: 'SHOW_NOTIFICATION' = getType(showNotification);
-  expect(typeLiteral).toBe('SHOW_NOTIFICATION');
+it('with payload', () => {
+    const add = createActionWithType('WITH_MAPPED_PAYLOAD', type => {
+      return (amount: number) => ({ type, payload: amount });
+    });
+    const actual: {
+      type: 'WITH_MAPPED_PAYLOAD';
+      payload: number;
+    } = add(1);
+    expect(actual).toEqual({ type: 'WITH_MAPPED_PAYLOAD', payload: 1 });
+  });
+
+it('with optional payload', () => {
+  const create = createActionWithType('WITH_OPTIONAL_PAYLOAD', type => {
+    return (id?: number) => ({ type, payload: id });
+  });
+  const actual1: {
+    type: 'WITH_OPTIONAL_PAYLOAD';
+    payload: number | undefined;
+  } = create();
+  expect(actual1).toEqual({
+    type: 'WITH_OPTIONAL_PAYLOAD',
+    payload: undefined,
+  });
+  const actual2: {
+    type: 'WITH_OPTIONAL_PAYLOAD';
+    payload: number | undefined;
+  } = create(1);
+  expect(actual2).toEqual({ type: 'WITH_OPTIONAL_PAYLOAD', payload: 1 });
 });
 ```
 

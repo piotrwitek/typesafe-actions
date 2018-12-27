@@ -7,7 +7,7 @@
  */
 export type ActionType<
   ActionCreatorOrMap
-> = ActionCreatorOrMap extends ActionCreator
+> = ActionCreatorOrMap extends ActionCreator<StringOrSymbol>
   ? ReturnType<ActionCreatorOrMap>
   : ActionCreatorOrMap extends object
   ? ActionCreatorMap<ActionCreatorOrMap>[keyof ActionCreatorOrMap]
@@ -158,7 +158,7 @@ export type FsaMapBuilder<
   : (payload: Unbox<P>, meta: Unbox<M>) => { type: T } & Unbox<R>;
 
 /** @private */
-export type ActionCreator<T extends StringType = StringType> = (
+export type ActionCreator<T extends StringOrSymbol> = (
   ...args: any[]
 ) => { type: T };
 

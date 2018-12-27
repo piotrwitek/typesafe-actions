@@ -1,5 +1,5 @@
 import { StringType, Box, FsaBuilder, FsaMapBuilder } from './types';
-import { withType } from './with-type';
+import { createActionWithType } from './create-action-with-type';
 import { validateActionType } from './utils';
 
 export interface CreateStandardAction<T extends StringType> {
@@ -18,7 +18,7 @@ export function createStandardAction<T extends StringType>(
   validateActionType(actionType);
 
   function constructor<P, M = void>(): FsaBuilder<T, Box<P>, Box<M>> {
-    return withType(actionType, type => (payload: P, meta: M) => ({
+    return createActionWithType(actionType, type => (payload: P, meta: M) => ({
       type,
       payload,
       meta,
@@ -28,7 +28,7 @@ export function createStandardAction<T extends StringType>(
   function map<R, P, M>(
     fn: (payload: P, meta: M) => R
   ): FsaMapBuilder<T, Box<R>, Box<P>, Box<M>> {
-    return withType(actionType, type => (payload: P, meta: M) =>
+    return createActionWithType(actionType, type => (payload: P, meta: M) =>
       Object.assign(fn(payload, meta), { type })
     ) as FsaMapBuilder<T, Box<R>, Box<P>, Box<M>>;
   }

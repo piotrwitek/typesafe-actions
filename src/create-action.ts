@@ -10,8 +10,8 @@ export function createAction<
   AC extends ActionCreator<T> = () => { type: T }
 >(
   actionType: T,
-  creatorHandler?: (
-    action: <P = undefined, M = undefined>(
+  actionResolverHandler?: (
+    resolve: <P = void, M = void>(
       payload?: P,
       meta?: M
     ) => PayloadMetaAction<T, P, M>
@@ -20,9 +20,9 @@ export function createAction<
   validateActionType(actionType);
 
   const actionCreator: AC =
-    creatorHandler == null
+    actionResolverHandler == null
       ? ((() => action(actionType)) as AC)
-      : creatorHandler(action.bind(null, actionType));
+      : actionResolverHandler(action.bind(null, actionType));
 
   return Object.assign(actionCreator, {
     getType: () => actionType,
