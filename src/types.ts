@@ -73,12 +73,11 @@ export type PayloadAction<T extends StringType, P> = {
  * @type P - Payload
  * @type M - Meta
  */
-export type MetaAction<T extends StringType, P, M> = {
+export type MetaAction<T extends StringType, M> = {
   type: T;
   meta: M;
 };
 
-// TODO: refactor to separate types, move condition to Factories
 /**
  * @private
  * @desc Action with both Payload and Meta
@@ -86,13 +85,11 @@ export type MetaAction<T extends StringType, P, M> = {
  * @type P - Payload
  * @type M - Meta
  */
-export type PayloadMetaAction<T extends StringType, P, M> = P extends void
-  ? M extends void
-    ? { type: T }
-    : { type: T; meta: M }
-  : M extends void
-  ? { type: T; payload: P }
-  : { type: T; payload: P; meta: M };
+export type PayloadMetaAction<T extends StringType, P, M> = {
+  type: T;
+  payload: P;
+  meta: M;
+};
 
 /**
  * TODO: NOT USED

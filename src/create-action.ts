@@ -1,6 +1,14 @@
-import { StringType, ActionCreator, PayloadMetaAction } from './types';
+import { StringType, ActionCreator } from './types';
 import { validateActionType } from './utils';
 import { action } from './action';
+
+export type PayloadMetaAction<T extends StringType, P, M> = P extends void
+  ? M extends void
+    ? { type: T }
+    : { type: T; meta: M }
+  : M extends void
+  ? { type: T; payload: P }
+  : { type: T; payload: P; meta: M };
 
 /**
  * @description typesafe action-creator factory
