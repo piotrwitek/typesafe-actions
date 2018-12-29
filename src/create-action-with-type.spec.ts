@@ -19,14 +19,14 @@ describe('createActionWithType', () => {
   });
 
   it('with payload', () => {
-    const add = createActionWithType('WITH_MAPPED_PAYLOAD', type => {
+    const add = createActionWithType('WITH_PAYLOAD', type => {
       return (amount: number) => ({ type, payload: amount });
     });
     const actual: {
-      type: 'WITH_MAPPED_PAYLOAD';
+      type: 'WITH_PAYLOAD';
       payload: number;
     } = add(1);
-    expect(actual).toEqual({ type: 'WITH_MAPPED_PAYLOAD', payload: 1 });
+    expect(actual).toEqual({ type: 'WITH_PAYLOAD', payload: 1 });
   });
 
   it('with optional payload', () => {

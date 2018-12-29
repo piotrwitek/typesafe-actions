@@ -790,12 +790,11 @@ if(isOfType([ADD, REMOVE], action)) {
 ### v1.x.x to v2.x.x
 > NOTE: `typesafe-actions@1.x.x` should be used with `utility-types@1.x.x` which contains `$call` utility (removed in `utility-types@2.x.x`)
 
-```ts
-// target action creator
-getTodo('some_id', 'some_meta'); // { type: 'GET_TODO', payload: 'some_id', meta: 'some_meta' }
+In v2 we provide `createActionDeprecated` from v1 API to help with incremental migration.
 
-// deprecated API
-const getTodo = createActionDeprecated('GET_TODO',
+```ts
+// in v1 we created action-creator like this:
+const getTodo = createAction('GET_TODO',
   (id: string, meta: string) => ({
     type: 'GET_TODO',
     payload: id,
@@ -803,7 +802,9 @@ const getTodo = createActionDeprecated('GET_TODO',
   })
 );
 
-// new API equivalent (we offer 4 different styles - choose your preference)
+getTodo('some_id', 'some_meta'); // { type: 'GET_TODO', payload: 'some_id', meta: 'some_meta' }
+
+// in v2 API we offer 4 different styles - please choose your preference
 const getTodoSimple = (id: string, meta: string) => action('GET_TODO', id, meta);
 
 const getTodoVariadic = createAction('GET_TODO', resolve => {
