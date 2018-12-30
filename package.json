@@ -13,6 +13,12 @@
   "engines": {
     "node": ">= 4"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run ci-check",
+      "pre-push": "npm run ci-check"
+    }
+  },
   "scripts": {
     "reinstall": "rm -rf node_modules/ dist/ && npm install",
     "prettier": "prettier --list-different 'src/**/*.ts' || (echo '\nPlease run the following command to fix:\nnpm run prettier:fix\n'; exit 1)",
@@ -28,7 +34,6 @@
     "prebuild": "rm -rf dist/ && tsc -p ./tsconfig.declaration.json",
     "build": "tsc -p . && rollup -c",
     "postbuild": "rm -rf out",
-    "prepush": "npm run ci-check",
     "prepublishOnly": "npm run reinstall && npm run ci-check && npm run build",
     "ci-check": "npm run lint & npm run tsc & npm run test"
   },
