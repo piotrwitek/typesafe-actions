@@ -2,7 +2,6 @@ import {
   StringType,
   EmptyAction,
   PayloadAction,
-  MetaAction,
   PayloadMetaAction,
 } from './types';
 

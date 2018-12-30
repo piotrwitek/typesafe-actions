@@ -30,10 +30,9 @@ describe('action', () => {
     const actual: {
       type: 'SHOW_NOTIFICATION';
       payload: string | undefined;
-    } = showNotification('Hello!');
+    } = showNotification();
     expect(actual).toEqual({
       type: 'SHOW_NOTIFICATION',
-      payload: 'Hello!',
     });
   });
 
@@ -56,10 +55,9 @@ describe('action', () => {
     const actual: {
       type: 'SHOW_NOTIFICATION';
       meta: string | undefined;
-    } = showNotification('info');
+    } = showNotification();
     expect(actual).toEqual({
       type: 'SHOW_NOTIFICATION',
-      meta: 'info',
     });
   });
 
@@ -85,7 +83,7 @@ describe('action', () => {
       type: 'SHOW_NOTIFICATION';
       payload: string | undefined;
       meta: string;
-    } = showNotification('SHOW_NOTIFICATION', 'info');
+    } = showNotification('info');
     expect(actual).toEqual({
       type: 'SHOW_NOTIFICATION',
       meta: 'info',
@@ -99,7 +97,7 @@ describe('action', () => {
       type: 'SHOW_NOTIFICATION';
       payload: string;
       meta: string | undefined;
-    } = showNotification('SHOW_NOTIFICATION', 'Hello!');
+    } = showNotification('Hello!');
     expect(actual).toEqual({
       type: 'SHOW_NOTIFICATION',
       payload: 'Hello!',
@@ -113,7 +111,7 @@ describe('action', () => {
       type: 'SHOW_NOTIFICATION';
       payload: string | undefined;
       meta: string | undefined;
-    } = showNotification('SHOW_NOTIFICATION');
+    } = showNotification();
     expect(actual).toEqual({
       type: 'SHOW_NOTIFICATION',
     });
