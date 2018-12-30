@@ -775,6 +775,9 @@ if(isOfType([ADD, REMOVE], action)) {
 
 ## Migration Guides
 
+### v2.x.x to v3.x.x
+v3.x.x API is backward compatible with v2.x.x. You'll only need to update typescript dependency to `> v3.0`.
+
 ### v1.x.x to v2.x.x
 > NOTE: `typesafe-actions@1.x.x` should be used with `utility-types@1.x.x` which contains `$call` utility (removed in `utility-types@2.x.x`)
 

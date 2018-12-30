@@ -37,6 +37,9 @@
     "ci-check": "npm run lint && (npm run tsc & npm run test)"
   },
   "dependencies": {},
+  "optionalDependencies": {
+    "typescript": "3.X.X"
+  },
   "devDependencies": {
     "@types/jest": "21.1.10",
     "dts-jest": "22.0.4",
