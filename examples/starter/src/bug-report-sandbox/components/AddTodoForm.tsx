@@ -7,7 +7,9 @@ const dispatchProps = {
   addItem: (title: string) => addTodo({ title }),
 };
 
-type Props = typeof dispatchProps;
+type Props = {
+  addItem: (title: string) => void;
+};
 
 type State = {
   title: string;
