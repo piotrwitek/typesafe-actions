@@ -30,7 +30,9 @@ export function createAction<
   const actionCreator: AC =
     actionResolverHandler == null
       ? ((() => action(actionType)) as AC)
-      : actionResolverHandler(action.bind(null, actionType) as any);
+      : actionResolverHandler(action.bind(null, actionType) as Parameters<
+          typeof actionResolverHandler
+        >[0]);
 
   return Object.assign(actionCreator, {
     getType: () => actionType,

@@ -1,6 +1,6 @@
 {
   "name": "typesafe-actions",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "description": "Typesafe Action Creators for Redux / Flux Architectures (in TypeScript)",
   "author": "Piotr Witek <piotrek.witek@gmail.com> (http://piotrwitek.github.io)",
   "repository": "https://github.com/piotrwitek/typesafe-actions",
@@ -51,7 +51,7 @@
     "rollup-plugin-uglify": "3.0.0",
     "ts-jest": "22.4.6",
     "tslint": "5.12.0",
-    "typescript": "2.9.2"
+    "typescript": "3.2.2"
   },
   "keywords": [
     "typescript",
