@@ -89,8 +89,9 @@ yarn add typesafe-actions
 ## Compatibility Notes
 
 ### TypeScript support
-* `typesafe-actions@1.X.X` - minimum TS v2.7.2
-* `typesafe-actions@2.X.X` - minimum TS v2.9.2
+* `typesafe-actions@1.X.X` - minimal TS v2.7
+* `typesafe-actions@2.X.X` - minimal TS v2.9
+* `typesafe-actions@3.X.X` - minimal TS v3.0
 
 ### Browser Polyfills
 If you support older browsers (e.g. IE < 11) and mobile devices please provide this polyfill:
