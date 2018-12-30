@@ -9,7 +9,6 @@
     "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
     "noEmitHelpers": true,
     "jsx": "react",

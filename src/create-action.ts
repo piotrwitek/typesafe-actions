@@ -1,6 +1,14 @@
-import { StringType, ActionCreator, PayloadMetaAction } from './types';
+import { StringType, ActionCreator } from './types';
 import { validateActionType } from './utils';
 import { action } from './action';
+
+export type PayloadMetaAction<T extends StringType, P, M> = P extends undefined
+  ? M extends undefined
+    ? { type: T }
+    : { type: T; meta: M }
+  : M extends undefined
+  ? { type: T; payload: P }
+  : { type: T; payload: P; meta: M };
 
 /**
  * @description typesafe action-creator factory
@@ -10,8 +18,8 @@ export function createAction<
   AC extends ActionCreator<T> = () => { type: T }
 >(
   actionType: T,
-  creatorHandler?: (
-    action: <P = undefined, M = undefined>(
+  actionResolverHandler?: (
+    resolve: <P = undefined, M = undefined>(
       payload?: P,
       meta?: M
     ) => PayloadMetaAction<T, P, M>
@@ -20,9 +28,11 @@ export function createAction<
   validateActionType(actionType);
 
   const actionCreator: AC =
-    creatorHandler == null
+    actionResolverHandler == null
       ? ((() => action(actionType)) as AC)
-      : creatorHandler(action.bind(null, actionType));
+      : actionResolverHandler(action.bind(null, actionType) as Parameters<
+          typeof actionResolverHandler
+        >[0]);
 
   return Object.assign(actionCreator, {
     getType: () => actionType,

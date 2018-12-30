@@ -1,20 +1,46 @@
 import { combineReducers } from 'redux';
-import { ActionType, getType } from 'typesafe-actions';
+import { getType } from 'typesafe-actions';
 
-import { SandboxItem } from './models';
+import { Todo } from './models';
 import * as actions from './actions';
 
-export type SandboxAction = ActionType<typeof actions>;
-
 export type SandboxState = Readonly<{
-  items: SandboxItem[];
+  isLoadingTodos: boolean;
+  todos: Todo[];
 }>;
 
-export default combineReducers<SandboxState, SandboxAction>({
-  items: (state = [{ id: '0', title: 'Please add more items using the form...' }], action) => {
+export default combineReducers<SandboxState, import('MyTypes').RootAction>({
+  isLoadingTodos: (state = false, action) => {
     switch (action.type) {
-      case getType(actions.add):
+      case getType(actions.loadTodosAsync.request):
+        return true;
+
+      case getType(actions.loadTodosAsync.success):
+      case getType(actions.loadTodosAsync.failure):
+        return false;
+
+      default:
+        return state;
+    }
+  },
+  todos: (
+    state = [
+      {
+        id: '0',
+        title: 'You can add new todos using the form or load saved snapshot...',
+      },
+    ],
+    action
+  ) => {
+    switch (action.type) {
+      case getType(actions.addTodo):
         return [...state, action.payload];
+
+      case getType(actions.removeTodo):
+        return state.filter(i => i.id !== action.payload);
+
+      case getType(actions.loadTodosAsync.success):
+        return action.payload;
 
       default:
         return state;

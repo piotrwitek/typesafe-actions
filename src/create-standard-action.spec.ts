@@ -6,6 +6,7 @@ describe('createStandardAction', () => {
       const increment = createStandardAction('INCREMENT')();
 
       expect(increment.toString()).toBe('INCREMENT');
+      // tslint:disable-next-line:triple-equals
       expect((increment as any) == 'INCREMENT').toBe(true);
     });
 

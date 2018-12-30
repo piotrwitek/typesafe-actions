@@ -1,4 +1,8 @@
-import { getType, isOfType, isActionOf, ActionType, StateType } from './';
+import { getType } from './get-type';
+import { isOfType } from './is-of-type';
+import { isActionOf } from './is-action-of';
+import { StateType, ActionType } from './types';
+
 import { types, actions, testType, User } from './test-utils';
 const {
   withTypeOnly,
@@ -30,7 +34,7 @@ describe('StateType', () => {
 describe('ActionType', () => {
   type RootAction = ActionType<typeof actions>;
 
-  function switchReducer(action: RootAction): RootAction | undefined {
+  function getTypeReducer(action: RootAction): RootAction | undefined {
     switch (action.type) {
       case getType(actions.very.deep.withTypeOnly): {
         return testType<{ type: 'VERY_DEEP_WITH_TYPE_ONLY' }>(action);
@@ -83,7 +87,7 @@ describe('ActionType', () => {
     }
   }
 
-  function ifReducer(action: RootAction): RootAction | undefined {
+  function isActionOfReducer(action: RootAction): RootAction | undefined {
     if (isActionOf(actions.very.deep.withTypeOnly, action)) {
       return testType<{ type: 'VERY_DEEP_WITH_TYPE_ONLY' }>(action);
     } else if (isActionOf(withTypeOnly, action)) {
@@ -113,7 +117,9 @@ describe('ActionType', () => {
     return undefined;
   }
 
-  function ifReducerCurried(action: RootAction): RootAction | undefined {
+  function isActionOfCurriedReducer(
+    action: RootAction
+  ): RootAction | undefined {
     if (isActionOf(actions.very.deep.withTypeOnly)(action)) {
       return testType<{ type: 'VERY_DEEP_WITH_TYPE_ONLY' }>(action);
     } else if (isActionOf(withTypeOnly)(action)) {
@@ -143,7 +149,7 @@ describe('ActionType', () => {
     return undefined;
   }
 
-  function ifReducerArray(action: RootAction): RootAction | undefined {
+  function isActionOfArrayReducer(action: RootAction): RootAction | undefined {
     if (isActionOf([actions.very.deep.withTypeOnly])(action)) {
       return testType<{ type: 'VERY_DEEP_WITH_TYPE_ONLY' }>(action);
     } else if (isActionOf([withTypeOnly])(action)) {
@@ -175,7 +181,7 @@ describe('ActionType', () => {
     return undefined;
   }
 
-  function hasReducer(action: RootAction): RootAction | undefined {
+  function isOfTypeReducer(action: RootAction): RootAction | undefined {
     if (isOfType(types.VERY_DEEP_WITH_TYPE_ONLY, action)) {
       return testType<{ type: 'VERY_DEEP_WITH_TYPE_ONLY' }>(action);
     } else if (isOfType(types.WITH_TYPE_ONLY, action)) {
@@ -203,7 +209,7 @@ describe('ActionType', () => {
     return undefined;
   }
 
-  function hasReducerCurried(action: RootAction): RootAction | undefined {
+  function isOfTypeCurriedReducer(action: RootAction): RootAction | undefined {
     if (isOfType(types.VERY_DEEP_WITH_TYPE_ONLY)(action)) {
       return testType<{ type: 'VERY_DEEP_WITH_TYPE_ONLY' }>(action);
     } else if (isOfType(types.WITH_TYPE_ONLY)(action)) {
@@ -231,27 +237,27 @@ describe('ActionType', () => {
     return undefined;
   }
 
-  describe('with createStandardAction', () => {
+  describe('action-helpers - createStandardAction', () => {
     it('should return action with type only', () => {
       const actual = withTypeOnly();
       const expected = { type: 'WITH_TYPE_ONLY' };
-      expect(switchReducer(actual)).toEqual(expected);
-      expect(ifReducer(actual)).toEqual(expected);
-      expect(ifReducerCurried(actual)).toEqual(expected);
-      expect(ifReducerArray(actual)).toEqual(expected);
-      expect(hasReducer(actual)).toEqual(expected);
-      expect(hasReducerCurried(actual)).toEqual(expected);
+      expect(getTypeReducer(actual)).toEqual(expected);
+      expect(isActionOfReducer(actual)).toEqual(expected);
+      expect(isActionOfCurriedReducer(actual)).toEqual(expected);
+      expect(isActionOfArrayReducer(actual)).toEqual(expected);
+      expect(isOfTypeReducer(actual)).toEqual(expected);
+      expect(isOfTypeCurriedReducer(actual)).toEqual(expected);
     });
 
     it('should return action with payload', () => {
       const actual = withPayload(2);
       const expected = { type: 'WITH_PAYLOAD', payload: 2 };
-      expect(switchReducer(actual)).toEqual(expected);
-      expect(ifReducer(actual)).toEqual(expected);
-      expect(ifReducerCurried(actual)).toEqual(expected);
-      expect(ifReducerArray(actual)).toEqual(expected);
-      expect(hasReducer(actual)).toEqual(expected);
-      expect(hasReducerCurried(actual)).toEqual(expected);
+      expect(getTypeReducer(actual)).toEqual(expected);
+      expect(isActionOfReducer(actual)).toEqual(expected);
+      expect(isActionOfCurriedReducer(actual)).toEqual(expected);
+      expect(isActionOfArrayReducer(actual)).toEqual(expected);
+      expect(isOfTypeReducer(actual)).toEqual(expected);
+      expect(isOfTypeCurriedReducer(actual)).toEqual(expected);
     });
 
     it('should return action with payload and meta', () => {
@@ -261,23 +267,23 @@ describe('ActionType', () => {
         payload: 2,
         meta: 'metaValue',
       };
-      expect(switchReducer(actual)).toEqual(expected);
-      expect(ifReducer(actual)).toEqual(expected);
-      expect(ifReducerCurried(actual)).toEqual(expected);
-      expect(ifReducerArray(actual)).toEqual(expected);
-      expect(hasReducer(actual)).toEqual(expected);
-      expect(hasReducerCurried(actual)).toEqual(expected);
+      expect(getTypeReducer(actual)).toEqual(expected);
+      expect(isActionOfReducer(actual)).toEqual(expected);
+      expect(isActionOfCurriedReducer(actual)).toEqual(expected);
+      expect(isActionOfArrayReducer(actual)).toEqual(expected);
+      expect(isOfTypeReducer(actual)).toEqual(expected);
+      expect(isOfTypeCurriedReducer(actual)).toEqual(expected);
     });
 
     it('should return action with mapped payload', () => {
       const actual = withMappedPayload(2);
       const expected = { type: 'WITH_MAPPED_PAYLOAD', payload: 2 };
-      expect(switchReducer(actual)).toEqual(expected);
-      expect(ifReducer(actual)).toEqual(expected);
-      expect(ifReducerCurried(actual)).toEqual(expected);
-      expect(ifReducerArray(actual)).toEqual(expected);
-      expect(hasReducer(actual)).toEqual(expected);
-      expect(hasReducerCurried(actual)).toEqual(expected);
+      expect(getTypeReducer(actual)).toEqual(expected);
+      expect(isActionOfReducer(actual)).toEqual(expected);
+      expect(isActionOfCurriedReducer(actual)).toEqual(expected);
+      expect(isActionOfArrayReducer(actual)).toEqual(expected);
+      expect(isOfTypeReducer(actual)).toEqual(expected);
+      expect(isOfTypeCurriedReducer(actual)).toEqual(expected);
     });
 
     it('should return action with mapped payload and meta', () => {
@@ -287,12 +293,12 @@ describe('ActionType', () => {
         payload: 2,
         meta: 'metaValue',
       };
-      expect(switchReducer(actual)).toEqual(expected);
-      expect(ifReducer(actual)).toEqual(expected);
-      expect(ifReducerCurried(actual)).toEqual(expected);
-      expect(ifReducerArray(actual)).toEqual(expected);
-      expect(hasReducer(actual)).toEqual(expected);
-      expect(hasReducerCurried(actual)).toEqual(expected);
+      expect(getTypeReducer(actual)).toEqual(expected);
+      expect(isActionOfReducer(actual)).toEqual(expected);
+      expect(isActionOfCurriedReducer(actual)).toEqual(expected);
+      expect(isActionOfArrayReducer(actual)).toEqual(expected);
+      expect(isOfTypeReducer(actual)).toEqual(expected);
+      expect(isOfTypeCurriedReducer(actual)).toEqual(expected);
     });
 
     it('should return action with async action', () => {
@@ -300,12 +306,12 @@ describe('ActionType', () => {
       const expected = {
         type: 'FETCH_USER_REQUEST',
       };
-      expect(switchReducer(actual)).toEqual(expected);
-      expect(ifReducer(actual)).toEqual(expected);
-      expect(ifReducerCurried(actual)).toEqual(expected);
-      expect(ifReducerArray(actual)).toEqual(expected);
-      expect(hasReducer(actual)).toEqual(expected);
-      expect(hasReducerCurried(actual)).toEqual(expected);
+      expect(getTypeReducer(actual)).toEqual(expected);
+      expect(isActionOfReducer(actual)).toEqual(expected);
+      expect(isActionOfCurriedReducer(actual)).toEqual(expected);
+      expect(isActionOfArrayReducer(actual)).toEqual(expected);
+      expect(isOfTypeReducer(actual)).toEqual(expected);
+      expect(isOfTypeCurriedReducer(actual)).toEqual(expected);
     });
   });
 });

@@ -1,12 +1,15 @@
 import * as React from 'react';
 
-import ExampleList from './ExampleList';
-import ExampleForm from './ExampleForm';
+import TodoList from './TodoList';
+import AddTodoForm from './AddTodoForm';
+import TodoListActions from './TodoListActions';
 
 export default () => (
   <section>
-    <ExampleForm />
+    <TodoListActions />
+    <br />
+    <AddTodoForm />
     <hr />
-    <ExampleList />
+    <TodoList />
   </section>
 );

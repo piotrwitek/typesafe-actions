@@ -1,39 +1,119 @@
-import { action } from './';
-import { types } from './test-utils';
+import { action } from './action';
 
 describe('action', () => {
   it('with type only', () => {
-    const actual: { type: 'WITH_TYPE_ONLY' } = action(types.WITH_TYPE_ONLY);
-    expect(actual).toEqual({ type: 'WITH_TYPE_ONLY' });
+    const showNotification = () => action('SHOW_NOTIFICATION');
+    const actual: {
+      type: 'SHOW_NOTIFICATION';
+    } = showNotification();
+    expect(actual).toEqual({
+      type: 'SHOW_NOTIFICATION',
+    });
   });
 
   it('with payload', () => {
-    const actual: { type: 'WITH_PAYLOAD'; payload: number } = action(
-      types.WITH_PAYLOAD,
-      1
-    );
-    expect(actual).toEqual({ type: 'WITH_PAYLOAD', payload: 1 });
+    const showNotification = (message: string) =>
+      action('SHOW_NOTIFICATION', message);
+    const actual: {
+      type: 'SHOW_NOTIFICATION';
+      payload: string;
+    } = showNotification('Hello!');
+    expect(actual).toEqual({
+      type: 'SHOW_NOTIFICATION',
+      payload: 'Hello!',
+    });
+  });
+
+  it('with optional payload', () => {
+    const showNotification = (message?: string) =>
+      action('SHOW_NOTIFICATION', message);
+    const actual: {
+      type: 'SHOW_NOTIFICATION';
+      payload: string | undefined;
+    } = showNotification();
+    expect(actual).toEqual({
+      type: 'SHOW_NOTIFICATION',
+    });
   });
 
   it('with meta', () => {
-    const actual: { type: 'WITH_META'; meta: string } = action(
-      types.WITH_META,
-      undefined,
-      'token'
-    );
-    expect(actual).toEqual({ type: 'WITH_META', meta: 'token' });
+    const showNotification = (scope: string) =>
+      action('SHOW_NOTIFICATION', undefined, scope);
+    const actual: {
+      type: 'SHOW_NOTIFICATION';
+      meta: string;
+    } = showNotification('info');
+    expect(actual).toEqual({
+      type: 'SHOW_NOTIFICATION',
+      meta: 'info',
+    });
+  });
+
+  it('with optional meta', () => {
+    const showNotification = (scope?: string) =>
+      action('SHOW_NOTIFICATION', undefined, scope);
+    const actual: {
+      type: 'SHOW_NOTIFICATION';
+      meta: string | undefined;
+    } = showNotification();
+    expect(actual).toEqual({
+      type: 'SHOW_NOTIFICATION',
+    });
   });
 
   it('with payload and meta', () => {
+    const showNotification = (message: string, scope: string) =>
+      action('SHOW_NOTIFICATION', message, scope);
     const actual: {
-      type: 'WITH_PAYLOAD_META';
-      payload: number;
+      type: 'SHOW_NOTIFICATION';
+      payload: string;
       meta: string;
-    } = action(types.WITH_PAYLOAD_META, 1, 'token');
+    } = showNotification('Hello!', 'info');
     expect(actual).toEqual({
-      type: 'WITH_PAYLOAD_META',
-      payload: 1,
-      meta: 'token',
+      type: 'SHOW_NOTIFICATION',
+      payload: 'Hello!',
+      meta: 'info',
+    });
+  });
+
+  it('with optional payload and meta', () => {
+    const showNotification = (scope: string, message?: string) =>
+      action('SHOW_NOTIFICATION', message, scope);
+    const actual: {
+      type: 'SHOW_NOTIFICATION';
+      payload: string | undefined;
+      meta: string;
+    } = showNotification('info');
+    expect(actual).toEqual({
+      type: 'SHOW_NOTIFICATION',
+      meta: 'info',
+    });
+  });
+
+  it('with payload and optional meta', () => {
+    const showNotification = (message: string, scope?: string) =>
+      action('SHOW_NOTIFICATION', message, scope);
+    const actual: {
+      type: 'SHOW_NOTIFICATION';
+      payload: string;
+      meta: string | undefined;
+    } = showNotification('Hello!');
+    expect(actual).toEqual({
+      type: 'SHOW_NOTIFICATION',
+      payload: 'Hello!',
+    });
+  });
+
+  it('with optional payload and optional meta', () => {
+    const showNotification = (message?: string, scope?: string) =>
+      action('SHOW_NOTIFICATION', message, scope);
+    const actual: {
+      type: 'SHOW_NOTIFICATION';
+      payload: string | undefined;
+      meta: string | undefined;
+    } = showNotification();
+    expect(actual).toEqual({
+      type: 'SHOW_NOTIFICATION',
     });
   });
 });

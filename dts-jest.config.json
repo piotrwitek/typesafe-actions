@@ -4,16 +4,17 @@
   "moduleFileExtensions": ["js", "jsx", "ts", "tsx", "json"],
   "testMatch": ["<rootDir>/src/?(*.)+(spec|test).ts?(x)"],
   "transform": {
+    ".spec.(ts|tsx)": "dts-jest/transform",
     ".(ts|tsx)": "ts-jest"
   },
   "globals": {
     "window": {},
-    "ts-jest": {
-      "tsConfig": "./tsconfig.json",
-      "diagnostics": {
-        "ignoreCodes": [5023]
-      }
+    "_dts_jest_": {
+      "compiler_options": "./tsconfig.json",
+      "enclosing_declaration": true,
+      "test_value": false,
+      "transpile": false
     }
   },
-  "setupFiles": []
+  "reporters": ["default", "dts-jest/reporter"]
 }

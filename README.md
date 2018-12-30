@@ -10,22 +10,22 @@
 [![peerDependencies Status](https://david-dm.org/piotrwitek/typesafe-actions/peer-status.svg)](https://david-dm.org/piotrwitek/typesafe-actions?type=peer)
 
 ## Typesafe "Action Creators" for Redux / Flux Architectures (in TypeScript)
-Flexible functional API that's specifically designed to reduce types **verbosity** (especially maintainability concerns)
+Flexible functional API that's specifically designed to reduce types **verbosity** (maintainability concerns)
 and **complexity** (thanks to powerful helpers).
 
-> #### _Found it useful? Want more updates?_ [**Show your support by giving a :star:**](https://github.com/piotrwitek/typesafe-actions/stargazers)  
+> #### :star: _Found it useful? Want more updates?_ [**Show your support by giving a :star:**](https://github.com/piotrwitek/typesafe-actions/stargazers)  
 
-> _This lib is an integral part of [React & Redux TypeScript Guide](https://github.com/piotrwitek/react-redux-typescript-guide)_ :book:  
+> :book: _This lib is an integral part of [React & Redux TypeScript Guide](https://github.com/piotrwitek/react-redux-typescript-guide)_ :book:  
 
-> _Reference implementation of Todo-App with `typesafe-actions`: https://codesandbox.io/s/github/piotrwitek/typesafe-actions-todo-app_ :computer:  
+> :computer: _Reference implementation of Todo-App with `typesafe-actions` on [CodeSandbox](https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/examples/starter)_ :computer:  
 
-> _Now compatible with **TypeScript v2.8.3** (rewritten using conditional types)_ :tada:  
+> :tada: _Now updated to be compatible with **TypeScript v3.2.2**_ :tada:  
 
 ### Features
 
-* __small and focused__ - according to `rollup-plugin-filesize` (Bundle size: 2.6 KB, Gzipped size: 808 B) check also on [bundlephobia](https://bundlephobia.com/result?p=typesafe-actions)
+* __minimalistic__ - according to `rollup-plugin-filesize` (Bundle size: 2.6 KB, Gzipped size: 808 B) check also on [bundlephobia](https://bundlephobia.com/result?p=typesafe-actions)
 * __secure and optimized__ - no external dependencies with 3 different bundle types (`cjs`, `esm` and `umd` for browser)
-* __solid as a rock__ - complete test-suite for entire API surface with extra tests for static-types
+* __focus on quality__ - complete test-suite for an entire API surface with regular runtime tests and extra tests to guarantee **type soundness**
 
 ## Contributing Guide
 If you're planning to contribute please make sure to read the contributing guide: [CONTRIBUTING.md](/CONTRIBUTING.md)
@@ -59,6 +59,7 @@ This gives you the power to prioritize our work and support project contributors
     * [`createAction`](#createaction)
     * [`createStandardAction`](#createstandardaction)
     * [`createAsyncAction`](#createasyncaction)
+    * [`createActionWithType`](#withtype)
   * action-helpers
     * [`getType`](#gettype)
     * [`isActionOf`](#isactionof)
@@ -89,9 +90,7 @@ yarn add typesafe-actions
 
 ### TypeScript support
 * `typesafe-actions@1.X.X` - minimum TS v2.7.2
-* `typesafe-actions@2.X.X` - minimum TS v2.8.1
-  - `strictFunctionTypes` is not supported, turn it to `false`
-* `typesafe-actions@3.X.X` - WIP
+* `typesafe-actions@2.X.X` - minimum TS v2.9.2
 
 ### Browser Polyfills
 If you support older browsers (e.g. IE < 11) and mobile devices please provide this polyfill:
@@ -106,12 +105,13 @@ You can check `React` guidelines on how to do that specifically: https://reactjs
 
 ## Motivation
 
-When I was first starting with Redux and TypeScript I was trying to use [redux-actions](https://redux-actions.js.org/) to simplify maintainability of **action-creators**. I was struggling and results were intimidating: incorrect type signatures and broken type-inference cascading throughout the entire code-base [(read more detailed comparison)](#redux-actions).
+When I was starting to use type-safe Redux with TypeScript I was trying to use [redux-actions](https://redux-actions.js.org/) to simplify maintainability of **action-creators**. Unfortunately the results were intimidating: incorrect type signatures and broken type-inference cascading throughout the entire code-base [(read more detailed comparison)](#redux-actions).
 
-Moreover alternative solutions in the wild have been either **too verbose because of excess type annotations** (primary maintainability concern) or **used classes** (hinders readability and enforce to use a **new** keyword 😱).
+Existing alternative solutions in the wild have been either **too verbose because of redundant type annotations** (maintainability concern) or **used classes** (hinders readability and enforce to use a **new** keyword 😱)
 
-The solution for all the above pain points is finally here, the `typesafe-actions`.
-The core idea was to design an API that would harness the power of incredible **type-inference** 💪 to lift the "maintainability burden" of type annotations. In addition I wanted to make it "look and feel" as close as possible to idiomatic JavaScript we all know and love ❤️, maybe sometimes we even hate but anyway...
+**I created `typesafe-actions` to solve all of the above pain points.**
+
+The core idea was to design an API that would harness the power of TypeScript incredible **type-inference** 💪 to lift the "maintainability burden" of type annotations. In addition I wanted to make it "look and feel" as close as possible to idiomatic JavaScript we all know and love ❤️
 
 [⇧ back to top](#table-of-contents)
 
@@ -127,7 +127,24 @@ To showcase flexibility and the power of **type-safety** provided by this librar
 
 ### - The Actions
 
-> Different projects have different needs and conventions vary across teams this is why `typesafe-actions` was designed and built with flexibility in mind. It provides 3 different factory functions so you can choose what would be the best fit for your project.
+Different projects have different needs and conventions vary across teams this is why `typesafe-actions` was designed and built with flexibility in mind. It provides 3 different factory functions so you can choose what would be the best fit for your project.
+
+> **PRO-TIP: string constants limitation in TypeScript** - when using *string constants* as action `type` property, please make sure to only use **const string literals** because **dynamic string operations** (like string concatenation, template strings, object used as dictionary etc.) will widen literal type to it's supertype `string`. This will break contextual typing in reducer cases.
+
+```ts
+// Example file: './constants.ts'
+
+// WARNING: Incorrect usage
+export const ADD = prefix + 'ADD'; // => string
+export const ADD = `${prefix}/ADD`; // => string
+export default {
+   ADD: '@prefix/ADD', // => string
+}
+
+// Correct usage
+export const ADD = '@prefix/ADD'; // => '@prefix/ADD'
+export const TOGGLE = '@prefix/TOGGLE'; // => '@prefix/TOGGLE'
+```
 
 #### 1. Classic JS style with constants FTW!
 Using this simple function we'll have complete type-safety with minimal type declaration effort, but we're constrained to use constants (as in regular JS applications) because some of advanced **action-helpers** (`getType`, `isActionOf`) will not work with such action-creator. This is still a very compelling option, especially for refactoring existing projects.
@@ -142,18 +159,6 @@ export const toggle = (id: string) => action(TOGGLE, id);
 
 export const add = (title: string) => action(ADD, { title, id: cuid(), completed: false } as Todo);
 // (title: string) => { type: 'todos/ADD'; payload: Todo; }
-```
-
-> **WARNING:** When using string constants for action `type`, please be sure to use simple string literals. Don't use string concatenation, template strings or object map because your `type` will lose the type information, widening to its supertype `string` (this is how TypeScript works).
-
-```ts
-// example './constants.js' file
-export const ADD = '@prefix/ADD'; // type literal => '@prefix/ADD'
-export const TOGGLE = '@prefix/TOGGLE'; // type literal => '@prefix/TOGGLE'
-
-// Below will NOT work!!!
-// export const ADD = `${prefix}/ADD`; // widened to string
-// export default { ADD: '@prefix/ADD' } // widened to string
 ```
 
 #### 2. Opinionated without need for constants
@@ -398,7 +403,6 @@ function action(type: T, payload?: P, meta?: M): { type: T, payload?: P, meta?: 
 ```
 
 Examples:
-
 [> Advanced Usage Examples](src/action.spec.ts)
 
 ```ts
@@ -419,7 +423,7 @@ const getUsers = (meta: string) =>
 
 ### createAction
 
-> create the action-creator of a typesafe compatible action
+> create custom action-creator using constructor function with injected resolver callback
 
 ```ts
 // type only
@@ -449,7 +453,6 @@ const executor = (resolve) => (...args) => resolve(payload: P, meta: M)
 ```
 
 Examples:
-
 [> Advanced Usage Examples](src/create-action.spec.ts)
 
 ```ts
@@ -488,7 +491,7 @@ expect(getTodo('some_id', 'some_meta'))
 
 ### createStandardAction
 
-> simple creator compatible with "Flux Standard Action" to reduce boilerplate and enforce convention
+> create action-creator that will create "Flux Standard Action" compatible actions to reduce boilerplate and enforce convention
 
 ```ts
 function createStandardAction(type: T): <P, M>() => (payload: P, meta: M) => { type: T, payload: P, meta: M };
@@ -496,7 +499,6 @@ function createStandardAction(type: T): { map: (payload: P, meta: M): { ...anyth
 ```
 
 Examples:
-
 [> Advanced Usage Examples](src/create-standard-action.spec.ts)
 
 ```ts
@@ -545,7 +547,6 @@ function createAsyncAction(requestType: T1, successType: T2, failureType: T3): <
 ```
 
 Examples:
-
 [> Advanced Usage Examples](src/create-async-action.spec.ts)
 
 ```ts
@@ -577,6 +578,53 @@ expect(failureResult).toEqual({
 
 [⇧ back to top](#table-of-contents)
 
+### createActionWithType
+
+> create custom action-creator using constructor function with injected type
+
+```ts
+createActionWithType(type, constructorFunction): 
+```
+
+Examples:
+[> Advanced Usage Examples](src/create-action-with-type.spec.ts)
+
+```ts
+import { createActionWithType } from 'typesafe-actions';
+
+it('with payload', () => {
+    const add = createActionWithType('WITH_MAPPED_PAYLOAD', type => {
+      return (amount: number) => ({ type, payload: amount });
+    });
+    const actual: {
+      type: 'WITH_MAPPED_PAYLOAD';
+      payload: number;
+    } = add(1);
+    expect(actual).toEqual({ type: 'WITH_MAPPED_PAYLOAD', payload: 1 });
+  });
+
+it('with optional payload', () => {
+  const create = createActionWithType('WITH_OPTIONAL_PAYLOAD', type => {
+    return (id?: number) => ({ type, payload: id });
+  });
+  const actual1: {
+    type: 'WITH_OPTIONAL_PAYLOAD';
+    payload: number | undefined;
+  } = create();
+  expect(actual1).toEqual({
+    type: 'WITH_OPTIONAL_PAYLOAD',
+    payload: undefined,
+  });
+  const actual2: {
+    type: 'WITH_OPTIONAL_PAYLOAD';
+    payload: number | undefined;
+  } = create(1);
+  expect(actual2).toEqual({ type: 'WITH_OPTIONAL_PAYLOAD', payload: 1 });
+});
+```
+
+[⇧ back to top](#table-of-contents)
+
 ---
 
 ### getType
@@ -595,7 +643,6 @@ function getType(actionCreator: ActionCreator<T>): T
 [> Advanced Usage Examples](src/get-type.spec.ts)
 
 Examples:
-
 ```ts
 const increment = createAction('INCREMENT');
 const type: 'INCREMENT' = getType(increment);
@@ -633,7 +680,6 @@ isActionOf([actionCreator]: Array<ActionCreator<T>>): (action: any) => action is
 ```
 
 Examples:
-
 [> Advanced Usage Examples](src/is-action-of.spec.ts)
 
 ```ts
@@ -683,7 +729,6 @@ isOfType(type: T[]): (action: any) => action is T
 ```
 
 Examples:
-
 [> Advanced Usage Examples](src/is-of-type.spec.ts)
 
 ```ts
@@ -732,12 +777,11 @@ if(isOfType([ADD, REMOVE], action)) {
 ### v1.x.x to v2.x.x
 > NOTE: `typesafe-actions@1.x.x` should be used with `utility-types@1.x.x` which contains `$call` utility (removed in `utility-types@2.x.x`)
 
-```ts
-// target action creator
-getTodo('some_id', 'some_meta'); // { type: 'GET_TODO', payload: 'some_id', meta: 'some_meta' }
+In v2 we provide `createActionDeprecated` from v1 API to help with incremental migration.
 
-// deprecated API
-const getTodo = createActionDeprecated('GET_TODO',
+```ts
+// in v1 we created action-creator like this:
+const getTodo = createAction('GET_TODO',
   (id: string, meta: string) => ({
     type: 'GET_TODO',
     payload: id,
@@ -745,7 +789,9 @@ const getTodo = createActionDeprecated('GET_TODO',
   })
 );
 
-// new API equivalent (we offer 4 different styles - choose your preference)
+getTodo('some_id', 'some_meta'); // { type: 'GET_TODO', payload: 'some_id', meta: 'some_meta' }
+
+// in v2 API we offer 4 different styles - please choose your preference
 const getTodoSimple = (id: string, meta: string) => action('GET_TODO', id, meta);
 
 const getTodoVariadic = createAction('GET_TODO', resolve => {

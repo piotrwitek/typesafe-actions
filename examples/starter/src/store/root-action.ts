@@ -1,6 +1,8 @@
-import { RouterAction, LocationChangeAction } from 'react-router-redux';
+import { routerActions } from 'react-router-redux';
 
-import { SandboxAction } from '../bug-report-sandbox/';
+import * as bugReportSandboxActions from '../bug-report-sandbox/actions';
 
-type ReactRouterAction = RouterAction | LocationChangeAction;
-export type RootAction = ReactRouterAction | SandboxAction;
+export default {
+  router: routerActions,
+  sandbox: bugReportSandboxActions,
+};

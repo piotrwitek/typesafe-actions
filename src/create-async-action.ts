@@ -1,5 +1,6 @@
-import { StringType, B, MapBuilder, FsaBuilder } from './types';
-import { validateActionType, withType } from './utils';
+import { StringType, Box, FsaMapBuilder, FsaBuilder } from './types';
+import { createActionWithType } from './create-action-with-type';
+import { validateActionType } from './utils';
 
 export interface CreateAsyncAction<
   T1 extends StringType,
@@ -23,9 +24,9 @@ export type AsyncActionBuilder<
   P2,
   P3
 > = {
-  request: FsaBuilder<T1, B<P1>>;
-  success: FsaBuilder<T2, B<P2>>;
-  failure: FsaBuilder<T3, B<P3>>;
+  request: FsaBuilder<T1, Box<P1>>;
+  success: FsaBuilder<T2, Box<P2>>;
+  failure: FsaBuilder<T3, Box<P3>>;
 };
 
 export type AsyncActionWithMappers<
@@ -39,9 +40,9 @@ export type AsyncActionWithMappers<
   A3 = void,
   P3 = void
 > = {
-  request: MapBuilder<T1, B<A1>, B<P1>>;
-  success: MapBuilder<T2, B<A2>, B<P2>>;
-  failure: MapBuilder<T3, B<A3>, B<P3>>;
+  request: FsaMapBuilder<T1, Box<A1>, Box<P1>>;
+  success: FsaMapBuilder<T2, Box<A2>, Box<P2>>;
+  failure: FsaMapBuilder<T3, Box<A3>, Box<P3>>;
 };
 
 /** implementation */
@@ -67,18 +68,18 @@ export function createAsyncAction<
     P3
   > {
     return {
-      request: withType(requestType, type => (payload?: P1) => ({
+      request: createActionWithType(requestType, type => (payload?: P1) => ({
         type: requestType,
         payload,
-      })) as FsaBuilder<T1, B<P1>>,
-      success: withType(successType, type => (payload?: P2) => ({
+      })) as FsaBuilder<T1, Box<P1>>,
+      success: createActionWithType(successType, type => (payload?: P2) => ({
         type: successType,
         payload,
-      })) as FsaBuilder<T2, B<P2>>,
-      failure: withType(failureType, type => (payload?: P3) => ({
+      })) as FsaBuilder<T2, Box<P2>>,
+      failure: createActionWithType(failureType, type => (payload?: P3) => ({
         type: failureType,
         payload,
-      })) as FsaBuilder<T3, B<P3>>,
+      })) as FsaBuilder<T3, Box<P3>>,
     };
   }
 
@@ -88,15 +89,15 @@ export function createAsyncAction<
   //   failureMapper: (a?: A3) => P3
   // ): AsyncActionWithMappers<T1, T2, T3, A1, P1, A2, P2, A3, P3> {
   //   return {
-  //     request: withType(requestType, type => (payload?: A1) => ({
+  //     request: createActionWithType(requestType, type => (payload?: A1) => ({
   //       type,
   //       payload: requestMapper != null ? requestMapper(payload) : undefined,
   //     })) as MapBuilder<T1, B<A1>, B<P1>>,
-  //     success: withType(successType, type => (payload?: A2) => ({
+  //     success: createActionWithType(successType, type => (payload?: A2) => ({
   //       type,
   //       payload: successMapper != null ? successMapper(payload) : undefined,
   //     })) as MapBuilder<T2, B<A2>, B<P2>>,
-  //     failure: withType(failureType, type => (payload?: A3) => ({
+  //     failure: createActionWithType(failureType, type => (payload?: A3) => ({
   //       type,
   //       payload: failureMapper != null ? failureMapper(payload) : undefined,
   //     })) as MapBuilder<T3, B<A3>, B<P3>>,

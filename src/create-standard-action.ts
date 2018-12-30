@@ -1,11 +1,12 @@
-import { StringType, B, FsaBuilder, MapBuilder } from './types';
-import { validateActionType, withType } from './utils';
+import { StringType, Box, FsaBuilder, FsaMapBuilder } from './types';
+import { createActionWithType } from './create-action-with-type';
+import { validateActionType } from './utils';
 
 export interface CreateStandardAction<T extends StringType> {
-  <P = void, M = void>(): FsaBuilder<T, B<P>, B<M>>;
+  <P = void, M = void>(): FsaBuilder<T, Box<P>, Box<M>>;
   map<R, P = void, M = void>(
-    fn: (payload?: P, meta?: M) => R
-  ): MapBuilder<T, B<R>, B<P>, B<M>>;
+    fn: (payload: P, meta: M) => R
+  ): FsaMapBuilder<T, Box<R>, Box<P>, Box<M>>;
 }
 
 /**
@@ -16,20 +17,20 @@ export function createStandardAction<T extends StringType>(
 ): CreateStandardAction<T> {
   validateActionType(actionType);
 
-  function constructor<P, M = void>(): FsaBuilder<T, B<P>, B<M>> {
-    return withType(actionType, type => (payload?: P, meta?: M) => ({
+  function constructor<P, M = void>(): FsaBuilder<T, Box<P>, Box<M>> {
+    return createActionWithType(actionType, type => (payload: P, meta: M) => ({
       type,
       payload,
       meta,
-    })) as FsaBuilder<T, B<P>, B<M>>;
+    })) as FsaBuilder<T, Box<P>, Box<M>>;
   }
 
   function map<R, P, M>(
-    fn: (payload?: P, meta?: M) => R
-  ): MapBuilder<T, B<R>, B<P>, B<M>> {
-    return withType(actionType, type => (payload?: P, meta?: M) =>
+    fn: (payload: P, meta: M) => R
+  ): FsaMapBuilder<T, Box<R>, Box<P>, Box<M>> {
+    return createActionWithType(actionType, type => (payload: P, meta: M) =>
       Object.assign(fn(payload, meta), { type })
-    ) as MapBuilder<T, B<R>, B<P>, B<M>>;
+    ) as FsaMapBuilder<T, Box<R>, Box<P>, Box<M>>;
   }
 
   return Object.assign(constructor, { map });

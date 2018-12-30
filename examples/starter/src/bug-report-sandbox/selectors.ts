@@ -2,4 +2,4 @@
 
 import { SandboxState } from './reducer';
 
-export const getItems = (state: SandboxState) => state.items;
+export const getTodos = (state: SandboxState) => state.todos;
