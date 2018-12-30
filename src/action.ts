@@ -25,7 +25,7 @@ export function action<T extends StringType, P = undefined, M = undefined>(
  * const add = (amount: number, meta?: MetaShape) => action('INCREMENT', amount, meta);
  * ```
  */
-export function action<T extends StringType, P = void, M = void>(
+export function action<T extends StringType, P = undefined, M = undefined>(
   type: T,
   payload?: P,
   meta?: M

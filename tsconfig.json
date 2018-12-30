@@ -6,7 +6,6 @@
     "paths": {},
     /* Strict Type-Checking Options */
     "strict": true,
-    // "strictBindCallApply": false,
     /* Others */
     "lib": ["dom", "es2017"],
     "types": ["jest"],
