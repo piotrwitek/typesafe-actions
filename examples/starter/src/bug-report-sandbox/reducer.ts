@@ -1,3 +1,4 @@
+import { RootAction } from 'MyTypes';
 import { combineReducers } from 'redux';
 import { getType } from 'typesafe-actions';
 
@@ -9,7 +10,7 @@ export type SandboxState = Readonly<{
   todos: Todo[];
 }>;
 
-export default combineReducers<SandboxState, import('MyTypes').RootAction>({
+export default combineReducers<SandboxState, RootAction>({
   isLoadingTodos: (state = false, action) => {
     switch (action.type) {
       case getType(actions.loadTodosAsync.request):
