@@ -59,7 +59,7 @@ This gives you the power to prioritize our work and support project contributors
     * [`createAction`](#createaction)
     * [`createStandardAction`](#createstandardaction)
     * [`createAsyncAction`](#createasyncaction)
-    * [`createActionWithType`](#withtype)
+    * [`createActionWithType`](#createactionwithtype)
   * action-helpers
     * [`getType`](#gettype)
     * [`isActionOf`](#isactionof)
