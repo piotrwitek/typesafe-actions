@@ -91,7 +91,7 @@ yarn add typesafe-actions
 ### TypeScript support
 * `typesafe-actions@1.X.X` - minimal TS v2.7
 * `typesafe-actions@2.X.X` - minimal TS v2.9
-* `typesafe-actions@3.X.X` - minimal TS v3.0
+* `typesafe-actions@3.X.X` - minimal TS v3.2
 
 ### Browser Polyfills
 If you support older browsers (e.g. IE < 11) and mobile devices please provide this polyfill:
@@ -776,7 +776,7 @@ if(isOfType([ADD, REMOVE], action)) {
 ## Migration Guides
 
 ### v2.x.x to v3.x.x
-v3.x.x API is backward compatible with v2.x.x. You'll only need to update typescript dependency to `> v3.0`.
+v3.x.x API is backward compatible with v2.x.x. You'll only need to update typescript dependency to `> v3.2`.
 
 ### v1.x.x to v2.x.x
 > NOTE: `typesafe-actions@1.x.x` should be used with `utility-types@1.x.x` which contains `$call` utility (removed in `utility-types@2.x.x`)
