@@ -37,29 +37,18 @@ const $action = [
 ];
 
 describe('isActionOf', () => {
-  it('should work with type only actions', () => {
+  it('should work with single action-creator arg', () => {
     expect(isActionOf(withTypeOnly)(typeOnlyAction)).toBeTruthy();
     expect(isActionOf(withTypeOnly, typeOnlyAction)).toBeTruthy();
-    expect(isActionOf([withTypeOnly])(typeOnlyAction)).toBeTruthy();
-    expect(isActionOf([withTypeOnly], typeOnlyAction)).toBeTruthy();
     expect(isActionOf(withTypeOnly)(payloadAction)).toBeFalsy();
     expect(isActionOf(withTypeOnly, payloadAction)).toBeFalsy();
+    expect(isActionOf([withTypeOnly])(typeOnlyAction)).toBeTruthy();
+    expect(isActionOf([withTypeOnly], typeOnlyAction)).toBeTruthy();
     expect(isActionOf([withTypeOnly])(payloadAction)).toBeFalsy();
     expect(isActionOf([withTypeOnly], payloadAction)).toBeFalsy();
   });
 
-  it('should work with with mapped actions', () => {
-    expect(isActionOf(withMappedPayload)(mappedPayloadAction)).toBeTruthy();
-    expect(isActionOf(withMappedPayload, mappedPayloadAction)).toBeTruthy();
-    expect(isActionOf([withMappedPayload])(mappedPayloadAction)).toBeTruthy();
-    expect(isActionOf([withMappedPayload], mappedPayloadAction)).toBeTruthy();
-    expect(isActionOf(withMappedPayload)(typeOnlyAction)).toBeFalsy();
-    expect(isActionOf(withMappedPayload, typeOnlyAction)).toBeFalsy();
-    expect(isActionOf([withMappedPayload])(typeOnlyAction)).toBeFalsy();
-    expect(isActionOf([withMappedPayload], typeOnlyAction)).toBeFalsy();
-  });
-
-  it('should work with array of mixed actions', () => {
+  it('should work with multiple action-creator args', () => {
     expect(
       isActionOf([withTypeOnly, withPayload])(typeOnlyAction)
     ).toBeTruthy();
@@ -76,30 +65,28 @@ describe('isActionOf', () => {
     ).toBeFalsy();
   });
 
-  it('should correctly assert for array with one actionCreator', () => {
-    const actual: Array<{ type: 'WITH_TYPE_ONLY' }> = $action.filter(
-      isActionOf([withTypeOnly])
-    );
+  it('should correctly assert for an array with 1 arg', () => {
+    const actual = $action.filter(isActionOf([withTypeOnly]));
+    // @dts-jest:pass:snap
+    actual;
     expect(actual).toHaveLength(1);
     expect(actual).toEqual([typeOnlyExpected]);
   });
 
-  it('should correctly assert for array with two actionCreators', () => {
-    const actual: Array<
-      { type: 'WITH_TYPE_ONLY' } | { type: 'WITH_PAYLOAD'; payload: number }
-    > = $action.filter(isActionOf([withTypeOnly, withPayload]));
+  it('should correctly assert for an array with 2 args', () => {
+    const actual = $action.filter(isActionOf([withTypeOnly, withPayload]));
+    // @dts-jest:pass:snap
+    actual;
     expect(actual).toHaveLength(2);
     expect(actual).toEqual([typeOnlyExpected, payloadExpected]);
   });
 
-  it('should correctly assert for array with three actionCreators', () => {
-    const actual: Array<
-      | { type: 'WITH_TYPE_ONLY' }
-      | { type: 'WITH_PAYLOAD'; payload: number }
-      | { type: 'WITH_PAYLOAD_META'; payload: number; meta: string }
-    > = $action.filter(
+  it('should correctly assert for an array with 3 args', () => {
+    const actual = $action.filter(
       isActionOf([withTypeOnly, withPayload, withPayloadMeta])
     );
+    // @dts-jest:pass:snap
+    actual;
     expect(actual).toHaveLength(3);
     expect(actual).toEqual([
       typeOnlyExpected,
@@ -108,13 +95,8 @@ describe('isActionOf', () => {
     ]);
   });
 
-  it('should correctly assert for array with four actionCreators', () => {
-    const actual: Array<
-      | { type: 'WITH_TYPE_ONLY' }
-      | { type: 'WITH_PAYLOAD'; payload: number }
-      | { type: 'WITH_PAYLOAD_META'; payload: number; meta: string }
-      | ({ type: 'WITH_MAPPED_PAYLOAD' } & { payload: number })
-    > = $action.filter(
+  it('should correctly assert for an array with 4 args', () => {
+    const actual = $action.filter(
       isActionOf([
         withTypeOnly,
         withPayload,
@@ -122,6 +104,8 @@ describe('isActionOf', () => {
         withMappedPayload,
       ])
     );
+    // @dts-jest:pass:snap
+    actual;
     expect(actual).toEqual([
       typeOnlyExpected,
       payloadExpected,
@@ -130,17 +114,8 @@ describe('isActionOf', () => {
     ]);
   });
 
-  it('should correctly assert for array with five actionCreators', () => {
-    const actual: Array<
-      | { type: 'WITH_TYPE_ONLY' }
-      | { type: 'WITH_PAYLOAD'; payload: number }
-      | { type: 'WITH_PAYLOAD_META'; payload: number; meta: string }
-      | ({ type: 'WITH_MAPPED_PAYLOAD' } & { payload: number })
-      | ({ type: 'WITH_MAPPED_PAYLOAD_META' } & {
-          payload: number;
-          meta: string;
-        })
-    > = $action.filter(
+  it('should correctly assert for an array with 5 args', () => {
+    const actual = $action.filter(
       isActionOf([
         withTypeOnly,
         withPayload,
@@ -149,6 +124,8 @@ describe('isActionOf', () => {
         withMappedPayloadMeta,
       ])
     );
+    // @dts-jest:pass:snap
+    actual;
     expect(actual).toHaveLength(5);
     expect(actual).toEqual([
       typeOnlyExpected,
@@ -159,17 +136,17 @@ describe('isActionOf', () => {
     ]);
   });
 
-  it('should correctly resolve assertions', () => {
+  it('should correctly assert type with "any" action', () => {
     const action: any = withMappedPayload(1234);
     if (isActionOf([withMappedPayload, withMappedPayloadMeta], action)) {
+      // @dts-jest:pass:snap
+      action;
       expect(action.payload).toBe(1234);
-    } else {
-      fail('isActionOf assertion should work when not curried');
     }
     if (isActionOf([withMappedPayload, withMappedPayloadMeta])(action)) {
+      // @dts-jest:pass:snap
+      action;
       expect(action.payload).toBe(1234);
-    } else {
-      fail('isActionOf assertion should work when curried');
     }
   });
 });
