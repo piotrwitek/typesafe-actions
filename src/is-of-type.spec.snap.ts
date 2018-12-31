@@ -72,7 +72,7 @@ describe('isOfType', () => {
 
   it('should correctly assert for an array with 1 arg', () => {
     const actual = $action.filter(isOfType(types.WITH_TYPE_ONLY));
-    // @dts-jest:pass:snap
+    // @dts-jest:pass:snap -> Types.EmptyAction<"WITH_TYPE_ONLY">[]
     actual;
     expect(actual).toHaveLength(1);
     expect(actual).toEqual([typeOnlyExpected]);
@@ -82,7 +82,7 @@ describe('isOfType', () => {
     const actual = $action.filter(
       isOfType([types.WITH_TYPE_ONLY, types.WITH_PAYLOAD])
     );
-    // @dts-jest:pass:snap
+    // @dts-jest:pass:snap -> (Types.EmptyAction<"WITH_TYPE_ONLY"> | Types.PayloadAction<"WITH_PAYLOAD", number>)[]
     actual;
     expect(actual).toHaveLength(2);
     expect(actual).toEqual([typeOnlyExpected, payloadExpected]);
@@ -96,7 +96,7 @@ describe('isOfType', () => {
         types.WITH_PAYLOAD_META,
       ])
     );
-    // @dts-jest:pass:snap
+    // @dts-jest:pass:snap -> (Types.EmptyAction<"WITH_TYPE_ONLY"> | Types.PayloadAction<"WITH_PAYLOAD", number> | Types.PayloadMetaAction<"WITH_PAYLOAD_META", number, string>)[]
     actual;
     expect(actual).toHaveLength(3);
     expect(actual).toEqual([
@@ -115,7 +115,7 @@ describe('isOfType', () => {
         types.WITH_MAPPED_PAYLOAD,
       ])
     );
-    // @dts-jest:pass:snap
+    // @dts-jest:pass:snap -> (Types.EmptyAction<"WITH_TYPE_ONLY"> | Types.PayloadAction<"WITH_PAYLOAD", number> | Types.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }))[]
     actual;
     expect(actual).toHaveLength(4);
     expect(actual).toEqual([
@@ -136,7 +136,7 @@ describe('isOfType', () => {
         types.WITH_MAPPED_PAYLOAD_META,
       ])
     );
-    // @dts-jest:pass:snap
+    // @dts-jest:pass:snap -> (Types.EmptyAction<"WITH_TYPE_ONLY"> | Types.PayloadAction<"WITH_PAYLOAD", number> | Types.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }))[]
     actual;
     expect(actual).toHaveLength(5);
     expect(actual).toEqual([
@@ -156,7 +156,7 @@ describe('isOfType', () => {
         action
       )
     ) {
-      // @dts-jest:pass:snap
+      // @dts-jest:pass:snap -> any
       action;
       expect(action.payload).toBe(1234);
     }
@@ -165,7 +165,7 @@ describe('isOfType', () => {
         action
       )
     ) {
-      // @dts-jest:pass:snap
+      // @dts-jest:pass:snap -> any
       action;
       expect(action.payload).toBe(1234);
     }

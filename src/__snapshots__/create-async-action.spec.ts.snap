@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`failureResult 1`] = `"Types.PayloadAction<\\"FETCH_TODOS_FAILURE\\", Error>"`;
+
+exports[`requestResult 1`] = `"Types.EmptyAction<\\"FETCH_TODOS_REQUEST\\">"`;
+
+exports[`successResult 1`] = `"Types.PayloadAction<\\"FETCH_TODOS_SUCCESS\\", Todo[]>"`;

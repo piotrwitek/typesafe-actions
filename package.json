@@ -34,7 +34,7 @@
     "build": "tsc -p . && rollup -c",
     "postbuild": "rm -rf out",
     "prepublishOnly": "npm run reinstall && npm run ci-check && npm run build",
-    "ci-check": "npm run lint && (npm run tsc & npm run test)"
+    "ci-check": "npm run lint && (npm run tsc & npm run test & npm run test-types:update)"
   },
   "dependencies": {},
   "optionalDependencies": {

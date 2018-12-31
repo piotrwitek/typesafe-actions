@@ -1,6 +1,6 @@
 import { StringType, Box, FsaBuilder, FsaMapBuilder } from './types';
 import { createActionWithType } from './create-action-with-type';
-import { validateActionType } from './utils';
+import { validateActionType } from './utils/utils';
 
 export interface CreateStandardAction<T extends StringType> {
   <P = void, M = void>(): FsaBuilder<T, Box<P>, Box<M>>;

@@ -5,7 +5,7 @@ describe('action', () => {
   it('with type only', () => {
     const showNotification = () => action('SHOW_NOTIFICATION');
     const actual = showNotification();
-    // @dts-jest:pass:snap
+    // @dts-jest:pass:snap -> Types.EmptyAction<"SHOW_NOTIFICATION">
     actual;
     expect(actual).toEqual({
       type: 'SHOW_NOTIFICATION',

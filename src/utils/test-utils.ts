@@ -1,10 +1,10 @@
-import { action } from './action';
-import { createStandardAction } from './create-standard-action';
-import { createAsyncAction } from './create-async-action';
+import { action } from '../action';
+import { createStandardAction } from '../create-standard-action';
+import { createAsyncAction } from '../create-async-action';
 
 /** @internal */
-export function testType<T>(a: T): T {
-  return a;
+export function testType<T>(a?: T): T {
+  return a as any;
 }
 
 /**

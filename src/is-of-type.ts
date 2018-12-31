@@ -1,5 +1,5 @@
 import { StringType } from './types';
-import { validateActionType } from './utils';
+import { validateActionType } from './utils/utils';
 /**
  * @description (curried assert function) check if action type is equal given type-constant
  * @description it works with discriminated union types
@@ -17,7 +17,7 @@ export function isOfType<
   T extends K[],
   K extends StringType,
   A extends { type: StringType }
->(type: T, action: A): action is A extends { type: T } ? A : never;
+>(type: T, action: A): action is A extends { type: T[number] } ? A : never;
 
 /**
  * @description (curried assert function) check if action type is equal given type-constant
@@ -37,7 +37,7 @@ export function isOfType<T extends K[], K extends StringType>(
   type: T
 ): <A extends { type: StringType }>(
   action: A
-) => action is A extends { type: T } ? A : never;
+) => action is A extends { type: T[number] } ? A : never;
 
 /** implementation */
 export function isOfType<

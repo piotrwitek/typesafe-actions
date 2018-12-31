@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`action 1`] = `"({ type: \\"WITH_MAPPED_PAYLOAD\\"; } & { payload: number; }) | ({ type: \\"WITH_MAPPED_PAYLOAD_META\\"; } & { payload: number; meta: string; })"`;
+
+exports[`action 2`] = `"({ type: \\"WITH_MAPPED_PAYLOAD\\"; } & { payload: number; }) | ({ type: \\"WITH_MAPPED_PAYLOAD_META\\"; } & { payload: number; meta: string; })"`;
+
+exports[`actual 1`] = `"Types.EmptyAction<\\"WITH_TYPE_ONLY\\">[]"`;
+
+exports[`actual 2`] = `"(Types.EmptyAction<\\"WITH_TYPE_ONLY\\"> | Types.PayloadAction<\\"WITH_PAYLOAD\\", number>)[]"`;
+
+exports[`actual 3`] = `"(Types.EmptyAction<\\"WITH_TYPE_ONLY\\"> | Types.PayloadAction<\\"WITH_PAYLOAD\\", number> | Types.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string>)[]"`;
+
+exports[`actual 4`] = `"(Types.EmptyAction<\\"WITH_TYPE_ONLY\\"> | Types.PayloadAction<\\"WITH_PAYLOAD\\", number> | Types.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string> | ({ type: \\"WITH_MAPPED_PAYLOAD\\"; } & { payload: number; }))[]"`;
+
+exports[`actual 5`] = `"(Types.EmptyAction<\\"WITH_TYPE_ONLY\\"> | Types.PayloadAction<\\"WITH_PAYLOAD\\", number> | Types.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string> | ({ type: \\"WITH_MAPPED_PAYLOAD\\"; } & { payload: number; }) | ({ type: \\"WITH_MAPPED_PAYLOAD_META\\"; } & { payload: number; meta: string; }))[]"`;

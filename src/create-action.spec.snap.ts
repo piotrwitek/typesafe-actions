@@ -15,7 +15,7 @@ describe('createAction', () => {
   it('with type only - shorthand', () => {
     const action = createAction(types.WITH_TYPE_ONLY);
     const actual = action();
-    // @dts-jest:pass:snap
+    // @dts-jest:pass:snap -> { type: "WITH_TYPE_ONLY"; }
     actual;
     expect(actual).toEqual({ type: 'WITH_TYPE_ONLY' });
   });

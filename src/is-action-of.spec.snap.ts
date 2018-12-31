@@ -68,7 +68,7 @@ describe('isActionOf', () => {
 
   it('should correctly assert for an array with 1 arg', () => {
     const actual = $action.filter(isActionOf([withTypeOnly]));
-    // @dts-jest:pass:snap
+    // @dts-jest:pass:snap -> Types.EmptyAction<"WITH_TYPE_ONLY">[]
     actual;
     expect(actual).toHaveLength(1);
     expect(actual).toEqual([typeOnlyExpected]);
@@ -76,7 +76,7 @@ describe('isActionOf', () => {
 
   it('should correctly assert for an array with 2 args', () => {
     const actual = $action.filter(isActionOf([withTypeOnly, withPayload]));
-    // @dts-jest:pass:snap
+    // @dts-jest:pass:snap -> (Types.EmptyAction<"WITH_TYPE_ONLY"> | Types.PayloadAction<"WITH_PAYLOAD", number>)[]
     actual;
     expect(actual).toHaveLength(2);
     expect(actual).toEqual([typeOnlyExpected, payloadExpected]);
@@ -86,7 +86,7 @@ describe('isActionOf', () => {
     const actual = $action.filter(
       isActionOf([withTypeOnly, withPayload, withPayloadMeta])
     );
-    // @dts-jest:pass:snap
+    // @dts-jest:pass:snap -> (Types.EmptyAction<"WITH_TYPE_ONLY"> | Types.PayloadAction<"WITH_PAYLOAD", number> | Types.PayloadMetaAction<"WITH_PAYLOAD_META", number, string>)[]
     actual;
     expect(actual).toHaveLength(3);
     expect(actual).toEqual([
@@ -105,7 +105,7 @@ describe('isActionOf', () => {
         withMappedPayload,
       ])
     );
-    // @dts-jest:pass:snap
+    // @dts-jest:pass:snap -> (Types.EmptyAction<"WITH_TYPE_ONLY"> | Types.PayloadAction<"WITH_PAYLOAD", number> | Types.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }))[]
     actual;
     expect(actual).toEqual([
       typeOnlyExpected,
@@ -125,7 +125,7 @@ describe('isActionOf', () => {
         withMappedPayloadMeta,
       ])
     );
-    // @dts-jest:pass:snap
+    // @dts-jest:pass:snap -> (Types.EmptyAction<"WITH_TYPE_ONLY"> | Types.PayloadAction<"WITH_PAYLOAD", number> | Types.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }))[]
     actual;
     expect(actual).toHaveLength(5);
     expect(actual).toEqual([
@@ -140,12 +140,12 @@ describe('isActionOf', () => {
   it('should correctly assert type with "any" action', () => {
     const action: any = withMappedPayload(1234);
     if (isActionOf([withMappedPayload, withMappedPayloadMeta], action)) {
-      // @dts-jest:pass:snap
+      // @dts-jest:pass:snap -> ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; })
       action;
       expect(action.payload).toBe(1234);
     }
     if (isActionOf([withMappedPayload, withMappedPayloadMeta])(action)) {
-      // @dts-jest:pass:snap
+      // @dts-jest:pass:snap -> ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; })
       action;
       expect(action.payload).toBe(1234);
     }

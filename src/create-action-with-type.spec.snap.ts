@@ -6,7 +6,7 @@ describe('createActionWithType', () => {
     const INCREMENT = Symbol(1);
     const increment = createActionWithType(INCREMENT, type => () => ({ type }));
     const actual = increment();
-    // @dts-jest:pass:snap
+    // @dts-jest:pass:snap -> { type: unique symbol; }
     actual;
     expect(actual).toEqual({ type: INCREMENT });
   });

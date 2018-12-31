@@ -1,5 +1,5 @@
 import { StringType, ActionCreator } from './types';
-import { validateActionType } from './utils';
+import { validateActionType } from './utils/utils';
 import { action } from './action';
 
 export type PayloadMetaAction<T extends StringType, P, M> = P extends undefined

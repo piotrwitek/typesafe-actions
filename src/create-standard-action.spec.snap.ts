@@ -14,7 +14,7 @@ describe('createStandardAction', () => {
     it('with type only - shorthand', () => {
       const increment = createStandardAction('INCREMENT')();
       const actual = increment();
-      // @dts-jest:pass:snap
+      // @dts-jest:pass:snap -> Types.EmptyAction<"INCREMENT">
       actual;
       expect(actual).toEqual({ type: 'INCREMENT' });
     });

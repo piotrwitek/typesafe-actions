@@ -12,7 +12,7 @@ describe('createAsyncAction', () => {
     )<void, Todo[], Error>();
 
     const requestResult = fetchTodos.request();
-    // @dts-jest:pass:snap
+    // @dts-jest:pass:snap -> Types.EmptyAction<"FETCH_TODOS_REQUEST">
     requestResult;
     expect(requestResult).toEqual({ type: 'FETCH_TODOS_REQUEST' });
     const successResult = fetchTodos.success([
@@ -21,7 +21,7 @@ describe('createAsyncAction', () => {
         lastName: 'Witek',
       },
     ]);
-    // @dts-jest:pass:snap
+    // @dts-jest:pass:snap -> Types.PayloadAction<"FETCH_TODOS_SUCCESS", Todo[]>
     successResult;
     expect(successResult).toEqual({
       type: 'FETCH_TODOS_SUCCESS',
@@ -33,7 +33,7 @@ describe('createAsyncAction', () => {
       ],
     });
     const failureResult = fetchTodos.failure(Error('reason'));
-    // @dts-jest:pass:snap
+    // @dts-jest:pass:snap -> Types.PayloadAction<"FETCH_TODOS_FAILURE", Error>
     failureResult;
     expect(failureResult).toEqual({
       type: 'FETCH_TODOS_FAILURE',

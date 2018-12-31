@@ -6,7 +6,7 @@ describe('createActionDeprecated', () => {
     const INCREMENT = Symbol(1);
     const increment = createActionDeprecated(INCREMENT);
     const actual = increment();
-    // @dts-jest:pass:snap
+    // @dts-jest:pass:snap -> { type: unique symbol; }
     actual;
     expect(actual).toEqual({ type: INCREMENT });
     expect(actual).not.toEqual({ type: 'INCREMENT' });

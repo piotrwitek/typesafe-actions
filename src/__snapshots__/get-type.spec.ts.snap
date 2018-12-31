@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`typeLiteral 1`] = `"\\"WITH_TYPE_ONLY\\""`;
+
+exports[`typeLiteral 2`] = `"\\"WITH_PAYLOAD\\""`;
+
+exports[`typeLiteral 3`] = `"\\"WITH_MAPPED_PAYLOAD\\""`;

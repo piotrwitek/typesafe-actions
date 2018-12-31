@@ -27,13 +27,13 @@ describe('StateType', () => {
     }
   };
 
-  // @dts-jest:pass:snap
+  // @dts-jest:pass:snap -> boolean
   testType<StateType<typeof reducer>>();
   expect(reducer(undefined, withTypeOnly())).toBe(true);
 });
 
 describe('ActionType', () => {
-  // @dts-jest:pass:snap
+  // @dts-jest:pass:snap -> Types.EmptyAction<"WITH_TYPE_ONLY"> | Types.EmptyAction<"VERY_DEEP_WITH_TYPE_ONLY"> | Types.PayloadAction<"WITH_PAYLOAD", number> | Types.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | Types.PayloadMetaAction<"WITH_META", void, string> | Types.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | Types.EmptyAction<"FETCH_USER_REQUEST"> | Types.PayloadAction<"FETCH_USER_SUCCESS", User> | Types.PayloadAction<"FETCH_USER_FAILURE", Error> | Types.EmptyAction<"SIMPLE_WITH_TYPE_ONLY"> | Types.PayloadAction<"SIMPLE_WITH_PAYLOAD", number> | Types.PayloadAction<"SIMPLE_WITH_OPTIONAL_PAYLOAD", number | undefined> | Types.PayloadMetaAction<"SIMPLE_WITH_META", undefined, string> | Types.PayloadMetaAction<"SIMPLE_WITH_PAYLOAD_META", number, string>
   testType<ActionType<typeof actions>>();
   type RootAction = ActionType<typeof actions>;
 
