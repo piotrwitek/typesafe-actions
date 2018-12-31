@@ -581,7 +581,7 @@ expect(failureResult).toEqual({
 
 ### createActionWithType
 
-> create custom action-creator using constructor function with injected type
+> create custom action-creator using constructor function with injected type argument
 
 ```ts
 createActionWithType(type, constructorFunction): 

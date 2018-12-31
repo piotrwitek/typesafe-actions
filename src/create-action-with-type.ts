@@ -1,8 +1,7 @@
 import { ActionCreator, StringOrSymbol } from './types';
 
 /**
- * @description decorate any action-creator to make it compatible with `typesafe-actions`
- * @description (usefull to make third-party action-creator work with typesafe helpers)
+ * @description create custom action-creator using constructor function with injected type argument
  */
 export function createActionWithType<
   T extends StringOrSymbol,
