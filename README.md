@@ -325,6 +325,24 @@ if (isOfType(types.ADD, action)) {
 
 > _PS: If you're wondering what the `Services` type is in the epics signature and how to declare it in your application to easily inject statically typed API clients to your epics also ensuring for easy mocking while testing resulting in clean architecture, please create an issue for it and perhaps I'll find some time in the future to write an article about it._
 
+### - The Sagas
+
+If you are using sagas, you can take advantage of strong typing by using `ReturnType` to describe the action's type.
+
+```ts
+function* addTodoSaga(action: ReturnType<typeof TodosAction.add>) {
+  try {
+    const response: AxiosResponse = yield call(todoApi.add, action.payload);
+
+    yield put(TodosAction.addSuccess(response));
+  } catch (e) {
+    yield put(TodosAction.addFailure(e));
+  }
+}
+```
+
+Note that [Typescript does not currently infer types resulting from a `yield` statement](https://github.com/Microsoft/TypeScript/issues/2983), so you have to provide the type annotation e.g. `const response: AxiosResponse = yield ...`.
+
 [⇧ back to top](#table-of-contents)
 
 ---
