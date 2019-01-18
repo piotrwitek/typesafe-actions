@@ -49,7 +49,7 @@ This gives you the power to prioritize our work and support project contributors
 * [Installation](#installation)
 * [Compatibility Notes](#compatibility-notes)
 * [Motivation](#motivation)
-* [Behold the Mighty "Tutorial"](#behold-the-mighty-"tutorial")
+* [Behold the Mighty "Tutorial"](#behold-the-mighty-tutorial)
 * [API Docs](#api-docs)
   * utility-types
     * [`ActionType`](#actiontype) (RootAction type-helper)
