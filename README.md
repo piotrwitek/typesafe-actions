@@ -1,17 +1,19 @@
 # typesafe-actions
 
-[![Build Status](https://semaphoreci.com/api/v1/piotrekwitek/typesafe-actions/branches/big-project-update-v3/shields_badge.svg)](https://semaphoreci.com/piotrekwitek/typesafe-actions)
+Typesafe utilities for "action-creators" in Redux / Flux Architecture.
+
+Featuring flexible functional API that's specifically designed to reduce types **verbosity**
+and **complexity** (explained in [motivation](#motivation)).
+
 [![Latest Stable Version](https://img.shields.io/npm/v/typesafe-actions.svg)](https://www.npmjs.com/package/typesafe-actions)
-[![Bundlephobia Size](https://img.shields.io/bundlephobia/minzip/typesafe-actions.svg)](https://www.npmjs.com/package/typesafe-actions)
+[![Build Status](https://semaphoreci.com/api/v1/piotrekwitek/typesafe-actions/branches/master/shields_badge.svg)](https://semaphoreci.com/piotrekwitek/typesafe-actions)
+[![dependencies Status](https://david-dm.org/piotrwitek/typesafe-actions/status.svg)](https://david-dm.org/piotrwitek/typesafe-actions)
+[![peerDependencies Status](https://david-dm.org/piotrwitek/typesafe-actions/peer-status.svg)](https://david-dm.org/piotrwitek/typesafe-actions?type=peer)
 [![License](https://img.shields.io/npm/l/typesafe-actions.svg?style=flat)](https://david-dm.org/piotrwitek/typesafe-actions?type=peer)
 
 [![NPM Downloads](https://img.shields.io/npm/dm/typesafe-actions.svg)](https://www.npmjs.com/package/typesafe-actions)
-[![dependencies Status](https://david-dm.org/piotrwitek/typesafe-actions/status.svg)](https://david-dm.org/piotrwitek/typesafe-actions)
-[![peerDependencies Status](https://david-dm.org/piotrwitek/typesafe-actions/peer-status.svg)](https://david-dm.org/piotrwitek/typesafe-actions?type=peer)
-
-## Typesafe "Action Creators" for Redux / Flux Architectures (in TypeScript)
-Flexible functional API that's specifically designed to reduce types **verbosity** (maintainability concerns)
-and **complexity** (thanks to powerful helpers).
+[![NPM Downloads](https://img.shields.io/npm/dt/typesafe-actions.svg)](https://www.npmjs.com/package/typesafe-actions)
+[![Bundlephobia Size](https://img.shields.io/bundlephobia/minzip/typesafe-actions.svg)](https://www.npmjs.com/package/typesafe-actions)
 
 > #### :star: _Found it useful? Want more updates?_ [**Show your support by giving a :star:**](https://github.com/piotrwitek/typesafe-actions/stargazers)  
 
@@ -25,22 +27,22 @@ and **complexity** (thanks to powerful helpers).
 
 * __minimalistic__ - according to `rollup-plugin-filesize` (Bundle size: 2.6 KB, Gzipped size: 808 B) check also on [bundlephobia](https://bundlephobia.com/result?p=typesafe-actions)
 * __secure and optimized__ - no external dependencies with 3 different bundle types (`cjs`, `esm` and `umd` for browser)
-* __focus on quality__ - complete test-suite for an entire API surface with regular runtime tests and extra tests to guarantee **type soundness**
-
-## Contributing Guide
-If you're planning to contribute please make sure to read the contributing guide: [CONTRIBUTING.md](/CONTRIBUTING.md)
+* __focus on quality__ - complete test-suite for an entire API surface with runtime tests and extra type-tests to guarantee **type soundness**
 
 ## Bug Report CodeSandbox
 You can use this CodeSandbox to reproduce bug reports: https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/examples/starter
 
+## Contributing Guide
+We are open for contributions. If you're planning to contribute please make sure to read the contributing guide: [CONTRIBUTING.md](/CONTRIBUTING.md)
+
 ## Sponsor
-If you like what we're doing here, you can help us by funding the work on specific issues that you choose by using IssueHunt.io!
+**Typesafe-Actions** is an independent open-source project created by people investing their free time for the benefit of our community.
 
-This gives you the power to prioritize our work and support project contributors. Moreover it'll guarantee the project will be updated and maintained in the long run.
+If you are using **Typesafe-Actions** please consider donating as this will guarantee the project will be updated and maintained in the long run.
 
-> I keep sponsor anonymity by default but if you'd like your brand to be featured in this repo, please contact me at: piotrek.witek@gmail.com
+Issues can be funded by anyone and the money will be transparently distributed to the contributors handling a particular issue.
 
-[![issuehunt-image](https://github.com/BoostIO/issuehunt-materials/blob/master/issuehunt-badge@1x.png?raw=true)](https://issuehunt.io/repos/110746954)
+[![Let's fund issues in this repository](https://issuehunt.io/static/embed/issuehunt-button-v1.svg)](https://issuehunt.io/repos/110746954)
 
 ---
 
@@ -106,13 +108,13 @@ You can check `React` guidelines on how to do that specifically: https://reactjs
 
 ## Motivation
 
-When I was starting to use type-safe Redux with TypeScript I was trying to use [redux-actions](https://redux-actions.js.org/) to simplify maintainability of **action-creators**. Unfortunately the results were intimidating: incorrect type signatures and broken type-inference cascading throughout the entire code-base [(read more detailed comparison)](#redux-actions).
+When I started to combine Redux with TypeScript I was trying to use [redux-actions](https://redux-actions.js.org/) to simplify maintainability cost and boilerplate of **action-creators**. Unfortunately the results were intimidating: incorrect type signatures and broken type-inference cascading throughout the entire code-base [(click here for a detailed comparison)](#redux-actions).
 
-Existing alternative solutions in the wild have been either **too verbose because of redundant type annotations** (maintainability concern) or **used classes** (hinders readability and enforce to use a **new** keyword 😱)
+Existing solutions in the wild have been either **too verbose because of redundant type annotations** (hard to maintain) or **used classes** (hinders readability and require to use a **new** keyword 😱)
 
-**I created `typesafe-actions` to solve all of the above pain points.**
+**So I created `typesafe-actions` to solve all of the above pain points.**
 
-The core idea was to design an API that would harness the power of TypeScript incredible **type-inference** 💪 to lift the "maintainability burden" of type annotations. In addition I wanted to make it "look and feel" as close as possible to idiomatic JavaScript we all know and love ❤️
+The core idea was to design an API that would mostly use the power of TypeScript **type-inference** 💪 to lift the "maintainability burden" of type annotations. In addition I wanted to make it "look and feel" as close as possible to the idiomatic JavaScript ❤️ so we don't have to write that redundant type annotation which will create additional noise in your code.
 
 [⇧ back to top](#table-of-contents)
 
