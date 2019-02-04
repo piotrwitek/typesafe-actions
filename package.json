@@ -37,9 +37,6 @@
     "ci-check": "npm run lint && (npm run tsc & npm run test & npm run test-types:update)"
   },
   "dependencies": {},
-  "optionalDependencies": {
-    "typescript": "3.X.X"
-  },
   "devDependencies": {
     "@types/jest": "21.1.10",
     "dts-jest": "22.0.4",
@@ -54,7 +51,10 @@
     "rollup-plugin-uglify": "3.0.0",
     "ts-jest": "22.4.6",
     "tslint": "5.12.0",
-    "typescript": "3.2.2"
+    "typescript": "3.3.1"
+  },
+  "optionalDependencies": {
+    "typescript": "3.X.X"
   },
   "keywords": [
     "typescript",
