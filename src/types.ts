@@ -92,6 +92,58 @@ export type PayloadMetaAction<T extends StringType, P, M> = {
 };
 
 /**
+ * @private
+ * @desc Action with Error
+ * @type T - ActionType
+ * @type E - Error
+ */
+export type ErrorAction<T extends StringType, E> = {
+  type: T;
+  error: E;
+};
+
+/**
+ * @private
+ * @desc Action with both Payload and Error
+ * @type T - ActionType
+ * @type P - Payload
+ * @type E - Error
+ */
+export type PayloadErrorAction<T extends StringType, P, E> = {
+  type: T;
+  payload: P;
+  error: E;
+};
+
+/**
+ * @private
+ * @desc Action with both Meta and Error
+ * @type T - ActionType
+ * @type M - Meta
+ * @type E - Error
+ */
+export type MetaErrorAction<T extends StringType, M, E> = {
+  type: T;
+  meta: M;
+  error: E;
+};
+
+/**
+ * @private
+ * @desc Action with Payload, Meta, and Error
+ * @type T - ActionType
+ * @type P - Payload
+ * @type M - Meta
+ * @type E - Error
+ */
+export type PayloadMetaErrorAction<T extends StringType, P, M, E> = {
+  type: T;
+  payload: P;
+  meta: M;
+  error: E;
+};
+
+/**
  * TODO: NOT USED
  * @private
  * @desc Flux Standard Action

@@ -59,4 +59,68 @@ describe('createAction', () => {
       meta: 'token',
     });
   });
+
+  it('with error', () => {
+    const action = createAction(types.WITH_ERROR, resolve => {
+      return (error: boolean) => resolve(undefined, undefined, error);
+    });
+    const actual: {
+      type: 'WITH_ERROR';
+      error: boolean;
+    } = action(false);
+    expect(actual).toEqual({
+      type: 'WITH_ERROR',
+      error: false,
+    });
+  });
+
+  it('with payload and error', () => {
+    const action = createAction(types.WITH_PAYLOAD_ERROR, resolve => {
+      return (id: number, error: boolean) => resolve(id, undefined, error);
+    });
+    const actual: {
+      type: 'WITH_PAYLOAD_ERROR';
+      payload: number;
+      error: boolean;
+    } = action(1, false);
+    expect(actual).toEqual({
+      type: 'WITH_PAYLOAD_ERROR',
+      payload: 1,
+      error: false,
+    });
+  });
+
+  it('with meta and error', () => {
+    const action = createAction(types.WITH_META_ERROR, resolve => {
+      return (token: string, error: boolean) => resolve(undefined, token, error);
+    });
+    const actual: {
+      type: 'WITH_META_ERROR';
+      meta: string;
+      error: boolean;
+    } = action('token', false);
+    expect(actual).toEqual({
+      type: 'WITH_META_ERROR',
+      meta: 'token',
+      error: false,
+    });
+  });
+
+  it('with payload, meta, and error', () => {
+    const action = createAction(types.WITH_PAYLOAD_META_ERROR, resolve => {
+      return (id: number, token: string, error: boolean) => resolve(id, token, error);
+    });
+    const actual: {
+      type: 'WITH_PAYLOAD_META_ERROR';
+      payload: number;
+      meta: string;
+      error: boolean;
+    } = action(1, 'token', false);
+    expect(actual).toEqual({
+      type: 'WITH_PAYLOAD_META_ERROR',
+      payload: 1,
+      meta: 'token',
+      error: false,
+    });
+  });
 });
