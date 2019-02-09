@@ -9,6 +9,8 @@ export type ActionType<
   ActionCreatorOrMap
 > = ActionCreatorOrMap extends ActionCreator<StringOrSymbol>
   ? ReturnType<ActionCreatorOrMap>
+  : ActionCreatorOrMap extends any[]
+  ? ActionCreatorMap<ActionCreatorOrMap>[number]
   : ActionCreatorOrMap extends object
   ? ActionCreatorMap<ActionCreatorOrMap>[keyof ActionCreatorOrMap]
   : never;

@@ -84,7 +84,9 @@ describe('ActionType', () => {
           payload: Error;
         }>(action);
       }
-
+      case getType(actions.inArray[0]): {
+        return testType<{type: 'IN_ARRAY'}>(action);
+      }
       default:
         return undefined;
     }

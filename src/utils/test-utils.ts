@@ -31,6 +31,7 @@ export namespace types {
   export const SIMPLE_WITH_OPTIONAL_PAYLOAD = 'SIMPLE_WITH_OPTIONAL_PAYLOAD';
   export const SIMPLE_WITH_META = 'SIMPLE_WITH_META';
   export const SIMPLE_WITH_PAYLOAD_META = 'SIMPLE_WITH_PAYLOAD_META';
+  export const IN_ARRAY = 'IN_ARRAY';
 }
 export type TypesKeys = keyof typeof types;
 
@@ -73,4 +74,5 @@ export const actions = {
     action(types.SIMPLE_WITH_META, undefined, str),
   simpleWithPayloadMeta: (int: number, str: string) =>
     action(types.SIMPLE_WITH_PAYLOAD_META, int, str),
+  inArray: [createStandardAction(types.IN_ARRAY)()],
 };
