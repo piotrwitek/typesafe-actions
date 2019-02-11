@@ -1,3 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`actual 1`] = `"{ type: \\"WITH_TYPE_ONLY\\"; }"`;
+
+exports[`setUserSetting('settingA', 'foo') 1`] = `"{ type: \\"SET_USER_SETTING\\"; payload: { setting: \\"settingA\\"; newValue: string; }; }"`;
+
+exports[`setUserSetting('settingA', 0) 1`] = `"Argument of type '0' is not assignable to parameter of type 'string'."`;
+
+exports[`setUserSetting('settingB', 'foo') 1`] = `"Argument of type '\\"foo\\"' is not assignable to parameter of type 'number'."`;
+
+exports[`setUserSetting('settingB', 0) 1`] = `"{ type: \\"SET_USER_SETTING\\"; payload: { setting: \\"settingB\\"; newValue: number; }; }"`;

@@ -59,4 +59,29 @@ describe('createAction', () => {
       meta: 'token',
     });
   });
+
+  it('with higher-order function', () => {
+    interface UserSettingsState {
+      settingA: string;
+      settingB: number;
+    }
+
+    const setUserSetting = <K extends keyof UserSettingsState>(
+      setting: K,
+      newValue: UserSettingsState[K]
+    ) =>
+      createAction('SET_USER_SETTING', resolve => () =>
+        resolve({ setting, newValue })
+      )();
+
+    // @dts-jest:pass:snap
+    setUserSetting('settingA', 'foo');
+    // @dts-jest:fail:snap
+    setUserSetting('settingA', 0); // Error as expected
+
+    // @dts-jest:pass:snap
+    setUserSetting('settingB', 0);
+    // @dts-jest:fail:snap
+    setUserSetting('settingB', 'foo'); // Error as expected
+  });
 });

@@ -1,6 +1,6 @@
 {
   "include": ["src/**/*"],
-  "exclude": ["src/**/*.snap.ts"],
+  "exclude": ["src/**/*.snap.ts", "src/**/*.spec.ts"],
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {},

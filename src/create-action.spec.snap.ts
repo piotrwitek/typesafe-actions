@@ -59,4 +59,29 @@ describe('createAction', () => {
       meta: 'token',
     });
   });
+
+  it('with higher-order function', () => {
+    interface UserSettingsState {
+      settingA: string;
+      settingB: number;
+    }
+
+    const setUserSetting = <K extends keyof UserSettingsState>(
+      setting: K,
+      newValue: UserSettingsState[K]
+    ) =>
+      createAction('SET_USER_SETTING', resolve => () =>
+        resolve({ setting, newValue })
+      )();
+
+    // @dts-jest:pass:snap -> { type: "SET_USER_SETTING"; payload: { setting: "settingA"; newValue: string; }; }
+    setUserSetting('settingA', 'foo');
+    // @dts-jest:fail:snap -> Argument of type '0' is not assignable to parameter of type 'string'.
+    setUserSetting('settingA', 0); // Error as expected
+
+    // @dts-jest:pass:snap -> { type: "SET_USER_SETTING"; payload: { setting: "settingB"; newValue: number; }; }
+    setUserSetting('settingB', 0);
+    // @dts-jest:fail:snap -> Argument of type '"foo"' is not assignable to parameter of type 'number'.
+    setUserSetting('settingB', 'foo'); // Error as expected
+  });
 });
