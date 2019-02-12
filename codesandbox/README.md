@@ -1,1 +1,1 @@
-# Typesafe-Actions Bug Report Sandbox
+# Typesafe-Actions Reference Project
