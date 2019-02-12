@@ -54,7 +54,7 @@
       "allow-pascal-case",
       "allow-leading-underscore"
     ],
-    "no-implicit-dependencies": [true, ["MyTypes"]],
+    "no-implicit-dependencies": [false],
     "whitespace": [true, "check-branch", "check-operator"],
     // tslint-react
     "jsx-no-multiline-js": false,

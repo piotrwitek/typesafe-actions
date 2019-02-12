@@ -5,7 +5,7 @@ import { loadTodosAsync, saveTodosAsync } from '../actions';
 import { RootState } from 'MyTypes';
 
 const mapStateToProps = (state: RootState) => ({
-  isLoading: state.sandbox.isLoadingTodos,
+  isLoading: state.todos.isLoadingTodos,
 });
 const dispatchProps = {
   loadTodos: loadTodosAsync.request,

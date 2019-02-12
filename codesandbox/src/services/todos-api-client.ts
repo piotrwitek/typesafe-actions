@@ -1,4 +1,4 @@
-import { Todo } from '../models';
+import { Todo } from 'MyModels';
 
 let todos: Todo[] = [
   { id: '0', title: `Yo, your snapshot has been loaded successfully!` },

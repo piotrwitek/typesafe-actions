@@ -1,7 +1,6 @@
+import { Todo } from 'MyModels';
 import cuid from 'cuid';
 import { createStandardAction, createAsyncAction } from 'typesafe-actions';
-
-import { Todo } from './models';
 
 export const addTodo = createStandardAction('ADD_TODO').map(
   ({ title }: { title: string }): { payload: Todo } => ({

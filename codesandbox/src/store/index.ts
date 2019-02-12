@@ -1,21 +1,19 @@
-import { RootAction, RootState, RootService } from 'MyTypes';
-import { createStore, applyMiddleware, compose } from 'redux';
+import { RootAction, RootState, Services } from 'MyTypes';
+import { createStore, applyMiddleware } from 'redux';
 import { createEpicMiddleware } from 'redux-observable';
 
+import { composeEnhancers } from './utils';
 import rootReducer from './root-reducer';
 import rootEpic from './root-epic';
-import rootService from './root-service';
-
-const composeEnhancers =
-  (window && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
+import services from '../services';
 
 export const epicMiddleware = createEpicMiddleware<
   RootAction,
   RootAction,
   RootState,
-  RootService
+  Services
 >({
-  dependencies: rootService,
+  dependencies: services,
 });
 
 // configure middlewares

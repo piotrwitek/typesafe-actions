@@ -30,12 +30,5 @@
     "sourceMap": true
   },
   "include": ["src/**/*", "typings/*"],
-  "exclude": [
-    "node_modules",
-    "src/**/*.spec.*",
-    "build",
-    "scripts",
-    "webpack",
-    "src/setupTests.ts"
-  ]
+  "exclude": ["src/**/*.spec.*"]
 }

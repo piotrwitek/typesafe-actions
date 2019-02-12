@@ -19,7 +19,7 @@ and **complexity** (explained in [motivation](#motivation)).
 
 > :book: _This lib is an integral part of [React & Redux TypeScript Guide](https://github.com/piotrwitek/react-redux-typescript-guide)_ :book:  
 
-> :computer: _Reference implementation of Todo-App with `typesafe-actions` on [CodeSandbox](https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/examples/starter)_ :computer:  
+> :computer: _Reference implementation of Todo-App with `typesafe-actions` on [CodeSandbox](https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/codesandbox)_ :computer:  
 
 > :tada: _Now updated to be compatible with **TypeScript v3.2.2**_ :tada:  
 
@@ -30,7 +30,7 @@ and **complexity** (explained in [motivation](#motivation)).
 * __focus on quality__ - complete test-suite for an entire API surface with runtime tests and extra type-tests to guarantee **type soundness**
 
 ## Bug Report CodeSandbox
-You can use this CodeSandbox to reproduce bug reports: https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/examples/starter
+You can use this CodeSandbox to reproduce bug reports: https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/codesandbox
 
 ## Contributing Guide
 We are open for contributions. If you're planning to contribute please make sure to read the contributing guide: [CONTRIBUTING.md](/CONTRIBUTING.md)

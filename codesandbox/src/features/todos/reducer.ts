@@ -1,8 +1,8 @@
 import { RootAction } from 'MyTypes';
+import { Todo } from 'MyModels';
 import { combineReducers } from 'redux';
 import { getType } from 'typesafe-actions';
 
-import { Todo } from './models';
 import * as actions from './actions';
 
 export type SandboxState = Readonly<{

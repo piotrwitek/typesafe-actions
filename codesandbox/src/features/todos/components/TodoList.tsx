@@ -8,8 +8,8 @@ import { removeTodo } from '../actions';
 import TodoListItem from './TodoListItem';
 
 const mapStateToProps = (state: RootState) => ({
-  isLoading: state.sandbox.isLoadingTodos,
-  todos: selectors.getTodos(state.sandbox),
+  isLoading: state.todos.isLoadingTodos,
+  todos: selectors.getTodos(state.todos),
 });
 const dispatchProps = {
   removeTodo,

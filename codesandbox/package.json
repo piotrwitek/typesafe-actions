@@ -1,6 +1,6 @@
 {
-  "name": "typesafe-actions-bug-report-sandbox",
-  "description": "Typesafe-Actions Bug Report Sandbox",
+  "name": "typesafe-actions-reference-project",
+  "description": "Typesafe-Actions Reference Project",
   "version": "0.1.0",
   "private": true,
   "author": "Piotr Witek <piotrek.witek@gmail.com> (http://piotrwitek.github.io/)",
