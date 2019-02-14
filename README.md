@@ -299,16 +299,19 @@ function* addTodoSaga(action: ReturnType<typeof fetchTodos.request>): Generator 
 
 [⇧ back to top](#table-of-contents)
 
-### - The Side-Effects
-> Starring `redux-observable` epics
+### - The Action-Helpers
 
-To showcase handling of various side-effects in our application we'll implement an `epic` responsible of showing a notification when the user adds a new todo.
-In the **async-flow** section above we have already seen the usage of the `isActionOf` function. We used it to help us filter actions coming from the source stream using **action-creators** as an argument. It's also a **type-guard** so it'll narrow **tagged union type** of all actions (here we're using `RootAction`) to a specific action down the pipe in epics.
+I wan't to show you why **action-helpers** was created and why they are useful, so let me guide you trough simple use-case. We're going to implement a side-effect responsible for showing a notification when the user adds a new todo.
+
+#### with action-creators
+
+When you're using only **action-creators** (no type-constants) there is a (`isActionOf`) helper that will accept action-creator as parameter. It is used to filter actions that was created with matching creator. This helper is working like a **type-guard** so it'll narrow **tagged union type** (`RootAction`) containing all the action types to a single specific action type.
+
 ```ts
 // epics.ts
 import { isActionOf } from 'typesafe-actions';
 
-import { add, toggle } from './actions';
+import { add } from './actions';
 
 const addTodoToast: Epic<RootAction, RootAction, RootState, Services> = (action$, store, { toastService }) =>
   action$.pipe(
@@ -317,16 +320,15 @@ const addTodoToast: Epic<RootAction, RootAction, RootState, Services> = (action$
       toastService.success(...);
     })
     ...
-```
-
-> **PRO-TIP:** It also works with multiple actions as an array argument
-```ts
+    
+  // Works with multiple actions! (with type-safety up to 5)
   action$.pipe(
     filter(isActionOf([add, toggle])) // here action type is narrowed to a smaller union:
     // { type: "todos/ADD"; payload: Todo; } | { type: "todos/TOGGLE"; payload: string; }
 ```
 
-**ALTERNATIVE:** If your team prefers to use **type-constants**, I still got you covered! We have an equivalent `isOfType` function that will work with **type-constants** instead of action-creators.
+#### with type-constants
+Alternatively if your team prefers to use **type-constants**, we have an equivalent helper (`isOfType`) which will accept **type-constants** instead of action-creators and have exact same behavior.
 ```ts
 // epics.ts
 import { isOfType } from 'typesafe-actions';
@@ -338,9 +340,14 @@ const addTodoToast: Epic<RootAction, RootAction, RootState, Services> = (action$
     filter(isTypeOf(ADD)),
     tap(action => { // here action type is narrowed to: { type: "todos/ADD"; payload: Todo; }
     ...
+    
+  // Works with multiple actions! (with type-safety up to 5)
+  action$.pipe(
+    filter(isTypeOf([ADD, TOGGLE])) // here action type is narrowed to a smaller union:
+    // { type: "todos/ADD"; payload: Todo; } | { type: "todos/TOGGLE"; payload: string; }
 ```
 
-> **PRO-TIP:** Both helpers above prove useful in all conditional statements
+> **PRO-TIP:** Both helpers above prove useful in all types of conditional statements.
 ```ts
 import { isActionOf, isOfType } from 'typesafe-actions';
 
@@ -352,8 +359,6 @@ if (isOfType(types.ADD, action)) {
   // here action is narrowed to: { type: "todos/ADD"; payload: Todo; }
 }
 ```
-
-> _PS: If you're wondering what the `Services` type is in the epics signature and how to declare it in your application to easily inject statically typed API clients to your epics also ensuring for easy mocking while testing resulting in clean architecture, please create an issue for it and perhaps I'll find some time in the future to write an article about it._
 
 [⇧ back to top](#table-of-contents)
 
