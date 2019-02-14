@@ -239,7 +239,8 @@ export type RootAction =
 [⇧ back to top](#table-of-contents)
 
 ### - The Async-Flow
-> Starring `redux-observable` epics
+
+#### Starring `redux-observable` epics
 
 To handle async-flow of request to a remote resources, we'll implement an `epic`. The `epic` will call a remote API using an injected `todosApi` client and then return a Promise.
 To help us simplify the creation process of necessary action-creators, we'll use `createAsyncAction` function providing us with a nice common interface `{ request: ... , success: ... , failure: ... }` that will nicely fit with the functional API of `RxJS`.
@@ -253,7 +254,7 @@ const fetchTodos = createAsyncAction(
   'FETCH_TODOS_REQUEST',
   'FETCH_TODOS_SUCCESS',
   'FETCH_TODOS_FAILURE'
-)<void, Todo[], Error>();
+)<string, Todo[], Error>();
 
 // epics.ts
 import { fetchTodos } from './actions';
@@ -262,11 +263,38 @@ const fetchTodosFlow: Epic<RootAction, RootAction, RootState, Services> = (actio
   action$.pipe(
     filter(isActionOf(fetchTodos.request)),
     switchMap(action =>
-      from(todosApi.getAll(...)).pipe(
+      from(todosApi.getAll(action.payload)).pipe(
         map(fetchTodos.success),
         catchError(pipe(fetchTodos.failure, of))
       )
     );
+```
+
+#### Starring `redux-saga` sagas
+With sagas it's not possible to achieve the same degree of type-safety as with epics because of limitations coming from `redux-saga` API design.
+
+Typescript issues:
+- [Typescript does not currently infer types resulting from a `yield` statement](https://github.com/Microsoft/TypeScript/issues/2983) so you have to manually assert the type  e.g. `const response: Todo[] = yield call(...`
+
+*Here is the latest recommendation although it's not fully optimal. If you cooked something better, please open an issue so we can share it with the world.*
+
+```ts
+import { createAsyncAction } from 'typesafe-actions';
+
+const fetchTodos = createAsyncAction(
+  'FETCH_TODOS_REQUEST',
+  'FETCH_TODOS_SUCCESS',
+  'FETCH_TODOS_FAILURE'
+)<string, Todo[], Error>();
+
+function* addTodoSaga(action: ReturnType<typeof fetchTodos.request>): Generator {
+    const response: Todo[] = yield call(todosApi.getAll, action.payload);
+
+    yield put(fetchTodos.success(response));
+  } catch (err) {
+    yield put(fetchTodos.failure(err));
+  }
+}
 ```
 
 [⇧ back to top](#table-of-contents)
