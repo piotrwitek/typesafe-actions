@@ -434,32 +434,15 @@ export type RootState = StateType<typeof rootReducer>;
 
 #### createAction
 
-_Create an enhanced action-creator so it can work with **action-helpers**._
+_Create an enhanced action-creator with unlimited number of arguments._
+- Arguments of resulting action-creator will preserve their original semantic names `(id, firstName, lastName)`.
+- Returned action objects have predefined properties `({ payload, meta })`
 
 ```ts
-TODO
 createAction(type)
-// createAction('INCREMENT');
-
-createAction(type, executor): (...args) => { type: T, payload: P };
-const executor = (resolve) => (...args) => resolve(payload: P)
-// createAction('ADD', resolve => {
-//   return (amount: number) => resolve(amount);
-// });
-
-// type with meta
-function createAction(type: T, executor): (...args) => { type: T, meta: M };
-const executor = (resolve) => (...args) => resolve(payload: undefined, meta: M)
-// createAction('ADD', resolve => {
-//   return (meta: string) => resolve(undefined, meta);
-// });
-
-// type with payload and meta
-function createAction(type: T, executor): (...args) => { type: T, payload: P, meta: M };
-const executor = (resolve) => (...args) => resolve(payload: P, meta: M)
-// createAction('GET_TODO', resolve => {
-//   return (id: string, meta: string) => resolve(id, meta);
-// });
+createAction(type, actionCallback => {
+  return (namedArg1, namedArg2, ...namedArgN) => actionCallback(payload?, meta?)
+})
 ```
 
 Examples:
@@ -468,31 +451,28 @@ Examples:
 ```ts
 import { createAction } from 'typesafe-actions';
 
-// type only
+// Using action callback
+// - with type only
 const increment = createAction('INCREMENT');
-expect(increment())
-  .toEqual({ type: 'INCREMENT' });
+increment(); // { type: 'INCREMENT' };
 
-// type with payload
-const add = createAction('ADD', resolve => {
-  return (amount: number) => resolve(amount);
+// - with type and payload
+const add = createAction('ADD', action => {
+  return (amount: number) => action(amount);
 });
-expect(add(10))
-  .toEqual({ type: 'ADD', payload: 10 });
+add(10); // { type: 'ADD', payload: number }
 
-// type with meta
-const getTodos = createAction('GET_TODOS', resolve => {
-  return (meta: string) => resolve(undefined, meta);
+// - with type and meta
+const getTodos = createAction('GET_TODOS', action => {
+  return (params: Params) => action(undefined, params);
 });
-expect(getTodos('some_meta'))
-  .toEqual({ type: 'GET_TODOS', meta: 'some_meta' });
+getTodos('some_meta'); // { type: 'GET_TODOS', meta: Params }
 
-// type with payload and meta
-const getTodo = createAction('GET_TODO', resolve => {
-  return (id: string, meta: string) => resolve(id, meta);
+// - and finally with type, payload and meta
+const getTodo = createAction('GET_TODO', action => {
+  return (id: string, meta: string) => action(id, meta);
 });
-expect(getTodo('some_id', 'some_meta'))
-  .toEqual({ type: 'GET_TODO', payload: 'some_id', meta: 'some_meta' });
+getTodo('some_id', 'some_meta'); // { type: 'GET_TODO', payload: string, meta: string }
 ```
 
 [⇧ back to top](#table-of-contents)
@@ -502,6 +482,15 @@ expect(getTodo('some_id', 'some_meta'))
 #### createStandardAction
 
 _Create an enhanced action-creator compatible with [Flux Standard Action](https://github.com/redux-utilities/flux-standard-action) to reduce boilerplate and enforce convention._
+- Arguments of resulting action-creator are predefined `(payload, meta)`
+- Returned action objects have predefined properties `({ payload, meta })`
+- But it also contains a `.map()` method that allow to map `(payload, meta)` arguments to a custom action object `({ customProp1, customProp2, ...customPropN })`
+
+```ts
+createStandardAction(type)()
+createStandardAction(type)<TPayload | void, TMeta?>()
+createStandardAction(type).map((payload, meta) => ({ customProp1, customProp2, ...customPropN }))
+```
 
 Examples:
 [> Advanced Usage Examples](src/create-standard-action.spec.ts)
@@ -509,32 +498,36 @@ Examples:
 ```ts
 import { createStandardAction } from 'typesafe-actions';
 
-// createStandardAction(type)<T>()
+// Very concise with use of generic type arguments
+// - with type only
+const increment = createStandardAction('INCREMENT')();
+const increment = createStandardAction('INCREMENT')<void>();
+increment(); // { type: 'INCREMENT' }
 
-const increment = createStandardAction('INCREMENT')<void>()
-increment() // { type: 'INCREMENT' }
+// - with type and payload
+const add = createStandardAction('ADD')<number>();
+add(10); // { type: 'INCREMENT', payload: number }
 
-const add = createStandardAction('ADD')<number>()
-add(10) // { type: 'INCREMENT', payload: number }
+// - with type and meta
+const getData = createStandardAction('GET_DATA')<void, string>();
+getData(undefined, 'meta'); // { type: 'INCREMENT', meta: string }
 
-// createStandardAction(type, meta)<T, M>()
+// - and finally with type, payload and meta
+const getData = createStandardAction('GET_DATA')<number, string>();
+getData(1, 'meta'); // { type: 'INCREMENT', payload: number, meta: string }
 
-const getData = createStandardAction('GET_DATA')<void, string>()
-getData(undefined, 'meta') // { type: 'INCREMENT', meta: string }
-
-const getData = createStandardAction('GET_DATA')<number, string>()
-getData(1, 'meta') // { type: 'INCREMENT', payload: number, meta: string }
-
-// createStandardAction(type).map((payload, meta) => ({ payload, meta }))
-
+// Can map payload and meta arguments to a custom action object
 const notify = createStandardAction('NOTIFY').map(
-  ({ username, message }}: Notification) => ({
-    payload: `${username}: ${message || ''}`,
-    meta: { username, message },
+  (payload: string, meta: Meta) => ({
+    from: meta.username,
+    message: `${username}: ${payload}`,
+    messageType: meta.type,
+    datetime: new Date(),
   })
-)
-notify({ username: 'Piotr', message: 'Hello!' })
-// { type: 'NOTIFY', payload: string, meta: Notification }
+);
+
+notify('Hello!', { username: 'Piotr', type: 'announcement' });
+// { type: 'NOTIFY', from: string, message: string, messageType: MessageType, datetime: Date }
 ```
 
 [⇧ back to top](#table-of-contents)
@@ -543,12 +536,14 @@ notify({ username: 'Piotr', message: 'Hello!' })
 
 #### createCustomAction
 
-_Create an enhanced action-creator with custom properties on action object._
+_Create an enhanced action-creator with unlimited number of arguments and custom properties on action object._
+- Arguments of resulting action-creator will preserve their original semantic names `(id, firstName, lastName)`.
+- Returned action objects have custom properties `({ type, customProp1, customProp2, ...customPropN })`
 
 ```ts
 createCustomAction(type, type => {
-  return (arg1, arg2, ...argN) => ({ type, arg1, arg2, ...argN });
-});
+  return (namedArg1, namedArg2, ...namedArgN) => ({ type, customProp1, customProp2, ...customPropN })
+})
 ```
 
 Examples:
@@ -558,10 +553,10 @@ Examples:
 import { createCustomAction } from 'typesafe-actions';
 
 const add = createCustomAction('CUSTOM', type => {
-  return (amount1: number, amount2: number) => ({ type, amount1, amount2 });
+  return (first: number, second: number) => ({ type, customProp1: first, customProp2: second });
 });
 
-add(1) // { type: "CUSTOM"; amount1: number; amount2: number; }
+add(1) // { type: "CUSTOM"; customProp1: number; customProp2: number; }
 ```
 
 [⇧ back to top](#table-of-contents)
@@ -603,7 +598,7 @@ fetchUsers.failure(err);
 
 #### getType
 
-_Get the **type** property value (narrowed to literal type) of a given enhanced action-creator._
+_Get the **type** property value (narrowed to literal type) of given enhanced action-creator._
 
 ```ts
 getType(actionCreator)
@@ -613,15 +608,23 @@ getType(actionCreator)
 
 Examples:
 ```ts
-const increment = createAction('INCREMENT');
+import { getType, createStandardAction } from 'typesafe-actions';
 
-// in reducer
+const add = createStandardAction('ADD')<number>();
+
+// In switch reducer
 switch (action.type) {
-  case getType(increment):
-    return state + 1;
+  case getType(add):
+    // action type is { type: "ADD"; payload: number; }
+    return state + action.payload;
 
   default:
     return state;
+}
+
+// or with conditional statements
+if (action.type === getType(add)) {
+  // action type is { type: "ADD"; payload: number; }
 }
 ```
 
@@ -631,8 +634,8 @@ switch (action.type) {
 
 #### isActionOf
 
-> (curried assert function) check if action is an instance of given enhanced action-creator(s)
-> it will narrow actions union to a specific action
+_Check if action is an instance of given enhanced action-creator(s)
+(it will narrow action type to a type of given action-creator(s))_
 
 
 **NOTE**: ActionCreator type is generated from the `createAction` API. Simple [action](#action) creators throw a `RuntimeError`
@@ -652,28 +655,33 @@ Examples:
 [> Advanced Usage Examples](src/is-action-of.spec.ts)
 
 ```ts
-import { addTodo } from './todos-actions';
+import { addTodo, removeTodo } from './todos-actions';
 
-const addTodoToast: Epic<RootAction, RootAction, RootState> =
-  (action$, store) => action$
-    .filter(isActionOf(addTodo))
-    .concatMap((action) => { // action is asserted as: { type: "ADD_TODO"; payload: string; }
-      const toast = `Added new todo: ${action.payload}`;
-
-// epics with multiple actions
-import { addTodo, toggleTodo } from './todos-actions';
-
-const logTodoAction: Epic<RootAction, RootAction, RootState> =
-  (action$, store) => action$
-    .filter(isActionOf([addTodo, toggleTodo]))
-    .concatMap((action) => { // action is asserted as: { type: "ADD_TODO"; payload: string; } | { type: "TOGGLE_TODO"; payload: string; }
-      const log = `Dispatched action: ${action.type}`;
-
-// conditionals where you need a type guard
-import { addTodo } from './actions';
-
+// Works with any filter type function (`Array.prototype.filter`, lodash, ramda, rxjs, etc.)
+// - single action
+[action1, action2, ...actionN]
+  .filter(isActionOf(addTodo)) // only actions with type `ADD` will pass
+  .map((action) => {
+    // action type is { type: "todos/ADD"; payload: Todo; }
+    ...
+    
+// - multiple actions
+[action1, action2, ...actionN]
+  .filter(isActionOf([addTodo, removeTodo])) // only actions with type `ADD` or 'REMOVE' will pass
+  .do((action) => {
+    // action type is { type: "todos/ADD"; payload: Todo; } | { type: "todos/REMOVE"; payload: Todo; }
+    ...
+      
+// With conditional statements
+// - single action
 if(isActionOf(addTodo, action)) {
-  operationThatNeedsPayload(action.payload) // action is asserted as: { type: "ADD_TODO"; payload: string; }
+  return iAcceptOnlyTodoType(action.payload);
+  // action type is { type: "todos/ADD"; payload: Todo; }
+}
+// - multiple actions
+if(isActionOf([addTodo, removeTodo], action)) {
+  return iAcceptOnlyTodoType(action.payload);
+  // action type is { type: "todos/ADD"; payload: Todo; } | { type: "todos/REMOVE"; payload: Todo; }
 }
 ```
 
@@ -683,8 +691,8 @@ if(isActionOf(addTodo, action)) {
 
 #### isOfType
 
-> (curried assert function) check if action type is equal given type-constant
-> it will narrow actions union to a specific action
+_Check if action type property is equal given type-constant(s)
+(it will narrow action type to a type of given action-creator(s))_
 
 ```ts
 // can be used as a binary function
@@ -701,38 +709,33 @@ Examples:
 [> Advanced Usage Examples](src/is-of-type.spec.ts)
 
 ```ts
-import { ADD } from './todos-types';
-
-const addTodoToast: Epic<RootAction, RootAction, RootState, Services> =
-  (action$, store, { toastService }) => action$
-    .filter(isOfType(ADD))
-    .do((action) => {
-      // action is narrowed as: { type: "todos/ADD"; payload: Todo; }
-      toastService.success(`Added new todo: ${action.payload}`);
-    })
-    .ignoreElements();
-// Filter against array of actions
 import { ADD, REMOVE } from './todos-types';
 
-const addOrRemove: Epic<RootAction, RootState, Services> =
-  (action$, store, { toastService }) => action$
-    .filter(isOfType([ADD, REMOVE]))
-    .do((action) => {
-      // action is narrowed as: { type: "todos/ADD"; payload: Todo; } | { type: "todos/REMOVE"; payload: Todo; }
-      toastService.update(action.payload);
-    })
-    .ignoreElements();
-
-// conditionals where you need a type guard
-import { ADD } from './todos-types';
-
+// Works with any filter type function (`Array.prototype.filter`, lodash, ramda, rxjs, etc.)
+// - single action
+[action1, action2, ...actionN]
+  .filter(isOfType(ADD)) // only actions with type `ADD` will pass
+  .map((action) => {
+    // action type is { type: "todos/ADD"; payload: Todo; }
+    ...
+    
+// - multiple actions
+[action1, action2, ...actionN]
+  .filter(isOfType([ADD, REMOVE])) // only actions with type `ADD` or 'REMOVE' will pass
+  .do((action) => {
+    // action type is { type: "todos/ADD"; payload: Todo; } | { type: "todos/REMOVE"; payload: Todo; }
+    ...
+      
+// With conditional statements
+// - single action
 if(isOfType(ADD, action)) {
-  return functionThatAcceptsTodo(action.payload) // action: { type: "todos/ADD"; payload: Todo; }
+  return iAcceptOnlyTodoType(action.payload);
+  // action type is { type: "todos/ADD"; payload: Todo; }
 }
-// or
-
+// - multiple actions
 if(isOfType([ADD, REMOVE], action)) {
-  return functionThatAcceptsTodo(action.payload) // action:  { type: "todos/ADD"; payload: Todo; } | { type: "todos/REMOVE"; payload: Todo; }
+  return iAcceptOnlyTodoType(action.payload);
+  // action type is { type: "todos/ADD"; payload: Todo; } | { type: "todos/REMOVE"; payload: Todo; }
 }
 
 ```
