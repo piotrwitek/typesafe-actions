@@ -1,18 +1,18 @@
 import * as Types from './types';
-import { createActionWithType } from './create-action-with-type';
+import { createCustomAction } from './create-custom-action';
 
-describe('createActionWithType', () => {
+describe('createCustomAction', () => {
   it('with type only using symbol', () => {
     const INCREMENT = Symbol(1);
-    const increment = createActionWithType(INCREMENT, type => () => ({ type }));
+    const increment = createCustomAction(INCREMENT, type => () => ({ type }));
     const actual = increment();
-    // @dts-jest:pass:snap
+    // @dts-jest:pass:snap -> { type: unique symbol; }
     actual;
     expect(actual).toEqual({ type: INCREMENT });
   });
 
   it('with type only', () => {
-    const increment = createActionWithType('WITH_TYPE_ONLY');
+    const increment = createCustomAction('WITH_TYPE_ONLY');
     const actual: {
       type: 'WITH_TYPE_ONLY';
     } = increment();
@@ -20,7 +20,7 @@ describe('createActionWithType', () => {
   });
 
   it('with payload', () => {
-    const add = createActionWithType('WITH_PAYLOAD', type => {
+    const add = createCustomAction('WITH_PAYLOAD', type => {
       return (amount: number) => ({ type, payload: amount });
     });
     const actual: {
@@ -31,7 +31,7 @@ describe('createActionWithType', () => {
   });
 
   it('with optional payload', () => {
-    const create = createActionWithType('WITH_OPTIONAL_PAYLOAD', type => {
+    const create = createCustomAction('WITH_OPTIONAL_PAYLOAD', type => {
       return (id?: number) => ({ type, payload: id });
     });
     const actual1: {
@@ -50,7 +50,7 @@ describe('createActionWithType', () => {
   });
 
   it('with payload and meta', () => {
-    const showNotification = createActionWithType(
+    const showNotification = createCustomAction(
       'SHOW_NOTIFICATION',
       type => (message: string, scope: string) => ({
         type,
