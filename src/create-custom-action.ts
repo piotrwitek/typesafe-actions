@@ -3,7 +3,7 @@ import { ActionCreator, StringOrSymbol } from './types';
 /**
  * @description create custom action-creator using constructor function with injected type argument
  */
-export function createActionWithType<
+export function createCustomAction<
   T extends StringOrSymbol,
   AC extends ActionCreator<T> = () => { type: T }
 >(type: T, actionCreatorHandler?: (type: T) => AC): AC {

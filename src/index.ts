@@ -9,6 +9,7 @@
 export { action } from './action';
 export { createAction } from './create-action';
 export { createStandardAction } from './create-standard-action';
+export { createCustomAction } from './create-custom-action';
 export { createAsyncAction } from './create-async-action';
 // guards
 export { ActionType, StateType } from './types';
