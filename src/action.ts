@@ -4,6 +4,12 @@ import {
   PayloadAction,
   PayloadMetaAction,
 } from './types';
+import {
+  checkIsEmpty,
+  throwIsEmpty,
+  checkInvalidActionType,
+  throwInvalidActionCreator,
+} from './utils/validation';
 
 export function action<T extends StringType>(type: T): EmptyAction<T>;
 
@@ -30,5 +36,13 @@ export function action<T extends StringType, P = undefined, M = undefined>(
   payload?: P,
   meta?: M
 ) {
+  if (checkIsEmpty(type)) {
+    throwIsEmpty(1);
+  }
+
+  if (checkInvalidActionType(type)) {
+    throwInvalidActionCreator(1);
+  }
+
   return { type, payload, meta } as any;
 }

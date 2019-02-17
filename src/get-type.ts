@@ -1,18 +1,24 @@
 import { StringType, ActionCreator, TypeMeta } from './types';
+import {
+  checkIsEmpty,
+  throwIsEmpty,
+  checkInvalidActionCreator,
+  throwInvalidActionCreator,
+} from './utils/validation';
 
 /**
  * @description get the "type literal" of a given action-creator
  */
 export function getType<T extends StringType>(
-  creator: ActionCreator<T> & TypeMeta<T>
+  actionCreator: ActionCreator<T> & TypeMeta<T>
 ): T {
-  if (creator == null) {
-    throw new Error('first argument is missing');
+  if (checkIsEmpty(actionCreator)) {
+    throwIsEmpty(1);
   }
 
-  if (creator.getType == null) {
-    throw new Error('first argument is not an instance of "typesafe-actions"');
+  if (checkInvalidActionCreator(actionCreator)) {
+    throwInvalidActionCreator(1);
   }
 
-  return creator.getType();
+  return actionCreator.getType!();
 }

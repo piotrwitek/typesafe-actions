@@ -56,7 +56,7 @@ export function createAsyncAction<
   failureType: T3
 ): CreateAsyncAction<T1, T2, T3> {
   [requestType, successType, failureType].forEach((arg, idx) => {
-    validateActionType(arg, idx + 1);
+    validateIsActionType(arg, idx + 1);
   });
 
   function constructor<P1, P2, P3>(): AsyncActionBuilder<

@@ -2,7 +2,10 @@
   "verbose": true,
   "testEnvironment": "node",
   "moduleFileExtensions": ["js", "jsx", "ts", "tsx", "json"],
-  "testMatch": ["<rootDir>/src/?(*.)+(spec|test).ts?(x)"],
+  "testMatch": [
+    "<rootDir>/src/?(*.)+(spec|test).ts?(x)",
+    "<rootDir>/src/utils/?(*.)+(spec|test).ts?(x)"
+  ],
   "transform": {
     ".(ts|tsx)": "ts-jest"
   },

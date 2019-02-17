@@ -15,7 +15,7 @@ export interface CreateStandardAction<T extends StringType> {
 export function createStandardAction<T extends StringType>(
   actionType: T
 ): CreateStandardAction<T> {
-  validateActionType(actionType);
+  validateIsActionType(actionType);
 
   function constructor<P, M = void>(): FsaBuilder<T, Box<P>, Box<M>> {
     return createCustomAction(actionType, type => (payload: P, meta: M) => ({

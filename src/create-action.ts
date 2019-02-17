@@ -1,5 +1,5 @@
 import { StringType, ActionCreator } from './types';
-import { validateActionType } from './utils/utils';
+import { checkIsEmpty, throwIsEmpty } from './utils/validation';
 import { action } from './action';
 
 export type PayloadMetaAction<T extends StringType, P, M> = P extends undefined
@@ -25,7 +25,9 @@ export function createAction<
     ) => PayloadMetaAction<T, P, M>
   ) => AC
 ): AC {
-  validateActionType(actionType);
+  if (checkIsEmpty(actionType)) {
+    throwIsEmpty(1);
+  }
 
   const actionCreator: AC =
     actionResolverHandler == null
