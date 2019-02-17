@@ -1,3 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`actual 1`] = `"Types.EmptyAction<\\"SHOW_NOTIFICATION\\">"`;
+exports[`showNotification('Hello!') 1`] = `"{ type: \\"SHOW_NOTIFICATION\\"; payload: string; }"`;
+
+exports[`showNotification('Hello!') 2`] = `"{ type: \\"SHOW_NOTIFICATION\\"; payload: string; meta: string | undefined; }"`;
+
+exports[`showNotification('Hello!', 'info') 1`] = `"{ type: \\"SHOW_NOTIFICATION\\"; payload: string; meta: string; }"`;
+
+exports[`showNotification('info') 1`] = `"{ type: \\"SHOW_NOTIFICATION\\"; meta: string; }"`;
+
+exports[`showNotification('info') 2`] = `"{ type: \\"SHOW_NOTIFICATION\\"; payload: string | undefined; meta: string; }"`;
+
+exports[`showNotification() 1`] = `"{ type: \\"SHOW_NOTIFICATION\\"; }"`;
+
+exports[`showNotification() 2`] = `"{ type: \\"SHOW_NOTIFICATION\\"; payload: string | undefined; }"`;
+
+exports[`showNotification() 3`] = `"{ type: \\"SHOW_NOTIFICATION\\"; meta: string | undefined; }"`;
+
+exports[`showNotification() 4`] = `"{ type: \\"SHOW_NOTIFICATION\\"; payload: string | undefined; meta: string | undefined; }"`;
+
+exports[`withSymbol() 1`] = `"{ type: any; }"`;

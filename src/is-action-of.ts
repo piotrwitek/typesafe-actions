@@ -1,6 +1,6 @@
 import { TypeMeta } from './types';
 import {
-  validateArrayHasOnlyActionCreators,
+  checkInvalidActionCreatorInArray,
   checkIsEmpty,
   throwIsEmpty,
 } from './utils/validation';
@@ -27,10 +27,12 @@ export function isActionOf<AC extends ActionCreator<{ type: string }>>(
   actionCreator: AC | AC[]
 ): (action: { type: string }) => action is ReturnType<AC>;
 
-/** implementation */
+/**
+ * implementation
+ */
 export function isActionOf<AC extends ActionCreator<{ type: string }>>(
-  creatorOrCreators: AC | AC[],
-  actionOrNil?: { type: string }
+  actionCreatorOrCreators: AC | AC[],
+  action?: { type: string }
 ) {
   if (checkIsEmpty(actionCreatorOrCreators)) {
     throwIsEmpty(1);
@@ -40,12 +42,9 @@ export function isActionOf<AC extends ActionCreator<{ type: string }>>(
     ? actionCreatorOrCreators
     : [actionCreatorOrCreators];
 
-  const assertFn = (action: { type: string }) => {
-    const actionCreators: any[] = Array.isArray(creatorOrCreators)
-      ? creatorOrCreators
-      : [creatorOrCreators];
+  actionCreators.forEach(checkInvalidActionCreatorInArray);
 
-  const assertFn = (_action: A) =>
+  const assertFn = (_action: { type: string }) =>
     actionCreators.some(
       actionCreator => _action.type === actionCreator.getType!()
     );

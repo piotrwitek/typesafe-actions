@@ -1,16 +1,28 @@
-import { ActionCreator, StringOrSymbol } from './types';
+import { ActionCreator, StringType } from './types';
+import {
+  checkIsEmpty,
+  throwIsEmpty,
+  checkInvalidActionType,
+  throwInvalidActionType,
+} from './utils/validation';
 
 /**
  * @description create custom action-creator using constructor function with injected type argument
  */
 export function createCustomAction<
-  T extends StringOrSymbol,
+  T extends StringType,
   AC extends ActionCreator<T> = () => { type: T }
->(type: T, actionCreatorHandler?: (type: T) => AC): AC {
+>(type: T, createHandler?: (type: T) => AC): AC {
+  if (checkIsEmpty(type)) {
+    throwIsEmpty(1);
+  }
+
+  if (checkInvalidActionType(type)) {
+    throwInvalidActionType(1);
+  }
+
   const actionCreator: AC =
-    actionCreatorHandler != null
-      ? actionCreatorHandler(type)
-      : ((() => ({ type })) as AC);
+    createHandler != null ? createHandler(type) : ((() => ({ type })) as AC);
 
   return Object.assign(actionCreator, {
     getType: () => type,

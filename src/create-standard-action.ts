@@ -1,6 +1,11 @@
 import { StringType, Box, FsaBuilder, FsaMapBuilder } from './types';
 import { createCustomAction } from './create-custom-action';
-import { validateActionType } from './utils/utils';
+import {
+  checkIsEmpty,
+  throwIsEmpty,
+  checkInvalidActionType,
+  throwInvalidActionType,
+} from './utils/validation';
 
 export interface CreateStandardAction<T extends StringType> {
   <P = void, M = void>(): FsaBuilder<T, Box<P>, Box<M>>;
@@ -13,13 +18,19 @@ export interface CreateStandardAction<T extends StringType> {
  * @description create an action-creator of a given function that contains hidden "type" metadata
  */
 export function createStandardAction<T extends StringType>(
-  actionType: T
+  type: T
 ): CreateStandardAction<T> {
-  validateIsActionType(actionType);
+  if (checkIsEmpty(type)) {
+    throwIsEmpty(1);
+  }
+
+  if (checkInvalidActionType(type)) {
+    throwInvalidActionType(1);
+  }
 
   function constructor<P, M = void>(): FsaBuilder<T, Box<P>, Box<M>> {
-    return createCustomAction(actionType, type => (payload: P, meta: M) => ({
-      type,
+    return createCustomAction(type, _type => (payload: P, meta: M) => ({
+      type: _type,
       payload,
       meta,
     })) as FsaBuilder<T, Box<P>, Box<M>>;
@@ -28,8 +39,8 @@ export function createStandardAction<T extends StringType>(
   function map<R, P, M>(
     fn: (payload: P, meta: M) => R
   ): FsaMapBuilder<T, Box<R>, Box<P>, Box<M>> {
-    return createCustomAction(actionType, type => (payload: P, meta: M) =>
-      Object.assign(fn(payload, meta), { type })
+    return createCustomAction(type, _type => (payload: P, meta: M) =>
+      Object.assign(fn(payload, meta), { type: _type })
     ) as FsaMapBuilder<T, Box<R>, Box<P>, Box<M>>;
   }
 

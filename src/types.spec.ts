@@ -4,7 +4,9 @@ import { isOfType } from './is-of-type';
 import { isActionOf } from './is-action-of';
 import { StateType, ActionType } from './types';
 
-import { types, actions, testType, User } from './utils/test-utils';
+import { testType } from './utils/test-utils';
+import { types } from './utils/type-fixtures';
+import { actions } from './utils/action-creator-fixtures';
 const {
   withTypeOnly,
   withPayload,
@@ -75,7 +77,7 @@ describe('ActionType', () => {
       case getType(asyncAction.success): {
         return testType<{
           type: 'FETCH_USER_SUCCESS';
-          payload: User;
+          payload: { firstName: string; lastName: string };
         }>(action);
       }
       case getType(asyncAction.failure): {

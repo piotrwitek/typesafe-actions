@@ -4,7 +4,9 @@ import { isOfType } from './is-of-type';
 import { isActionOf } from './is-action-of';
 import { StateType, ActionType } from './types';
 
-import { types, actions, testType, User } from './utils/test-utils';
+import { testType } from './utils/test-utils';
+import { types } from './utils/type-fixtures';
+import { actions } from './utils/action-creator-fixtures';
 const {
   withTypeOnly,
   withPayload,
@@ -33,7 +35,7 @@ describe('StateType', () => {
 });
 
 describe('ActionType', () => {
-  // @dts-jest:pass:snap -> Types.EmptyAction<"WITH_TYPE_ONLY"> | Types.EmptyAction<"VERY_DEEP_WITH_TYPE_ONLY"> | Types.PayloadAction<"WITH_PAYLOAD", number> | Types.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | Types.PayloadMetaAction<"WITH_META", void, string> | Types.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | Types.EmptyAction<"FETCH_USER_REQUEST"> | Types.PayloadAction<"FETCH_USER_SUCCESS", User> | Types.PayloadAction<"FETCH_USER_FAILURE", Error> | Types.EmptyAction<"SIMPLE_WITH_TYPE_ONLY"> | Types.PayloadAction<"SIMPLE_WITH_PAYLOAD", number> | Types.PayloadAction<"SIMPLE_WITH_OPTIONAL_PAYLOAD", number | undefined> | Types.PayloadMetaAction<"SIMPLE_WITH_META", undefined, string> | Types.PayloadMetaAction<"SIMPLE_WITH_PAYLOAD_META", number, string>
+  // @dts-jest:pass:snap -> Types.EmptyAction<"WITH_TYPE_ONLY"> | Types.EmptyAction<"VERY_DEEP_WITH_TYPE_ONLY"> | Types.PayloadAction<"WITH_PAYLOAD", number> | Types.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | Types.PayloadMetaAction<"WITH_META", void, string> | Types.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | Types.EmptyAction<"FETCH_USER_REQUEST"> | Types.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | Types.PayloadAction<"FETCH_USER_FAILURE", Error> | { type: "SIMPLE_WITH_TYPE_ONLY"; } | { type: "SIMPLE_WITH_PAYLOAD"; payload: number; } | { type: "SIMPLE_WITH_OPTIONAL_PAYLOAD"; payload: number | undefined; } | { type: "SIMPLE_WITH_META"; meta: string; } | { type: "SIMPLE_WITH_PAYLOAD_META"; payload: number; meta: string; }
   testType<ActionType<typeof actions>>();
   type RootAction = ActionType<typeof actions>;
 
@@ -75,7 +77,7 @@ describe('ActionType', () => {
       case getType(asyncAction.success): {
         return testType<{
           type: 'FETCH_USER_SUCCESS';
-          payload: User;
+          payload: { firstName: string; lastName: string };
         }>(action);
       }
       case getType(asyncAction.failure): {

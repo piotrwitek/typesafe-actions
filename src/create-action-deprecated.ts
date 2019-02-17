@@ -1,6 +1,10 @@
-import { StringOrSymbol } from './types';
+/**
+ * DEPRECATED
+ */
 
-export interface FSA<T extends StringOrSymbol, P = {}, M = {}, E = boolean> {
+import { StringType } from './types';
+
+interface FSA<T extends StringType, P = {}, M = {}, E = boolean> {
   type: T;
   payload?: P;
   meta?: M;
@@ -8,18 +12,20 @@ export interface FSA<T extends StringOrSymbol, P = {}, M = {}, E = boolean> {
 }
 
 /**
+ * @deprecated
  * @description create an action-creator of a given function that contains hidden "type" metadata
  */
 export function createActionDeprecated<
-  T extends StringOrSymbol,
+  T extends StringType,
   AC extends (...args: any[]) => FSA<T>
 >(actionType: T, creatorFunction: AC): AC;
 
 /**
+ * @deprecated
  * @description create an action-creator of a given function that contains hidden "type" metadata
  */
 export function createActionDeprecated<
-  T extends StringOrSymbol,
+  T extends StringType,
   AC extends () => { type: T }
 >(actionType: T): AC;
 
@@ -27,7 +33,7 @@ export function createActionDeprecated<
  *  implementation
  */
 export function createActionDeprecated<
-  T extends StringOrSymbol,
+  T extends StringType,
   AC extends (...args: any[]) => FSA<T>
 >(actionType: T, creatorFunction?: AC): AC {
   let actionCreator: AC;

@@ -7,7 +7,7 @@
  */
 export type ActionType<
   ActionCreatorOrMap
-> = ActionCreatorOrMap extends ActionCreator<StringOrSymbol>
+> = ActionCreatorOrMap extends ActionCreator<StringType>
   ? ReturnType<ActionCreatorOrMap>
   : ActionCreatorOrMap extends object
   ? ActionCreatorMap<ActionCreatorOrMap>[keyof ActionCreatorOrMap]
@@ -33,18 +33,6 @@ export type StateType<ReducerOrMap> = ReducerOrMap extends (
  * @desc Representing action-type of string
  */
 export type StringType = string;
-
-/**
- * @private
- * @desc Representing action-type of symbol
- */
-export type SymbolType = symbol;
-
-/**
- * @private
- * @desc Representing generic action-type
- */
-export type StringOrSymbol = StringType | SymbolType;
 
 /**
  * @private
@@ -145,17 +133,17 @@ export type FsaBuilder<
 /** @private */
 export type FsaMapBuilder<
   T extends StringType,
-  R extends Box<any>,
-  P extends Box<any> = Box<void>,
-  M extends Box<any> = Box<void>
-> = M extends Box<void>
-  ? P extends Box<void>
-    ? () => { type: T } & Unbox<R>
-    : (payload: Unbox<P>) => { type: T } & Unbox<R>
-  : (payload: Unbox<P>, meta: Unbox<M>) => { type: T } & Unbox<R>;
+  Result extends Box<any>,
+  PArg extends Box<any> = Box<void>,
+  MArg extends Box<any> = Box<void>
+> = MArg extends Box<void>
+  ? PArg extends Box<void>
+    ? () => { type: T } & Unbox<Result>
+    : (payload: Unbox<PArg>) => { type: T } & Unbox<Result>
+  : (payload: Unbox<PArg>, meta: Unbox<MArg>) => { type: T } & Unbox<Result>;
 
 /** @private */
-export type ActionCreator<T extends StringOrSymbol> = (
+export type ActionCreator<T extends StringType> = (
   ...args: any[]
 ) => { type: T };
 

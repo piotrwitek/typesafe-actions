@@ -1,6 +1,7 @@
 import * as Types from './types';
 import { isOfType } from './is-of-type';
-import { types, actions } from './utils/test-utils';
+import { actions } from './utils/action-creator-fixtures';
+import { types } from './utils/type-fixtures';
 const {
   withTypeOnly,
   withPayload,

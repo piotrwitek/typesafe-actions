@@ -9,11 +9,21 @@
   },
   "globals": {
     "window": {},
+    "ts-jest": {
+      "tsConfig": "./tsconfig.json",
+      "diagnostics": {
+        "ignoreCodes": [5023]
+      }
+    },
     "_dts_jest_": {
-      "compiler_options": "./tsconfig.json",
+      "compiler_options": {
+        "module": "commonjs",
+        "strict": true,
+        "target": "es6"
+      },
       "enclosing_declaration": true,
-      "test_value": false,
-      "transpile": false
+      "test_value": true,
+      "transpile": true
     }
   },
   "reporters": ["default", "dts-jest/reporter"]

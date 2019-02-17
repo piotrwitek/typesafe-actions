@@ -1,5 +1,4 @@
 import { StringType, ActionCreator } from './types';
-import { checkIsEmpty, throwIsEmpty } from './utils/validation';
 import { action } from './action';
 
 export type PayloadMetaAction<T extends StringType, P, M> = P extends undefined
@@ -17,28 +16,26 @@ export function createAction<
   T extends StringType,
   AC extends ActionCreator<T> = () => { type: T }
 >(
-  actionType: T,
-  actionResolverHandler?: (
-    resolve: <P = undefined, M = undefined>(
+  type: T,
+  createHandler?: (
+    actionCallback: <P = undefined, M = undefined>(
       payload?: P,
       meta?: M
     ) => PayloadMetaAction<T, P, M>
   ) => AC
 ): AC {
-  if (checkIsEmpty(actionType)) {
-    throwIsEmpty(1);
-  }
+  // validation is already done in action function
 
   const actionCreator: AC =
-    actionResolverHandler == null
-      ? ((() => action(actionType)) as AC)
-      : actionResolverHandler(action.bind(null, actionType) as Parameters<
-          typeof actionResolverHandler
+    createHandler == null
+      ? ((() => action(type)) as AC)
+      : createHandler(action.bind(null, type) as Parameters<
+          typeof createHandler
         >[0]);
 
   return Object.assign(actionCreator, {
-    getType: () => actionType,
+    getType: () => type,
     // redux-actions compatibility
-    toString: () => actionType,
+    toString: () => type,
   });
 }

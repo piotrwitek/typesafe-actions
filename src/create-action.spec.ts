@@ -1,87 +1,84 @@
 import * as Types from './types';
 import { createAction } from './create-action';
-import { types } from './utils/test-utils';
+import { types } from './utils/type-fixtures';
 
-describe('createAction', () => {
-  it('toString', () => {
-    const action = createAction(types.WITH_TYPE_ONLY, resolve => {
-      return () => resolve();
-    });
-    expect(action.toString()).toBe('WITH_TYPE_ONLY');
-    // tslint:disable-next-line:triple-equals
-    expect((action as any) == 'WITH_TYPE_ONLY').toBe(true);
+it.skip('skip', () => undefined);
+
+describe('toString() method return a type', () => {
+  const actionCreator = createAction('TO_STRING');
+  // @dts-jest:pass:snap
+  actionCreator.toString(); // => 'TO_STRING'
+});
+
+describe('with symbol', () => {
+  const WITH_SYMBOL = Symbol(1);
+  const withSymbol = createAction(WITH_SYMBOL as any);
+  // @dts-jest:pass:snap
+  withSymbol(); // => { type: WITH_SYMBOL }
+});
+
+describe('with type only', () => {
+  const withTypeOnly = createAction(types.WITH_TYPE_ONLY);
+  // @dts-jest:pass:snap
+  withTypeOnly(); // => { "type": "WITH_TYPE_ONLY" }
+});
+
+describe('with payload', () => {
+  const withPayload = createAction(types.WITH_PAYLOAD, resolve => {
+    return (id: number) => resolve(id);
   });
+  // @dts-jest:pass:snap
+  withPayload(1); // => { type: 'WITH_PAYLOAD', payload: 1 }
+});
 
-  it('with type only - shorthand', () => {
-    const action = createAction(types.WITH_TYPE_ONLY);
-    const actual = action();
-    // @dts-jest:pass:snap
-    actual;
-    expect(actual).toEqual({ type: 'WITH_TYPE_ONLY' });
+// TODO: optionals could be solved with overloads
+describe('with optional payload', () => {
+  const withPayload = createAction(types.WITH_PAYLOAD, resolve => {
+    return (id?: number) => resolve(id);
   });
+  // @dts-jest:pass:snap
+  withPayload(); // => { type: 'WITH_PAYLOAD' }
+  // @dts-jest:pass:snap
+  withPayload(1); // => { type: 'WITH_PAYLOAD', payload: 1 }
+});
 
-  it('with type only', () => {
-    const action = createAction(types.WITH_TYPE_ONLY, resolve => {
-      return () => resolve();
-    });
-    const actual: { type: 'WITH_TYPE_ONLY' } = action();
-    expect(actual).toEqual({ type: 'WITH_TYPE_ONLY' });
+describe('with meta', () => {
+  const withMeta = createAction(types.WITH_META, resolve => {
+    return (token: string) => resolve(undefined, token);
   });
+  // @dts-jest:pass:snap
+  withMeta('token'); // => { type: 'WITH_META', meta: 'token' }
+});
 
-  it('with payload', () => {
-    const action = createAction(types.WITH_PAYLOAD, resolve => {
-      return (id: number) => resolve(id);
-    });
-    const actual: { type: 'WITH_PAYLOAD'; payload: number } = action(1);
-    expect(actual).toEqual({ type: 'WITH_PAYLOAD', payload: 1 });
+describe('with payload and meta', () => {
+  const withPayloadAndMeta = createAction(types.WITH_PAYLOAD_META, resolve => {
+    return (id: number, token: string) => resolve(id, token);
   });
+  // @dts-jest:pass:snap
+  withPayloadAndMeta(1, 'token'); // => { type: 'WITH_PAYLOAD_META', payload: 1, meta: 'token' }
+});
 
-  it('with meta', () => {
-    const action = createAction(types.WITH_META, resolve => {
-      return (token: string) => resolve(undefined, token);
-    });
-    const actual: { type: 'WITH_META'; meta: string } = action('token');
-    expect(actual).toEqual({ type: 'WITH_META', meta: 'token' });
-  });
+describe('with higher-order function', () => {
+  interface UserSettingsState {
+    settingA: string;
+    settingB: number;
+  }
 
-  it('with payload and meta', () => {
-    const action = createAction(types.WITH_PAYLOAD_META, resolve => {
-      return (id: number, token: string) => resolve(id, token);
-    });
-    const actual: {
-      type: 'WITH_PAYLOAD_META';
-      payload: number;
-      meta: string;
-    } = action(1, 'token');
-    expect(actual).toEqual({
-      type: 'WITH_PAYLOAD_META',
-      payload: 1,
-      meta: 'token',
-    });
-  });
+  const setUserSetting = <K extends keyof UserSettingsState>(
+    setting: K,
+    newValue: UserSettingsState[K]
+  ) =>
+    createAction('SET_USER_SETTING', resolve => () =>
+      resolve({ setting, newValue })
+    )();
 
-  it('with higher-order function', () => {
-    interface UserSettingsState {
-      settingA: string;
-      settingB: number;
-    }
+  // @dts-jest:pass:snap
+  setUserSetting('settingA', 'foo');
+  // @dts-jest:fail:snap
+  setUserSetting('settingA', 0); // Error as expected
 
-    const setUserSetting = <K extends keyof UserSettingsState>(
-      setting: K,
-      newValue: UserSettingsState[K]
-    ) =>
-      createAction('SET_USER_SETTING', resolve => () =>
-        resolve({ setting, newValue })
-      )();
-
-    // @dts-jest:pass:snap
-    setUserSetting('settingA', 'foo');
-    // @dts-jest:fail:snap
-    setUserSetting('settingA', 0); // Error as expected
-
-    // @dts-jest:pass:snap
-    setUserSetting('settingB', 0);
-    // @dts-jest:fail:snap
-    setUserSetting('settingB', 'foo'); // Error as expected
-  });
+  // @dts-jest:pass:snap
+  setUserSetting('settingB', 0);
+  // @dts-jest:fail:snap
+  setUserSetting('settingB', 'foo'); // Error as expected
 });

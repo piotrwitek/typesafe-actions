@@ -1,120 +1,73 @@
 import * as Types from './types';
 import { action } from './action';
 
-describe('action', () => {
-  it('with type only', () => {
-    const showNotification = () => action('SHOW_NOTIFICATION');
-    const actual = showNotification();
-    // @dts-jest:pass:snap
-    actual;
-    expect(actual).toEqual({
-      type: 'SHOW_NOTIFICATION',
-    });
-  });
+it.skip('skip', () => undefined);
 
-  it('with payload', () => {
-    const showNotification = (message: string) =>
-      action('SHOW_NOTIFICATION', message);
-    const actual: {
-      type: 'SHOW_NOTIFICATION';
-      payload: string;
-    } = showNotification('Hello!');
-    expect(actual).toEqual({
-      type: 'SHOW_NOTIFICATION',
-      payload: 'Hello!',
-    });
-  });
+describe('with symbol', () => {
+  const WITH_SYMBOL = Symbol(1);
+  const withSymbol = () => action(WITH_SYMBOL as any);
+  // @dts-jest:pass:snap
+  withSymbol(); // => { type: WITH_SYMBOL }
+});
 
-  it('with optional payload', () => {
-    const showNotification = (message?: string) =>
-      action('SHOW_NOTIFICATION', message);
-    const actual: {
-      type: 'SHOW_NOTIFICATION';
-      payload: string | undefined;
-    } = showNotification();
-    expect(actual).toEqual({
-      type: 'SHOW_NOTIFICATION',
-    });
-  });
+describe('with type only', () => {
+  const showNotification = () => action('SHOW_NOTIFICATION');
+  // @dts-jest:pass:snap
+  showNotification(); // => { type: 'SHOW_NOTIFICATION' }
+});
 
-  it('with meta', () => {
-    const showNotification = (scope: string) =>
-      action('SHOW_NOTIFICATION', undefined, scope);
-    const actual: {
-      type: 'SHOW_NOTIFICATION';
-      meta: string;
-    } = showNotification('info');
-    expect(actual).toEqual({
-      type: 'SHOW_NOTIFICATION',
-      meta: 'info',
-    });
-  });
+describe('with payload', () => {
+  const showNotification = (message: string) =>
+    action('SHOW_NOTIFICATION', message);
+  // @dts-jest:pass:snap
+  showNotification('Hello!'); // => { type: 'SHOW_NOTIFICATION',payload: 'Hello!' }
+});
 
-  it('with optional meta', () => {
-    const showNotification = (scope?: string) =>
-      action('SHOW_NOTIFICATION', undefined, scope);
-    const actual: {
-      type: 'SHOW_NOTIFICATION';
-      meta: string | undefined;
-    } = showNotification();
-    expect(actual).toEqual({
-      type: 'SHOW_NOTIFICATION',
-    });
-  });
+describe('with optional payload', () => {
+  const showNotification = (message?: string) =>
+    action('SHOW_NOTIFICATION', message);
+  // @dts-jest:pass:snap
+  showNotification(); // => { type: 'SHOW_NOTIFICATION' }
+});
 
-  it('with payload and meta', () => {
-    const showNotification = (message: string, scope: string) =>
-      action('SHOW_NOTIFICATION', message, scope);
-    const actual: {
-      type: 'SHOW_NOTIFICATION';
-      payload: string;
-      meta: string;
-    } = showNotification('Hello!', 'info');
-    expect(actual).toEqual({
-      type: 'SHOW_NOTIFICATION',
-      payload: 'Hello!',
-      meta: 'info',
-    });
-  });
+describe('with meta', () => {
+  const showNotification = (scope: string) =>
+    action('SHOW_NOTIFICATION', undefined, scope);
+  // @dts-jest:pass:snap
+  showNotification('info'); // => { type: 'SHOW_NOTIFICATION', meta: 'info' }
+});
 
-  it('with optional payload and meta', () => {
-    const showNotification = (scope: string, message?: string) =>
-      action('SHOW_NOTIFICATION', message, scope);
-    const actual: {
-      type: 'SHOW_NOTIFICATION';
-      payload: string | undefined;
-      meta: string;
-    } = showNotification('info');
-    expect(actual).toEqual({
-      type: 'SHOW_NOTIFICATION',
-      meta: 'info',
-    });
-  });
+describe('with optional meta', () => {
+  const showNotification = (scope?: string) =>
+    action('SHOW_NOTIFICATION', undefined, scope);
+  // @dts-jest:pass:snap
+  showNotification(); // => { type: 'SHOW_NOTIFICATION' }
+});
 
-  it('with payload and optional meta', () => {
-    const showNotification = (message: string, scope?: string) =>
-      action('SHOW_NOTIFICATION', message, scope);
-    const actual: {
-      type: 'SHOW_NOTIFICATION';
-      payload: string;
-      meta: string | undefined;
-    } = showNotification('Hello!');
-    expect(actual).toEqual({
-      type: 'SHOW_NOTIFICATION',
-      payload: 'Hello!',
-    });
-  });
+describe('with payload and meta', () => {
+  const showNotification = (message: string, scope: string) =>
+    action('SHOW_NOTIFICATION', message, scope);
+  // @dts-jest:pass:snap
+  showNotification('Hello!', 'info'); // => { type: 'SHOW_NOTIFICATION', payload: 'Hello!', meta: 'info' }
+});
 
-  it('with optional payload and optional meta', () => {
-    const showNotification = (message?: string, scope?: string) =>
-      action('SHOW_NOTIFICATION', message, scope);
-    const actual: {
-      type: 'SHOW_NOTIFICATION';
-      payload: string | undefined;
-      meta: string | undefined;
-    } = showNotification();
-    expect(actual).toEqual({
-      type: 'SHOW_NOTIFICATION',
-    });
-  });
+describe('with optional payload and meta', () => {
+  const showNotification = (scope: string, message?: string) =>
+    action('SHOW_NOTIFICATION', message, scope);
+  // @dts-jest:pass:snap
+  showNotification('info'); // => { type: 'SHOW_NOTIFICATION', meta: 'info' }
+});
+
+describe('with payload and optional meta', () => {
+  const showNotification = (message: string, scope?: string) =>
+    action('SHOW_NOTIFICATION', message, scope);
+  // @dts-jest:pass:snap
+  showNotification('Hello!'); // => { type: 'SHOW_NOTIFICATION', payload: 'Hello!' }
+});
+
+describe('with optional payload and optional meta', () => {
+  const showNotification = (message?: string, scope?: string) =>
+    action('SHOW_NOTIFICATION', message, scope);
+  // @dts-jest:pass:snap
+  showNotification(); // => { type: 'SHOW_NOTIFICATION' }
 });

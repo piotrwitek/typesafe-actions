@@ -1,3 +1,53 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`actual 1`] = `"Types.EmptyAction<\\"INCREMENT\\">"`;
+exports[`action(1, 'token') 1`] = `"Types.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string>"`;
+
+exports[`action(undefined, 'token') 1`] = `"Types.PayloadMetaAction<\\"WITH_META\\", void, string>"`;
+
+exports[`actionCreator.toString() 1`] = `"string"`;
+
+exports[`add(10) 1`] = `"Types.PayloadAction<\\"WITH_MAPPED_PAYLOAD\\", number>"`;
+
+exports[`increment() 1`] = `"Types.EmptyAction<\\"INCREMENT\\">"`;
+
+exports[`increment() 2`] = `"Types.EmptyAction<\\"INCREMENT\\">"`;
+
+exports[`increment() 3`] = `"{ type: \\"INCREMENT\\"; }"`;
+
+exports[`notify({ username: 'Piotr', message: 'Hello!' }) 1`] = `"{ type: \\"WITH_PAYLOAD_META\\"; } & { payload: string; meta: { username: string; message: string | undefined; }; }"`;
+
+exports[`set('up') 1`] = `"Types.PayloadAction<\\"SET\\", \\"up\\" | \\"down\\" | \\"unknown\\">"`;
+
+exports[`set(true) 1`] = `"Types.PayloadAction<\\"SET\\", boolean>"`;
+
+exports[`showError('error message') 1`] = `"{ type: \\"SHOW_ERROR\\"; } & { payload: string; meta: { severity: string; }; }"`;
+
+exports[`showError() 1`] = `"{ type: \\"SHOW_ERROR\\"; } & { payload: string; meta: { severity: string; }; }"`;
+
+exports[`showNotification('info message') 1`] = `"{ type: \\"SHOW_NOTIFICATION\\"; } & { payload: string; }"`;
+
+exports[`showNotification('info message') 2`] = `"{ type: \\"SHOW_NOTIFICATION\\"; } & { payload: string | number | null; }"`;
+
+exports[`showNotification('info message') 3`] = `"{ type: \\"SHOW_NOTIFICATION\\"; } & { meta: string; }"`;
+
+exports[`showNotification('info message') 4`] = `"{ type: \\"SHOW_NOTIFICATION\\"; } & { meta: string | number | null; }"`;
+
+exports[`showNotification() 1`] = `"{ type: \\"SHOW_NOTIFICATION\\"; } & { payload: string; }"`;
+
+exports[`showNotification() 2`] = `"{ type: \\"SHOW_NOTIFICATION\\"; } & { meta: string; }"`;
+
+exports[`showNotification(3) 1`] = `"{ type: \\"SHOW_NOTIFICATION\\"; } & { payload: string | number | null; }"`;
+
+exports[`showNotification(3) 2`] = `"{ type: \\"SHOW_NOTIFICATION\\"; } & { meta: string | number | null; }"`;
+
+exports[`showNotification(null) 1`] = `"{ type: \\"SHOW_NOTIFICATION\\"; } & { payload: string | number | null; }"`;
+
+exports[`showNotification(null) 2`] = `"{ type: \\"SHOW_NOTIFICATION\\"; } & { meta: string | number | null; }"`;
+
+exports[`union('foo') 1`] = `"Types.PayloadAction<\\"UNION\\", string | number | null>"`;
+
+exports[`union(3) 1`] = `"Types.PayloadAction<\\"UNION\\", string | number | null>"`;
+
+exports[`union(null) 1`] = `"Types.PayloadAction<\\"UNION\\", string | number | null>"`;
+
+exports[`withSymbol() 1`] = `"Types.EmptyAction<any>"`;

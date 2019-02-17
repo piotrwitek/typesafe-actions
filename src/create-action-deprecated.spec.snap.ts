@@ -1,17 +1,14 @@
 import * as Types from './types';
 import { createActionDeprecated } from './create-action-deprecated';
 
-describe('createActionDeprecated', () => {
-  it('should work with symbol as action type', () => {
-    const INCREMENT = Symbol(1);
-    const increment = createActionDeprecated(INCREMENT);
-    const actual = increment();
-    // @dts-jest:pass:snap -> { type: unique symbol; }
-    actual;
-    expect(actual).toEqual({ type: INCREMENT });
-    expect(actual).not.toEqual({ type: 'INCREMENT' });
-  });
+describe('should work with symbol as action type', () => {
+  const INCREMENT = Symbol(1);
+  const increment = createActionDeprecated(INCREMENT as any);
+  // @dts-jest:pass:snap -> { type: any; }
+  increment(); // => { type: INCREMENT }
+});
 
+describe('createActionDeprecated', () => {
   it('with type only', () => {
     const increment = createActionDeprecated('INCREMENT');
 

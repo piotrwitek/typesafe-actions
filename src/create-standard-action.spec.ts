@@ -1,275 +1,181 @@
 import * as Types from './types';
 import { createStandardAction } from './create-standard-action';
 
-describe('createStandardAction', () => {
-  describe('constructor', () => {
-    it('toString', () => {
-      const increment = createStandardAction('INCREMENT')();
+it.skip('skip', () => undefined);
 
-      expect(increment.toString()).toBe('INCREMENT');
-      // tslint:disable-next-line:triple-equals
-      expect((increment as any) == 'INCREMENT').toBe(true);
-    });
-
-    it('with type only - shorthand', () => {
-      const increment = createStandardAction('INCREMENT')();
-      const actual = increment();
-      // @dts-jest:pass:snap
-      actual;
-      expect(actual).toEqual({ type: 'INCREMENT' });
-    });
-
-    it('with type only', () => {
-      const increment = createStandardAction('INCREMENT')<void>();
-      const action: { type: 'INCREMENT' } = increment();
-      expect(action).toEqual({ type: 'INCREMENT' });
-    });
-
-    it('with payload - number', () => {
-      const add = createStandardAction('WITH_MAPPED_PAYLOAD')<number>();
-      const action: { type: 'WITH_MAPPED_PAYLOAD'; payload: number } = add(10);
-      expect(action).toEqual({ type: 'WITH_MAPPED_PAYLOAD', payload: 10 });
-    });
-
-    it('with payload - boolean', () => {
-      const set = createStandardAction('SET')<boolean>();
-      const action: { type: 'SET'; payload: boolean } = set(true);
-      expect(action).toEqual({ type: 'SET', payload: true });
-    });
-
-    it('with payload - literal string union', () => {
-      type NetStatus = 'up' | 'down' | 'unknown';
-      const set = createStandardAction('SET')<NetStatus>();
-      const action: { type: 'SET'; payload: NetStatus } = set('up');
-      expect(action).toEqual({ type: 'SET', payload: 'up' });
-    });
-
-    it('with payload - primitives union', () => {
-      const union = createStandardAction('UNION')<string | null | number>();
-      const action: { type: 'UNION'; payload: string | null | number } = union(
-        'foo'
-      );
-      expect(action).toEqual({ type: 'UNION', payload: 'foo' });
-      const action2: { type: 'UNION'; payload: string | null | number } = union(
-        null
-      );
-      expect(action2).toEqual({ type: 'UNION', payload: null });
-      const action3: { type: 'UNION'; payload: string | null | number } = union(
-        3
-      );
-      expect(action3).toEqual({ type: 'UNION', payload: 3 });
-    });
-
-    it('with meta', () => {
-      const action = createStandardAction('WITH_META')<void, string>();
-      const actual: { type: 'WITH_META'; meta: string } = action(
-        undefined,
-        'token'
-      );
-      expect(actual).toEqual({ type: 'WITH_META', meta: 'token' });
-    });
-
-    it('with payload and meta', () => {
-      const action = createStandardAction('WITH_PAYLOAD_META')<
-        number,
-        string
-      >();
-      const actual: {
-        type: 'WITH_PAYLOAD_META';
-        payload: number;
-        meta: string;
-      } = action(1, 'token');
-      expect(actual).toEqual({
-        type: 'WITH_PAYLOAD_META',
-        payload: 1,
-        meta: 'token',
-      });
-    });
+describe('constructor', () => {
+  describe('toString() method return a type', () => {
+    const actionCreator = createStandardAction('TO_STRING')();
+    // @dts-jest:pass:snap
+    actionCreator.toString(); // => 'TO_STRING'
   });
 
-  describe('map', () => {
-    it('with type only', () => {
-      const increment = createStandardAction('INCREMENT').map(() => ({}));
-      const action: { type: 'INCREMENT' } = increment();
-      expect(action).toEqual({ type: 'INCREMENT' });
-    });
+  describe('with symbol', () => {
+    const WITH_SYMBOL = Symbol(1);
+    const withSymbol = createStandardAction(WITH_SYMBOL as any)();
+    // @dts-jest:pass:snap
+    withSymbol(); // => { type: WITH_SYMBOL }
+  });
 
-    it('with payload - no param', () => {
-      const showNotification = createStandardAction('SHOW_NOTIFICATION').map(
-        () => ({
-          payload: 'hardcoded message',
-        })
-      );
-      const action: {
-        type: 'SHOW_NOTIFICATION';
-        payload: string;
-      } = showNotification();
-      expect(action).toEqual({
-        type: 'SHOW_NOTIFICATION',
+  describe('with type only', () => {
+    const increment = createStandardAction('INCREMENT')();
+    // @dts-jest:pass:snap
+    increment(); // => { type: 'INCREMENT' }
+  });
+
+  describe('with type only - void', () => {
+    const increment = createStandardAction('INCREMENT')<void>();
+    // @dts-jest:pass:snap
+    increment(); // => { type: 'INCREMENT' }
+  });
+
+  describe('with payload - number', () => {
+    const add = createStandardAction('WITH_MAPPED_PAYLOAD')<number>();
+    // @dts-jest:pass:snap
+    add(10); // => { type: 'WITH_MAPPED_PAYLOAD', payload: 10 }
+  });
+
+  describe('with payload - boolean', () => {
+    const set = createStandardAction('SET')<boolean>();
+    // @dts-jest:pass:snap
+    set(true); // => { type: 'SET', payload: true }
+  });
+
+  describe('with payload - literal string union', () => {
+    type NetStatus = 'up' | 'down' | 'unknown';
+    const set = createStandardAction('SET')<NetStatus>();
+    // @dts-jest:pass:snap
+    set('up'); // => { type: 'SET', payload: 'up' }
+  });
+
+  describe('with payload - primitives union', () => {
+    const union = createStandardAction('UNION')<string | null | number>();
+    // @dts-jest:pass:snap
+    union('foo'); // => { type: 'UNION', payload: 'foo' }
+    // @dts-jest:pass:snap
+    union(null); // => { type: 'UNION', payload: null }
+    // @dts-jest:pass:snap
+    union(3); // => { type: 'UNION', payload: 3 }
+  });
+
+  describe('with meta', () => {
+    const action = createStandardAction('WITH_META')<void, string>();
+    // @dts-jest:pass:snap
+    action(undefined, 'token'); // => { type: 'WITH_META', meta: 'token' }
+  });
+
+  describe('with payload and meta', () => {
+    const action = createStandardAction('WITH_PAYLOAD_META')<number, string>();
+    // @dts-jest:pass:snap
+    action(1, 'token'); // => { type: 'WITH_PAYLOAD_META', payload: 1, meta: 'token' }
+  });
+});
+
+describe('map', () => {
+  describe('with type only', () => {
+    const increment = createStandardAction('INCREMENT').map(() => ({}));
+    // @dts-jest:pass:snap
+    increment(); // => { type: 'INCREMENT' }
+  });
+
+  describe('with payload - no param', () => {
+    const showNotification = createStandardAction('SHOW_NOTIFICATION').map(
+      () => ({
         payload: 'hardcoded message',
-      });
-    });
+      })
+    );
+    // @dts-jest:pass:snap
+    showNotification(); // => { type: 'SHOW_NOTIFICATION', payload: 'hardcoded message' }
+  });
 
-    it('with payload - primitive param', () => {
-      const showNotification = createStandardAction('SHOW_NOTIFICATION').map(
-        (payload: string) => ({
-          payload,
-        })
-      );
-      const action: {
-        type: 'SHOW_NOTIFICATION';
-        payload: string;
-      } = showNotification('info message');
-      expect(action).toEqual({
-        type: 'SHOW_NOTIFICATION',
-        payload: 'info message',
-      });
-    });
+  describe('with payload - primitive param', () => {
+    const showNotification = createStandardAction('SHOW_NOTIFICATION').map(
+      (payload: string) => ({
+        payload,
+      })
+    );
+    // @dts-jest:pass:snap
+    showNotification('info message'); // => { type: 'SHOW_NOTIFICATION', payload: 'info message' }
+  });
 
-    it('with payload - union param', () => {
-      const showNotification = createStandardAction('SHOW_NOTIFICATION').map(
-        (payload: string | null | number) => ({
-          payload,
-        })
-      );
-      const action: {
-        type: 'SHOW_NOTIFICATION';
-        payload: string | null | number;
-      } = showNotification('info message');
-      expect(action).toEqual({
-        type: 'SHOW_NOTIFICATION',
-        payload: 'info message',
-      });
-      const action2: {
-        type: 'SHOW_NOTIFICATION';
-        payload: string | null | number;
-      } = showNotification(null);
-      expect(action2).toEqual({
-        type: 'SHOW_NOTIFICATION',
-        payload: null,
-      });
-      const action3: {
-        type: 'SHOW_NOTIFICATION';
-        payload: string | null | number;
-      } = showNotification(3);
-      expect(action3).toEqual({
-        type: 'SHOW_NOTIFICATION',
-        payload: 3,
-      });
-    });
+  describe('with payload - union param', () => {
+    const showNotification = createStandardAction('SHOW_NOTIFICATION').map(
+      (payload: string | null | number) => ({
+        payload,
+      })
+    );
+    // @dts-jest:pass:snap
+    showNotification('info message'); // => { type: 'SHOW_NOTIFICATION', payload: 'info message' }
+    // @dts-jest:pass:snap
+    showNotification(null); // => { type: 'SHOW_NOTIFICATION', payload: null }
+    // @dts-jest:pass:snap
+    showNotification(3); // => { type: 'SHOW_NOTIFICATION', payload: 3 }
+  });
 
-    it('with meta - no param', () => {
-      const showNotification = createStandardAction('SHOW_NOTIFICATION').map(
-        () => ({
-          meta: 'hardcoded message',
-        })
-      );
-      const action: {
-        type: 'SHOW_NOTIFICATION';
-        meta: string;
-      } = showNotification();
-      expect(action).toEqual({
-        type: 'SHOW_NOTIFICATION',
+  describe('with meta - no param', () => {
+    const showNotification = createStandardAction('SHOW_NOTIFICATION').map(
+      () => ({
         meta: 'hardcoded message',
-      });
-    });
+      })
+    );
+    // @dts-jest:pass:snap
+    showNotification(); // => { type: 'SHOW_NOTIFICATION', meta: 'hardcoded message' }
+  });
 
-    it('with meta - primitive param', () => {
-      const showNotification = createStandardAction('SHOW_NOTIFICATION').map(
-        (meta: string) => ({
-          meta,
-        })
-      );
-      const action: {
-        type: 'SHOW_NOTIFICATION';
-        meta: string;
-      } = showNotification('info message');
-      expect(action).toEqual({
-        type: 'SHOW_NOTIFICATION',
-        meta: 'info message',
-      });
-    });
+  describe('with meta - primitive param', () => {
+    const showNotification = createStandardAction('SHOW_NOTIFICATION').map(
+      (meta: string) => ({
+        meta,
+      })
+    );
+    // @dts-jest:pass:snap
+    showNotification('info message'); // => { type: 'SHOW_NOTIFICATION', meta: 'info message' }
+  });
 
-    it('with meta - union param', () => {
-      const showNotification = createStandardAction('SHOW_NOTIFICATION').map(
-        (meta: string | null | number) => ({
-          meta,
-        })
-      );
-      const action: {
-        type: 'SHOW_NOTIFICATION';
-        meta: string | null | number;
-      } = showNotification('info message');
-      expect(action).toEqual({
-        type: 'SHOW_NOTIFICATION',
-        meta: 'info message',
-      });
-      const action2: {
-        type: 'SHOW_NOTIFICATION';
-        meta: string | null | number;
-      } = showNotification(null);
-      expect(action2).toEqual({ type: 'SHOW_NOTIFICATION', meta: null });
-      const action3: {
-        type: 'SHOW_NOTIFICATION';
-        meta: string | null | number;
-      } = showNotification(3);
-      expect(action3).toEqual({ type: 'SHOW_NOTIFICATION', meta: 3 });
-    });
+  describe('with meta - union param', () => {
+    const showNotification = createStandardAction('SHOW_NOTIFICATION').map(
+      (meta: string | null | number) => ({
+        meta,
+      })
+    );
+    // @dts-jest:pass:snap
+    showNotification('info message'); // => { type: 'SHOW_NOTIFICATION', meta: 'info message' }
+    // @dts-jest:pass:snap
+    showNotification(null); // => { type: 'SHOW_NOTIFICATION', meta: null }
+    // @dts-jest:pass:snap
+    showNotification(3); // => { type: 'SHOW_NOTIFICATION', meta: 3 }
+  });
 
-    it('with payload and meta - no param', () => {
-      const showError = createStandardAction('SHOW_ERROR').map(() => ({
-        payload: 'hardcoded error',
+  describe('with payload and meta - no param', () => {
+    const showError = createStandardAction('SHOW_ERROR').map(() => ({
+      payload: 'hardcoded error',
+      meta: { severity: 'error' },
+    }));
+    // @dts-jest:pass:snap
+    showError(); // => { type: 'SHOW_ERROR', payload: 'hardcoded error', meta: { severity: 'error' } }
+  });
+
+  describe('with payload and meta - string param', () => {
+    const showError = createStandardAction('SHOW_ERROR').map(
+      (message: string) => ({
+        payload: message,
         meta: { severity: 'error' },
-      }));
-      const action: {
-        type: 'SHOW_ERROR';
-        payload: string;
-        meta: { severity: string };
-      } = showError();
-      expect(action).toEqual({
-        type: 'SHOW_ERROR',
-        payload: 'hardcoded error',
-        meta: { severity: 'error' },
-      });
-    });
+      })
+    );
+    // @dts-jest:pass:snap
+    showError('error message'); // => { type: 'SHOW_ERROR', payload: 'error message', meta: { severity: 'error' } }
+  });
 
-    it('with payload and meta - string param', () => {
-      const showError = createStandardAction('SHOW_ERROR').map(
-        (message: string) => ({
-          payload: message,
-          meta: { severity: 'error' },
-        })
-      );
-      const action: {
-        type: 'SHOW_ERROR';
-        payload: string;
-        meta: { severity: string };
-      } = showError('error message');
-      expect(action).toEqual({
-        type: 'SHOW_ERROR',
-        payload: 'error message',
-        meta: { severity: 'error' },
-      });
-    });
-
-    it('with payload and meta - object param', () => {
-      type Notification = { username: string; message?: string };
-      const notify = createStandardAction('WITH_PAYLOAD_META').map(
-        ({ username, message }: Notification) => ({
-          payload: `${username}: ${message || ''}`,
-          meta: { username, message },
-        })
-      );
-      const action: {
-        type: 'WITH_PAYLOAD_META';
-        payload: string;
-        meta: Notification;
-      } = notify({ username: 'Piotr', message: 'Hello!' });
-      expect(action).toEqual({
-        type: 'WITH_PAYLOAD_META',
-        payload: 'Piotr: Hello!',
-        meta: { username: 'Piotr', message: 'Hello!' },
-      });
-    });
+  describe('with payload and meta - object param', () => {
+    type Notification = { username: string; message?: string };
+    const notify = createStandardAction('WITH_PAYLOAD_META').map(
+      ({ username, message }: Notification) => ({
+        payload: `${username}: ${message || ''}`,
+        meta: { username, message },
+      })
+    );
+    // tslint:disable:max-line-length
+    // @dts-jest:pass:snap
+    notify({ username: 'Piotr', message: 'Hello!' }); // => { type: 'WITH_PAYLOAD_META', payload: 'Piotr: Hello!', meta: { username: 'Piotr', message: 'Hello!' } }
   });
 });

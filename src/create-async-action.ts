@@ -1,6 +1,6 @@
 import { StringType, Box, FsaMapBuilder, FsaBuilder } from './types';
 import { createCustomAction } from './create-custom-action';
-import { validateActionType } from './utils/utils';
+import { checkInvalidActionTypeInArray } from './utils/validation';
 
 export interface CreateAsyncAction<
   T1 extends StringType,
@@ -45,7 +45,9 @@ export type AsyncActionWithMappers<
   failure: FsaMapBuilder<T3, Box<A3>, Box<P3>>;
 };
 
-/** implementation */
+/**
+ * implementation
+ */
 export function createAsyncAction<
   T1 extends StringType,
   T2 extends StringType,
@@ -55,9 +57,9 @@ export function createAsyncAction<
   successType: T2,
   failureType: T3
 ): CreateAsyncAction<T1, T2, T3> {
-  [requestType, successType, failureType].forEach((arg, idx) => {
-    validateIsActionType(arg, idx + 1);
-  });
+  [requestType, successType, failureType].forEach(
+    checkInvalidActionTypeInArray
+  );
 
   function constructor<P1, P2, P3>(): AsyncActionBuilder<
     T1,

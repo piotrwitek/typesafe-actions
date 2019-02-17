@@ -1,5 +1,5 @@
 import {
-  validateArrayHasOnlyActionTypes,
+  checkInvalidActionTypeInArray,
   checkIsEmpty,
   throwIsEmpty,
 } from './utils/validation';
@@ -22,7 +22,9 @@ export function isOfType<T extends string>(
   action: A
 ) => action is A extends { type: T } ? A : never;
 
-/** implementation */
+/**
+ * implementation
+ */
 export function isOfType<T extends string, A extends { type: T }>(
   actionTypeOrTypes: T | T[],
   action?: A
@@ -35,7 +37,7 @@ export function isOfType<T extends string, A extends { type: T }>(
     ? actionTypeOrTypes
     : [actionTypeOrTypes];
 
-  actionTypes.forEach(validateArrayHasOnlyActionTypes);
+  actionTypes.forEach(checkInvalidActionTypeInArray);
 
   const assertFn = (_action: A) => actionTypes.includes(_action.type);
 

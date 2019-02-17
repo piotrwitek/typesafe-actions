@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`actual 1`] = `"{ type: \\"WITH_TYPE_ONLY\\"; }"`;
+exports[`actionCreator.toString() 1`] = `"string"`;
 
 exports[`setUserSetting('settingA', 'foo') 1`] = `"{ type: \\"SET_USER_SETTING\\"; payload: { setting: \\"settingA\\"; newValue: string; }; }"`;
 
@@ -9,3 +9,17 @@ exports[`setUserSetting('settingA', 0) 1`] = `"Argument of type '0' is not assig
 exports[`setUserSetting('settingB', 'foo') 1`] = `"Argument of type '\\"foo\\"' is not assignable to parameter of type 'number'."`;
 
 exports[`setUserSetting('settingB', 0) 1`] = `"{ type: \\"SET_USER_SETTING\\"; payload: { setting: \\"settingB\\"; newValue: number; }; }"`;
+
+exports[`withMeta('token') 1`] = `"{ type: \\"WITH_META\\"; meta: string; }"`;
+
+exports[`withPayload() 1`] = `"{ type: \\"WITH_PAYLOAD\\"; payload: number; }"`;
+
+exports[`withPayload(1) 1`] = `"{ type: \\"WITH_PAYLOAD\\"; payload: number; }"`;
+
+exports[`withPayload(1) 2`] = `"{ type: \\"WITH_PAYLOAD\\"; payload: number; }"`;
+
+exports[`withPayloadAndMeta(1, 'token') 1`] = `"{ type: \\"WITH_PAYLOAD_META\\"; payload: number; meta: string; }"`;
+
+exports[`withSymbol() 1`] = `"{ type: any; }"`;
+
+exports[`withTypeOnly() 1`] = `"{ type: \\"WITH_TYPE_ONLY\\"; }"`;

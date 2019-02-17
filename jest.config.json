@@ -17,6 +17,5 @@
         "ignoreCodes": [5023]
       }
     }
-  },
-  "setupFiles": []
+  }
 }

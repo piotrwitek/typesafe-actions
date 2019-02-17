@@ -1,72 +1,62 @@
 import * as Types from './types';
 import { createCustomAction } from './create-custom-action';
 
-describe('createCustomAction', () => {
-  it('with type only using symbol', () => {
-    const INCREMENT = Symbol(1);
-    const increment = createCustomAction(INCREMENT, type => () => ({ type }));
-    const actual = increment();
-    // @dts-jest:pass:snap -> { type: unique symbol; }
-    actual;
-    expect(actual).toEqual({ type: INCREMENT });
-  });
+it.skip('skip', () => undefined);
 
-  it('with type only', () => {
-    const increment = createCustomAction('WITH_TYPE_ONLY');
-    const actual: {
-      type: 'WITH_TYPE_ONLY';
-    } = increment();
-    expect(actual).toEqual({ type: 'WITH_TYPE_ONLY' });
-  });
+describe('toString() method return a type', () => {
+  const actionCreator = createCustomAction('TO_STRING');
+  // @dts-jest:pass:snap -> string
+  actionCreator.toString(); // => 'TO_STRING'
+});
 
-  it('with payload', () => {
-    const add = createCustomAction('WITH_PAYLOAD', type => {
-      return (amount: number) => ({ type, payload: amount });
-    });
-    const actual: {
-      type: 'WITH_PAYLOAD';
-      payload: number;
-    } = add(1);
-    expect(actual).toEqual({ type: 'WITH_PAYLOAD', payload: 1 });
-  });
+describe('with symbol', () => {
+  const WITH_SYMBOL = Symbol(1);
+  const withSymbol = createCustomAction(WITH_SYMBOL as any);
+  // @dts-jest:pass:snap -> { type: any; }
+  withSymbol(); // => { type: WITH_SYMBOL }
+});
 
-  it('with optional payload', () => {
-    const create = createCustomAction('WITH_OPTIONAL_PAYLOAD', type => {
-      return (id?: number) => ({ type, payload: id });
-    });
-    const actual1: {
-      type: 'WITH_OPTIONAL_PAYLOAD';
-      payload: number | undefined;
-    } = create();
-    expect(actual1).toEqual({
-      type: 'WITH_OPTIONAL_PAYLOAD',
-      payload: undefined,
-    });
-    const actual2: {
-      type: 'WITH_OPTIONAL_PAYLOAD';
-      payload: number | undefined;
-    } = create(1);
-    expect(actual2).toEqual({ type: 'WITH_OPTIONAL_PAYLOAD', payload: 1 });
-  });
+describe('with type only', () => {
+  const increment = createCustomAction('WITH_TYPE_ONLY');
+  // @dts-jest:pass:snap -> { type: "WITH_TYPE_ONLY"; }
+  increment(); // => { type: 'WITH_TYPE_ONLY' }
+});
 
-  it('with payload and meta', () => {
-    const showNotification = createCustomAction(
-      'SHOW_NOTIFICATION',
-      type => (message: string, scope: string) => ({
-        type,
-        payload: message,
-        meta: scope,
-      })
-    );
-    const actual: {
-      type: 'SHOW_NOTIFICATION';
-      payload: string;
-      meta: string;
-    } = showNotification('Hello!', 'info');
-    expect(actual).toEqual({
-      type: 'SHOW_NOTIFICATION',
-      payload: 'Hello!',
-      meta: 'info',
-    });
+describe('with payload', () => {
+  const add = createCustomAction('WITH_PAYLOAD', type => {
+    return (amount: number) => ({ type, payload: amount });
   });
+  // @dts-jest:pass:snap -> { type: "WITH_PAYLOAD"; payload: number; }
+  add(1); // => { type: 'WITH_PAYLOAD', payload: 1 }
+});
+
+describe('with optional payload', () => {
+  const create = createCustomAction('WITH_OPTIONAL_PAYLOAD', type => {
+    return (id?: number) => ({ type, payload: id });
+  });
+  // @dts-jest:pass:snap -> { type: "WITH_OPTIONAL_PAYLOAD"; payload: number | undefined; }
+  create(); // => { type: 'WITH_OPTIONAL_PAYLOAD' }
+  // @dts-jest:pass:snap -> { type: "WITH_OPTIONAL_PAYLOAD"; payload: number | undefined; }
+  create(1); // => { type: 'WITH_OPTIONAL_PAYLOAD', payload: 1 }
+});
+
+describe('with meta', () => {
+  const withMeta = createCustomAction('WITH_META', type => {
+    return (token: string) => ({ type, meta: token });
+  });
+  // @dts-jest:pass:snap -> { type: "WITH_META"; meta: string; }
+  withMeta('token'); // => { type: 'WITH_META', meta: 'token' }
+});
+
+describe('with payload and meta', () => {
+  const showNotification = createCustomAction(
+    'SHOW_NOTIFICATION',
+    type => (message: string, scope: string) => ({
+      type,
+      payload: message,
+      meta: scope,
+    })
+  );
+  // @dts-jest:pass:snap -> { type: "SHOW_NOTIFICATION"; payload: string; meta: string; }
+  showNotification('Hello!', 'info'); // => { type: 'SHOW_NOTIFICATION', payload: 'Hello!', meta: 'info' }
 });

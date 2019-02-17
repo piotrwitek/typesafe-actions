@@ -3,6 +3,7 @@ import {
   EmptyAction,
   PayloadAction,
   PayloadMetaAction,
+  MetaAction,
 } from './types';
 import {
   checkIsEmpty,
@@ -11,18 +12,24 @@ import {
   throwInvalidActionCreator,
 } from './utils/validation';
 
-export function action<T extends StringType>(type: T): EmptyAction<T>;
-
-export function action<T extends StringType, P = undefined>(
+export function action<T extends StringType, M>(
   type: T,
-  payload: P
-): PayloadAction<T, P>;
+  payload: undefined,
+  meta: M
+): { type: T; meta: M };
 
-export function action<T extends StringType, P = undefined, M = undefined>(
+export function action<T extends StringType, P, M>(
   type: T,
   payload: P,
   meta: M
-): PayloadMetaAction<T, P, M>;
+): { type: T; payload: P; meta: M };
+
+export function action<T extends StringType, P>(
+  type: T,
+  payload: P
+): { type: T; payload: P };
+
+export function action<T extends StringType>(type: T): { type: T };
 
 /**
  * @description flux standard action factory

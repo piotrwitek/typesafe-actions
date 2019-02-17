@@ -1,4 +1,4 @@
-import { ActionCreator, TypeMeta, StringType, StringOrSymbol } from '../types';
+import { ActionCreator, TypeMeta, StringType } from '../types';
 
 export function checkIsEmpty(arg: unknown, argPosition: number = 1) {
   return arg == null;
@@ -18,7 +18,7 @@ export function throwInvalidActionCreator(argPosition: number = 1): never {
   );
 }
 
-export function checkInvalidActionType(arg: StringOrSymbol) {
+export function checkInvalidActionType(arg: StringType) {
   return typeof arg !== 'string' && typeof arg !== 'symbol';
 }
 
@@ -28,19 +28,8 @@ export function throwInvalidActionType(argPosition: number = 1): never {
   );
 }
 
-export function validateIsActionType(
-  arg: StringOrSymbol,
-  argPosition: number = 1
-): void {
-  if (typeof arg !== 'string' && typeof arg !== 'symbol') {
-    throw new Error(
-      `Argument ${argPosition} is invalid, it should be of type: string | symbol`
-    );
-  }
-}
-
-export function validateArrayHasOnlyActionTypes(
-  arg: StringOrSymbol,
+export function checkInvalidActionTypeInArray(
+  arg: StringType,
   idx: number
 ): void {
   if (arg == null) {
@@ -54,7 +43,7 @@ export function validateArrayHasOnlyActionTypes(
   }
 }
 
-export function validateArrayHasOnlyActionCreators(
+export function checkInvalidActionCreatorInArray(
   arg: ActionCreator<StringType> & TypeMeta<StringType>,
   idx: number
 ): void {
