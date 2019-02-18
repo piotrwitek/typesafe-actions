@@ -1,73 +1,84 @@
-import * as Types from './types';
+import * as T from './type-helpers';
 import { action } from './action';
 
 it.skip('skip', () => undefined);
 
 describe('with symbol', () => {
-  const WITH_SYMBOL = Symbol(1);
-  const withSymbol = () => action(WITH_SYMBOL as any);
+  const ACTION = Symbol(1);
+  const withSymbol = () => action(ACTION as any);
   // @dts-jest:pass:snap
-  withSymbol(); // => { type: WITH_SYMBOL }
+  withSymbol(); // => { type: ACTION }
 });
 
 describe('with type only', () => {
-  const showNotification = () => action('SHOW_NOTIFICATION');
+  const withTypeOnly = () => action('ACTION');
   // @dts-jest:pass:snap
-  showNotification(); // => { type: 'SHOW_NOTIFICATION' }
+  withTypeOnly(); // => { type: 'ACTION' }
 });
 
 describe('with payload', () => {
-  const showNotification = (message: string) =>
-    action('SHOW_NOTIFICATION', message);
+  const withPayload = (message: string) => action('ACTION', message);
   // @dts-jest:pass:snap
-  showNotification('Hello!'); // => { type: 'SHOW_NOTIFICATION',payload: 'Hello!' }
+  withPayload('Hello!'); // => { type: 'ACTION',payload: 'Hello!' }
 });
 
 describe('with optional payload', () => {
-  const showNotification = (message?: string) =>
-    action('SHOW_NOTIFICATION', message);
+  const withOptionalPayload = (message?: string) => action('ACTION', message);
   // @dts-jest:pass:snap
-  showNotification(); // => { type: 'SHOW_NOTIFICATION' }
+  withOptionalPayload(); // => { type: 'ACTION' }
+  // @dts-jest:pass:snap
+  withOptionalPayload('Hello!'); // => { type: 'ACTION', payload: 'Hello!' }
 });
 
 describe('with meta', () => {
-  const showNotification = (scope: string) =>
-    action('SHOW_NOTIFICATION', undefined, scope);
+  const withMeta = (scope: string) => action('ACTION', undefined, scope);
   // @dts-jest:pass:snap
-  showNotification('info'); // => { type: 'SHOW_NOTIFICATION', meta: 'info' }
+  withMeta('info'); // => { type: 'ACTION', meta: 'info' }
 });
 
 describe('with optional meta', () => {
-  const showNotification = (scope?: string) =>
-    action('SHOW_NOTIFICATION', undefined, scope);
+  const withOptionalMeta = (scope?: string) =>
+    action('ACTION', undefined, scope);
   // @dts-jest:pass:snap
-  showNotification(); // => { type: 'SHOW_NOTIFICATION' }
+  withOptionalMeta(); // => { type: 'ACTION' }
+  // @dts-jest:pass:snap
+  withOptionalMeta('info'); // => { type: 'ACTION', meta: 'info' }
 });
 
 describe('with payload and meta', () => {
-  const showNotification = (message: string, scope: string) =>
-    action('SHOW_NOTIFICATION', message, scope);
+  const withPayloadAndMeta = (message: string, scope: string) =>
+    action('ACTION', message, scope);
   // @dts-jest:pass:snap
-  showNotification('Hello!', 'info'); // => { type: 'SHOW_NOTIFICATION', payload: 'Hello!', meta: 'info' }
+  withPayloadAndMeta('Hello!', 'info'); // => { type: 'ACTION', payload: 'Hello!', meta: 'info' }
 });
 
 describe('with optional payload and meta', () => {
-  const showNotification = (scope: string, message?: string) =>
-    action('SHOW_NOTIFICATION', message, scope);
+  const withOptionalPayloadAndMeta = (scope: string, message?: string) =>
+    action('ACTION', message, scope);
   // @dts-jest:pass:snap
-  showNotification('info'); // => { type: 'SHOW_NOTIFICATION', meta: 'info' }
+  withOptionalPayloadAndMeta('info'); // => { type: 'ACTION', meta: 'info' }
+  // @dts-jest:pass:snap
+  withOptionalPayloadAndMeta('info', 'Hello!'); // => { type: 'ACTION', payload: 'Hello!', meta: 'info' }
 });
 
 describe('with payload and optional meta', () => {
-  const showNotification = (message: string, scope?: string) =>
-    action('SHOW_NOTIFICATION', message, scope);
+  const withPayloadAndOptionalMeta = (message: string, scope?: string) =>
+    action('ACTION', message, scope);
   // @dts-jest:pass:snap
-  showNotification('Hello!'); // => { type: 'SHOW_NOTIFICATION', payload: 'Hello!' }
+  withPayloadAndOptionalMeta('Hello!'); // => { type: 'ACTION', payload: 'Hello!' }
+  // @dts-jest:pass:snap
+  withPayloadAndOptionalMeta('Hello!', 'info'); // => { type: 'ACTION', payload: 'Hello!', meta: 'info' }
 });
 
 describe('with optional payload and optional meta', () => {
-  const showNotification = (message?: string, scope?: string) =>
-    action('SHOW_NOTIFICATION', message, scope);
+  const withOptionalPayloadAndOptionalMeta = (
+    message?: string,
+    scope?: string
+  ) => action('ACTION', message, scope);
   // @dts-jest:pass:snap
-  showNotification(); // => { type: 'SHOW_NOTIFICATION' }
+  withOptionalPayloadAndOptionalMeta(); // => { type: 'ACTION' }
+  // @dts-jest:pass:snap
+  withOptionalPayloadAndOptionalMeta('Hello!'); // => { type: 'ACTION', payload: 'Hello!' }
+  // @dts-jest:pass:snap
+  withOptionalPayloadAndOptionalMeta('Hello!', 'info'); // => { type: 'ACTION', payload: 'Hello!', meta: 'info' }
 });

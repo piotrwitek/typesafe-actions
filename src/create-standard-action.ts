@@ -1,4 +1,4 @@
-import { StringType, Box, FsaBuilder, FsaMapBuilder } from './types';
+import { StringType, Box, FsaBuilder, FsaMapBuilder } from './type-helpers';
 import { createCustomAction } from './create-custom-action';
 import {
   checkIsEmpty,

@@ -1,4 +1,4 @@
-import { ActionCreator, StringType } from './types';
+import { ActionCreator, StringType } from './type-helpers';
 import {
   checkIsEmpty,
   throwIsEmpty,

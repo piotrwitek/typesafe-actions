@@ -1,4 +1,4 @@
-import { StringType, ActionCreator, TypeMeta } from './types';
+import { StringType, ActionCreator, TypeMeta } from './type-helpers';
 import {
   checkIsEmpty,
   throwIsEmpty,

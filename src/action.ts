@@ -4,7 +4,7 @@ import {
   PayloadAction,
   PayloadMetaAction,
   MetaAction,
-} from './types';
+} from './type-helpers';
 import {
   checkIsEmpty,
   throwIsEmpty,

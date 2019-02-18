@@ -12,7 +12,7 @@ export { createStandardAction } from './create-standard-action';
 export { createCustomAction } from './create-custom-action';
 export { createAsyncAction } from './create-async-action';
 // guards
-export { ActionType, StateType } from './types';
+export { ActionType, StateType } from './type-helpers';
 export { getType } from './get-type';
 export { isOfType } from './is-of-type';
 export { isActionOf } from './is-action-of';

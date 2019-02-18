@@ -2,7 +2,7 @@
  * DEPRECATED
  */
 
-import { StringType } from './types';
+import { StringType } from './type-helpers';
 
 interface FSA<T extends StringType, P = {}, M = {}, E = boolean> {
   type: T;

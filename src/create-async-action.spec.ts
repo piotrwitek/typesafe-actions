@@ -1,4 +1,4 @@
-import * as Types from './types';
+import * as T from './type-helpers';
 import { createAsyncAction } from './create-async-action';
 
 type Todo = { firstName: string; lastName: string };

@@ -1,6 +1,7 @@
-import * as Types from './types';
+import * as T from './type-helpers';
 import { isActionOf } from './is-action-of';
-import { actions } from './utils/action-creator-fixtures';
+
+import { actions } from './type-helpers-fixtures';
 const {
   withTypeOnly,
   withPayload,

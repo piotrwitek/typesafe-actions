@@ -1,4 +1,4 @@
-import { StringType, ActionCreator } from './types';
+import { StringType, ActionCreator } from './type-helpers';
 import { action } from './action';
 
 export type PayloadMetaAction<T extends StringType, P, M> = P extends undefined

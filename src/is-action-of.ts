@@ -1,4 +1,4 @@
-import { TypeMeta } from './types';
+import { TypeMeta } from './type-helpers';
 import {
   checkInvalidActionCreatorInArray,
   checkIsEmpty,

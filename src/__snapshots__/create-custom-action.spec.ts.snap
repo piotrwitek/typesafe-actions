@@ -2,16 +2,16 @@
 
 exports[`actionCreator.toString() 1`] = `"string"`;
 
-exports[`add(1) 1`] = `"{ type: \\"WITH_PAYLOAD\\"; payload: number; }"`;
+exports[`withMeta('token') 1`] = `"{ type: \\"CREATE_CUSTOM_ACTION\\"; meta: string; }"`;
 
-exports[`create() 1`] = `"{ type: \\"WITH_OPTIONAL_PAYLOAD\\"; payload: number | undefined; }"`;
+exports[`withOptionalPayload() 1`] = `"{ type: \\"CREATE_CUSTOM_ACTION\\"; payload: number | undefined; }"`;
 
-exports[`create(1) 1`] = `"{ type: \\"WITH_OPTIONAL_PAYLOAD\\"; payload: number | undefined; }"`;
+exports[`withOptionalPayload(1) 1`] = `"{ type: \\"CREATE_CUSTOM_ACTION\\"; payload: number | undefined; }"`;
 
-exports[`increment() 1`] = `"{ type: \\"WITH_TYPE_ONLY\\"; }"`;
+exports[`withPayload(1) 1`] = `"{ type: \\"CREATE_CUSTOM_ACTION\\"; payload: number; }"`;
 
-exports[`showNotification('Hello!', 'info') 1`] = `"{ type: \\"SHOW_NOTIFICATION\\"; payload: string; meta: string; }"`;
-
-exports[`withMeta('token') 1`] = `"{ type: \\"WITH_META\\"; meta: string; }"`;
+exports[`withPayloadAndMeta('Hello!', 'info') 1`] = `"{ type: \\"CREATE_CUSTOM_ACTION\\"; payload: string; meta: string; }"`;
 
 exports[`withSymbol() 1`] = `"{ type: any; }"`;
+
+exports[`withTypeOnly() 1`] = `"{ type: \\"CREATE_CUSTOM_ACTION\\"; }"`;

@@ -1,4 +1,4 @@
-import { ActionCreator, TypeMeta, StringType } from '../types';
+import { ActionCreator, TypeMeta, StringType } from '../type-helpers';
 
 export function checkIsEmpty(arg: unknown, argPosition: number = 1) {
   return arg == null;

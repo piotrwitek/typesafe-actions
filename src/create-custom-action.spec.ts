@@ -1,56 +1,58 @@
-import * as Types from './types';
+import * as T from './type-helpers';
 import { createCustomAction } from './create-custom-action';
 
 it.skip('skip', () => undefined);
-
 describe('toString() method return a type', () => {
-  const actionCreator = createCustomAction('TO_STRING');
+  const actionCreator = createCustomAction('CREATE_CUSTOM_ACTION');
   // @dts-jest:pass:snap
-  actionCreator.toString(); // => 'TO_STRING'
+  actionCreator.toString(); // => 'CREATE_CUSTOM_ACTION'
 });
 
 describe('with symbol', () => {
-  const WITH_SYMBOL = Symbol(1);
-  const withSymbol = createCustomAction(WITH_SYMBOL as any);
+  const CREATE_CUSTOM_ACTION = Symbol(1);
+  const withSymbol = createCustomAction(CREATE_CUSTOM_ACTION as any);
   // @dts-jest:pass:snap
-  withSymbol(); // => { type: WITH_SYMBOL }
+  withSymbol(); // => { type: CREATE_CUSTOM_ACTION }
 });
 
 describe('with type only', () => {
-  const increment = createCustomAction('WITH_TYPE_ONLY');
+  const withTypeOnly = createCustomAction('CREATE_CUSTOM_ACTION');
   // @dts-jest:pass:snap
-  increment(); // => { type: 'WITH_TYPE_ONLY' }
+  withTypeOnly(); // => { type: 'CREATE_CUSTOM_ACTION' }
 });
 
 describe('with payload', () => {
-  const add = createCustomAction('WITH_PAYLOAD', type => {
+  const withPayload = createCustomAction('CREATE_CUSTOM_ACTION', type => {
     return (amount: number) => ({ type, payload: amount });
   });
   // @dts-jest:pass:snap
-  add(1); // => { type: 'WITH_PAYLOAD', payload: 1 }
+  withPayload(1); // => { type: 'CREATE_CUSTOM_ACTION', payload: 1 }
 });
 
 describe('with optional payload', () => {
-  const create = createCustomAction('WITH_OPTIONAL_PAYLOAD', type => {
-    return (id?: number) => ({ type, payload: id });
-  });
+  const withOptionalPayload = createCustomAction(
+    'CREATE_CUSTOM_ACTION',
+    type => {
+      return (id?: number) => ({ type, payload: id });
+    }
+  );
   // @dts-jest:pass:snap
-  create(); // => { type: 'WITH_OPTIONAL_PAYLOAD' }
+  withOptionalPayload(); // => { type: 'CREATE_CUSTOM_ACTION' }
   // @dts-jest:pass:snap
-  create(1); // => { type: 'WITH_OPTIONAL_PAYLOAD', payload: 1 }
+  withOptionalPayload(1); // => { type: 'CREATE_CUSTOM_ACTION', payload: 1 }
 });
 
 describe('with meta', () => {
-  const withMeta = createCustomAction('WITH_META', type => {
+  const withMeta = createCustomAction('CREATE_CUSTOM_ACTION', type => {
     return (token: string) => ({ type, meta: token });
   });
   // @dts-jest:pass:snap
-  withMeta('token'); // => { type: 'WITH_META', meta: 'token' }
+  withMeta('token'); // => { type: 'CREATE_CUSTOM_ACTION', meta: 'token' }
 });
 
 describe('with payload and meta', () => {
-  const showNotification = createCustomAction(
-    'SHOW_NOTIFICATION',
+  const withPayloadAndMeta = createCustomAction(
+    'CREATE_CUSTOM_ACTION',
     type => (message: string, scope: string) => ({
       type,
       payload: message,
@@ -58,5 +60,5 @@ describe('with payload and meta', () => {
     })
   );
   // @dts-jest:pass:snap
-  showNotification('Hello!', 'info'); // => { type: 'SHOW_NOTIFICATION', payload: 'Hello!', meta: 'info' }
+  withPayloadAndMeta('Hello!', 'info'); // => { type: 'CREATE_CUSTOM_ACTION', payload: 'Hello!', meta: 'info' }
 });

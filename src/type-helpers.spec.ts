@@ -1,12 +1,11 @@
-import * as Types from './types';
+import * as T from './type-helpers';
+import { testType } from './utils/testing';
 import { getType } from './get-type';
 import { isOfType } from './is-of-type';
 import { isActionOf } from './is-action-of';
-import { StateType, ActionType } from './types';
+import { StateType, ActionType } from './type-helpers';
 
-import { testType } from './utils/test-utils';
-import { types } from './utils/type-fixtures';
-import { actions } from './utils/action-creator-fixtures';
+import { actions, types } from './type-helpers-fixtures';
 const {
   withTypeOnly,
   withPayload,
@@ -29,19 +28,19 @@ describe('StateType', () => {
     }
   };
 
-  // @dts-jest:pass:snap -> boolean
+  // @dts-jest:pass:snap
   testType<StateType<typeof reducer>>();
   expect(reducer(undefined, withTypeOnly())).toBe(true);
 });
 
 describe('ActionType', () => {
-  // @dts-jest:pass:snap -> Types.EmptyAction<"WITH_TYPE_ONLY"> | Types.EmptyAction<"VERY_DEEP_WITH_TYPE_ONLY"> | Types.PayloadAction<"WITH_PAYLOAD", number> | Types.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | Types.PayloadMetaAction<"WITH_META", void, string> | Types.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | Types.EmptyAction<"FETCH_USER_REQUEST"> | Types.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | Types.PayloadAction<"FETCH_USER_FAILURE", Error> | { type: "SIMPLE_WITH_TYPE_ONLY"; } | { type: "SIMPLE_WITH_PAYLOAD"; payload: number; } | { type: "SIMPLE_WITH_OPTIONAL_PAYLOAD"; payload: number | undefined; } | { type: "SIMPLE_WITH_META"; meta: string; } | { type: "SIMPLE_WITH_PAYLOAD_META"; payload: number; meta: string; }
+  // @dts-jest:pass:snap
   testType<ActionType<typeof actions>>();
   type RootAction = ActionType<typeof actions>;
 
   function getTypeReducer(action: RootAction): RootAction | undefined {
     switch (action.type) {
-      case getType(actions.very.deep.withTypeOnly): {
+      case getType(actions.deep.nested.withTypeOnly): {
         return testType<{ type: 'VERY_DEEP_WITH_TYPE_ONLY' }>(action);
       }
       case getType(withTypeOnly): {
@@ -93,7 +92,7 @@ describe('ActionType', () => {
   }
 
   function isActionOfReducer(action: RootAction): RootAction | undefined {
-    if (isActionOf(actions.very.deep.withTypeOnly, action)) {
+    if (isActionOf(actions.deep.nested.withTypeOnly, action)) {
       return testType<{ type: 'VERY_DEEP_WITH_TYPE_ONLY' }>(action);
     } else if (isActionOf(withTypeOnly, action)) {
       return testType<{ type: 'WITH_TYPE_ONLY' }>(action);
@@ -125,7 +124,7 @@ describe('ActionType', () => {
   function isActionOfCurriedReducer(
     action: RootAction
   ): RootAction | undefined {
-    if (isActionOf(actions.very.deep.withTypeOnly)(action)) {
+    if (isActionOf(actions.deep.nested.withTypeOnly)(action)) {
       return testType<{ type: 'VERY_DEEP_WITH_TYPE_ONLY' }>(action);
     } else if (isActionOf(withTypeOnly)(action)) {
       return testType<{ type: 'WITH_TYPE_ONLY' }>(action);
@@ -155,7 +154,7 @@ describe('ActionType', () => {
   }
 
   function isActionOfArrayReducer(action: RootAction): RootAction | undefined {
-    if (isActionOf([actions.very.deep.withTypeOnly])(action)) {
+    if (isActionOf([actions.deep.nested.withTypeOnly])(action)) {
       return testType<{ type: 'VERY_DEEP_WITH_TYPE_ONLY' }>(action);
     } else if (isActionOf([withTypeOnly])(action)) {
       return testType<{ type: 'WITH_TYPE_ONLY' }>(action);
