@@ -10,6 +10,8 @@ export type ActionCreator<T extends { type: string }> = ((
 ) => T) &
   TypeMeta<T['type']>;
 
+// TODO: #95 - add overload that will extend AsyncActionCreator
+
 /**
  * @description (curried assert function) check if an action is the instance of given action-creator(s)
  * @description it works with discriminated union types
@@ -45,9 +47,14 @@ export function isActionOf<AC extends ActionCreator<{ type: string }>>(
   actionCreators.forEach(checkInvalidActionCreatorInArray);
 
   const assertFn = (_action: { type: string }) =>
-    actionCreators.some(
-      actionCreator => _action.type === actionCreator.getType!()
-    );
+    actionCreators.some(actionCreator => {
+      // createAsyncAction object return array of types
+      const typeOrTypes = actionCreator.getType!();
+      const actionTypes = Array.isArray(typeOrTypes)
+        ? typeOrTypes
+        : [typeOrTypes];
+      return actionTypes.includes(_action.type);
+    });
 
   // 1 arg case => return curried version
   if (action === undefined) {

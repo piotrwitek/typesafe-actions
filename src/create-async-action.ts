@@ -106,5 +106,6 @@ export function createAsyncAction<
   //   };
   // }
 
+  // TODO: add getType return array of types for each handler #95
   return Object.assign(constructor, {});
 }
