@@ -1,4 +1,9 @@
-import { TypeMeta } from './types';
+import { TypeMeta } from './type-helpers';
+import {
+  checkInvalidActionCreatorInArray,
+  checkIsEmpty,
+  throwIsEmpty,
+} from './utils/validation';
 
 export type ActionCreator<T extends { type: string }> = ((
   ...args: any[]
@@ -22,42 +27,32 @@ export function isActionOf<AC extends ActionCreator<{ type: string }>>(
   actionCreator: AC | AC[]
 ): (action: { type: string }) => action is ReturnType<AC>;
 
-/** implementation */
+/**
+ * implementation
+ */
 export function isActionOf<AC extends ActionCreator<{ type: string }>>(
-  creatorOrCreators: AC | AC[],
-  actionOrNil?: { type: string }
+  actionCreatorOrCreators: AC | AC[],
+  action?: { type: string }
 ) {
-  if (creatorOrCreators == null) {
-    throw new Error('first argument is missing');
+  if (checkIsEmpty(actionCreatorOrCreators)) {
+    throwIsEmpty(1);
   }
 
-  if (Array.isArray(creatorOrCreators)) {
-    (creatorOrCreators as any[]).forEach((actionCreator, index) => {
-      if (actionCreator.getType == null) {
-        throw new Error(`first argument contains element
-        that is not created with "typesafe-actions" at index [${index}]`);
-      }
-    });
-  } else {
-    if (creatorOrCreators.getType == null) {
-      throw new Error('first argument is not created with "typesafe-actions"');
-    }
-  }
+  const actionCreators = Array.isArray(actionCreatorOrCreators)
+    ? actionCreatorOrCreators
+    : [actionCreatorOrCreators];
 
-  const assertFn = (action: { type: string }) => {
-    const actionCreators: any[] = Array.isArray(creatorOrCreators)
-      ? creatorOrCreators
-      : [creatorOrCreators];
+  actionCreators.forEach(checkInvalidActionCreatorInArray);
 
-    return actionCreators.some((actionCreator, index) => {
-      return actionCreator.getType() === action.type;
-    });
-  };
+  const assertFn = (_action: { type: string }) =>
+    actionCreators.some(
+      actionCreator => _action.type === actionCreator.getType!()
+    );
 
-  // with 1 arg return assertFn
-  if (actionOrNil == null) {
+  // 1 arg case => return curried version
+  if (action === undefined) {
     return assertFn;
   }
-  // with 2 args invoke assertFn and return the result
-  return assertFn(actionOrNil);
+  // 2 args case => invoke assertFn and return the result
+  return assertFn(action);
 }

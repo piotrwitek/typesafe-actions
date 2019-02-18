@@ -1,108 +1,54 @@
-import * as Types from './types';
+import * as T from './type-helpers';
 import { createActionDeprecated } from './create-action-deprecated';
 
-describe('createActionDeprecated', () => {
-  it('should work with symbol as action type', () => {
-    const INCREMENT = Symbol(1);
-    const increment = createActionDeprecated(INCREMENT);
-    const actual = increment();
-    // @dts-jest:pass:snap
-    actual;
-    expect(actual).toEqual({ type: INCREMENT });
-    expect(actual).not.toEqual({ type: 'INCREMENT' });
-  });
+it.skip('skip', () => undefined);
 
-  it('with type only', () => {
-    const increment = createActionDeprecated('INCREMENT');
+describe('with symbol', () => {
+  const CREATE_ACTION_DEPRECATED = Symbol(1);
+  const increment = createActionDeprecated(CREATE_ACTION_DEPRECATED as any);
+  // @dts-jest:pass:snap
+  increment(); // => { type: CREATE_ACTION_DEPRECATED }
+});
 
-    const action: { type: 'INCREMENT' } = increment();
-    expect(action).toEqual({ type: 'INCREMENT' });
-  });
+describe('with type only', () => {
+  const withTypeOnly = createActionDeprecated('CREATE_ACTION_DEPRECATED');
+  // @dts-jest:pass:snap
+  withTypeOnly(); // => { type: 'CREATE_ACTION_DEPRECATED' }
+});
 
-  it('with payload', () => {
-    const add = createActionDeprecated('ADD', (amount: number) => ({
-      type: 'ADD',
+describe('with payload', () => {
+  const withPayload = createActionDeprecated(
+    'CREATE_ACTION_DEPRECATED',
+    (amount: number) => ({
+      type: 'CREATE_ACTION_DEPRECATED',
       payload: amount,
-    }));
+    })
+  );
+  // @dts-jest:pass:snap
+  withPayload(10); // => { type: 'CREATE_ACTION_DEPRECATED', payload: 10 }
+});
 
-    const action: { type: 'ADD'; payload: number } = add(10);
-    expect(action).toEqual({ type: 'ADD', payload: 10 });
-  });
+describe('with meta', () => {
+  const withMeta = createActionDeprecated(
+    'CREATE_ACTION_DEPRECATED',
+    (message: string) => ({
+      type: 'CREATE_ACTION_DEPRECATED',
+      meta: message,
+    })
+  );
+  // @dts-jest:pass:snap
+  withMeta('Error message'); // => { type: 'CREATE_ACTION_DEPRECATED', meta: 'Error message' }
+});
 
-  it('with optional payload', () => {
-    const showNotification = createActionDeprecated(
-      'SHOW_NOTIFICATION',
-      (message?: string) => ({
-        type: 'SHOW_NOTIFICATION',
-        payload: message,
-      })
-    );
-
-    const action: {
-      type: 'SHOW_NOTIFICATION';
-      payload: string | undefined;
-    } = showNotification();
-    expect(action).toEqual({
-      type: 'SHOW_NOTIFICATION',
-      payload: undefined,
-    });
-  });
-
-  it('with meta', () => {
-    const showError = createActionDeprecated(
-      'SHOW_ERROR',
-      (message: string) => ({
-        type: 'SHOW_ERROR',
-        meta: message,
-      })
-    );
-
-    const action: { type: 'SHOW_ERROR'; meta: string } = showError(
-      'Error message'
-    );
-    expect(action).toEqual({
-      type: 'SHOW_ERROR',
-      meta: 'Error message',
-    });
-  });
-
-  it('with optional meta', () => {
-    const showError = createActionDeprecated(
-      'SHOW_ERROR',
-      (message?: string) => ({
-        type: 'SHOW_ERROR',
-        meta: message,
-      })
-    );
-
-    const action: { type: 'SHOW_ERROR'; meta: string | undefined } = showError(
-      'Error message'
-    );
-    expect(action).toEqual({
-      type: 'SHOW_ERROR',
-      meta: 'Error message',
-    });
-  });
-
-  it('with payload and meta', () => {
-    const notify = createActionDeprecated(
-      'NOTIFY',
-      (username: string, message: string) => ({
-        type: 'NOTIFY',
-        payload: { message: `${username}: ${message}` },
-        meta: { username, message },
-      })
-    );
-
-    const action: {
-      type: 'NOTIFY';
-      payload: { message: string };
-      meta: { username: string; message: string };
-    } = notify('Piotr', 'Hello!');
-    expect(action).toEqual({
-      type: 'NOTIFY',
-      payload: { message: 'Piotr: Hello!' },
-      meta: { username: 'Piotr', message: 'Hello!' },
-    });
-  });
+describe('with payload and meta', () => {
+  const withPayloadAndMeta = createActionDeprecated(
+    'CREATE_ACTION_DEPRECATED',
+    (username: string, message: string) => ({
+      type: 'CREATE_ACTION_DEPRECATED',
+      payload: { message: `${username}: ${message}` },
+      meta: { username, message },
+    })
+  );
+  // @dts-jest:pass:snap
+  withPayloadAndMeta('Piotr', 'Hello!'); // => { type: 'CREATE_ACTION_DEPRECATED', payload: { message: 'Piotr: Hello!' }, meta: { username: 'Piotr', message: 'Hello!' } }
 });

@@ -1,3 +1,51 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`actual 1`] = `"Types.EmptyAction<\\"INCREMENT\\">"`;
+exports[`actionCreator.toString() 1`] = `"string"`;
+
+exports[`withMeta('info message') 1`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { meta: string; }"`;
+
+exports[`withMeta('info message') 2`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { meta: string | number | null; }"`;
+
+exports[`withMeta() 1`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { meta: string; }"`;
+
+exports[`withMeta(3) 1`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { meta: string | number | null; }"`;
+
+exports[`withMeta(null) 1`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { meta: string | number | null; }"`;
+
+exports[`withMeta(undefined, 'token') 1`] = `"T.PayloadMetaAction<\\"CREATE_STANDARD_ACTION\\", void, string>"`;
+
+exports[`withPayload('foo') 1`] = `"T.PayloadAction<\\"CREATE_STANDARD_ACTION\\", string | number | null>"`;
+
+exports[`withPayload('info message') 1`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { payload: string; }"`;
+
+exports[`withPayload('info message') 2`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { payload: string | number | null; }"`;
+
+exports[`withPayload('up') 1`] = `"T.PayloadAction<\\"CREATE_STANDARD_ACTION\\", \\"up\\" | \\"down\\" | \\"unknown\\">"`;
+
+exports[`withPayload() 1`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { payload: string; }"`;
+
+exports[`withPayload(3) 1`] = `"T.PayloadAction<\\"CREATE_STANDARD_ACTION\\", string | number | null>"`;
+
+exports[`withPayload(3) 2`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { payload: string | number | null; }"`;
+
+exports[`withPayload(10) 1`] = `"T.PayloadAction<\\"CREATE_STANDARD_ACTION\\", number>"`;
+
+exports[`withPayload(null) 1`] = `"T.PayloadAction<\\"CREATE_STANDARD_ACTION\\", string | number | null>"`;
+
+exports[`withPayload(null) 2`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { payload: string | number | null; }"`;
+
+exports[`withPayload(true) 1`] = `"T.PayloadAction<\\"CREATE_STANDARD_ACTION\\", boolean>"`;
+
+exports[`withPayloadAndMeta('error message') 1`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { payload: string; meta: { severity: string; }; }"`;
+
+exports[`withPayloadAndMeta() 1`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { payload: string; meta: { severity: string; }; }"`;
+
+exports[`withPayloadAndMeta({ username: 'Piotr', message: 'Hello!' }) 1`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { payload: string; meta: { username: string; message: string | undefined; }; }"`;
+
+exports[`withPayloadAndMeta(1, 'token') 1`] = `"T.PayloadMetaAction<\\"CREATE_STANDARD_ACTION\\", number, string>"`;
+
+exports[`withSymbol() 1`] = `"T.EmptyAction<any>"`;
+
+exports[`withTypeOnly() 1`] = `"T.EmptyAction<\\"CREATE_STANDARD_ACTION\\">"`;
+
+exports[`withTypeOnly() 2`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; }"`;

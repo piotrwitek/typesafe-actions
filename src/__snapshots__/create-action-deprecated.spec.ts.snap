@@ -1,3 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`actual 1`] = `"{ type: unique symbol; }"`;
+exports[`increment() 1`] = `"{ type: any; }"`;
+
+exports[`withMeta('Error message') 1`] = `"{ type: \\"CREATE_ACTION_DEPRECATED\\"; meta: string; }"`;
+
+exports[`withPayload(10) 1`] = `"{ type: \\"CREATE_ACTION_DEPRECATED\\"; payload: number; }"`;
+
+exports[`withPayloadAndMeta('Piotr', 'Hello!') 1`] = `"{ type: \\"CREATE_ACTION_DEPRECATED\\"; payload: { message: string; }; meta: { username: string; message: string; }; }"`;
+
+exports[`withTypeOnly() 1`] = `"{ type: \\"CREATE_ACTION_DEPRECATED\\"; }"`;

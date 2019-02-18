@@ -1,126 +1,112 @@
-import * as Types from './types';
+import * as T from './type-helpers';
 import { createAsyncAction } from './create-async-action';
 
-type Todo = { firstName: string; lastName: string };
-describe('createAsyncAction', () => {
-  it('should create an async action with types', () => {
-    // NOTE: with `void` type you can make it explicit that no arguments are accepted by the action-creator function
-    const fetchTodos = createAsyncAction(
-      'FETCH_TODOS_REQUEST',
-      'FETCH_TODOS_SUCCESS',
-      'FETCH_TODOS_FAILURE'
-    )<void, Todo[], Error>();
+it.skip('skip', () => undefined);
 
-    const requestResult = fetchTodos.request();
-    // @dts-jest:pass:snap -> Types.EmptyAction<"FETCH_TODOS_REQUEST">
-    requestResult;
-    expect(requestResult).toEqual({ type: 'FETCH_TODOS_REQUEST' });
-    const successResult = fetchTodos.success([
-      {
-        firstName: 'Piotr',
-        lastName: 'Witek',
-      },
-    ]);
-    // @dts-jest:pass:snap -> Types.PayloadAction<"FETCH_TODOS_SUCCESS", Todo[]>
-    successResult;
-    expect(successResult).toEqual({
-      type: 'FETCH_TODOS_SUCCESS',
-      payload: [
-        {
-          firstName: 'Piotr',
-          lastName: 'Witek',
-        },
-      ],
-    });
-    const failureResult = fetchTodos.failure(Error('reason'));
-    // @dts-jest:pass:snap -> Types.PayloadAction<"FETCH_TODOS_FAILURE", Error>
-    failureResult;
-    expect(failureResult).toEqual({
-      type: 'FETCH_TODOS_FAILURE',
-      payload: Error('reason'),
-    });
-  });
+type User = { firstName: string; lastName: string };
 
-  // it('should create an async action with mappers', () => {
-  //   const fetchUserMappers = createAsyncAction(
-  //     'FETCH_USER_REQUEST',
-  //     'FETCH_USER_SUCCESS',
-  //     'FETCH_USER_FAILURE'
-  //   ).withMappers(
-  //     (id: string) => ({ id }), // request mapper
-  //     ({ firstName, lastName }: User) => `${firstName} ${lastName}`, // success mapper
-  //     () => 'hardcoded error' // error mapper
-  //   );
+describe('should create an async action with types', () => {
+  // NOTE: with `void` type you can make it explicit that no arguments are accepted by the action-creator function
+  const fetchUsers = createAsyncAction(
+    'FETCH_USERS_REQUEST',
+    'FETCH_USERS_SUCCESS',
+    'FETCH_USERS_FAILURE'
+  )<void, User[], Error>();
 
-  //   const requestResult: {
-  //     type: 'FETCH_USER_REQUEST';
-  //     payload: { id: string };
-  //   } = fetchUserMappers.request('fake_id');
-  //   expect(requestResult).toEqual({ type: 'FETCH_USER_REQUEST', payload: { id: 'fake_id' } });
-  //   const successResult: {
-  //     type: 'FETCH_USER_SUCCESS';
-  //     payload: string;
-  //   } = fetchUserMappers.success({
-  //     firstName: 'Piotr',
-  //     lastName: 'Witek',
-  //   });
-  //   expect(successResult).toEqual({
-  //     type: 'FETCH_USER_SUCCESS',
-  //     payload: 'Piotr Witek',
-  //   });
-  //   const failureResult: {
-  //     type: 'FETCH_USER_FAILURE';
-  //     payload: string;
-  //   } = fetchUserMappers.failure();
-  //   expect(failureResult).toEqual({
-  //     type: 'FETCH_USER_FAILURE',
-  //     payload: 'hardcoded error',
-  //   });
-  // });
+  // @dts-jest:pass:snap -> T.EmptyAction<"FETCH_USERS_REQUEST">
+  fetchUsers.request(); /* => {
+    type: 'FETCH_USERS_REQUEST'
+  } */
 
-  // it('should create an async action with unions', () => {
-  //   const fetchUserMappers = createAsyncAction(
-  //     'FETCH_USER_REQUEST',
-  //     'FETCH_USER_SUCCESS',
-  //     'FETCH_USER_FAILURE'
-  //   ).withMappers(
-  //     (id: string | number) => ({ id }), // request mapper
-  //     ({ firstName, lastName }: User | undefined) => `${firstName} ${lastName}`, // success mapper
-  //     (error: boolean | string) => error // error mapper
-  //   );
+  // @dts-jest:pass:snap -> T.PayloadAction<"FETCH_USERS_SUCCESS", User[]>
+  fetchUsers.success([
+    { firstName: 'Piotr', lastName: 'Witek' },
+  ]); /* => {
+    type: 'FETCH_USERS_SUCCESS',
+    payload: [{ firstName: 'Piotr', lastName: 'Witek' }]
+  } */
 
-  //   const requestResult: {
-  //     type: 'FETCH_USER_REQUEST';
-  //     payload: { id: string | number };
-  //   } = fetchUserMappers.request(2);
-  //   expect(requestResult).toEqual({ type: 'FETCH_USER_REQUEST', payload: { id: 2 } });
-  //   const successResult: {
-  //     type: 'FETCH_USER_SUCCESS';
-  //     payload: string | undefined;
-  //   } = fetchUserMappers.success(undefined);
-  //   expect(successResult).toEqual({
-  //     type: 'FETCH_USER_SUCCESS',
-  //     payload: undefined,
-  //   });
-  //   const failureResult: {
-  //     type: 'FETCH_USER_FAILURE';
-  //     payload: boolean | string;
-  //   } = fetchUserMappers.failure(true);
-  //   expect(failureResult).toEqual({
-  //     type: 'FETCH_USER_FAILURE',
-  //     payload: true,
-  //   });
-  // });
+  // @dts-jest:pass:snap -> T.PayloadAction<"FETCH_USERS_FAILURE", Error>
+  fetchUsers.failure(
+    Error('reason')
+  ); /* => {
+    type: 'FETCH_USERS_FAILURE', payload: Error('reason')
+  } */
 });
 
-// NEW API
-// const getTodoAsync = createAsyncAction(
-//   'GET_TODO_REQUEST',
-//   'GET_TODO_SUCCESS',
-//   'GET_TODO_FAILURE'
-// )<{ token: string; id: string }, Todo, Error>();
+// describe('should create an async action with mappers', () => {
+//   const fetchUserMappers = createAsyncAction(
+//     'FETCH_USER_REQUEST',
+//     'FETCH_USER_SUCCESS',
+//     'FETCH_USER_FAILURE'
+//   ).withMappers(
+//     (id: string) => ({ id }), // request mapper
+//     ({ firstName, lastName }: User) => `${firstName} ${lastName}`, // success mapper
+//     () => 'hardcoded error' // error mapper
+//   );
 
-// WITH MAP (PROPOSAL):
+//   const requestResult: {
+//     type: 'FETCH_USER_REQUEST';
+//     payload: { id: string };
+//   } = fetchUserMappers.request('fake_id');
+//   expect(requestResult).toEqual({ type: 'FETCH_USER_REQUEST', payload: { id: 'fake_id' } });
+//   const successResult: {
+//     type: 'FETCH_USER_SUCCESS';
+//     payload: string;
+//   } = fetchUserMappers.success({
+//     firstName: 'Piotr',
+//     lastName: 'Witek',
+//   });
+//   expect(successResult).toEqual({
+//     type: 'FETCH_USER_SUCCESS',
+//     payload: 'Piotr Witek',
+//   });
+//   const failureResult: {
+//     type: 'FETCH_USER_FAILURE';
+//     payload: string;
+//   } = fetchUserMappers.failure();
+//   expect(failureResult).toEqual({
+//     type: 'FETCH_USER_FAILURE',
+//     payload: 'hardcoded error',
+//   });
+// });
+
+// describe('should create an async action with unions', () => {
+//   const fetchUserMappers = createAsyncAction(
+//     'FETCH_USER_REQUEST',
+//     'FETCH_USER_SUCCESS',
+//     'FETCH_USER_FAILURE'
+//   ).withMappers(
+//     (id: string | number) => ({ id }), // request mapper
+//     ({ firstName, lastName }: User | undefined) => `${firstName} ${lastName}`, // success mapper
+//     (error: boolean | string) => error // error mapper
+//   );
+
+//   const requestResult: {
+//     type: 'FETCH_USER_REQUEST';
+//     payload: { id: string | number };
+//   } = fetchUserMappers.request(2);
+//   expect(requestResult).toEqual({ type: 'FETCH_USER_REQUEST', payload: { id: 2 } });
+//   const successResult: {
+//     type: 'FETCH_USER_SUCCESS';
+//     payload: string | undefined;
+//   } = fetchUserMappers.success(undefined);
+//   expect(successResult).toEqual({
+//     type: 'FETCH_USER_SUCCESS',
+//     payload: undefined,
+//   });
+//   const failureResult: {
+//     type: 'FETCH_USER_FAILURE';
+//     payload: boolean | string;
+//   } = fetchUserMappers.failure(true);
+//   expect(failureResult).toEqual({
+//     type: 'FETCH_USER_FAILURE',
+//     payload: true,
+//   });
+// });
+
+// NEW API PROPOSAL:
+// - WITH MAP
 // const getTodoAsyncMap = createAsyncAction(
 //   'GET_TODO_REQUEST',
 //   'GET_TODO_SUCCESS',

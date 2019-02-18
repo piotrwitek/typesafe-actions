@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`typeLiteral 1`] = `"\\"WITH_TYPE_ONLY\\""`;
+exports[`getType(createAction('CREATE_ACTION')) 1`] = `"string"`;
 
-exports[`typeLiteral 2`] = `"\\"WITH_PAYLOAD\\""`;
+exports[`getType(createCustomAction('CREATE_CUSTOM_ACTION')) 1`] = `"string"`;
 
-exports[`typeLiteral 3`] = `"\\"WITH_MAPPED_PAYLOAD\\""`;
+exports[`getType(createStandardAction('CREATE_STANDARD_ACTION')<void>()) 1`] = `"\\"CREATE_STANDARD_ACTION\\""`;

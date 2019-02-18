@@ -1,6 +1,7 @@
-import * as Types from './types';
+import * as T from './type-helpers';
 import { isActionOf } from './is-action-of';
-import { actions } from './utils/test-utils';
+
+import { actions } from './type-helpers-fixtures';
 const {
   withTypeOnly,
   withPayload,
@@ -9,7 +10,8 @@ const {
   withMappedPayloadMeta,
 } = actions;
 
-/** FIXTURES */
+/** HELPERS */
+
 const typeOnlyAction = withTypeOnly();
 const typeOnlyExpected = { type: 'WITH_TYPE_ONLY' };
 const payloadAction = withPayload(2);
@@ -36,6 +38,12 @@ const $action = [
   mappedPayloadAction,
   mappedPayloadMetaAction,
 ];
+
+// TODO: #3
+// should error when missing argument
+// should error when passed invalid arguments like primitives,object, empty array, array with nulls
+
+/** TESTS */
 
 describe('isActionOf', () => {
   it('should work with single action-creator arg', () => {
@@ -68,7 +76,7 @@ describe('isActionOf', () => {
 
   it('should correctly assert for an array with 1 arg', () => {
     const actual = $action.filter(isActionOf([withTypeOnly]));
-    // @dts-jest:pass:snap -> Types.EmptyAction<"WITH_TYPE_ONLY">[]
+    // @dts-jest:pass:snap -> T.EmptyAction<"WITH_TYPE_ONLY">[]
     actual;
     expect(actual).toHaveLength(1);
     expect(actual).toEqual([typeOnlyExpected]);
@@ -76,7 +84,7 @@ describe('isActionOf', () => {
 
   it('should correctly assert for an array with 2 args', () => {
     const actual = $action.filter(isActionOf([withTypeOnly, withPayload]));
-    // @dts-jest:pass:snap -> (Types.EmptyAction<"WITH_TYPE_ONLY"> | Types.PayloadAction<"WITH_PAYLOAD", number>)[]
+    // @dts-jest:pass:snap -> (T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number>)[]
     actual;
     expect(actual).toHaveLength(2);
     expect(actual).toEqual([typeOnlyExpected, payloadExpected]);
@@ -86,7 +94,7 @@ describe('isActionOf', () => {
     const actual = $action.filter(
       isActionOf([withTypeOnly, withPayload, withPayloadMeta])
     );
-    // @dts-jest:pass:snap -> (Types.EmptyAction<"WITH_TYPE_ONLY"> | Types.PayloadAction<"WITH_PAYLOAD", number> | Types.PayloadMetaAction<"WITH_PAYLOAD_META", number, string>)[]
+    // @dts-jest:pass:snap -> (T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string>)[]
     actual;
     expect(actual).toHaveLength(3);
     expect(actual).toEqual([
@@ -105,7 +113,7 @@ describe('isActionOf', () => {
         withMappedPayload,
       ])
     );
-    // @dts-jest:pass:snap -> (Types.EmptyAction<"WITH_TYPE_ONLY"> | Types.PayloadAction<"WITH_PAYLOAD", number> | Types.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }))[]
+    // @dts-jest:pass:snap -> (T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }))[]
     actual;
     expect(actual).toEqual([
       typeOnlyExpected,
@@ -125,7 +133,7 @@ describe('isActionOf', () => {
         withMappedPayloadMeta,
       ])
     );
-    // @dts-jest:pass:snap -> (Types.EmptyAction<"WITH_TYPE_ONLY"> | Types.PayloadAction<"WITH_PAYLOAD", number> | Types.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }))[]
+    // @dts-jest:pass:snap -> (T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }))[]
     actual;
     expect(actual).toHaveLength(5);
     expect(actual).toEqual([

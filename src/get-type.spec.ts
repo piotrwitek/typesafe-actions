@@ -1,26 +1,22 @@
-import * as Types from './types';
+import * as T from './type-helpers';
+import { createAction } from './create-action';
+import { createStandardAction } from './create-standard-action';
+import { createCustomAction } from './create-custom-action';
 import { getType } from './get-type';
-import { actions } from './utils/test-utils';
 
-describe('getType', () => {
-  it('with type as string', () => {
-    const typeLiteral = getType(actions.withTypeOnly);
-    // @dts-jest:pass:snap
-    typeLiteral;
-    expect(typeLiteral).toBe('WITH_TYPE_ONLY');
-  });
+it.skip('skip', () => undefined);
 
-  it('with payload', () => {
-    const typeLiteral = getType(actions.withPayload);
-    // @dts-jest:pass:snap
-    typeLiteral;
-    expect(typeLiteral).toBe('WITH_PAYLOAD');
-  });
+describe('from createAction', () => {
+  // @dts-jest:pass:snap
+  getType(createAction('CREATE_ACTION')); // => 'CREATE_ACTION'
+});
 
-  it('with mapped payload', () => {
-    const typeLiteral = getType(actions.withMappedPayload);
-    // @dts-jest:pass:snap
-    typeLiteral;
-    expect(typeLiteral).toBe('WITH_MAPPED_PAYLOAD');
-  });
+describe('from createStandardAction', () => {
+  // @dts-jest:pass:snap
+  getType(createStandardAction('CREATE_STANDARD_ACTION')<void>()); // => 'CREATE_STANDARD_ACTION'
+});
+
+describe('from createCustomAction', () => {
+  // @dts-jest:pass:snap
+  getType(createCustomAction('CREATE_CUSTOM_ACTION')); // => 'CREATE_CUSTOM_ACTION'
 });

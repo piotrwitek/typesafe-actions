@@ -1,10 +1,11 @@
-import * as Types from './types';
+import * as T from './type-helpers';
+import { testType } from './utils/testing';
 import { getType } from './get-type';
 import { isOfType } from './is-of-type';
 import { isActionOf } from './is-action-of';
-import { StateType, ActionType } from './types';
+import { StateType, ActionType } from './type-helpers';
 
-import { types, actions, testType, User } from './utils/test-utils';
+import { actions, types } from './type-helpers-fixtures';
 const {
   withTypeOnly,
   withPayload,
@@ -39,7 +40,7 @@ describe('ActionType', () => {
 
   function getTypeReducer(action: RootAction): RootAction | undefined {
     switch (action.type) {
-      case getType(actions.very.deep.withTypeOnly): {
+      case getType(actions.deep.nested.withTypeOnly): {
         return testType<{ type: 'VERY_DEEP_WITH_TYPE_ONLY' }>(action);
       }
       case getType(withTypeOnly): {
@@ -75,7 +76,7 @@ describe('ActionType', () => {
       case getType(asyncAction.success): {
         return testType<{
           type: 'FETCH_USER_SUCCESS';
-          payload: User;
+          payload: { firstName: string; lastName: string };
         }>(action);
       }
       case getType(asyncAction.failure): {
@@ -91,7 +92,7 @@ describe('ActionType', () => {
   }
 
   function isActionOfReducer(action: RootAction): RootAction | undefined {
-    if (isActionOf(actions.very.deep.withTypeOnly, action)) {
+    if (isActionOf(actions.deep.nested.withTypeOnly, action)) {
       return testType<{ type: 'VERY_DEEP_WITH_TYPE_ONLY' }>(action);
     } else if (isActionOf(withTypeOnly, action)) {
       return testType<{ type: 'WITH_TYPE_ONLY' }>(action);
@@ -123,7 +124,7 @@ describe('ActionType', () => {
   function isActionOfCurriedReducer(
     action: RootAction
   ): RootAction | undefined {
-    if (isActionOf(actions.very.deep.withTypeOnly)(action)) {
+    if (isActionOf(actions.deep.nested.withTypeOnly)(action)) {
       return testType<{ type: 'VERY_DEEP_WITH_TYPE_ONLY' }>(action);
     } else if (isActionOf(withTypeOnly)(action)) {
       return testType<{ type: 'WITH_TYPE_ONLY' }>(action);
@@ -153,7 +154,7 @@ describe('ActionType', () => {
   }
 
   function isActionOfArrayReducer(action: RootAction): RootAction | undefined {
-    if (isActionOf([actions.very.deep.withTypeOnly])(action)) {
+    if (isActionOf([actions.deep.nested.withTypeOnly])(action)) {
       return testType<{ type: 'VERY_DEEP_WITH_TYPE_ONLY' }>(action);
     } else if (isActionOf([withTypeOnly])(action)) {
       return testType<{ type: 'WITH_TYPE_ONLY' }>(action);

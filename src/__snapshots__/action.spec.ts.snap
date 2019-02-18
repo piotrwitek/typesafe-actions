@@ -1,3 +1,33 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`actual 1`] = `"Types.EmptyAction<\\"SHOW_NOTIFICATION\\">"`;
+exports[`withMeta('info') 1`] = `"{ type: \\"ACTION\\"; meta: string; }"`;
+
+exports[`withOptionalMeta('info') 1`] = `"{ type: \\"ACTION\\"; meta: string | undefined; }"`;
+
+exports[`withOptionalMeta() 1`] = `"{ type: \\"ACTION\\"; meta: string | undefined; }"`;
+
+exports[`withOptionalPayload('Hello!') 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; }"`;
+
+exports[`withOptionalPayload() 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; }"`;
+
+exports[`withOptionalPayloadAndMeta('info') 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; meta: string; }"`;
+
+exports[`withOptionalPayloadAndMeta('info', 'Hello!') 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; meta: string; }"`;
+
+exports[`withOptionalPayloadAndOptionalMeta('Hello!') 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; meta: string | undefined; }"`;
+
+exports[`withOptionalPayloadAndOptionalMeta('Hello!', 'info') 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; meta: string | undefined; }"`;
+
+exports[`withOptionalPayloadAndOptionalMeta() 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; meta: string | undefined; }"`;
+
+exports[`withPayload('Hello!') 1`] = `"{ type: \\"ACTION\\"; payload: string; }"`;
+
+exports[`withPayloadAndMeta('Hello!', 'info') 1`] = `"{ type: \\"ACTION\\"; payload: string; meta: string; }"`;
+
+exports[`withPayloadAndOptionalMeta('Hello!') 1`] = `"{ type: \\"ACTION\\"; payload: string; meta: string | undefined; }"`;
+
+exports[`withPayloadAndOptionalMeta('Hello!', 'info') 1`] = `"{ type: \\"ACTION\\"; payload: string; meta: string | undefined; }"`;
+
+exports[`withSymbol() 1`] = `"{ type: any; }"`;
+
+exports[`withTypeOnly() 1`] = `"{ type: \\"ACTION\\"; }"`;

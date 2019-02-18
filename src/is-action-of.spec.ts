@@ -1,6 +1,7 @@
-import * as Types from './types';
+import * as T from './type-helpers';
 import { isActionOf } from './is-action-of';
-import { actions } from './utils/test-utils';
+
+import { actions } from './type-helpers-fixtures';
 const {
   withTypeOnly,
   withPayload,
@@ -9,7 +10,8 @@ const {
   withMappedPayloadMeta,
 } = actions;
 
-/** FIXTURES */
+/** HELPERS */
+
 const typeOnlyAction = withTypeOnly();
 const typeOnlyExpected = { type: 'WITH_TYPE_ONLY' };
 const payloadAction = withPayload(2);
@@ -36,6 +38,12 @@ const $action = [
   mappedPayloadAction,
   mappedPayloadMetaAction,
 ];
+
+// TODO: #3
+// should error when missing argument
+// should error when passed invalid arguments like primitives,object, empty array, array with nulls
+
+/** TESTS */
 
 describe('isActionOf', () => {
   it('should work with single action-creator arg', () => {
