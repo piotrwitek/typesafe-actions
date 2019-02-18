@@ -71,15 +71,15 @@ export function createAsyncAction<
   > {
     return {
       request: createCustomAction(requestType, type => (payload?: P1) => ({
-        type: requestType,
+        type,
         payload,
       })) as FsaBuilder<T1, Box<P1>>,
       success: createCustomAction(successType, type => (payload?: P2) => ({
-        type: successType,
+        type,
         payload,
       })) as FsaBuilder<T2, Box<P2>>,
       failure: createCustomAction(failureType, type => (payload?: P3) => ({
-        type: failureType,
+        type,
         payload,
       })) as FsaBuilder<T3, Box<P3>>,
     };
