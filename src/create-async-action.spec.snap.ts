@@ -6,12 +6,12 @@ it.skip('skip', () => undefined);
 type User = { firstName: string; lastName: string };
 
 describe('should create an async action with types', () => {
-  // NOTE: with `void` type you can make it explicit that no arguments are accepted by the action-creator function
+  // NOTE: Using `undefined` you can make the action-creator function to not accept any parameters
   const fetchUsers = createAsyncAction(
     'FETCH_USERS_REQUEST',
     'FETCH_USERS_SUCCESS',
     'FETCH_USERS_FAILURE'
-  )<void, User[], Error>();
+  )<undefined, User[], Error>();
 
   // @dts-jest:pass:snap -> T.EmptyAction<"FETCH_USERS_REQUEST">
   fetchUsers.request(); /* => {

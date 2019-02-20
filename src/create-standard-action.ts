@@ -1,4 +1,9 @@
-import { StringType, Box, FsaBuilder, FsaMapBuilder } from './type-helpers';
+import {
+  StringType,
+  Box,
+  ActionBuilderCreator,
+  ActionBuilderMap,
+} from './type-helpers';
 import { createCustomAction } from './create-custom-action';
 import {
   checkIsEmpty,
@@ -7,11 +12,11 @@ import {
   throwInvalidActionType,
 } from './utils/validation';
 
-export interface CreateStandardAction<T extends StringType> {
-  <P = void, M = void>(): FsaBuilder<T, Box<P>, Box<M>>;
-  map<R, P = void, M = void>(
+export interface ActionBuilder<T extends StringType> {
+  <P = undefined, M = undefined>(): ActionBuilderCreator<T, P, M>;
+  map<R, P = undefined, M = undefined>(
     fn: (payload: P, meta: M) => R
-  ): FsaMapBuilder<T, Box<R>, Box<P>, Box<M>>;
+  ): ActionBuilderMap<T, Box<R>, Box<P>, Box<M>>;
 }
 
 /**
@@ -19,7 +24,7 @@ export interface CreateStandardAction<T extends StringType> {
  */
 export function createStandardAction<T extends StringType>(
   type: T
-): CreateStandardAction<T> {
+): ActionBuilder<T> {
   if (checkIsEmpty(type)) {
     throwIsEmpty(1);
   }
@@ -28,20 +33,24 @@ export function createStandardAction<T extends StringType>(
     throwInvalidActionType(1);
   }
 
-  function constructor<P, M = void>(): FsaBuilder<T, Box<P>, Box<M>> {
+  function constructor<P, M = undefined>(): ActionBuilderCreator<
+    T,
+    Box<P>,
+    Box<M>
+  > {
     return createCustomAction(type, _type => (payload: P, meta: M) => ({
       type: _type,
       payload,
       meta,
-    })) as FsaBuilder<T, Box<P>, Box<M>>;
+    })) as ActionBuilderCreator<T, Box<P>, Box<M>>;
   }
 
   function map<R, P, M>(
     fn: (payload: P, meta: M) => R
-  ): FsaMapBuilder<T, Box<R>, Box<P>, Box<M>> {
+  ): ActionBuilderMap<T, Box<R>, Box<P>, Box<M>> {
     return createCustomAction(type, _type => (payload: P, meta: M) =>
       Object.assign(fn(payload, meta), { type: _type })
-    ) as FsaMapBuilder<T, Box<R>, Box<P>, Box<M>>;
+    ) as ActionBuilderMap<T, Box<R>, Box<P>, Box<M>>;
   }
 
   return Object.assign(constructor, { map });

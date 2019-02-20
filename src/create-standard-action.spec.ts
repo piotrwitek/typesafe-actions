@@ -17,8 +17,10 @@ describe('constructor', () => {
     withSymbol(); // => { type: CREATE_STANDARD_ACTION }
   });
 
-  describe('with type only - void', () => {
-    const withTypeOnly = createStandardAction('CREATE_STANDARD_ACTION')<void>();
+  describe('with type only - undefined', () => {
+    const withTypeOnly = createStandardAction('CREATE_STANDARD_ACTION')<
+      undefined
+    >();
     // @dts-jest:pass:snap
     withTypeOnly(); // => { type: 'CREATE_STANDARD_ACTION' }
   });
@@ -60,9 +62,15 @@ describe('constructor', () => {
     withPayload(3); // => { type: 'CREATE_STANDARD_ACTION', payload: 3 }
   });
 
+  describe('with payload - any', () => {
+    const withPayload = createStandardAction('CREATE_STANDARD_ACTION')<any>();
+    // @dts-jest:pass:snap
+    withPayload(10); // => { type: 'CREATE_STANDARD_ACTION', payload: 10 }
+  });
+
   describe('with meta', () => {
     const withMeta = createStandardAction('CREATE_STANDARD_ACTION')<
-      void,
+      undefined,
       string
     >();
     // @dts-jest:pass:snap

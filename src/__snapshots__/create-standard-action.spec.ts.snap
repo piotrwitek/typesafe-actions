@@ -12,7 +12,7 @@ exports[`withMeta(3) 1`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { meta: s
 
 exports[`withMeta(null) 1`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { meta: string | number | null; }"`;
 
-exports[`withMeta(undefined, 'token') 1`] = `"T.PayloadMetaAction<\\"CREATE_STANDARD_ACTION\\", void, string>"`;
+exports[`withMeta(undefined, 'token') 1`] = `"T.PayloadMetaAction<\\"CREATE_STANDARD_ACTION\\", undefined, string>"`;
 
 exports[`withPayload('foo') 1`] = `"T.PayloadAction<\\"CREATE_STANDARD_ACTION\\", string | number | null>"`;
 
@@ -29,6 +29,8 @@ exports[`withPayload(3) 1`] = `"T.PayloadAction<\\"CREATE_STANDARD_ACTION\\", st
 exports[`withPayload(3) 2`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { payload: string | number | null; }"`;
 
 exports[`withPayload(10) 1`] = `"T.PayloadAction<\\"CREATE_STANDARD_ACTION\\", number>"`;
+
+exports[`withPayload(10) 2`] = `"Expected 0 arguments, but got 1."`;
 
 exports[`withPayload(null) 1`] = `"T.PayloadAction<\\"CREATE_STANDARD_ACTION\\", string | number | null>"`;
 

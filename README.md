@@ -153,11 +153,11 @@ export default ({
 Different projects have different needs, and conventions vary across teams, and this is why `typesafe-actions` was designed with flexibility in mind. It provides three different major styles so you can choose whichever would be the best fit for your team.
 
 #### 1. Basic actions
-`action` and `createAction` are the most basic creators that can create **actions** with predefined properties ({ type, payload, meta }). This make them concise but also opinionated.
+`action` and `createAction` are creators that can create **actions** with predefined properties ({ type, payload, meta }). This make them concise but also opinionated.
  
 Important property is that resulting **action-creator** will have a variadic number of arguments and preserve their semantic names `(id, title, amount, etc...)`.
 
-This two creators are very similar and the only real difference is that `action` will NOT work with **action-helpers** while `createAction` will work.  
+This two creators are very similar and the only real difference is that `action` **WILL NOT WORK** with **action-helpers**.
 
 ```ts
 import { action, createAction } from 'typesafe-actions';
@@ -166,6 +166,7 @@ export const add = (title: string) => action('todos/ADD', { id: cuid(), title, c
 // add: (title: string) => { type: "todos/ADD"; payload: { id: string, title: string, completed: boolean; }; }
 
 export const add = createAction('todos/ADD', action => {
+  // Note: "action" callback does not need "type" parameter
   return (title: string) => action({ id: cuid(), title, completed: false });
 });
 // add: (title: string) => { type: "todos/ADD"; payload: { id: string, title: string, completed: boolean; }; }
@@ -481,13 +482,13 @@ _Create an enhanced action-creator with unlimited number of arguments._
 - Resulting action-creator will preserve semantic names of their arguments  `(id, title, amount, etc...)`.
 - Returned action object have predefined properties `({ type, payload, meta })`
 
-_**TIP**: Injected `actionCallback` argument is the same as `action`_
-
 ```ts
 createAction(type)
 createAction(type, actionCallback => {
   return (namedArg1, namedArg2, ...namedArgN) => actionCallback(payload?, meta?)
 })
+
+_**TIP**: Injected `actionCallback` argument is similar to `action` API but doesn't need the "type" parameter_
 ```
 
 Examples:
@@ -496,28 +497,31 @@ Examples:
 ```ts
 import { createAction } from 'typesafe-actions';
 
-// Using action callback
 // - with type only
 const increment = createAction('INCREMENT');
-increment(); // { type: 'INCREMENT' };
+dispatch(increment());
+// { type: 'INCREMENT' };
 
 // - with type and payload
 const add = createAction('ADD', action => {
   return (amount: number) => action(amount);
 });
-add(10); // { type: 'ADD', payload: number }
+dispatch(add(10));
+// { type: 'ADD', payload: number }
 
 // - with type and meta
 const getTodos = createAction('GET_TODOS', action => {
   return (params: Params) => action(undefined, params);
 });
-getTodos('some_meta'); // { type: 'GET_TODOS', meta: Params }
+dispatch(getTodos('some_meta'));
+// { type: 'GET_TODOS', meta: Params }
 
 // - and finally with type, payload and meta
 const getTodo = createAction('GET_TODO', action => {
   return (id: string, meta: string) => action(id, meta);
 });
-getTodo('some_id', 'some_meta'); // { type: 'GET_TODO', payload: string, meta: string }
+dispatch(getTodo('some_id', 'some_meta'));
+// { type: 'GET_TODO', payload: string, meta: string }
 ```
 
 [⇧ back to top](#table-of-contents)
@@ -533,9 +537,11 @@ _Create an enhanced action-creator compatible with [Flux Standard Action](https:
 
 ```ts
 createStandardAction(type)()
-createStandardAction(type)<TPayload | void, TMeta?>()
+createStandardAction(type)<TPayload, TMeta?>()
 createStandardAction(type).map((payload, meta) => ({ customProp1, customProp2, ...customPropN }))
 ```
+
+> **TIP**: Using `undefined` as generic type parameter you can make the action-creator function to accept ZERO parameters.
 
 Examples:
 [> Advanced Usage Examples](src/create-standard-action.spec.ts)
@@ -546,7 +552,7 @@ import { createStandardAction } from 'typesafe-actions';
 // Very concise with use of generic type arguments
 // - with type only
 const increment = createStandardAction('INCREMENT')();
-const increment = createStandardAction('INCREMENT')<void>();
+const increment = createStandardAction('INCREMENT')<undefined>();
 increment(); // { type: 'INCREMENT' }
 
 // - with type and payload
@@ -554,7 +560,7 @@ const add = createStandardAction('ADD')<number>();
 add(10); // { type: 'INCREMENT', payload: number }
 
 // - with type and meta
-const getData = createStandardAction('GET_DATA')<void, string>();
+const getData = createStandardAction('GET_DATA')<undefined, string>();
 getData(undefined, 'meta'); // { type: 'INCREMENT', meta: string }
 
 // - and finally with type, payload and meta
@@ -571,7 +577,7 @@ const notify = createStandardAction('NOTIFY').map(
   })
 );
 
-notify('Hello!', { username: 'Piotr', type: 'announcement' });
+dispatch(notify('Hello!', { username: 'Piotr', type: 'announcement' }));
 // { type: 'NOTIFY', from: string, message: string, messageType: MessageType, datetime: Date }
 ```
 
@@ -601,7 +607,8 @@ const add = createCustomAction('CUSTOM', type => {
   return (first: number, second: number) => ({ type, customProp1: first, customProp2: second });
 });
 
-add(1) // { type: "CUSTOM"; customProp1: number; customProp2: number; }
+dispatch(add(1));
+// { type: "CUSTOM"; customProp1: number; customProp2: number; }
 ```
 
 [⇧ back to top](#table-of-contents)
@@ -613,8 +620,12 @@ add(1) // { type: "CUSTOM"; customProp1: number; customProp2: number; }
 _Create an object containing three enhanced action-creators to simplify handling of async flows (e.g. network request - request/success/failure)._
 
 ```ts
-createAsyncAction(requestType, successType, failureType)
+createAsyncAction(
+  requestType, successType, failureType
+)<TRequestPayload, TSuccessPayload, TErrorPayload>
 ```
+
+> **TIP**: Using `undefined` as generic type parameter you can make the action-creator function to accept ZERO parameters.
 
 Examples:
 [> Advanced Usage Examples](src/create-async-action.spec.ts)
@@ -628,11 +639,11 @@ const fetchUsers = createAsyncAction(
   'FETCH_USERS_FAILURE'
 )<string, User[], Error>();
 
-fetchUsers.request(params);
+dispatch(fetchUsers.request(params));
 
-fetchUsers.success(response);
+dispatch(fetchUsers.success(response));
 
-fetchUsers.failure(err);
+dispatch(fetchUsers.failure(err));
 ```
 
 [⇧ back to top](#table-of-contents)

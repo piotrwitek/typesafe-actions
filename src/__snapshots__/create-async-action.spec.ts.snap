@@ -2,10 +2,20 @@
 
 exports[`fetchUsers.failure(
     Error('reason')
-  ) 1`] = `"T.PayloadAction<\\"FETCH_USERS_FAILURE\\", Error>"`;
+  ) 1`] = `"any"`;
 
-exports[`fetchUsers.request() 1`] = `"T.EmptyAction<\\"FETCH_USERS_REQUEST\\">"`;
+exports[`fetchUsers.failure(
+    Error('reason')
+  ) 2`] = `"any"`;
+
+exports[`fetchUsers.request() 1`] = `"any"`;
+
+exports[`fetchUsers.request() 2`] = `"any"`;
 
 exports[`fetchUsers.success([
     { firstName: 'Piotr', lastName: 'Witek' },
-  ]) 1`] = `"T.PayloadAction<\\"FETCH_USERS_SUCCESS\\", User[]>"`;
+  ]) 1`] = `"any"`;
+
+exports[`fetchUsers.success([
+    { firstName: 'Piotr', lastName: 'Witek' },
+  ]) 2`] = `"any"`;

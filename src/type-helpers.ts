@@ -87,7 +87,11 @@ export type PayloadMetaAction<T extends StringType, P, M> = {
  * @type P - Payload
  * @type M - Meta
  */
-export interface FluxStandardAction<T extends StringType, P = void, M = void> {
+export interface FluxStandardAction<
+  T extends StringType,
+  P = undefined,
+  M = undefined
+> {
   type: T;
   payload: P;
   meta: M;
@@ -106,38 +110,36 @@ export type Box<T> = { v: T };
 export type Unbox<T extends Box<any>> = T['v'];
 
 /** @private */
-export type NoArgCreator<T extends StringType> = () => EmptyAction<T>;
+export type EmptyAC<T extends StringType> = () => EmptyAction<T>;
 
 /** @private */
-export type PayloadCreator<T extends StringType, P> = (
+export type PayloadAC<T extends StringType, P> = (
   payload: P
 ) => PayloadAction<T, P>;
 
 /** @private */
-export type PayloadMetaCreator<T extends StringType, P, M> = (
+export type PayloadMetaAC<T extends StringType, P, M> = (
   payload: P,
   meta: M
 ) => PayloadMetaAction<T, P, M>;
 
 /** @private */
-export type FsaBuilder<
-  T extends StringType,
-  P extends Box<any> = Box<void>,
-  M extends Box<any> = Box<void>
-> = M extends Box<void>
-  ? P extends Box<void>
-    ? NoArgCreator<T>
-    : PayloadCreator<T, Unbox<P>>
-  : PayloadMetaCreator<T, Unbox<P>, Unbox<M>>;
+export type ActionBuilderCreator<T extends StringType, P, M> = [M] extends [
+  undefined
+]
+  ? [P] extends [undefined]
+    ? EmptyAC<T>
+    : PayloadAC<T, P>
+  : PayloadMetaAC<T, P, M>;
 
 /** @private */
-export type FsaMapBuilder<
+export type ActionBuilderMap<
   T extends StringType,
   Result extends Box<any>,
-  PArg extends Box<any> = Box<void>,
-  MArg extends Box<any> = Box<void>
-> = MArg extends Box<void>
-  ? PArg extends Box<void>
+  PArg extends Box<any> = Box<undefined>,
+  MArg extends Box<any> = Box<undefined>
+> = MArg extends Box<undefined>
+  ? PArg extends Box<undefined>
     ? () => { type: T } & Unbox<Result>
     : (payload: Unbox<PArg>) => { type: T } & Unbox<Result>
   : (payload: Unbox<PArg>, meta: Unbox<MArg>) => { type: T } & Unbox<Result>;
