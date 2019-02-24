@@ -1,7 +1,7 @@
 import {
   StringType,
   Box,
-  ActionBuilderCreator,
+  ActionBuilderConstructor,
   ActionBuilderMap,
 } from './type-helpers';
 import { createCustomAction } from './create-custom-action';
@@ -29,9 +29,9 @@ export type AsyncActionBuilderCreator<
   P2,
   P3
 > = {
-  request: ActionBuilderCreator<T1, P1>;
-  success: ActionBuilderCreator<T2, P2>;
-  failure: ActionBuilderCreator<T3, P3>;
+  request: ActionBuilderConstructor<T1, P1>;
+  success: ActionBuilderConstructor<T2, P2>;
+  failure: ActionBuilderConstructor<T3, P3>;
 };
 
 export type AsyncActionBuilderWithMappers<
@@ -78,15 +78,15 @@ export function createAsyncAction<
       request: createCustomAction(requestType, type => (payload?: P1) => ({
         type,
         payload,
-      })) as ActionBuilderCreator<T1, P1>,
+      })) as ActionBuilderConstructor<T1, P1>,
       success: createCustomAction(successType, type => (payload?: P2) => ({
         type,
         payload,
-      })) as ActionBuilderCreator<T2, P2>,
+      })) as ActionBuilderConstructor<T2, P2>,
       failure: createCustomAction(failureType, type => (payload?: P3) => ({
         type,
         payload,
-      })) as ActionBuilderCreator<T3, P3>,
+      })) as ActionBuilderConstructor<T3, P3>,
     };
   }
 

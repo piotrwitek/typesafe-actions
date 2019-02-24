@@ -124,7 +124,7 @@ export type PayloadMetaAC<T extends StringType, P, M> = (
 ) => PayloadMetaAction<T, P, M>;
 
 /** @private */
-export type ActionBuilderCreator<
+export type ActionBuilderConstructor<
   T extends StringType,
   TPayload extends any = undefined,
   TMeta extends any = undefined

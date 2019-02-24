@@ -1,7 +1,7 @@
 import {
   StringType,
   Box,
-  ActionBuilderCreator,
+  ActionBuilderConstructor,
   ActionBuilderMap,
 } from './type-helpers';
 import { createCustomAction } from './create-custom-action';
@@ -13,7 +13,7 @@ import {
 } from './utils/validation';
 
 export interface ActionBuilder<T extends StringType> {
-  <P = undefined, M = undefined>(): ActionBuilderCreator<T, P, M>;
+  <P = undefined, M = undefined>(): ActionBuilderConstructor<T, P, M>;
   map<R, P = undefined, M = undefined>(
     fn: (payload: P, meta: M) => R
   ): ActionBuilderMap<T, Box<R>, Box<P>, Box<M>>;
@@ -33,12 +33,12 @@ export function createStandardAction<T extends StringType>(
     throwInvalidActionType(1);
   }
 
-  function constructor<P, M = undefined>(): ActionBuilderCreator<T, P, M> {
+  function constructor<P, M = undefined>(): ActionBuilderConstructor<T, P, M> {
     return createCustomAction(type, _type => (payload: P, meta: M) => ({
       type: _type,
       payload,
       meta,
-    })) as ActionBuilderCreator<T, P, M>;
+    })) as ActionBuilderConstructor<T, P, M>;
   }
 
   function map<R, P, M>(
