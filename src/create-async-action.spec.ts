@@ -41,8 +41,11 @@ describe('async action with any type', () => {
   )<any, any[], any>();
 
   // @dts-jest:pass:snap
-  fetchUsers.request(); /* => {
-    type: 'FETCH_USERS_REQUEST'
+  fetchUsers.request(
+    1
+  ); /* => {
+    type: 'FETCH_USERS_REQUEST',
+    payload: 1
   } */
 
   // @dts-jest:pass:snap

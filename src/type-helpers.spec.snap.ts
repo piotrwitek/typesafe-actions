@@ -34,7 +34,7 @@ describe('StateType', () => {
 });
 
 describe('ActionType', () => {
-  // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", void, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error>
+  // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error>
   testType<ActionType<typeof actions>>();
   type RootAction = ActionType<typeof actions>;
 

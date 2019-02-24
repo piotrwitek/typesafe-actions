@@ -77,6 +77,15 @@ describe('constructor', () => {
     withMeta(undefined, 'token'); // => { type: 'CREATE_STANDARD_ACTION', meta: 'token' }
   });
 
+  describe('with meta - any', () => {
+    const withMeta = createStandardAction('CREATE_STANDARD_ACTION')<
+      undefined,
+      any
+    >();
+    // @dts-jest:pass:snap
+    withMeta(undefined, 'token'); // => { type: 'CREATE_STANDARD_ACTION', meta: 'token' }
+  });
+
   describe('with payload and meta', () => {
     const withPayloadAndMeta = createStandardAction('CREATE_STANDARD_ACTION')<
       number,

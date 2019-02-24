@@ -33,16 +33,12 @@ export function createStandardAction<T extends StringType>(
     throwInvalidActionType(1);
   }
 
-  function constructor<P, M = undefined>(): ActionBuilderCreator<
-    T,
-    Box<P>,
-    Box<M>
-  > {
+  function constructor<P, M = undefined>(): ActionBuilderCreator<T, P, M> {
     return createCustomAction(type, _type => (payload: P, meta: M) => ({
       type: _type,
       payload,
       meta,
-    })) as ActionBuilderCreator<T, Box<P>, Box<M>>;
+    })) as ActionBuilderCreator<T, P, M>;
   }
 
   function map<R, P, M>(

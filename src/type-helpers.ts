@@ -124,25 +124,34 @@ export type PayloadMetaAC<T extends StringType, P, M> = (
 ) => PayloadMetaAction<T, P, M>;
 
 /** @private */
-export type ActionBuilderCreator<T extends StringType, P, M> = [M] extends [
-  undefined
-]
-  ? [P] extends [undefined]
-    ? EmptyAC<T>
-    : PayloadAC<T, P>
-  : PayloadMetaAC<T, P, M>;
+export type ActionBuilderCreator<
+  T extends StringType,
+  TPayload extends any = undefined,
+  TMeta extends any = undefined
+> = [TMeta] extends [undefined]
+  ? [TPayload] extends [undefined]
+    ? unknown extends TPayload
+      ? PayloadAC<T, TPayload>
+      : unknown extends TMeta
+      ? PayloadMetaAC<T, TPayload, TMeta>
+      : EmptyAC<T>
+    : PayloadAC<T, TPayload>
+  : PayloadMetaAC<T, TPayload, TMeta>;
 
 /** @private */
 export type ActionBuilderMap<
   T extends StringType,
-  Result extends Box<any>,
-  PArg extends Box<any> = Box<undefined>,
-  MArg extends Box<any> = Box<undefined>
-> = MArg extends Box<undefined>
-  ? PArg extends Box<undefined>
-    ? () => { type: T } & Unbox<Result>
-    : (payload: Unbox<PArg>) => { type: T } & Unbox<Result>
-  : (payload: Unbox<PArg>, meta: Unbox<MArg>) => { type: T } & Unbox<Result>;
+  TCustomAction extends Box<any>,
+  TPayloadArg extends Box<any> = Box<undefined>,
+  TMetaArg extends Box<any> = Box<undefined>
+> = TMetaArg extends Box<undefined>
+  ? TPayloadArg extends Box<undefined>
+    ? () => { type: T } & Unbox<TCustomAction>
+    : (payload: Unbox<TPayloadArg>) => { type: T } & Unbox<TCustomAction>
+  : (
+      payload: Unbox<TPayloadArg>,
+      meta: Unbox<TMetaArg>
+    ) => { type: T } & Unbox<TCustomAction>;
 
 /** @private */
 export type ActionCreator<T extends StringType> = (
