@@ -1,4 +1,4 @@
-import * as T from './type-helpers';
+import * as T from './type-helpers'; // type-tests global
 import { action } from './action';
 
 it.skip('skip', () => undefined);
@@ -81,4 +81,58 @@ describe('with optional payload and optional meta', () => {
   withOptionalPayloadAndOptionalMeta('Hello!'); // => { type: 'ACTION', payload: 'Hello!' }
   // @dts-jest:pass:snap -> { type: "ACTION"; payload: string | undefined; meta: string | undefined; }
   withOptionalPayloadAndOptionalMeta('Hello!', 'info'); // => { type: 'ACTION', payload: 'Hello!', meta: 'info' }
+});
+
+describe('with error', () => {
+  const withError = (error: boolean) =>
+    action('ACTION', undefined, undefined, error);
+  // @dts-jest:pass:snap -> { type: "ACTION"; error: boolean; }
+  withError(true); // => { type: 'ACTION', error: true }
+});
+
+describe('with optional error', () => {
+  const withOptionalError = (error?: boolean) =>
+    action('ACTION', undefined, undefined, error);
+  // @dts-jest:pass:snap -> { type: "ACTION"; error: boolean | undefined; }
+  withOptionalError(); // => { type: 'ACTION' }
+  // @dts-jest:pass:snap -> { type: "ACTION"; error: boolean | undefined; }
+  withOptionalError(true); // => { type: 'ACTION', error: true }
+});
+
+describe('with payload, meta, and error', () => {
+  const withPayloadMetaAndError = (
+    message: string,
+    scope: string,
+    error: boolean
+  ) => action('ACTION', message, scope, error);
+  // @dts-jest:pass:snap -> { type: "ACTION"; payload: string; meta: string; error: boolean; }
+  withPayloadMetaAndError('Hello!', 'info', true); // => { type: 'ACTION', payload: 'Hello!', meta: 'info', error: true }
+});
+
+describe('with payload, meta, and optional error', () => {
+  const withPayloadMetaAndOptionalError = (
+    message: string,
+    scope: string,
+    error?: boolean
+  ) => action('ACTION', message, scope, error);
+  // @dts-jest:pass:snap -> { type: "ACTION"; payload: string; meta: string; error: boolean | undefined; }
+  withPayloadMetaAndOptionalError('Hello!', 'info'); // => { type: 'ACTION', payload: 'Hello!', meta: 'info' }
+  // @dts-jest:pass:snap -> { type: "ACTION"; payload: string; meta: string; error: boolean | undefined; }
+  withPayloadMetaAndOptionalError('Hello!', 'info', true); // => { type: 'ACTION', payload: 'Hello!', meta: 'info', error: true }
+});
+
+describe('with optional payload, optional meta, and optional error', () => {
+  const withOptionalPayloadOptionalMetaAndOptionalError = (
+    message?: string,
+    scope?: string,
+    error?: boolean
+  ) => action('ACTION', message, scope, error);
+  // @dts-jest:pass:snap -> { type: "ACTION"; payload: string | undefined; meta: string | undefined; error: boolean | undefined; }
+  withOptionalPayloadOptionalMetaAndOptionalError(); // => { type: 'ACTION' }
+  // @dts-jest:pass:snap -> { type: "ACTION"; payload: string | undefined; meta: string | undefined; error: boolean | undefined; }
+  withOptionalPayloadOptionalMetaAndOptionalError('Hello!'); // => { type: 'ACTION', payload: 'Hello!' }
+  // @dts-jest:pass:snap -> { type: "ACTION"; payload: string | undefined; meta: string | undefined; error: boolean | undefined; }
+  withOptionalPayloadOptionalMetaAndOptionalError('Hello!', 'info'); // => { type: 'ACTION', payload: 'Hello!', meta: 'info' }
+  // @dts-jest:pass:snap -> { type: "ACTION"; payload: string | undefined; meta: string | undefined; error: boolean | undefined; }
+  withOptionalPayloadOptionalMetaAndOptionalError('Hello!', 'info', true); // => { type: 'ACTION', payload: 'Hello!', meta: 'info', error: true }
 });

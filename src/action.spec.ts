@@ -1,3 +1,4 @@
+import * as T from './type-helpers'; // type-tests global
 import { action } from './action';
 
 it.skip('skip', () => undefined);
@@ -108,18 +109,6 @@ describe('with payload, meta, and error', () => {
   withPayloadMetaAndError('Hello!', 'info', true); // => { type: 'ACTION', payload: 'Hello!', meta: 'info', error: true }
 });
 
-describe('with payload, optional meta, and error', () => {
-  const withPayloadOptionalMetaAndError = (
-    message: string,
-    error: boolean,
-    scope?: string
-  ) => action('ACTION', message, scope, error);
-  // @dts-jest:pass:snap
-  withPayloadOptionalMetaAndError('Hello!', true); // => { type: 'ACTION', payload: 'Hello!', error: true }
-  // @dts-jest:pass:snap
-  withPayloadOptionalMetaAndError('Hello!', true, 'info'); // => { type: 'ACTION', payload: 'Hello!', error: true, meta: 'info' }
-});
-
 describe('with payload, meta, and optional error', () => {
   const withPayloadMetaAndOptionalError = (
     message: string,
@@ -130,46 +119,6 @@ describe('with payload, meta, and optional error', () => {
   withPayloadMetaAndOptionalError('Hello!', 'info'); // => { type: 'ACTION', payload: 'Hello!', meta: 'info' }
   // @dts-jest:pass:snap
   withPayloadMetaAndOptionalError('Hello!', 'info', true); // => { type: 'ACTION', payload: 'Hello!', meta: 'info', error: true }
-});
-
-describe('with payload, optional meta, and optional error', () => {
-  const withPayloadOptionalMetaAndOptionalError = (
-    message: string,
-    scope?: string,
-    error?: boolean
-  ) => action('ACTION', message, scope, error);
-  // @dts-jest:pass:snap
-  withPayloadOptionalMetaAndOptionalError('Hello!'); // => { type: 'ACTION', payload: 'Hello!' }
-  // @dts-jest:pass:snap
-  withPayloadOptionalMetaAndOptionalError('Hello!', 'info'); // => { type: 'ACTION', payload: 'Hello!', meta: 'info' }
-  // @dts-jest:pass:snap
-  withPayloadOptionalMetaAndOptionalError('Hello!', 'info', true); // => { type: 'ACTION', payload: 'Hello!', meta: 'info', error: true }
-});
-
-describe('with optional payload, meta, and error', () => {
-  const withOptionalPayloadMetaAndError = (
-    scope: string,
-    error: boolean,
-    message?: string
-  ) => action('ACTION', message, scope, error);
-  // @dts-jest:pass:snap
-  withOptionalPayloadMetaAndError('info', true); // => { type: 'ACTION', meta: 'info', error: true }
-  // @dts-jest:pass:snap
-  withOptionalPayloadMetaAndError('info', true, 'Hello!'); // => { type: 'ACTION', meta: 'info', error: true, payload: 'Hello!' }
-});
-
-describe('with optional payload, meta, and optional error', () => {
-  const withOptionalPayloadMetaAndOptionalError = (
-    scope: string,
-    message?: string,
-    error?: boolean
-  ) => action('ACTION', message, scope, error);
-  // @dts-jest:pass:snap
-  withOptionalPayloadMetaAndOptionalError('info'); // => { type: 'ACTION', meta: 'info' }
-  // @dts-jest:pass:snap
-  withOptionalPayloadMetaAndOptionalError('info', 'Hello!'); // => { type: 'ACTION', meta: 'info', payload: 'Hello!' }
-  // @dts-jest:pass:snap
-  withOptionalPayloadMetaAndOptionalError('info', 'Hello!', true); // => { type: 'ACTION', meta: 'info', payload: 'Hello!', error: true }
 });
 
 describe('with optional payload, optional meta, and optional error', () => {
