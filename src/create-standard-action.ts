@@ -1,6 +1,5 @@
 import {
   StringType,
-  Box,
   ActionBuilderConstructor,
   ActionBuilderMap,
 } from './type-helpers';
@@ -16,7 +15,7 @@ export interface ActionBuilder<T extends StringType> {
   <P = undefined, M = undefined>(): ActionBuilderConstructor<T, P, M>;
   map<R, P = undefined, M = undefined>(
     fn: (payload: P, meta: M) => R
-  ): ActionBuilderMap<T, Box<R>, Box<P>, Box<M>>;
+  ): ActionBuilderMap<T, R, P, M>;
 }
 
 /**
@@ -43,10 +42,10 @@ export function createStandardAction<T extends StringType>(
 
   function map<R, P, M>(
     fn: (payload: P, meta: M) => R
-  ): ActionBuilderMap<T, Box<R>, Box<P>, Box<M>> {
+  ): ActionBuilderMap<T, R, P, M> {
     return createCustomAction(type, _type => (payload: P, meta: M) =>
       Object.assign(fn(payload, meta), { type: _type })
-    ) as ActionBuilderMap<T, Box<R>, Box<P>, Box<M>>;
+    ) as ActionBuilderMap<T, R, P, M>;
   }
 
   return Object.assign(constructor, { map });

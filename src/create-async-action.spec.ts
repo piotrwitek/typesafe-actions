@@ -21,8 +21,7 @@ describe('async action with undefined type', () => {
   fetchUsers.success([
     { firstName: 'Piotr', lastName: 'Witek' },
   ]); /* => {
-    type: 'FETCH_USERS_SUCCESS',
-    payload: [{ firstName: 'Piotr', lastName: 'Witek' }]
+    type: 'FETCH_USERS_SUCCESS', payload: [{ firstName: 'Piotr', lastName: 'Witek' }]
   } */
 
   // @dts-jest:pass:snap
@@ -44,23 +43,21 @@ describe('async action with any type', () => {
   fetchUsers.request(
     1
   ); /* => {
-    type: 'FETCH_USERS_REQUEST',
-    payload: 1
+    type: 'FETCH_USERS_REQUEST', payload: 1,
   } */
 
   // @dts-jest:pass:snap
   fetchUsers.success([
-    { firstName: 'Piotr', lastName: 'Witek' },
+    1,
   ]); /* => {
-    type: 'FETCH_USERS_SUCCESS',
-    payload: [{ firstName: 'Piotr', lastName: 'Witek' }]
+    type: 'FETCH_USERS_SUCCESS', payload: [1],
   } */
 
   // @dts-jest:pass:snap
   fetchUsers.failure(
-    Error('reason')
+    1
   ); /* => {
-    type: 'FETCH_USERS_FAILURE', payload: Error('reason')
+    type: 'FETCH_USERS_FAILURE', payload: 1,
   } */
 });
 

@@ -104,12 +104,6 @@ export interface TypeMeta<T extends StringType> {
 }
 
 /** @private */
-export type Box<T> = { v: T };
-
-/** @private */
-export type Unbox<T extends Box<any>> = T['v'];
-
-/** @private */
 export type EmptyAC<T extends StringType> = () => EmptyAction<T>;
 
 /** @private */
@@ -141,17 +135,14 @@ export type ActionBuilderConstructor<
 /** @private */
 export type ActionBuilderMap<
   T extends StringType,
-  TCustomAction extends Box<any>,
-  TPayloadArg extends Box<any> = Box<undefined>,
-  TMetaArg extends Box<any> = Box<undefined>
-> = TMetaArg extends Box<undefined>
-  ? TPayloadArg extends Box<undefined>
-    ? () => { type: T } & Unbox<TCustomAction>
-    : (payload: Unbox<TPayloadArg>) => { type: T } & Unbox<TCustomAction>
-  : (
-      payload: Unbox<TPayloadArg>,
-      meta: Unbox<TMetaArg>
-    ) => { type: T } & Unbox<TCustomAction>;
+  TCustomAction extends any,
+  TPayloadArg extends any = undefined,
+  TMetaArg extends any = undefined
+> = [TMetaArg] extends [undefined]
+  ? [TPayloadArg] extends [undefined]
+    ? () => { type: T } & TCustomAction
+    : (payload: TPayloadArg) => { type: T } & TCustomAction
+  : (payload: TPayloadArg, meta: TMetaArg) => { type: T } & TCustomAction;
 
 /** @private */
 export type ActionCreator<T extends StringType> = (

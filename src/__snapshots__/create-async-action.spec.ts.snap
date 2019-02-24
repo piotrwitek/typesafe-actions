@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`fetchUsers.failure(
-    Error('reason')
-  ) 1`] = `"T.PayloadAction<\\"FETCH_USERS_FAILURE\\", Error>"`;
+    1
+  ) 1`] = `"T.PayloadAction<\\"FETCH_USERS_FAILURE\\", any>"`;
 
 exports[`fetchUsers.failure(
     Error('reason')
-  ) 2`] = `"T.PayloadAction<\\"FETCH_USERS_FAILURE\\", any>"`;
+  ) 1`] = `"T.PayloadAction<\\"FETCH_USERS_FAILURE\\", Error>"`;
 
 exports[`fetchUsers.request(
     1
@@ -19,5 +19,5 @@ exports[`fetchUsers.success([
   ]) 1`] = `"T.PayloadAction<\\"FETCH_USERS_SUCCESS\\", User[]>"`;
 
 exports[`fetchUsers.success([
-    { firstName: 'Piotr', lastName: 'Witek' },
-  ]) 2`] = `"T.PayloadAction<\\"FETCH_USERS_SUCCESS\\", any[]>"`;
+    1,
+  ]) 1`] = `"T.PayloadAction<\\"FETCH_USERS_SUCCESS\\", any[]>"`;
