@@ -1,7 +1,7 @@
 import {
   StringType,
   ActionBuilderConstructor,
-  ActionBuilderMap,
+  // ActionBuilderMap,
 } from './type-helpers';
 import { createCustomAction } from './create-custom-action';
 import { checkInvalidActionTypeInArray } from './utils/validation';
