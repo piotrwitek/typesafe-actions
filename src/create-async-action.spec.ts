@@ -5,13 +5,12 @@ it.skip('skip', () => undefined);
 
 type User = { firstName: string; lastName: string };
 
-describe('should create an async action with types', () => {
-  // NOTE: with `void` type you can make it explicit that no arguments are accepted by the action-creator function
+describe('async action with undefined type', () => {
   const fetchUsers = createAsyncAction(
     'FETCH_USERS_REQUEST',
     'FETCH_USERS_SUCCESS',
     'FETCH_USERS_FAILURE'
-  )<void, User[], Error>();
+  )<undefined, User[], Error>();
 
   // @dts-jest:pass:snap
   fetchUsers.request(); /* => {
@@ -22,8 +21,7 @@ describe('should create an async action with types', () => {
   fetchUsers.success([
     { firstName: 'Piotr', lastName: 'Witek' },
   ]); /* => {
-    type: 'FETCH_USERS_SUCCESS',
-    payload: [{ firstName: 'Piotr', lastName: 'Witek' }]
+    type: 'FETCH_USERS_SUCCESS', payload: [{ firstName: 'Piotr', lastName: 'Witek' }]
   } */
 
   // @dts-jest:pass:snap
@@ -31,6 +29,35 @@ describe('should create an async action with types', () => {
     Error('reason')
   ); /* => {
     type: 'FETCH_USERS_FAILURE', payload: Error('reason')
+  } */
+});
+
+describe('async action with any type', () => {
+  const fetchUsers = createAsyncAction(
+    'FETCH_USERS_REQUEST',
+    'FETCH_USERS_SUCCESS',
+    'FETCH_USERS_FAILURE'
+  )<any, any[], any>();
+
+  // @dts-jest:pass:snap
+  fetchUsers.request(
+    1
+  ); /* => {
+    type: 'FETCH_USERS_REQUEST', payload: 1,
+  } */
+
+  // @dts-jest:pass:snap
+  fetchUsers.success([
+    1,
+  ]); /* => {
+    type: 'FETCH_USERS_SUCCESS', payload: [1],
+  } */
+
+  // @dts-jest:pass:snap
+  fetchUsers.failure(
+    1
+  ); /* => {
+    type: 'FETCH_USERS_FAILURE', payload: 1,
   } */
 });
 

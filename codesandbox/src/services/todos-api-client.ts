@@ -12,7 +12,7 @@ export function loadSnapshot(): Promise<Todo[]> {
   });
 }
 
-export function saveSnapshot(data: Todo[]): Promise<void> {
+export function saveSnapshot(data: Todo[]): Promise<undefined> {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       todos = data;

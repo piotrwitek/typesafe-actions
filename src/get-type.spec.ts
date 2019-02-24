@@ -13,7 +13,7 @@ describe('from createAction', () => {
 
 describe('from createStandardAction', () => {
   // @dts-jest:pass:snap
-  getType(createStandardAction('CREATE_STANDARD_ACTION')<void>()); // => 'CREATE_STANDARD_ACTION'
+  getType(createStandardAction('CREATE_STANDARD_ACTION')<undefined>()); // => 'CREATE_STANDARD_ACTION'
 });
 
 describe('from createCustomAction', () => {

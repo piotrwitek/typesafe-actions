@@ -30,12 +30,12 @@ export const actions = {
       withTypeOnly: createCustomAction(types.VERY_DEEP_WITH_TYPE_ONLY),
     },
   },
-  withTypeOnly: createStandardAction(types.WITH_TYPE_ONLY)<void>(),
+  withTypeOnly: createStandardAction(types.WITH_TYPE_ONLY)<undefined>(),
   withPayload: createStandardAction(types.WITH_PAYLOAD)<number>(),
   withOptionalPayload: createStandardAction(types.WITH_OPTIONAL_PAYLOAD)<
     number | undefined
   >(),
-  withMeta: createStandardAction(types.WITH_META)<void, string>(),
+  withMeta: createStandardAction(types.WITH_META)<undefined, string>(),
   withPayloadMeta: createStandardAction(types.WITH_PAYLOAD_META)<
     number,
     string
@@ -53,5 +53,5 @@ export const actions = {
     'FETCH_USER_REQUEST',
     'FETCH_USER_SUCCESS',
     'FETCH_USER_FAILURE'
-  )<void, { firstName: string; lastName: string }, Error>(),
+  )<undefined, { firstName: string; lastName: string }, Error>(),
 };

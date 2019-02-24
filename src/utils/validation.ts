@@ -31,7 +31,7 @@ export function throwInvalidActionType(argPosition: number = 1): never {
 export function checkInvalidActionTypeInArray(
   arg: StringType,
   idx: number
-): void {
+): void | never {
   if (arg == null) {
     throw new Error(
       `Argument contains array with empty element at index ${idx}`
@@ -46,7 +46,7 @@ export function checkInvalidActionTypeInArray(
 export function checkInvalidActionCreatorInArray(
   arg: ActionCreator<StringType> & TypeMeta<StringType>,
   idx: number
-): void {
+): void | never {
   if (arg == null) {
     throw new Error(
       `Argument contains array with empty element at index ${idx}`

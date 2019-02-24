@@ -87,7 +87,11 @@ export type PayloadMetaAction<T extends StringType, P, M> = {
  * @type P - Payload
  * @type M - Meta
  */
-export interface FluxStandardAction<T extends StringType, P = void, M = void> {
+export interface FluxStandardAction<
+  T extends StringType,
+  P = undefined,
+  M = undefined
+> {
   type: T;
   payload: P;
   meta: M;
@@ -100,47 +104,45 @@ export interface TypeMeta<T extends StringType> {
 }
 
 /** @private */
-export type Box<T> = { v: T };
+export type EmptyAC<T extends StringType> = () => EmptyAction<T>;
 
 /** @private */
-export type Unbox<T extends Box<any>> = T['v'];
-
-/** @private */
-export type NoArgCreator<T extends StringType> = () => EmptyAction<T>;
-
-/** @private */
-export type PayloadCreator<T extends StringType, P> = (
+export type PayloadAC<T extends StringType, P> = (
   payload: P
 ) => PayloadAction<T, P>;
 
 /** @private */
-export type PayloadMetaCreator<T extends StringType, P, M> = (
+export type PayloadMetaAC<T extends StringType, P, M> = (
   payload: P,
   meta: M
 ) => PayloadMetaAction<T, P, M>;
 
 /** @private */
-export type FsaBuilder<
+export type ActionBuilderConstructor<
   T extends StringType,
-  P extends Box<any> = Box<void>,
-  M extends Box<any> = Box<void>
-> = M extends Box<void>
-  ? P extends Box<void>
-    ? NoArgCreator<T>
-    : PayloadCreator<T, Unbox<P>>
-  : PayloadMetaCreator<T, Unbox<P>, Unbox<M>>;
+  TPayload extends any = undefined,
+  TMeta extends any = undefined
+> = [TMeta] extends [undefined]
+  ? [TPayload] extends [undefined]
+    ? unknown extends TPayload
+      ? PayloadAC<T, TPayload>
+      : unknown extends TMeta
+      ? PayloadMetaAC<T, TPayload, TMeta>
+      : EmptyAC<T>
+    : PayloadAC<T, TPayload>
+  : PayloadMetaAC<T, TPayload, TMeta>;
 
 /** @private */
-export type FsaMapBuilder<
+export type ActionBuilderMap<
   T extends StringType,
-  Result extends Box<any>,
-  PArg extends Box<any> = Box<void>,
-  MArg extends Box<any> = Box<void>
-> = MArg extends Box<void>
-  ? PArg extends Box<void>
-    ? () => { type: T } & Unbox<Result>
-    : (payload: Unbox<PArg>) => { type: T } & Unbox<Result>
-  : (payload: Unbox<PArg>, meta: Unbox<MArg>) => { type: T } & Unbox<Result>;
+  TCustomAction extends any,
+  TPayloadArg extends any = undefined,
+  TMetaArg extends any = undefined
+> = [TMetaArg] extends [undefined]
+  ? [TPayloadArg] extends [undefined]
+    ? () => { type: T } & TCustomAction
+    : (payload: TPayloadArg) => { type: T } & TCustomAction
+  : (payload: TPayloadArg, meta: TMetaArg) => { type: T } & TCustomAction;
 
 /** @private */
 export type ActionCreator<T extends StringType> = (
