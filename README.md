@@ -557,15 +557,15 @@ increment(); // { type: 'INCREMENT' }
 
 // - with type and payload
 const add = createStandardAction('ADD')<number>();
-add(10); // { type: 'INCREMENT', payload: number }
+add(10); // { type: 'ADD', payload: number }
 
 // - with type and meta
 const getData = createStandardAction('GET_DATA')<undefined, string>();
-getData(undefined, 'meta'); // { type: 'INCREMENT', meta: string }
+getData(undefined, 'meta'); // { type: 'GET_DATA', meta: string }
 
 // - and finally with type, payload and meta
 const getData = createStandardAction('GET_DATA')<number, string>();
-getData(1, 'meta'); // { type: 'INCREMENT', payload: number, meta: string }
+getData(1, 'meta'); // { type: 'GET_DATA', payload: number, meta: string }
 
 // Can map payload and meta arguments to a custom action object
 const notify = createStandardAction('NOTIFY').map(
