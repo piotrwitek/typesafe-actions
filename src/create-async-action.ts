@@ -73,7 +73,7 @@ export function createAsyncAction<
     };
   }
 
-  return Object.assign(constructor, {});
+  return Object.assign(constructor);
 }
 
 // export type AsyncActionBuilderWithMappers<

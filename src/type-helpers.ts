@@ -9,9 +9,15 @@ export type ActionType<
   ActionCreatorOrMap
 > = ActionCreatorOrMap extends ActionCreator<StringType>
   ? ReturnType<ActionCreatorOrMap>
-  : ActionCreatorOrMap extends object
-  ? ActionCreatorMap<ActionCreatorOrMap>[keyof ActionCreatorOrMap]
-  : never;
+  : {
+      1: DeepActionType<ActionCreatorOrMap[keyof ActionCreatorOrMap]>;
+      0: never;
+    }[ActionCreatorOrMap extends object ? 1 : 0];
+
+/**
+ * @private
+ */
+type DeepActionType<T> = T extends any ? ActionType<T> : never;
 
 /**
  * @desc Infers State object from reducer map object
@@ -104,6 +110,11 @@ export interface TypeMeta<T extends StringType> {
 }
 
 /** @private */
+export type ActionCreator<T extends StringType> = (
+  ...args: any[]
+) => { type: T };
+
+/** @private */
 export type EmptyAC<T extends StringType> = () => EmptyAction<T>;
 
 /** @private */
@@ -143,11 +154,3 @@ export type ActionBuilderMap<
     ? () => { type: T } & TCustomAction
     : (payload: TPayloadArg) => { type: T } & TCustomAction
   : (payload: TPayloadArg, meta: TMetaArg) => { type: T } & TCustomAction;
-
-/** @private */
-export type ActionCreator<T extends StringType> = (
-  ...args: any[]
-) => { type: T };
-
-/** @private */
-export type ActionCreatorMap<T> = { [K in keyof T]: ActionType<T[K]> };
