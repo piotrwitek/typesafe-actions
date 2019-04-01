@@ -7,17 +7,13 @@
  */
 export type ActionType<
   ActionCreatorOrMap
-> = ActionCreatorOrMap extends ActionCreator<StringType>
+> = ActionCreatorOrMap extends ActionCreator<string>
   ? ReturnType<ActionCreatorOrMap>
-  : {
-      1: DeepActionType<ActionCreatorOrMap[keyof ActionCreatorOrMap]>;
-      0: never;
-    }[ActionCreatorOrMap extends object ? 1 : 0];
-
-/**
- * @private
- */
-type DeepActionType<T> = T extends any ? ActionType<T> : never;
+  : ActionCreatorOrMap extends object
+  ? {
+      [K in keyof ActionCreatorOrMap]: ActionType<ActionCreatorOrMap[K]>
+    }[keyof ActionCreatorOrMap]
+  : ActionCreatorOrMap; // should be never but compiler yell with circularly references itself error
 
 /**
  * @desc Infers State object from reducer map object

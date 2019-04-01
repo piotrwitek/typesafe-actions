@@ -20,7 +20,7 @@ _This lib is part of [React & Redux TypeScript Guide](https://github.com/piotrwi
 
 ##### :star: _Found it useful? Want more updates?_ [**Show your support by giving a :star:**](https://github.com/piotrwitek/typesafe-actions/stargazers)  
 
-_Now updated to be compatible with **TypeScript v3.2.2**_ :tada:  
+_Now updated to be compatible with **TypeScript v3.4.1**_ :tada:  
 
 _Reference Todo-App implementation with `typesafe-actions` on [CodeSandbox](https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/codesandbox)_ :computer:  
 
