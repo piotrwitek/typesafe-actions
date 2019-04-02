@@ -13,7 +13,9 @@ export type ActionType<
   ? {
       [K in keyof ActionCreatorOrMap]: ActionType<ActionCreatorOrMap[K]>
     }[keyof ActionCreatorOrMap]
-  : ActionCreatorOrMap; // should be never but compiler yell with circularly references itself error
+  : ActionCreatorOrMap extends infer R // should be just never but compiler yell with circularly references itself error
+  ? never
+  : never;
 
 /**
  * @desc Infers State object from reducer map object
