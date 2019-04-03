@@ -67,6 +67,8 @@ Issues can be funded by anyone and the money will be transparently distributed t
     * [`isActionOf`](#isactionof)
     * [`isOfType`](#isoftype)
 * [Migration Guides](#migration-guides)
+  * [v3.x.x to v4.x.x](#v3xx-to-v4xx)
+  * [v2.x.x to v3.x.x](#v2xx-to-v3xx)
   * [v1.x.x to v2.x.x](#v1xx-to-v2xx)
   * [Migrating from redux-actions](#migrating-from-redux-actions)
 * [Compare to others](#compare-to-others)
@@ -94,6 +96,7 @@ yarn add typesafe-actions
 * `typesafe-actions@1.X.X` - minimal TS v2.7
 * `typesafe-actions@2.X.X` - minimal TS v2.9
 * `typesafe-actions@3.X.X` - minimal TS v3.2
+* `typesafe-actions@4.X.X` - minimal TS v3.2
 
 ### Browser Polyfills
 If you support older browsers (e.g. IE < 11) and mobile devices please provide this polyfill:
@@ -541,7 +544,7 @@ createStandardAction(type)<TPayload, TMeta?>()
 createStandardAction(type).map((payload, meta) => ({ customProp1, customProp2, ...customPropN }))
 ```
 
-> **TIP**: Using `undefined` as generic type parameter you can make the action-creator function to accept ZERO parameters.
+> **TIP**: Using `undefined` as generic type parameter you can make the action-creator function require NO parameters.
 
 Examples:
 [> Advanced Usage Examples](src/create-standard-action.spec.ts)
@@ -553,7 +556,8 @@ import { createStandardAction } from 'typesafe-actions';
 // - with type only
 const increment = createStandardAction('INCREMENT')();
 const increment = createStandardAction('INCREMENT')<undefined>();
-increment(); // { type: 'INCREMENT' }
+increment(); // { type: 'INCREMENT' } (no parameters are required)
+
 
 // - with type and payload
 const add = createStandardAction('ADD')<number>();
@@ -625,7 +629,7 @@ createAsyncAction(
 )<TRequestPayload, TSuccessPayload, TErrorPayload>
 ```
 
-> **TIP**: Using `undefined` as generic type parameter you can make the action-creator function to accept ZERO parameters.
+> **TIP**: Using `undefined` as generic type parameter you can make the action-creator function require NO parameters.
 
 Examples:
 [> Advanced Usage Examples](src/create-async-action.spec.ts)
@@ -802,10 +806,24 @@ if(isOfType([ADD, REMOVE], action)) {
 
 ## Migration Guides
 
-### v2.x.x to v3.x.x
-v3.x.x API is backward compatible with v2.x.x. You'll only need to update typescript dependency to `> v3.1`.
+### `v3.x.x` to `v4.x.x`
+From `v4.x.x` all action creators will use `undefined` instead of `void` as a generic type parameter to make the action-creator function require NO parameters.
+```ts
+const increment = createStandardAction('INCREMENT')<undefined>();
+increment(); // <= no parameters required
 
-### v1.x.x to v2.x.x
+const fetchUsers = createAsyncAction(
+  'FETCH_USERS_REQUEST',
+  'FETCH_USERS_SUCCESS',
+  'FETCH_USERS_FAILURE'
+)<undefined, User[], Error>();
+fetchUsers.request(); // <= no parameters required
+```
+
+### `v2.x.x` to `v3.x.x`
+`v3.x.x` API is backward compatible with `v2.x.x`. You'll only need to update typescript dependency to `> v3.1`.
+
+### `v1.x.x` to `v2.x.x`
 > NOTE: `typesafe-actions@1.x.x` should be used with `utility-types@1.x.x` which contains `$call` utility (removed in `utility-types@2.x.x`)
 
 In v2 we provide `createActionDeprecated` from v1 API to help with incremental migration.

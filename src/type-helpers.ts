@@ -127,17 +127,12 @@ export type PayloadMetaAC<T extends StringType, P, M> = (
 ) => PayloadMetaAction<T, P, M>;
 
 /** @private */
-export type IsEmpty<T> = T extends undefined
-  ? never
-  : T extends void
-  ? never
-  : T;
 export type ActionBuilderConstructor<
   T extends StringType,
   TPayload extends any = undefined,
   TMeta extends any = undefined
 > = [TMeta] extends [undefined]
-  ? [IsEmpty<TPayload>] extends [never]
+  ? [TPayload] extends [undefined]
     ? unknown extends TPayload
       ? PayloadAC<T, TPayload>
       : unknown extends TMeta
