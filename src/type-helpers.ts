@@ -2,14 +2,22 @@
  * PUBLIC API
  */
 
+export interface TypeMeta<T extends StringType> {
+  getType?: () => T;
+}
+
+export type ActionCreator<T extends StringType> = (
+  ...args: any[]
+) => { type: T };
+
 /**
  * @desc Infers Action union-type from action-creator map object
  */
 export type ActionType<
-  ActionCreatorOrMap
+  ActionCreatorOrMap extends any
 > = ActionCreatorOrMap extends ActionCreator<string>
   ? ReturnType<ActionCreatorOrMap>
-  : ActionCreatorOrMap extends object
+  : ActionCreatorOrMap extends Record<any, any>
   ? {
       [K in keyof ActionCreatorOrMap]: ActionType<ActionCreatorOrMap[K]>
     }[keyof ActionCreatorOrMap]
@@ -101,16 +109,6 @@ export interface FluxStandardAction<
   meta: M;
   error?: true;
 }
-
-/** @private */
-export interface TypeMeta<T extends StringType> {
-  getType?: () => T;
-}
-
-/** @private */
-export type ActionCreator<T extends StringType> = (
-  ...args: any[]
-) => { type: T };
 
 /** @private */
 export type EmptyAC<T extends StringType> = () => EmptyAction<T>;
