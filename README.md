@@ -253,13 +253,13 @@ import { ADD } from './constants';
 
 const addTodoToast: Epic<RootAction, RootAction, RootState, Services> = (action$, store, { toastService }) =>
   action$.pipe(
-    filter(isTypeOf(ADD)),
+    filter(isOfType(ADD)),
     tap(action => { // here action type is narrowed to: { type: "todos/ADD"; payload: Todo; }
     ...
     
   // Works with multiple actions! (with type-safety up to 5)
   action$.pipe(
-    filter(isTypeOf([ADD, TOGGLE])) // here action type is narrowed to a smaller union:
+    filter(isOfType([ADD, TOGGLE])) // here action type is narrowed to a smaller union:
     // { type: "todos/ADD"; payload: Todo; } | { type: "todos/TOGGLE"; payload: string; }
 ```
 
