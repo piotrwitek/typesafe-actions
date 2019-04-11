@@ -1,4 +1,8 @@
 // tslint:disable-next-line:no-import-side-effect
+import '@babel/polyfill';
+// console.log('polyfills');
+
+// tslint:disable-next-line:no-import-side-effect
 import 'tslib';
 // tslint:disable-next-line:no-import-side-effect
 import './env';
