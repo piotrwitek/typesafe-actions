@@ -101,9 +101,12 @@ yarn add typesafe-actions
 ### Browser Polyfills
 If you support older browsers (e.g. IE < 11) and mobile devices please provide this polyfill:
 - [Object.assign](https://developer.mozilla.org/pl/docs/Web/JavaScript/Referencje/Obiekty/Object/assign#Polyfill)
+- [Array.prototype.includes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes)
 
-You could also consider including a global polyfill in your bundled application, such as core-js or babel-polyfill.
+You could also consider including a global polyfill in your bundled application, such as `@babel/polyfill`.
 You can check the `React` guidelines on how to do that, specifically: https://reactjs.org/docs/javascript-environment-requirements.html
+
+> You can also check our codesandbox reference implementation which is using `@babel/polyfill` and was confirmed to be working with IE11
 
 [⇧ back to top](#table-of-contents)
 
