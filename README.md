@@ -73,6 +73,7 @@ Issues can be funded by anyone and the money will be transparently distributed t
   * [Migrating from redux-actions](#migrating-from-redux-actions)
 * [Compare to others](#compare-to-others)
   * [redux-actions](#redux-actions)
+* [Recipes](#recipes)
 
 ---
 
@@ -800,12 +801,9 @@ if(isOfType([ADD, REMOVE], action)) {
   return iAcceptOnlyTodoType(action.payload);
   // action type is { type: "todos/ADD"; payload: Todo; } | { type: "todos/REMOVE"; payload: Todo; }
 }
-
 ```
 
 [⇧ back to top](#table-of-contents)
-
----
 
 ## Migration Guides
 
@@ -975,6 +973,34 @@ const notify3 = (username: string, message?: string) => action(
 // }
 ```
 > `typesafe-actions` never fail to `any` type, even with this advanced scenario all types are correct and provide complete type-safety and excellent developer experience 
+
+[⇧ back to top](#table-of-contents)
+
+## Recipes
+
+### Restrict Meta type in `action` creator
+Using this recipe you can create an action creator with restricted Meta type with exact object shape.
+
+```tsx
+export type MetaType = {
+  analytics?: {
+    eventName: string;
+  };
+};
+
+export const actionWithRestrictedMeta = <T extends string, P>(
+  type: T,
+  payload: P,
+  meta: MetaType
+) => action(type, payload, meta);
+
+export const validAction = (payload: string) =>
+  actionWithRestrictedMeta('type', payload, { analytics: { eventName: 'success' } }); // OK!
+
+export const invalidAction = (payload: string) =>
+  actionWithRestrictedMeta('type', payload, { analytics: { excessProp: 'no way!' } }); // Error
+// Object literal may only specify known properties, and 'excessProp' does not exist in type '{ eventName: string; }
+```
 
 [⇧ back to top](#table-of-contents)
 
