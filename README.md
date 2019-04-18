@@ -47,35 +47,57 @@ Issues can be funded by anyone and the money will be transparently distributed t
 
 ---
 
-## Table of Contents
+# Table of Contents
 
-* [Installation](#installation)
-* [Compatibility Notes](#compatibility-notes)
-* [Motivation](#motivation)
-* [Behold the Mighty "Tutorial"](#behold-the-mighty-tutorial)
-* [API Docs](#api-docs)
-  * Type-helpers
-    * [`ActionType`](#actiontype)
-    * [`StateType`](#statetype)
-  * Action-creators
-    * [`action`](#action)/[`createAction`](#createaction)
-    * [`createStandardAction`](#createstandardaction)
-    * [`createCustomAction`](#createcustomaction)
-    * [`createAsyncAction`](#createasyncaction)
-  * Action-helpers
-    * [`getType`](#gettype)
-    * [`isActionOf`](#isactionof)
-    * [`isOfType`](#isoftype)
-* [Migration Guides](#migration-guides)
-  * [v3.x.x to v4.x.x](#v3xx-to-v4xx)
-  * [v2.x.x to v3.x.x](#v2xx-to-v3xx)
-  * [v1.x.x to v2.x.x](#v1xx-to-v2xx)
-  * [Migrating from redux-actions](#migrating-from-redux-actions)
-* [Compare to others](#compare-to-others)
-  * [redux-actions](#redux-actions)
-* [Recipes](#recipes)
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
----
+
+- [Installation](#installation)
+- [Compatibility Notes](#compatibility-notes)
+  - [TypeScript support](#typescript-support)
+  - [Browser Polyfills](#browser-polyfills)
+- [Motivation](#motivation)
+- [Tutorial](#tutorial)
+  - [Constants](#constants)
+  - [Actions](#actions)
+    - [1. Basic actions](#1-basic-actions)
+    - [2. FSA compliant actions](#2-fsa-compliant-actions)
+    - [3. Custom actions (non-standard use-cases)](#3-custom-actions-non-standard-use-cases)
+  - [Action-Helpers](#action-helpers)
+    - [Using action-creators instances instead of type-constants](#using-action-creators-instances-instead-of-type-constants)
+    - [Using regular type-constants](#using-regular-type-constants)
+  - [Async-Flows](#async-flows)
+    - [With `redux-observable` epics](#with-redux-observable-epics)
+    - [With `redux-saga` sagas](#with-redux-saga-sagas)
+- [API Docs](#api-docs)
+  - [Type-helpers](#type-helpers)
+    - [`ActionType`](#actiontype)
+    - [`StateType`](#statetype)
+  - [Action-creators](#action-creators)
+    - [`action`](#action)
+    - [`createAction`](#createaction)
+    - [`createStandardAction`](#createstandardaction)
+    - [`createCustomAction`](#createcustomaction)
+    - [`createAsyncAction`](#createasyncaction)
+  - [Action-helpers](#action-helpers)
+    - [`getType`](#gettype)
+    - [`isActionOf`](#isactionof)
+    - [`isOfType`](#isoftype)
+- [Migration Guides](#migration-guides)
+  - [`v3.x.x` to `v4.x.x`](#v3xx-to-v4xx)
+  - [`v2.x.x` to `v3.x.x`](#v2xx-to-v3xx)
+  - [`v1.x.x` to `v2.x.x`](#v1xx-to-v2xx)
+  - [Migrating from `redux-actions`](#migrating-from-redux-actions)
+- [Recipes](#recipes)
+  - [Restrict Meta type in `action` creator](#restrict-meta-type-in-action-creator)
+- [Compare to others](#compare-to-others)
+  - [`redux-actions`](#redux-actions)
+- [MIT License](#mit-license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+--- 
 
 ## Installation
 
@@ -127,13 +149,13 @@ The core idea was to design an API that would mostly use the power of TypeScript
 
 ---
 
-## Behold the Mighty "Tutorial"
+## Tutorial
 
 To showcase the flexibility and the power of the **type-safety** provided by this library, let's build the most common parts of a typical todo-app using a Redux architecture:
 
 > **WARNING**: Please make sure that you are familiar with the following concepts of programming languages to be able to follow along: [Type Inference](https://www.typescriptlang.org/docs/handbook/type-inference.html), [Control flow analysis](https://github.com/Microsoft/TypeScript/wiki/What%27s-new-in-TypeScript#control-flow-based-type-analysis), [Tagged union types](https://github.com/Microsoft/TypeScript/wiki/What%27s-new-in-TypeScript#tagged-union-types), [Generics](https://www.typescriptlang.org/docs/handbook/generics.html) and [Advanced Types](https://www.typescriptlang.org/docs/handbook/advanced-types.html).
 
-### - The Constants
+### Constants
 
 **String constants limitation in TypeScript** - when using **string constants** as action `type` property, please make sure to use **simple string literal assignment with const**. This limitation is coming from the type-system, because all the **dynamic string operations** (e.g. string concatenation, template strings and also object used as a map) will widen the literal type to its super-type, `string`. As a result this will break contextual typing for **action** object in reducer cases.
 
@@ -155,7 +177,7 @@ export default ({
 } as const) // working in TS v3.4 and above => https://github.com/Microsoft/TypeScript/pull/29510
 ```
 
-### - The Actions
+### Actions
 
 Different projects have different needs, and conventions vary across teams, and this is why `typesafe-actions` was designed with flexibility in mind. It provides three different major styles so you can choose whichever would be the best fit for your team.
 
@@ -200,7 +222,7 @@ export const add = createStandardAction('todos/ADD').map(
 // add: (payload: string) => { type: "todos/ADD"; payload: { id: string, title: string, completed: boolean; }; }
 ```
 
-#### 3.  Custom actions - all the remaining cases
+#### 3. Custom actions (non-standard use-cases)
 
 This approach will give us the most flexibility of all creators, providing a variadic number of named parameters and custom properties on **action** object to fit all the custom use-cases.
 
@@ -217,13 +239,15 @@ const add = createCustomAction('todos/ADD', type => {
 
 [⇧ back to top](#table-of-contents)
 
-### - The Action-Helpers
+### Action-Helpers
 
-Now I wan't to show you **action-helpers** and explain why they are useful. We're going to implement a side-effect responsible for showing a success toast when the user adds a new todo.
+Now I wan't to show you **action-helpers** and explain why they are useful. We're going to implement a side-effect responsible for showing a success toast when user adds a new todo.
 
-#### with action-creators
+#### Using action-creators instances instead of type-constants
 
-Instead of **type-constants** we can use **action-creators** to match actions we are interested it. There is a `isActionOf` helper that will accept **action-creator** parameter and it'll match all actions that was created with this creator.
+Instead of **type-constants** we can use **action-creators** instance to match specific actions in reducers and epics cases. It works by adding a static property on **action-creator** instance which contains the `type` string. 
+
+We have an `isActionOf` helper which accept **action-creator** as parameter and it'll match all actions with corresponding type.
 
 Important thing is that this helper is acting as a **type-guard** so it'll narrow **tagged union type** (`RootAction`) to a specific action type that we want.
 
@@ -247,8 +271,11 @@ const addTodoToast: Epic<RootAction, RootAction, RootState, Services> = (action$
     // { type: "todos/ADD"; payload: Todo; } | { type: "todos/TOGGLE"; payload: string; }
 ```
 
-#### with type-constants
-Alternatively if your team prefers to use **type-constants**, we have an equivalent helper (`isOfType`) which will accept **type-constants** instead of action-creators and have the exact same behavior.
+#### Using regular type-constants
+Alternatively if your team prefers to use regular **type-constants** you can still do that.
+
+We have an equivalent helper (`isOfType`) which accept **type-constants** as parameter providing the same functionality.
+
 ```ts
 // epics.ts
 import { isOfType } from 'typesafe-actions';
@@ -282,69 +309,7 @@ if (isOfType(types.ADD, action)) {
 
 [⇧ back to top](#table-of-contents)
 
-### - The Async-Flow
-
-#### Starring `redux-observable` epics
-
-To handle an async-flow of http request lets implement an `epic`. The `epic` will call a remote API using an injected `todosApi` client, which will return a Promise that we'll need to handle by using three different actions that correspond to triggering, success and failure.
-
-To help us simplify the creation process of necessary action-creators, we'll use `createAsyncAction` function providing us with a nice common interface object `{ request: ... , success: ... , failure: ... }` that will nicely fit with the functional API of `RxJS`.
-This will mitigate **redux verbosity** and greatly reduce the maintenance cost of type annotations for **actions** and **action-creators** that would otherwise be written explicitly.
-
-```ts
-// actions.ts
-import { createAsyncAction } from 'typesafe-actions';
-
-const fetchTodos = createAsyncAction(
-  'FETCH_TODOS_REQUEST',
-  'FETCH_TODOS_SUCCESS',
-  'FETCH_TODOS_FAILURE'
-)<string, Todo[], Error>();
-
-// epics.ts
-import { fetchTodos } from './actions';
-
-const fetchTodosFlow: Epic<RootAction, RootAction, RootState, Services> = (action$, store, { todosApi }) =>
-  action$.pipe(
-    filter(isActionOf(fetchTodos.request)),
-    switchMap(action =>
-      from(todosApi.getAll(action.payload)).pipe(
-        map(fetchTodos.success),
-        catchError(pipe(fetchTodos.failure, of))
-      )
-    );
-```
-
-#### Starring `redux-saga` sagas
-With sagas it's not possible to achieve the same degree of type-safety as with epics because of limitations coming from `redux-saga` API design.
-
-Typescript issues:
-- [Typescript does not currently infer types resulting from a `yield` statement](https://github.com/Microsoft/TypeScript/issues/2983) so you have to manually assert the type  e.g. `const response: Todo[] = yield call(...`
-
-*Here is the latest recommendation although it's not fully optimal. If you cooked something better, please open an issue so we can share it with the world.*
-
-```ts
-import { createAsyncAction } from 'typesafe-actions';
-
-const fetchTodos = createAsyncAction(
-  'FETCH_TODOS_REQUEST',
-  'FETCH_TODOS_SUCCESS',
-  'FETCH_TODOS_FAILURE'
-)<string, Todo[], Error>();
-
-function* addTodoSaga(action: ReturnType<typeof fetchTodos.request>): Generator {
-    const response: Todo[] = yield call(todosApi.getAll, action.payload);
-
-    yield put(fetchTodos.success(response));
-  } catch (err) {
-    yield put(fetchTodos.failure(err));
-  }
-}
-```
-
-[⇧ back to top](#table-of-contents)
-
-### - The Reducer
+### Reducers
 
 Here we'll start by generating a **tagged union type** of actions (`TodosAction`). It's very easy to do using `ActionType` **type-helper** provided by `typesafe-actions`.
 ```ts
@@ -382,6 +347,68 @@ export type RootAction =
 
 [⇧ back to top](#table-of-contents)
 
+### Async-Flows
+
+#### With `redux-observable` epics
+
+To handle an async-flow of http request lets implement an `epic`. The `epic` will call a remote API using an injected `todosApi` client, which will return a Promise that we'll need to handle by using three different actions that correspond to triggering, success and failure.
+
+To help us simplify the creation process of necessary action-creators, we'll use `createAsyncAction` function providing us with a nice common interface object `{ request: ... , success: ... , failure: ... }` that will nicely fit with the functional API of `RxJS`.
+This will mitigate **redux verbosity** and greatly reduce the maintenance cost of type annotations for **actions** and **action-creators** that would otherwise be written explicitly.
+
+```ts
+// actions.ts
+import { createAsyncAction } from 'typesafe-actions';
+
+const fetchTodos = createAsyncAction(
+  'FETCH_TODOS_REQUEST',
+  'FETCH_TODOS_SUCCESS',
+  'FETCH_TODOS_FAILURE'
+)<string, Todo[], Error>();
+
+// epics.ts
+import { fetchTodos } from './actions';
+
+const fetchTodosFlow: Epic<RootAction, RootAction, RootState, Services> = (action$, store, { todosApi }) =>
+  action$.pipe(
+    filter(isActionOf(fetchTodos.request)),
+    switchMap(action =>
+      from(todosApi.getAll(action.payload)).pipe(
+        map(fetchTodos.success),
+        catchError(pipe(fetchTodos.failure, of))
+      )
+    );
+```
+
+#### With `redux-saga` sagas
+With sagas it's not possible to achieve the same degree of type-safety as with epics because of limitations coming from `redux-saga` API design.
+
+Typescript issues:
+- [Typescript does not currently infer types resulting from a `yield` statement](https://github.com/Microsoft/TypeScript/issues/2983) so you have to manually assert the type  e.g. `const response: Todo[] = yield call(...`
+
+*Here is the latest recommendation although it's not fully optimal. If you cooked something better, please open an issue so we can share it with the world.*
+
+```ts
+import { createAsyncAction } from 'typesafe-actions';
+
+const fetchTodos = createAsyncAction(
+  'FETCH_TODOS_REQUEST',
+  'FETCH_TODOS_SUCCESS',
+  'FETCH_TODOS_FAILURE'
+)<string, Todo[], Error>();
+
+function* addTodoSaga(action: ReturnType<typeof fetchTodos.request>): Generator {
+    const response: Todo[] = yield call(todosApi.getAll, action.payload);
+
+    yield put(fetchTodos.success(response));
+  } catch (err) {
+    yield put(fetchTodos.failure(err));
+  }
+}
+```
+
+[⇧ back to top](#table-of-contents)
+
 ---
 
 ## API Docs
@@ -389,7 +416,7 @@ export type RootAction =
 ### Type-helpers
 Below helper functions are very flexible generalizations, works great with nested structures and will cover numerous different use-cases.
 
-#### ActionType
+#### `ActionType`
 
 _Powerful type-helper that will infer union type from **import * as ...** or **action-creator map** object._
 
@@ -419,7 +446,7 @@ export type RootAction = ActionType<typeof actions>;
 
 ---
 
-#### StateType
+#### `StateType`
 
 _Powerful type helper that will infer state object type from **reducer function** and **nested/combined reducers**._
 
@@ -451,7 +478,7 @@ export type RootState = StateType<typeof rootReducer>;
 
 ### Action-creators
 
-#### action
+#### `action`
 
 _Simple **action factory function** to simplify creation of type-safe actions._
 
@@ -483,7 +510,7 @@ _**TIP**: Starting from TypeScript v3.4 you can achieve similar results using ne
 const increment = () => ({ type: 'INCREMENT' } as const);
 ```
 
-#### createAction
+#### `createAction`
 
 _Create an enhanced action-creator with unlimited number of arguments._
 - Resulting action-creator will preserve semantic names of their arguments  `(id, title, amount, etc...)`.
@@ -535,7 +562,7 @@ dispatch(getTodo('some_id', 'some_meta'));
 
 ---
 
-#### createStandardAction
+#### `createStandardAction`
 
 _Create an enhanced action-creator compatible with [Flux Standard Action](https://github.com/redux-utilities/flux-standard-action) to reduce boilerplate and enforce convention._
 - Resulting action-creator have predefined arguments `(payload, meta)`
@@ -593,7 +620,7 @@ dispatch(notify('Hello!', { username: 'Piotr', type: 'announcement' }));
 
 ---
 
-#### createCustomAction
+#### `createCustomAction`
 
 _Create an enhanced action-creator with unlimited number of arguments and custom properties on action object._
 - Resulting action-creator will preserve semantic names of their arguments  `(id, title, amount, etc...)`.
@@ -623,7 +650,7 @@ dispatch(add(1));
 
 ---
 
-#### createAsyncAction
+#### `createAsyncAction`
 
 _Create an object containing three enhanced action-creators to simplify handling of async flows (e.g. network request - request/success/failure)._
 
@@ -660,7 +687,7 @@ dispatch(fetchUsers.failure(err));
 
 ### Action-helpers
 
-#### getType
+#### `getType`
 
 _Get the **type** property value (narrowed to literal type) of given enhanced action-creator._
 
@@ -696,7 +723,7 @@ if (action.type === getType(add)) {
 
 ---
 
-#### isActionOf
+#### `isActionOf`
 
 _Check if action is an instance of given enhanced action-creator(s)
 (it will narrow action type to a type of given action-creator(s))_
@@ -753,7 +780,7 @@ if(isActionOf([addTodo, removeTodo], action)) {
 
 ---
 
-#### isOfType
+#### `isOfType`
 
 _Check if action type property is equal given type-constant(s)
 (it will narrow action type to a type of given action-creator(s))_
@@ -868,6 +895,36 @@ Additionally, if migrating from JS -> TS, you can swap out `redux-actions` actio
 
 ---
 
+## Recipes
+
+### Restrict Meta type in `action` creator
+Using this recipe you can create an action creator with restricted Meta type with exact object shape.
+
+```tsx
+export type MetaType = {
+  analytics?: {
+    eventName: string;
+  };
+};
+
+export const actionWithRestrictedMeta = <T extends string, P>(
+  type: T,
+  payload: P,
+  meta: MetaType
+) => action(type, payload, meta);
+
+export const validAction = (payload: string) =>
+  actionWithRestrictedMeta('type', payload, { analytics: { eventName: 'success' } }); // OK!
+
+export const invalidAction = (payload: string) =>
+  actionWithRestrictedMeta('type', payload, { analytics: { excessProp: 'no way!' } }); // Error
+// Object literal may only specify known properties, and 'excessProp' does not exist in type '{ eventName: string; }
+```
+
+[⇧ back to top](#table-of-contents)
+
+---
+
 ## Compare to others
 
 Here you can find out a detailed comparison of `typesafe-actions` to other solutions.
@@ -877,7 +934,7 @@ Lets compare the 3 most common variants of action-creators (with type only, with
 
 Note: tested with "@types/redux-actions": "2.2.3"
 
-#### - with type only (no payload)
+**- with type only (no payload)**
 
 ##### redux-actions
 ```ts
@@ -901,7 +958,7 @@ const notify1 = () => action('NOTIFY');
 ```
 > with `typesafe-actions` there is no excess nullable types and no excess properties and the action "type" property is containing a literal type
 
-#### - with payload
+**- with payload**
 
 ##### redux-actions
 ```ts
@@ -933,7 +990,7 @@ const notify2 = (username: string, message?: string) => action(
 ```
 > `typesafe-actions` infer very precise resulting type, notice working optional parameters and semantic argument names are preserved which is really important for great intellisense experience
 
-#### - with payload and meta
+**- with payload and meta**
 
 ##### redux-actions
 ```ts
@@ -976,36 +1033,8 @@ const notify3 = (username: string, message?: string) => action(
 
 [⇧ back to top](#table-of-contents)
 
-## Recipes
-
-### Restrict Meta type in `action` creator
-Using this recipe you can create an action creator with restricted Meta type with exact object shape.
-
-```tsx
-export type MetaType = {
-  analytics?: {
-    eventName: string;
-  };
-};
-
-export const actionWithRestrictedMeta = <T extends string, P>(
-  type: T,
-  payload: P,
-  meta: MetaType
-) => action(type, payload, meta);
-
-export const validAction = (payload: string) =>
-  actionWithRestrictedMeta('type', payload, { analytics: { eventName: 'success' } }); // OK!
-
-export const invalidAction = (payload: string) =>
-  actionWithRestrictedMeta('type', payload, { analytics: { excessProp: 'no way!' } }); // Error
-// Object literal may only specify known properties, and 'excessProp' does not exist in type '{ eventName: string; }
-```
-
-[⇧ back to top](#table-of-contents)
-
 ---
 
-MIT License
+## MIT License
 
 Copyright (c) 2017 Piotr Witek <piotrek.witek@gmail.com> (http://piotrwitek.github.io)
