@@ -1,23 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`fetchUsers.failure(
+exports[`async action with any type fetchUsers.failure(
     1
-  ) 1`] = `"T.PayloadAction<\\"FETCH_USERS_FAILURE\\", any>"`;
+  ) (type) should match snapshot 1`] = `"T.PayloadAction<\\"FETCH_USERS_FAILURE\\", any>"`;
 
-exports[`fetchUsers.failure(
-    Error('reason')
-  ) 1`] = `"T.PayloadAction<\\"FETCH_USERS_FAILURE\\", Error>"`;
-
-exports[`fetchUsers.request(
+exports[`async action with any type fetchUsers.request(
     1
-  ) 1`] = `"T.PayloadAction<\\"FETCH_USERS_REQUEST\\", any>"`;
+  ) (type) should match snapshot 1`] = `"T.PayloadAction<\\"FETCH_USERS_REQUEST\\", any>"`;
 
-exports[`fetchUsers.request() 1`] = `"T.EmptyAction<\\"FETCH_USERS_REQUEST\\">"`;
-
-exports[`fetchUsers.success([
-    { firstName: 'Piotr', lastName: 'Witek' },
-  ]) 1`] = `"T.PayloadAction<\\"FETCH_USERS_SUCCESS\\", User[]>"`;
-
-exports[`fetchUsers.success([
+exports[`async action with any type fetchUsers.success([
     1,
-  ]) 1`] = `"T.PayloadAction<\\"FETCH_USERS_SUCCESS\\", any[]>"`;
+  ]) (type) should match snapshot 1`] = `"T.PayloadAction<\\"FETCH_USERS_SUCCESS\\", any[]>"`;
+
+exports[`async action with undefined type fetchUsers.failure(
+    Error('reason')
+  ) (type) should match snapshot 1`] = `"T.PayloadAction<\\"FETCH_USERS_FAILURE\\", Error>"`;
+
+exports[`async action with undefined type fetchUsers.request() (type) should match snapshot 1`] = `"T.EmptyAction<\\"FETCH_USERS_REQUEST\\">"`;
+
+exports[`async action with undefined type fetchUsers.success([
+    { firstName: 'Piotr', lastName: 'Witek' },
+  ]) (type) should match snapshot 1`] = `"T.PayloadAction<\\"FETCH_USERS_SUCCESS\\", User[]>"`;

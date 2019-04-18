@@ -46,65 +46,61 @@ const $action = [
 /** TESTS */
 
 describe('isActionOf', () => {
-  it('should work with single action-creator arg', () => {
-    expect(isActionOf(withTypeOnly)(typeOnlyAction)).toBeTruthy();
-    expect(isActionOf(withTypeOnly, typeOnlyAction)).toBeTruthy();
-    expect(isActionOf(withTypeOnly)(payloadAction)).toBeFalsy();
-    expect(isActionOf(withTypeOnly, payloadAction)).toBeFalsy();
-    expect(isActionOf([withTypeOnly])(typeOnlyAction)).toBeTruthy();
-    expect(isActionOf([withTypeOnly], typeOnlyAction)).toBeTruthy();
-    expect(isActionOf([withTypeOnly])(payloadAction)).toBeFalsy();
-    expect(isActionOf([withTypeOnly], payloadAction)).toBeFalsy();
+  describe('should work with single action-creator arg', () => {
+    // @dts-jest:pass:snap
+    isActionOf(withTypeOnly)(typeOnlyAction); // => true
+    // @dts-jest:pass:snap
+    isActionOf(withTypeOnly, typeOnlyAction); // => true
+    // @dts-jest:pass:snap
+    isActionOf(withTypeOnly)(payloadAction); // => false
+    // @dts-jest:pass:snap
+    isActionOf(withTypeOnly, payloadAction); // => false
+    // @dts-jest:pass:snap
+    isActionOf([withTypeOnly])(typeOnlyAction); // => true
+    // @dts-jest:pass:snap
+    isActionOf([withTypeOnly], typeOnlyAction); // => true
+    // @dts-jest:pass:snap
+    isActionOf([withTypeOnly])(payloadAction); // => false
+    // @dts-jest:pass:snap
+    isActionOf([withTypeOnly], payloadAction); // => false
   });
 
-  it('should work with multiple action-creator args', () => {
-    expect(
-      isActionOf([withTypeOnly, withPayload])(typeOnlyAction)
-    ).toBeTruthy();
-    expect(
-      isActionOf([withTypeOnly, withPayload], typeOnlyAction)
-    ).toBeTruthy();
-    expect(isActionOf([withTypeOnly, withPayload])(payloadAction)).toBeTruthy();
-    expect(isActionOf([withTypeOnly, withPayload], payloadAction)).toBeTruthy();
-    expect(
-      isActionOf([withTypeOnly, withPayload])(mappedPayloadAction)
-    ).toBeFalsy();
-    expect(
-      isActionOf([withTypeOnly, withPayload], mappedPayloadAction)
-    ).toBeFalsy();
+  describe('should work with multiple action-creator args', () => {
+    // @dts-jest:pass:snap
+    isActionOf([withTypeOnly, withPayload])(typeOnlyAction); // => true
+    // @dts-jest:pass:snap
+    isActionOf([withTypeOnly, withPayload], typeOnlyAction); // => true
+    // @dts-jest:pass:snap
+    isActionOf([withTypeOnly, withPayload])(payloadAction); // => true
+    // @dts-jest:pass:snap
+    isActionOf([withTypeOnly, withPayload], payloadAction); // => true
+    // @dts-jest:pass:snap
+    isActionOf([withTypeOnly, withPayload])(mappedPayloadAction); // => false
+    // @dts-jest:pass:snap
+    isActionOf([withTypeOnly, withPayload], mappedPayloadAction); // => false
   });
 
-  it('should correctly assert for an array with 1 arg', () => {
+  describe('should correctly assert for an array with 1 arg', () => {
     const actual = $action.filter(isActionOf([withTypeOnly]));
     // @dts-jest:pass:snap
-    actual;
-    expect(actual).toHaveLength(1);
-    expect(actual).toEqual([typeOnlyExpected]);
+    actual; // => [typeOnlyExpected]
   });
 
-  it('should correctly assert for an array with 2 args', () => {
+  describe('should correctly assert for an array with 2 args', () => {
     const actual = $action.filter(isActionOf([withTypeOnly, withPayload]));
     // @dts-jest:pass:snap
-    actual;
-    expect(actual).toHaveLength(2);
-    expect(actual).toEqual([typeOnlyExpected, payloadExpected]);
+    actual; // => [typeOnlyExpected, payloadExpected]
   });
 
-  it('should correctly assert for an array with 3 args', () => {
+  describe('should correctly assert for an array with 3 args', () => {
     const actual = $action.filter(
       isActionOf([withTypeOnly, withPayload, withPayloadMeta])
     );
     // @dts-jest:pass:snap
-    actual;
-    expect(actual).toHaveLength(3);
-    expect(actual).toEqual([
-      typeOnlyExpected,
-      payloadExpected,
-      payloadMetaExpected,
-    ]);
+    actual; // => [typeOnlyExpected,payloadExpected,payloadMetaExpected]
   });
 
-  it('should correctly assert for an array with 4 args', () => {
+  describe('should correctly assert for an array with 4 args', () => {
     const actual = $action.filter(
       isActionOf([
         withTypeOnly,
@@ -114,16 +110,10 @@ describe('isActionOf', () => {
       ])
     );
     // @dts-jest:pass:snap
-    actual;
-    expect(actual).toEqual([
-      typeOnlyExpected,
-      payloadExpected,
-      payloadMetaExpected,
-      mappedPayloadExpected,
-    ]);
+    actual; // => [typeOnlyExpected,payloadExpected,payloadMetaExpected,mappedPayloadExpected]
   });
 
-  it('should correctly assert for an array with 5 args', () => {
+  describe('should correctly assert for an array with 5 args', () => {
     const actual = $action.filter(
       isActionOf([
         withTypeOnly,
@@ -134,28 +124,19 @@ describe('isActionOf', () => {
       ])
     );
     // @dts-jest:pass:snap
-    actual;
-    expect(actual).toHaveLength(5);
-    expect(actual).toEqual([
-      typeOnlyExpected,
-      payloadExpected,
-      payloadMetaExpected,
-      mappedPayloadExpected,
-      mappedPayloadMetaExpected,
-    ]);
+    actual; // => [typeOnlyExpected,payloadExpected,payloadMetaExpected,mappedPayloadExpected,mappedPayloadMetaExpected]
   });
 
-  it('should correctly assert type with "any" action', () => {
+  describe('should correctly assert type with "any" action', () => {
     const action: any = withMappedPayload(1234);
     if (isActionOf([withMappedPayload, withMappedPayloadMeta], action)) {
       // @dts-jest:pass:snap
-      action;
-      expect(action.payload).toBe(1234);
+      action; // => {"payload": 1234, "type": "WITH_MAPPED_PAYLOAD"}
     }
+
     if (isActionOf([withMappedPayload, withMappedPayloadMeta])(action)) {
       // @dts-jest:pass:snap
-      action;
-      expect(action.payload).toBe(1234);
+      action; // => {"payload": 1234, "type": "WITH_MAPPED_PAYLOAD"}
     }
   });
 });

@@ -9,23 +9,28 @@ import {
 /** TESTS */
 
 describe('checkIsEmpty', () => {
-  it('passes when input is empty', () => {
-    expect(checkIsEmpty(null)).toBeTruthy();
-    expect(checkIsEmpty(undefined)).toBeTruthy();
+  describe('should pass when input is empty', () => {
+    // @dts-jest:pass:snap
+    checkIsEmpty(null); // => true
+    // @dts-jest:pass:snap
+    checkIsEmpty(undefined); // => true
   });
 });
 
 describe('checkInvalidActionCreator', () => {
-  it('fail when input is valid action-creator', () => {
+  describe('should fail when input is valid action-creator', () => {
     const ac = () => ({ type: 'type' });
     ac.getType = () => 'type';
-    expect(checkInvalidActionCreator(ac)).toBeFalsy();
+    // @dts-jest:pass:snap
+    checkInvalidActionCreator(ac); // => false
   });
 });
 
 describe('checkInvalidActionType', () => {
-  it('fails when input is valid action-type', () => {
-    expect(checkInvalidActionType('asdf')).toBeFalsy();
-    expect(checkInvalidActionType(Symbol() as any)).toBeFalsy();
+  describe('should fail when input is valid action-type', () => {
+    // @dts-jest:pass:snap
+    checkInvalidActionType('asdf'); // => false
+    // @dts-jest:pass:snap
+    checkInvalidActionType(Symbol() as any); // => false
   });
 });

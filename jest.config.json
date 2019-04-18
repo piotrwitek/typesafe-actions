@@ -7,6 +7,7 @@
     "<rootDir>/src/utils/?(*.)+(spec|test).ts?(x)"
   ],
   "transform": {
+    ".spec.(ts|tsx)": "dts-jest/transform",
     ".(ts|tsx)": "ts-jest"
   },
   "globals": {
@@ -16,6 +17,17 @@
       "diagnostics": {
         "ignoreCodes": [5023]
       }
+    },
+    "_dts_jest_": {
+      "compiler_options": {
+        "module": "commonjs",
+        "strict": true,
+        "target": "es6"
+      },
+      "enclosing_declaration": true,
+      "test_value": true,
+      "transpile": true
     }
-  }
+  },
+  "reporters": ["default", "dts-jest/reporter"]
 }

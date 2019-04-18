@@ -1,53 +1,53 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`withError(true) 1`] = `"{ type: \\"ACTION\\"; error: boolean; }"`;
+exports[`with error withError(true) (type) should match snapshot 1`] = `"{ type: \\"ACTION\\"; error: boolean; }"`;
 
-exports[`withMeta('info') 1`] = `"{ type: \\"ACTION\\"; meta: string; }"`;
+exports[`with meta withMeta('info') (type) should match snapshot 1`] = `"{ type: \\"ACTION\\"; meta: string; }"`;
 
-exports[`withOptionalError() 1`] = `"{ type: \\"ACTION\\"; error: boolean | undefined; }"`;
+exports[`with optional error withOptionalError() (type) should match snapshot 1`] = `"{ type: \\"ACTION\\"; error: boolean | undefined; }"`;
 
-exports[`withOptionalError(true) 1`] = `"{ type: \\"ACTION\\"; error: boolean | undefined; }"`;
+exports[`with optional error withOptionalError(true) (type) should match snapshot 1`] = `"{ type: \\"ACTION\\"; error: boolean | undefined; }"`;
 
-exports[`withOptionalMeta('info') 1`] = `"{ type: \\"ACTION\\"; meta: string | undefined; }"`;
+exports[`with optional meta withOptionalMeta('info') (type) should match snapshot 1`] = `"{ type: \\"ACTION\\"; meta: string | undefined; }"`;
 
-exports[`withOptionalMeta() 1`] = `"{ type: \\"ACTION\\"; meta: string | undefined; }"`;
+exports[`with optional meta withOptionalMeta() (type) should match snapshot 1`] = `"{ type: \\"ACTION\\"; meta: string | undefined; }"`;
 
-exports[`withOptionalPayload('Hello!') 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; }"`;
+exports[`with optional payload and meta withOptionalPayloadAndMeta('info') (type) should match snapshot 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; meta: string; }"`;
 
-exports[`withOptionalPayload() 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; }"`;
+exports[`with optional payload and meta withOptionalPayloadAndMeta('info', 'Hello!') (type) should match snapshot 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; meta: string; }"`;
 
-exports[`withOptionalPayloadAndMeta('info') 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; meta: string; }"`;
+exports[`with optional payload and optional meta withOptionalPayloadAndOptionalMeta('Hello!') (type) should match snapshot 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; meta: string | undefined; }"`;
 
-exports[`withOptionalPayloadAndMeta('info', 'Hello!') 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; meta: string; }"`;
+exports[`with optional payload and optional meta withOptionalPayloadAndOptionalMeta('Hello!', 'info') (type) should match snapshot 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; meta: string | undefined; }"`;
 
-exports[`withOptionalPayloadAndOptionalMeta('Hello!') 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; meta: string | undefined; }"`;
+exports[`with optional payload and optional meta withOptionalPayloadAndOptionalMeta() (type) should match snapshot 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; meta: string | undefined; }"`;
 
-exports[`withOptionalPayloadAndOptionalMeta('Hello!', 'info') 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; meta: string | undefined; }"`;
+exports[`with optional payload withOptionalPayload('Hello!') (type) should match snapshot 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; }"`;
 
-exports[`withOptionalPayloadAndOptionalMeta() 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; meta: string | undefined; }"`;
+exports[`with optional payload withOptionalPayload() (type) should match snapshot 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; }"`;
 
-exports[`withOptionalPayloadOptionalMetaAndOptionalError('Hello!') 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; meta: string | undefined; error: boolean | undefined; }"`;
+exports[`with optional payload, optional meta, and optional error withOptionalPayloadOptionalMetaAndOptionalError('Hello!') (type) should match snapshot 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; meta: string | undefined; error: boolean | undefined; }"`;
 
-exports[`withOptionalPayloadOptionalMetaAndOptionalError('Hello!', 'info') 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; meta: string | undefined; error: boolean | undefined; }"`;
+exports[`with optional payload, optional meta, and optional error withOptionalPayloadOptionalMetaAndOptionalError('Hello!', 'info') (type) should match snapshot 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; meta: string | undefined; error: boolean | undefined; }"`;
 
-exports[`withOptionalPayloadOptionalMetaAndOptionalError('Hello!', 'info', true) 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; meta: string | undefined; error: boolean | undefined; }"`;
+exports[`with optional payload, optional meta, and optional error withOptionalPayloadOptionalMetaAndOptionalError('Hello!', 'info', true) (type) should match snapshot 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; meta: string | undefined; error: boolean | undefined; }"`;
 
-exports[`withOptionalPayloadOptionalMetaAndOptionalError() 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; meta: string | undefined; error: boolean | undefined; }"`;
+exports[`with optional payload, optional meta, and optional error withOptionalPayloadOptionalMetaAndOptionalError() (type) should match snapshot 1`] = `"{ type: \\"ACTION\\"; payload: string | undefined; meta: string | undefined; error: boolean | undefined; }"`;
 
-exports[`withPayload('Hello!') 1`] = `"{ type: \\"ACTION\\"; payload: string; }"`;
+exports[`with payload and meta withPayloadAndMeta('Hello!', 'info') (type) should match snapshot 1`] = `"{ type: \\"ACTION\\"; payload: string; meta: string; }"`;
 
-exports[`withPayloadAndMeta('Hello!', 'info') 1`] = `"{ type: \\"ACTION\\"; payload: string; meta: string; }"`;
+exports[`with payload and optional meta withPayloadAndOptionalMeta('Hello!') (type) should match snapshot 1`] = `"{ type: \\"ACTION\\"; payload: string; meta: string | undefined; }"`;
 
-exports[`withPayloadAndOptionalMeta('Hello!') 1`] = `"{ type: \\"ACTION\\"; payload: string; meta: string | undefined; }"`;
+exports[`with payload and optional meta withPayloadAndOptionalMeta('Hello!', 'info') (type) should match snapshot 1`] = `"{ type: \\"ACTION\\"; payload: string; meta: string | undefined; }"`;
 
-exports[`withPayloadAndOptionalMeta('Hello!', 'info') 1`] = `"{ type: \\"ACTION\\"; payload: string; meta: string | undefined; }"`;
+exports[`with payload withPayload('Hello!') (type) should match snapshot 1`] = `"{ type: \\"ACTION\\"; payload: string; }"`;
 
-exports[`withPayloadMetaAndError('Hello!', 'info', true) 1`] = `"{ type: \\"ACTION\\"; payload: string; meta: string; error: boolean; }"`;
+exports[`with payload, meta, and error withPayloadMetaAndError('Hello!', 'info', true) (type) should match snapshot 1`] = `"{ type: \\"ACTION\\"; payload: string; meta: string; error: boolean; }"`;
 
-exports[`withPayloadMetaAndOptionalError('Hello!', 'info') 1`] = `"{ type: \\"ACTION\\"; payload: string; meta: string; error: boolean | undefined; }"`;
+exports[`with payload, meta, and optional error withPayloadMetaAndOptionalError('Hello!', 'info') (type) should match snapshot 1`] = `"{ type: \\"ACTION\\"; payload: string; meta: string; error: boolean | undefined; }"`;
 
-exports[`withPayloadMetaAndOptionalError('Hello!', 'info', true) 1`] = `"{ type: \\"ACTION\\"; payload: string; meta: string; error: boolean | undefined; }"`;
+exports[`with payload, meta, and optional error withPayloadMetaAndOptionalError('Hello!', 'info', true) (type) should match snapshot 1`] = `"{ type: \\"ACTION\\"; payload: string; meta: string; error: boolean | undefined; }"`;
 
-exports[`withSymbol() 1`] = `"{ type: any; }"`;
+exports[`with symbol withSymbol() (type) should match snapshot 1`] = `"{ type: any; }"`;
 
-exports[`withTypeOnly() 1`] = `"{ type: \\"ACTION\\"; }"`;
+exports[`with type only withTypeOnly() (type) should match snapshot 1`] = `"{ type: \\"ACTION\\"; }"`;
