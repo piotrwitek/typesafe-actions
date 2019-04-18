@@ -1,7 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`getType(createAction('CREATE_ACTION')) 1`] = `"string"`;
-
-exports[`getType(createCustomAction('CREATE_CUSTOM_ACTION')) 1`] = `"string"`;
-
-exports[`getType(createStandardAction('CREATE_STANDARD_ACTION')<undefined>()) 1`] = `"\\"CREATE_STANDARD_ACTION\\""`;
