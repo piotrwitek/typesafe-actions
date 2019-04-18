@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`toString() method return a type actionCreator.toString() (type) should match snapshot 1`] = `"string"`;
+
+exports[`with meta withMeta('token') (type) should match snapshot 1`] = `"{ type: \\"CREATE_CUSTOM_ACTION\\"; meta: string; }"`;
+
+exports[`with optional payload withOptionalPayload() (type) should match snapshot 1`] = `"{ type: \\"CREATE_CUSTOM_ACTION\\"; payload: number | undefined; }"`;
+
+exports[`with optional payload withOptionalPayload(1) (type) should match snapshot 1`] = `"{ type: \\"CREATE_CUSTOM_ACTION\\"; payload: number | undefined; }"`;
+
+exports[`with payload and meta withPayloadAndMeta('Hello!', 'info') (type) should match snapshot 1`] = `"{ type: \\"CREATE_CUSTOM_ACTION\\"; payload: string; meta: string; }"`;
+
+exports[`with payload withPayload(1) (type) should match snapshot 1`] = `"{ type: \\"CREATE_CUSTOM_ACTION\\"; payload: number; }"`;
+
+exports[`with symbol withSymbol() (type) should match snapshot 1`] = `"{ type: any; }"`;
+
+exports[`with type only withTypeOnly() (type) should match snapshot 1`] = `"{ type: \\"CREATE_CUSTOM_ACTION\\"; }"`;

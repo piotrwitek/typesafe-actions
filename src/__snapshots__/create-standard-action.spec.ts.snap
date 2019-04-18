@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`constructor toString() method return a type actionCreator.toString() (type) should match snapshot 1`] = `"string"`;
+
+exports[`constructor with meta - any withMeta(undefined, 'token') (type) should match snapshot 1`] = `"T.PayloadMetaAction<\\"CREATE_STANDARD_ACTION\\", undefined, any>"`;
+
+exports[`constructor with meta withMeta(undefined, 'token') (type) should match snapshot 1`] = `"T.PayloadMetaAction<\\"CREATE_STANDARD_ACTION\\", undefined, string>"`;
+
+exports[`constructor with payload - any withPayload(10) (type) should match snapshot 1`] = `"T.PayloadAction<\\"CREATE_STANDARD_ACTION\\", any>"`;
+
+exports[`constructor with payload - boolean withPayload(true) (type) should match snapshot 1`] = `"T.PayloadAction<\\"CREATE_STANDARD_ACTION\\", boolean>"`;
+
+exports[`constructor with payload - literal string union withPayload('up') (type) should match snapshot 1`] = `"T.PayloadAction<\\"CREATE_STANDARD_ACTION\\", \\"up\\" | \\"down\\" | \\"unknown\\">"`;
+
+exports[`constructor with payload - number withPayload(10) (type) should match snapshot 1`] = `"T.PayloadAction<\\"CREATE_STANDARD_ACTION\\", number>"`;
+
+exports[`constructor with payload - primitives union withPayload('foo') (type) should match snapshot 1`] = `"T.PayloadAction<\\"CREATE_STANDARD_ACTION\\", string | number | null>"`;
+
+exports[`constructor with payload - primitives union withPayload(3) (type) should match snapshot 1`] = `"T.PayloadAction<\\"CREATE_STANDARD_ACTION\\", string | number | null>"`;
+
+exports[`constructor with payload - primitives union withPayload(null) (type) should match snapshot 1`] = `"T.PayloadAction<\\"CREATE_STANDARD_ACTION\\", string | number | null>"`;
+
+exports[`constructor with payload and meta withPayloadAndMeta(1, 'token') (type) should match snapshot 1`] = `"T.PayloadMetaAction<\\"CREATE_STANDARD_ACTION\\", number, string>"`;
+
+exports[`constructor with symbol withSymbol() (type) should match snapshot 1`] = `"T.EmptyAction<any>"`;
+
+exports[`constructor with type only - undefined withTypeOnly() (type) should match snapshot 1`] = `"T.EmptyAction<\\"CREATE_STANDARD_ACTION\\">"`;
+
+exports[`map with meta - no param withMeta() (type) should match snapshot 1`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { meta: string; }"`;
+
+exports[`map with meta - primitive param withMeta('info message') (type) should match snapshot 1`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { meta: string; }"`;
+
+exports[`map with meta - union param withMeta('info message') (type) should match snapshot 1`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { meta: string | number | null; }"`;
+
+exports[`map with meta - union param withMeta(3) (type) should match snapshot 1`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { meta: string | number | null; }"`;
+
+exports[`map with meta - union param withMeta(null) (type) should match snapshot 1`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { meta: string | number | null; }"`;
+
+exports[`map with payload - no param withPayload() (type) should match snapshot 1`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { payload: string; }"`;
+
+exports[`map with payload - primitive param withPayload('info message') (type) should match snapshot 1`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { payload: string; }"`;
+
+exports[`map with payload - union param withPayload('info message') (type) should match snapshot 1`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { payload: string | number | null; }"`;
+
+exports[`map with payload - union param withPayload(3) (type) should match snapshot 1`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { payload: string | number | null; }"`;
+
+exports[`map with payload - union param withPayload(null) (type) should match snapshot 1`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { payload: string | number | null; }"`;
+
+exports[`map with payload and meta - no param withPayloadAndMeta() (type) should match snapshot 1`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { payload: string; meta: { severity: string; }; }"`;
+
+exports[`map with payload and meta - object param withPayloadAndMeta({ username: 'Piotr', message: 'Hello!' }) (type) should match snapshot 1`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { payload: string; meta: { username: string; message: string | undefined; }; }"`;
+
+exports[`map with payload and meta - string param withPayloadAndMeta('error message') (type) should match snapshot 1`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; } & { payload: string; meta: { severity: string; }; }"`;
+
+exports[`map with type only withTypeOnly() (type) should match snapshot 1`] = `"{ type: \\"CREATE_STANDARD_ACTION\\"; }"`;

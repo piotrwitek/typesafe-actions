@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`isOfType should correctly assert for an array with 1 arg actual (type) should match snapshot 1`] = `"T.EmptyAction<\\"WITH_TYPE_ONLY\\">[]"`;
+
+exports[`isOfType should correctly assert for an array with 2 args actual (type) should match snapshot 1`] = `"(T.EmptyAction<\\"WITH_TYPE_ONLY\\"> | T.PayloadAction<\\"WITH_PAYLOAD\\", number>)[]"`;
+
+exports[`isOfType should correctly assert for an array with 3 args actual (type) should match snapshot 1`] = `"(T.EmptyAction<\\"WITH_TYPE_ONLY\\"> | T.PayloadAction<\\"WITH_PAYLOAD\\", number> | T.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string>)[]"`;
+
+exports[`isOfType should correctly assert for an array with 4 args actual (type) should match snapshot 1`] = `"(T.EmptyAction<\\"WITH_TYPE_ONLY\\"> | T.PayloadAction<\\"WITH_PAYLOAD\\", number> | ({ type: \\"WITH_MAPPED_PAYLOAD\\"; } & { payload: number; }) | T.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string>)[]"`;
+
+exports[`isOfType should correctly assert for an array with 4 args actual (type) should match snapshot 2`] = `"(T.EmptyAction<\\"WITH_TYPE_ONLY\\"> | T.PayloadAction<\\"WITH_PAYLOAD\\", number> | ({ type: \\"WITH_MAPPED_PAYLOAD\\"; } & { payload: number; }) | T.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string> | ({ type: \\"WITH_MAPPED_PAYLOAD_META\\"; } & { payload: number; meta: string; }))[]"`;
+
+exports[`isOfType should correctly assert type with "any" action action (type) should match snapshot 1`] = `"any"`;
+
+exports[`isOfType should correctly assert type with "any" action action (type) should match snapshot 2`] = `"any"`;
+
+exports[`isOfType should work with multiple action-type args isOfType([types.WITH_TYPE_ONLY, types.WITH_PAYLOAD])(mappedPayloadAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`isOfType should work with multiple action-type args isOfType([types.WITH_TYPE_ONLY, types.WITH_PAYLOAD])(payloadAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`isOfType should work with multiple action-type args isOfType([types.WITH_TYPE_ONLY, types.WITH_PAYLOAD])(typeOnlyAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`isOfType should work with multiple action-type args isOfType([types.WITH_TYPE_ONLY, types.WITH_PAYLOAD], mappedPayloadAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`isOfType should work with multiple action-type args isOfType([types.WITH_TYPE_ONLY, types.WITH_PAYLOAD], payloadAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`isOfType should work with multiple action-type args isOfType([types.WITH_TYPE_ONLY, types.WITH_PAYLOAD], typeOnlyAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`isOfType should work with single action-type arg isOfType([types.WITH_TYPE_ONLY])(payloadAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`isOfType should work with single action-type arg isOfType([types.WITH_TYPE_ONLY])(typeOnlyAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`isOfType should work with single action-type arg isOfType([types.WITH_TYPE_ONLY], payloadAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`isOfType should work with single action-type arg isOfType([types.WITH_TYPE_ONLY], typeOnlyAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`isOfType should work with single action-type arg isOfType(types.WITH_TYPE_ONLY)(payloadAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`isOfType should work with single action-type arg isOfType(types.WITH_TYPE_ONLY)(typeOnlyAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`isOfType should work with single action-type arg isOfType(types.WITH_TYPE_ONLY, payloadAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`isOfType should work with single action-type arg isOfType(types.WITH_TYPE_ONLY, typeOnlyAction) (type) should match snapshot 1`] = `"boolean"`;
