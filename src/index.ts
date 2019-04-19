@@ -5,16 +5,22 @@
  */
 
 /** Public API */
-// creators
+
+// action-creators
 export { action } from './action';
 export { createAction } from './create-action';
 export { createStandardAction } from './create-standard-action';
 export { createCustomAction } from './create-custom-action';
 export { createAsyncAction } from './create-async-action';
-// guards
-export { ActionType, StateType } from './type-helpers';
+export { createReducer } from './create-reducer';
+
+// action-helpers
 export { getType } from './get-type';
 export { isOfType } from './is-of-type';
 export { isActionOf } from './is-action-of';
+
+// type-helpers
+export { ActionType, StateType, ActionCreator, TypeMeta } from './type-helpers';
+
 // deprecated
 export { createActionDeprecated } from './create-action-deprecated';
