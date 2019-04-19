@@ -1,4 +1,6 @@
+// @ts-ignore
 import { RootAction } from '.';
+import { getType } from './get-type';
 
 export function createReducer<S, A extends { type: string } = RootAction>(
   initialState: S
@@ -7,25 +9,31 @@ export function createReducer<S, A extends { type: string } = RootAction>(
     actionsCreators: Array<(...args: any[]) => TAction>,
     actionsHandler: (state: S, action: A extends TAction ? A : never) => S
   ) => Exclude<TAllActions, TAction> extends never
-    ? ReducerInstance
-    : ReducerInstance & {
+    ? Reducer
+    : Reducer & {
         addHandler: AddHandler<Exclude<TAllActions, TAction>>;
       };
+  type AddHandlerChain = { addHandler: AddHandler<A> };
 
-  type ReducerInstance = (state: S, action: A) => S;
-  type Chain = { addHandler: AddHandler<A> };
+  const handlers: Record<string, Reducer> = {};
 
-  const addHandler: AddHandler<A> = (types, handler) => {
-    return Object.assign({}, { addHandler });
+  type Reducer = (state: S, action: A) => S;
+  const reducer: Reducer = (state = initialState, action) => {
+    if (handlers.hasOwnProperty(action.type)) {
+      return handlers[action.type](state, action);
+    } else {
+      return state;
+    }
   };
 
-  return Object.assign({}, { addHandler }) as ReducerInstance & Chain;
+  const addHandler = ((actionsCreators, actionsHandler: Reducer) => {
+    actionsCreators.forEach(ac => (handlers[getType(ac)] = actionsHandler));
+    return chain;
+  }) as AddHandler<A>;
 
-  // return (state: S = initialState, action: A): S => {
-  //   if (handlers.hasOwnProperty(action.type)) {
-  //     return (handlers as any)[action.type](state, action);
-  //   } else {
-  //     return state;
-  //   }
-  // };
+  const chain: Reducer & AddHandlerChain = Object.assign(reducer, {
+    addHandler,
+  });
+
+  return chain;
 }
