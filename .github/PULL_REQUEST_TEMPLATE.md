@@ -1,19 +1,23 @@
-Thank you for your contribution! :thumbsup:
+<!-- Thank you for your contribution! :thumbsup: -->
+<!-- Please makes sure that these checkboxes are checked before submitting your PR, thank you! -->
 
-Please makes sure that these checkboxes are checked before submitting your PR, thank you!
+## Description
+<!-- Example: Added error property support to `action` API -->
 
-Related issues: ...
+## Related issues:
+- Resolved #XXX
 
-* [ ] PR have a corresponding issue which is approved and it's linked above
-* [ ] Rebase before creating a PR to keep commit history clean
-* [ ] Clear node_modules and reinstall all the dependencies: `npm run reinstall`
-* [ ] Run ci-check npm script: `npm run ci-check`
+## Checklist
+
+* [ ] I have read [CONTRIBUTING.md](../CONTRIBUTING.md)
+* [ ] I have linked all related issues above
+* [ ] I have rebased my branch
 
 For bugfixes:
- * [ ] Add at least one unit test to cover the bug that have been fixed
+* [ ] I have added at least one unit test to confirm the bug have been fixed
 
-For new feature:
- * [ ] Update API docs and tutorial
- * [ ] Add examples to demonstrate new feature
- * [ ] Add type unit tests
- * [ ] Add runtime unit tests
+For new features:
+* [ ] I have updated API docs and tutorial (if applicable)
+* [ ] I have added short examples to demonstrate new feature usage
+* [ ] I have added type unit tests with `dts-jest`
+* [ ] I have added runtime unit tests with `dts-jest`
