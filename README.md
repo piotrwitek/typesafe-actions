@@ -56,7 +56,8 @@ Issues can be funded by anyone and the money will be transparently distributed t
 - [Installation](#installation)
 - [Compatibility Notes](#compatibility-notes)
   - [TypeScript support](#typescript-support)
-  - [Browser Polyfills](#browser-polyfills)
+  - [Browser support](#browser-support)
+  - [Recommended polyfill for IE](#recommended-polyfill-for-ie)
 - [Motivation](#motivation)
 - [Tutorial](#tutorial)
   - [Constants](#constants)
@@ -121,15 +122,18 @@ yarn add typesafe-actions
 * `typesafe-actions@3.X.X` - minimal TS v3.2
 * `typesafe-actions@4.X.X` - minimal TS v3.2
 
-### Browser Polyfills
-If you support older browsers (e.g. IE < 11) and mobile devices please provide this polyfill:
+### Browser support
+It's compatible with all modern browsers.
+
+For older browsers (e.g. IE <= 11) and mobile devices you need to provide these polyfills:
 - [Object.assign](https://developer.mozilla.org/pl/docs/Web/JavaScript/Referencje/Obiekty/Object/assign#Polyfill)
 - [Array.prototype.includes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes)
 
-You could also consider including a global polyfill in your bundled application, such as `@babel/polyfill`.
+### Recommended polyfill for IE
+To provide the best compatibility for your application please include a popular polyfill package in your bundled application, such as `@babel/polyfill`.
 You can check the `React` guidelines on how to do that, specifically: https://reactjs.org/docs/javascript-environment-requirements.html
 
-> You can also check our codesandbox reference implementation which is using `@babel/polyfill` and was confirmed to be working with IE11
+> It's included in our `/codesandbox` reference implementation which is using `@babel/polyfill` and is confirmed to be working with IE11. Please check it out!
 
 [⇧ back to top](#table-of-contents)
 
@@ -155,6 +159,8 @@ To showcase the flexibility and the power of the **type-safety** provided by thi
 
 > **WARNING**: Please make sure that you are familiar with the following concepts of programming languages to be able to follow along: [Type Inference](https://www.typescriptlang.org/docs/handbook/type-inference.html), [Control flow analysis](https://github.com/Microsoft/TypeScript/wiki/What%27s-new-in-TypeScript#control-flow-based-type-analysis), [Tagged union types](https://github.com/Microsoft/TypeScript/wiki/What%27s-new-in-TypeScript#tagged-union-types), [Generics](https://www.typescriptlang.org/docs/handbook/generics.html) and [Advanced Types](https://www.typescriptlang.org/docs/handbook/advanced-types.html).
 
+[⇧ back to top](#table-of-contents)
+
 ### Constants
 
 **String constants limitation in TypeScript** - when using **string constants** as action `type` property, please make sure to use **simple string literal assignment with const**. This limitation is coming from the type-system, because all the **dynamic string operations** (e.g. string concatenation, template strings and also object used as a map) will widen the literal type to its super-type, `string`. As a result this will break contextual typing for **action** object in reducer cases.
@@ -176,6 +182,8 @@ export default ({
   ADD: '@prefix/ADD', // => '@prefix/ADD'
 } as const) // working in TS v3.4 and above => https://github.com/Microsoft/TypeScript/pull/29510
 ```
+
+[⇧ back to top](#table-of-contents)
 
 ### Actions
 
