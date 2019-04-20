@@ -1,5 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`counterReducer(0, add(4)) (type) should match snapshot 1`] = `"number"`;
+exports[`With Action Creators fn(0, add(4)) (type) should match snapshot 1`] = `"number"`;
 
-exports[`counterReducer(0, increment()) (type) should match snapshot 1`] = `"number"`;
+exports[`With Action Creators fn(0, add(4)) (type) should match snapshot 2`] = `"number"`;
+
+exports[`With Action Creators fn(0, add(4)) (type) should match snapshot 3`] = `"number"`;
+
+exports[`With Action Creators fn(0, increment()) (type) should match snapshot 1`] = `"number"`;
+
+exports[`With Action Creators fn(0, increment()) (type) should match snapshot 2`] = `"number"`;
+
+exports[`With Action Creators fn(0, increment()) (type) should match snapshot 3`] = `"number"`;
+
+exports[`With Action Types fn(0, add(4)) (type) should match snapshot 1`] = `"number"`;
+
+exports[`With Action Types fn(0, add(4)) (type) should match snapshot 2`] = `"number"`;
+
+exports[`With Action Types fn(0, add(4)) (type) should match snapshot 3`] = `"number"`;
+
+exports[`With Action Types fn(0, increment()) (type) should match snapshot 1`] = `"number"`;
+
+exports[`With Action Types fn(0, increment()) (type) should match snapshot 2`] = `"number"`;
+
+exports[`With Action Types fn(0, increment()) (type) should match snapshot 3`] = `"number"`;
