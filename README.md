@@ -1,75 +1,70 @@
-# typesafe-actions
+<div align="center">
+<h1>typesafe-actions</h1>
 
-Typesafe utilities for "action-creators" in Redux / Flux Architecture.
+Typesafe utilities designed to reduce types **verbosity**
+and **complexity**  in Redux Architecture.
 
-Featuring flexible functional API that's specifically designed to reduce types **verbosity**
-and **complexity** (explained in [motivation](#motivation)).
-
-_This lib is part of [React & Redux TypeScript Guide](https://github.com/piotrwitek/react-redux-typescript-guide)_ :book:  
-
+_This library is part of the [React & Redux TypeScript Guide](https://github.com/piotrwitek/react-redux-typescript-guide)_ ecosystem :book:  
 
 [![Latest Stable Version](https://img.shields.io/npm/v/typesafe-actions.svg)](https://www.npmjs.com/package/typesafe-actions)
 [![Build Status](https://semaphoreci.com/api/v1/piotrekwitek/typesafe-actions/branches/master/shields_badge.svg)](https://semaphoreci.com/piotrekwitek/typesafe-actions)
 [![dependencies Status](https://david-dm.org/piotrwitek/typesafe-actions/status.svg)](https://david-dm.org/piotrwitek/typesafe-actions)
-[![peerDependencies Status](https://david-dm.org/piotrwitek/typesafe-actions/peer-status.svg)](https://david-dm.org/piotrwitek/typesafe-actions?type=peer)
 [![License](https://img.shields.io/npm/l/typesafe-actions.svg?style=flat)](https://david-dm.org/piotrwitek/typesafe-actions?type=peer)
 
 [![NPM Downloads](https://img.shields.io/npm/dm/typesafe-actions.svg)](https://www.npmjs.com/package/typesafe-actions)
 [![NPM Downloads](https://img.shields.io/npm/dt/typesafe-actions.svg)](https://www.npmjs.com/package/typesafe-actions)
 [![Bundlephobia Size](https://img.shields.io/bundlephobia/minzip/typesafe-actions.svg)](https://www.npmjs.com/package/typesafe-actions)
 
-##### :star: _Found it useful? Want more updates?_ [**Show your support by giving a :star:**](https://github.com/piotrwitek/typesafe-actions/stargazers)  
+:star: _Found it useful? Want more updates?_ [**Show your support by giving a :star:**](https://github.com/piotrwitek/typesafe-actions/stargazers)
 
-_Now updated to be compatible with **TypeScript v3.4.1**_ :tada:  
+<a href="https://www.patreon.com/piotrekwitek" target="_blank">
+  <img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" alt="Become a Patron" width="160">
+</a>
+<br />
+<a href="https://www.buymeacoffee.com/zh9guxbA5" target="_blank">
+  <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me a Coffee" width="160">
+</a>
 
-_Reference Todo-App implementation with `typesafe-actions` on [CodeSandbox](https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/codesandbox)_ :computer:  
+:tada: _Now updated to be compatible with **TypeScript v3.4**_ :tada:
 
-### Features
+</div>
+
+---
+
+**Features:**
 
 * __minimalistic__ - according to `rollup-plugin-filesize` (Bundle size: 2.6 KB, Gzipped size: 808 B) check also on [bundlephobia](https://bundlephobia.com/result?p=typesafe-actions)
 * __secure and optimized__ - no external dependencies, bundled in 3 different formats (`cjs`, `esm` and `umd` for browser)
 * __focus on quality__ - complete test-suite for an entire API surface containing regular runtime tests and extra type-tests to guarantee **type soundness**
 
-## Bug Report CodeSandbox
-You can use this CodeSandbox to reproduce bug reports: https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/codesandbox
+**Codesandbox links:**
 
-## Contributing Guide
-We are open for contributions. If you're planning to contribute please make sure to read the contributing guide: [CONTRIBUTING.md](/CONTRIBUTING.md)
-
-## Sponsor
-**Typesafe-Actions** is an independent open-source project created by people investing their free time for the benefit of our community.
-
-If you are using **Typesafe-Actions** please consider donating as this will guarantee the project will be updated and maintained in the long run.
-
-Issues can be funded by anyone and the money will be transparently distributed to the contributors handling a particular issue.
-
-[![Let's fund issues in this repository](https://issuehunt.io/static/embed/issuehunt-button-v1.svg)](https://issuehunt.io/repos/110746954)
+- Reference Todo-App implementation using `typesafe-actions`: [Link](https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/codesandbox)
+- Starter to help reproduce bug reports: [Link](https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/codesandbox)
 
 ---
 
-# Table of Contents
+## Table of Contents
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
+- [Motivation](#motivation)
 - [Installation](#installation)
 - [Compatibility Notes](#compatibility-notes)
-  - [TypeScript support](#typescript-support)
-  - [Browser support](#browser-support)
-  - [Recommended polyfill for IE](#recommended-polyfill-for-ie)
-- [Motivation](#motivation)
+- [Contributing Guide](#contributing-guide)
+- [Funding issues](#funding-issues)
 - [Tutorial](#tutorial)
   - [Constants](#constants)
   - [Actions](#actions)
     - [1. Basic actions](#1-basic-actions)
     - [2. FSA compliant actions](#2-fsa-compliant-actions)
     - [3. Custom actions (non-standard use-cases)](#3-custom-actions-non-standard-use-cases)
+  - [Reducers](#reducers)
   - [Action-Helpers](#action-helpers)
     - [Using action-creators instances instead of type-constants](#using-action-creators-instances-instead-of-type-constants)
     - [Using regular type-constants](#using-regular-type-constants)
-  - [Async-Flows](#async-flows)
-    - [With `redux-observable` epics](#with-redux-observable-epics)
     - [With `redux-saga` sagas](#with-redux-saga-sagas)
 - [API Docs](#api-docs)
   - [Type-helpers](#type-helpers)
@@ -100,6 +95,20 @@ Issues can be funded by anyone and the money will be transparently distributed t
 
 --- 
 
+## Motivation
+
+When I started to combine Redux with TypeScript, I was trying to use [redux-actions](https://redux-actions.js.org/) to reduce the maintainability cost and boilerplate of **action-creators**. Unfortunately, the results were intimidating: incorrect type signatures and broken type-inference cascading throughout the entire code-base [(click here for a detailed comparison)](#redux-actions).
+
+Existing solutions in the wild have been either **too verbose because of redundant type annotations** (hard to maintain) or **used classes** (hinders readability and requires using the **new** keyword 😱)
+
+**So I created `typesafe-actions` to address all of the above pain points.**
+
+The core idea was to design an API that would mostly use the power of TypeScript **type-inference** 💪 to lift the "maintainability burden" of type annotations. In addition, I wanted to make it "look and feel" as close as possible to the idiomatic JavaScript ❤️ , so we don't have to write the redundant type annotations that which will create additional noise in your code.
+
+[⇧ back to top](#table-of-contents)
+
+---
+
 ## Installation
 
 ```bash
@@ -116,20 +125,23 @@ yarn add typesafe-actions
 
 ## Compatibility Notes
 
-### TypeScript support
+**TypeScript support**
+
 * `typesafe-actions@1.X.X` - minimal TS v2.7
 * `typesafe-actions@2.X.X` - minimal TS v2.9
 * `typesafe-actions@3.X.X` - minimal TS v3.2
 * `typesafe-actions@4.X.X` - minimal TS v3.2
 
-### Browser support
+**Browser support**
+
 It's compatible with all modern browsers.
 
 For older browsers (e.g. IE <= 11) and mobile devices you need to provide these polyfills:
 - [Object.assign](https://developer.mozilla.org/pl/docs/Web/JavaScript/Referencje/Obiekty/Object/assign#Polyfill)
 - [Array.prototype.includes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes)
 
-### Recommended polyfill for IE
+**Recommended polyfill for IE**
+
 To provide the best compatibility for your application please include a popular polyfill package in your bundled application, such as `@babel/polyfill`.
 You can check the `React` guidelines on how to do that, specifically: https://reactjs.org/docs/javascript-environment-requirements.html
 
@@ -139,15 +151,22 @@ You can check the `React` guidelines on how to do that, specifically: https://re
 
 ---
 
-## Motivation
+## Contributing Guide
 
-When I started to combine Redux with TypeScript, I was trying to use [redux-actions](https://redux-actions.js.org/) to reduce the maintainability cost and boilerplate of **action-creators**. Unfortunately, the results were intimidating: incorrect type signatures and broken type-inference cascading throughout the entire code-base [(click here for a detailed comparison)](#redux-actions).
+We are open for contributions. If you're planning to contribute please make sure to read the contributing guide: [CONTRIBUTING.md](/CONTRIBUTING.md)
 
-Existing solutions in the wild have been either **too verbose because of redundant type annotations** (hard to maintain) or **used classes** (hinders readability and requires using the **new** keyword 😱)
+[⇧ back to top](#table-of-contents)
 
-**So I created `typesafe-actions` to address all of the above pain points.**
+---
 
-The core idea was to design an API that would mostly use the power of TypeScript **type-inference** 💪 to lift the "maintainability burden" of type annotations. In addition, I wanted to make it "look and feel" as close as possible to the idiomatic JavaScript ❤️ , so we don't have to write the redundant type annotations that which will create additional noise in your code.
+## Funding issues
+**Typesafe-Actions** is an independent open-source project created by people investing their free time for the benefit of our community.
+
+If you are using **Typesafe-Actions** please consider donating as this will guarantee the project will be updated and maintained in the long run.
+
+Specific issues can be funded by anyone interested in it. Reward money will be transparently distributed to the contributor handling a particular issue on the issuehunt platform.
+
+[![Let's fund issues in this repository](https://issuehunt.io/static/embed/issuehunt-button-v1.svg)](https://issuehunt.io/repos/110746954)
 
 [⇧ back to top](#table-of-contents)
 
@@ -163,7 +182,9 @@ To showcase the flexibility and the power of the **type-safety** provided by thi
 
 ### Constants
 
-**String constants limitation in TypeScript** - when using **string constants** as action `type` property, please make sure to use **simple string literal assignment with const**. This limitation is coming from the type-system, because all the **dynamic string operations** (e.g. string concatenation, template strings and also object used as a map) will widen the literal type to its super-type, `string`. As a result this will break contextual typing for **action** object in reducer cases.
+**RECOMMENDATION:** When using `typesafe-actions` in your project you won't need to export and reuse **string constants**. It's because **action-creators** created by this library have **action type** property on each action-creator instance that you easily access and use to match actions in reducers, epics, sagas, and basically any other library. This will simplify your codebase and remove some boilerplate code associated with the  usage of **string constants**. Check our `/codesandbox` application to see how such codebase look like in a real application.
+
+**Limitations of TypeScript when working with string constants** - when using **string constants** as action `type` property, please make sure to use **simple string literal assignment with const**. This limitation is coming from the type-system, because all the **dynamic string operations** (e.g. string concatenation, template strings and also object used as a map) will widen the literal type to its super-type, `string`. As a result this will break contextual typing for **action** object in reducer cases.
 
 ```ts
 // Example file: './constants.ts'
@@ -247,6 +268,44 @@ const add = createCustomAction('todos/ADD', type => {
 
 [⇧ back to top](#table-of-contents)
 
+### Reducers
+
+Here we'll start by generating a **tagged union type** of actions (`TodosAction`). It's very easy to do using `ActionType` **type-helper** provided by `typesafe-actions`.
+```ts
+import { ActionType, getType } from 'typesafe-actions';
+
+import * as todos from './actions';
+export type TodosAction = ActionType<typeof todos>;
+```
+Now we define a regular reducer function by annotating `state` and `action` arguments with their respective types (`TodosAction` for action type)
+```ts
+export default (state: Todo[] = [], action: TodosAction) => {
+```
+Now in switch cases using the `type` property of action (which is a **tagged union type**), we can narrow the type of `TodosAction` in the corresponding code block to a specific action type that we expect.
+```ts
+  switch (action.type) {
+    case getType(todos.add):
+      // below action type is narrowed to: { type: "todos/ADD"; payload: Todo; }
+      return [...state, action.payload];
+    ...
+```
+> **TIP**: we are using `getType` action-helper with the respective action-creator as an argument for the corresponding switch case. This will help to reduce boilerplate and completely remove the need to use **type-constants**. But if your team prefer to use regular type-constants, you can still use them.
+
+I recommend to create a `RootAction` in the central point of your redux store - it will model a complete representation of all possible action types in your application. You can even merge it with third-party action types as shown below to make your model even more complete.
+```ts
+// types.d.ts
+// example of including `react-router` actions in `RootAction`
+import { RouterAction, LocationChangeAction } from 'react-router-redux';
+type ReactRouterAction = RouterAction | LocationChangeAction;
+import { TodosAction } from '../features/todos';
+
+export type RootAction =
+  | ReactRouterAction
+  | TodosAction;
+```
+
+[⇧ back to top](#table-of-contents)
+
 ### Action-Helpers
 
 Now I wan't to show you **action-helpers** and explain why they are useful. We're going to implement a side-effect responsible for showing a success toast when user adds a new todo.
@@ -313,44 +372,6 @@ if (isActionOf(actions.add, action)) {
 if (isOfType(types.ADD, action)) {
   // here action is narrowed to: { type: "todos/ADD"; payload: Todo; }
 }
-```
-
-[⇧ back to top](#table-of-contents)
-
-### Reducers
-
-Here we'll start by generating a **tagged union type** of actions (`TodosAction`). It's very easy to do using `ActionType` **type-helper** provided by `typesafe-actions`.
-```ts
-import { ActionType, getType } from 'typesafe-actions';
-
-import * as todos from './actions';
-export type TodosAction = ActionType<typeof todos>;
-```
-Now we define a regular reducer function by annotating `state` and `action` arguments with their respective types (`TodosAction` for action type)
-```ts
-export default (state: Todo[] = [], action: TodosAction) => {
-```
-Now in switch cases using the `type` property of action (which is a **tagged union type**), we can narrow the type of `TodosAction` in the corresponding code block to a specific action type that we expect.
-```ts
-  switch (action.type) {
-    case getType(todos.add):
-      // below action type is narrowed to: { type: "todos/ADD"; payload: Todo; }
-      return [...state, action.payload];
-    ...
-```
-> **TIP**: we are using `getType` action-helper with the respective action-creator as an argument for the corresponding switch case. This will help to reduce boilerplate and completely remove the need to use **type-constants**. But if your team prefer to use regular type-constants, you can still use them.
-
-I recommend to create a `RootAction` in the central point of your redux store - it will model a complete representation of all possible action types in your application. You can even merge it with third-party action types as shown below to make your model even more complete.
-```ts
-// types.d.ts
-// example of including `react-router` actions in `RootAction`
-import { RouterAction, LocationChangeAction } from 'react-router-redux';
-type ReactRouterAction = RouterAction | LocationChangeAction;
-import { TodosAction } from '../features/todos';
-
-export type RootAction =
-  | ReactRouterAction
-  | TodosAction;
 ```
 
 [⇧ back to top](#table-of-contents)
@@ -451,8 +472,6 @@ export type RootAction = ActionType<typeof actions>;
 ```
 
 [⇧ back to top](#table-of-contents)
-
----
 
 #### `StateType`
 
@@ -568,8 +587,6 @@ dispatch(getTodo('some_id', 'some_meta'));
 
 [⇧ back to top](#table-of-contents)
 
----
-
 #### `createStandardAction`
 
 _Create an enhanced action-creator compatible with [Flux Standard Action](https://github.com/redux-utilities/flux-standard-action) to reduce boilerplate and enforce convention._
@@ -626,8 +643,6 @@ dispatch(notify('Hello!', { username: 'Piotr', type: 'announcement' }));
 
 [⇧ back to top](#table-of-contents)
 
----
-
 #### `createCustomAction`
 
 _Create an enhanced action-creator with unlimited number of arguments and custom properties on action object._
@@ -655,8 +670,6 @@ dispatch(add(1));
 ```
 
 [⇧ back to top](#table-of-contents)
-
----
 
 #### `createAsyncAction`
 
@@ -729,8 +742,6 @@ if (action.type === getType(add)) {
 
 [⇧ back to top](#table-of-contents)
 
----
-
 #### `isActionOf`
 
 _Check if action is an instance of given enhanced action-creator(s)
@@ -786,8 +797,6 @@ if(isActionOf([addTodo, removeTodo], action)) {
 
 [⇧ back to top](#table-of-contents)
 
----
-
 #### `isOfType`
 
 _Check if action type property is equal given type-constant(s)
@@ -839,6 +848,8 @@ if(isOfType([ADD, REMOVE], action)) {
 ```
 
 [⇧ back to top](#table-of-contents)
+
+---
 
 ## Migration Guides
 
