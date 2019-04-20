@@ -65,6 +65,8 @@ _This library is part of the [React & Redux TypeScript Guide](https://github.com
   - [Action-Helpers](#action-helpers)
     - [Using action-creators instances instead of type-constants](#using-action-creators-instances-instead-of-type-constants)
     - [Using regular type-constants](#using-regular-type-constants)
+  - [Async-Flows](#async-flows)
+    - [With `redux-observable` epics](#with-redux-observable-epics)
     - [With `redux-saga` sagas](#with-redux-saga-sagas)
 - [API Docs](#api-docs)
   - [Type-helpers](#type-helpers)
@@ -362,6 +364,7 @@ const addTodoToast: Epic<RootAction, RootAction, RootState, Services> = (action$
 ```
 
 > **TIP:** action-helpers are working in all types of conditional statements.
+
 ```ts
 import { isActionOf, isOfType } from 'typesafe-actions';
 
@@ -965,6 +968,7 @@ const notify1 = createAction('NOTIFY');
 //   error: boolean | undefined;
 // }
 ```
+
 > with `redux-actions` you can notice the redundant nullable `payload` property and literal type of `type` property is lost (discrimination of union type would not be possible)
 
 ##### typesafe-actions
@@ -975,6 +979,7 @@ const notify1 = () => action('NOTIFY');
 //   type: "NOTIFY";
 // }
 ```
+
 > with `typesafe-actions` there is no excess nullable types and no excess properties and the action "type" property is containing a literal type
 
 **- with payload**
@@ -993,6 +998,7 @@ const notify2 = createAction('NOTIFY',
 //   error: boolean | undefined;
 // }
 ```
+
 > first the optional `message` parameter is lost, `username` semantic argument name is changed to some generic `t1`, `type` property is widened once again and `payload` is nullable because of broken inference
 
 ##### typesafe-actions
@@ -1007,6 +1013,7 @@ const notify2 = (username: string, message?: string) => action(
 //   payload: { message: string; };
 // }
 ```
+
 > `typesafe-actions` infer very precise resulting type, notice working optional parameters and semantic argument names are preserved which is really important for great intellisense experience
 
 **- with payload and meta**
@@ -1029,6 +1036,7 @@ const notify3 = createAction('NOTIFY',
 //   error: boolean | undefined;
 // }
 ```
+
 > this time we got a completely broken arguments arity with no type-safety because of `any` type with all the earlier issues
 
 ##### typesafe-actions
@@ -1048,6 +1056,7 @@ const notify3 = (username: string, message?: string) => action(
 //   meta: { username: string; message: string | undefined; };
 // }
 ```
+
 > `typesafe-actions` never fail to `any` type, even with this advanced scenario all types are correct and provide complete type-safety and excellent developer experience 
 
 [⇧ back to top](#table-of-contents)
