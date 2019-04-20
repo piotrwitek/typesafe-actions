@@ -3,7 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import * as selectors from '../selectors';
-import { removeTodo } from '../actions';
+import * as actions from '../actions';
 
 import TodoListItem from './TodoListItem';
 
@@ -12,7 +12,7 @@ const mapStateToProps = (state: RootState) => ({
   todos: selectors.getTodos(state.todos),
 });
 const dispatchProps = {
-  removeTodo,
+  removeTodo: actions.removeTodo,
 };
 
 type Props = ReturnType<typeof mapStateToProps> & typeof dispatchProps;

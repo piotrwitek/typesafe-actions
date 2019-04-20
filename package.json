@@ -31,7 +31,7 @@
     "test:update": "jest --config jest.config.json --no-cache -u && dts-jest-remap ./src/*.spec.ts --rename '{{basename}}.snap.{{extname}}'",
     "prebuild": "rm -rf dist/ && tsc -p ./tsconfig.declaration.json",
     "build": "tsc -p . && rollup -c",
-    "postbuild": "rm -rf out",
+    "postbuild": "cp -a dist/. codesandbox/src/typesafe-actions/ && rm -rf out",
     "ci-check": "npm run prettier && npm run lint && npm run tsc && npm run test && npm run doctoc",
     "prepublishOnly": "npm run reinstall && npm run ci-check && npm run build"
   },
@@ -51,7 +51,7 @@
     "rollup-plugin-uglify": "3.0.0",
     "ts-jest": "24.0.2",
     "tslint": "5.16.0",
-    "typescript": "3.4.3"
+    "typescript": "3.4.4"
   },
   "keywords": [
     "typescript",
