@@ -16,7 +16,7 @@ Steps to reproduce the behavior:
 4. See error
 -->
 
-## CodeSandbox to help you reproduce issue in isolation
+**CodeSandbox to help you reproduce issue in isolation**
 > Please use this sandbox as an isolated environment to reproduce the bug: https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/codesandbox
 
 ## Expected behavior
@@ -31,7 +31,8 @@ Steps to reproduce the behavior:
 - tsconfig.json:
 <!-- Paste contents of your tsconfig.json here -->
 
-## Environment
+## Environment (optional)
+<!-- Fill if you think it's relevant to your issue -->
 - Browser and Version: XXX
 - OS: XXX
 - Node Version: XXX
