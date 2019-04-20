@@ -33,7 +33,7 @@ _This library is part of the [React & Redux TypeScript Guide](https://github.com
 
 **Features:**
 
-* __minimalistic__ - according to `rollup-plugin-filesize` (Bundle size: 2.6 KB, Gzipped size: 808 B) check also on [bundlephobia](https://bundlephobia.com/result?p=typesafe-actions)
+* __minimalistic__ - according to `rollup-plugin-filesize` (Bundle size: 3.48 KB, Gzipped size: 1.03 KB) check also on [bundlephobia](https://bundlephobia.com/result?p=typesafe-actions)
 * __secure and optimized__ - no external dependencies, bundled in 3 different formats (`cjs`, `esm` and `umd` for browser)
 * __focus on quality__ - complete test-suite for an entire API surface containing regular runtime tests and extra type-tests to guarantee **type soundness**
 
