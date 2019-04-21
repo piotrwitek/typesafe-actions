@@ -140,9 +140,9 @@ function getType(actionCreator) {
     return actionCreator.getType();
 }
 
-function createReducer(initialState, initialReducers) {
-    if (initialReducers === void 0) { initialReducers = {}; }
-    var handlers = tslib_1.__assign({}, initialReducers);
+function createReducer(initialState, initialHandlers) {
+    if (initialHandlers === void 0) { initialHandlers = {}; }
+    var handlers = tslib_1.__assign({}, initialHandlers);
     var rootReducer = function (state, action) {
         if (state === void 0) { state = initialState; }
         if (handlers.hasOwnProperty(action.type)) {

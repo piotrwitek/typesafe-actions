@@ -60,29 +60,32 @@ _This library is part of the [React & Redux TypeScript Guide](https://github.com
     - [1. Basic actions](#1-basic-actions)
     - [2. FSA compliant actions](#2-fsa-compliant-actions)
     - [3. Custom actions (non-standard use-cases)](#3-custom-actions-non-standard-use-cases)
-  - [Action-Helpers](#action-helpers)
+  - [Action Helpers](#action-helpers)
     - [Using action-creators instances instead of type-constants](#using-action-creators-instances-instead-of-type-constants)
     - [Using regular type-constants](#using-regular-type-constants)
   - [Reducers](#reducers)
+    - [Extending internal types to streamline type usage with `typesafe-actions`](#extending-internal-types-to-streamline-type-usage-with-typesafe-actions)
     - [Using createReducer API](#using-createreducer-api)
     - [Using standard switch reducer](#using-standard-switch-reducer)
   - [Async-Flows](#async-flows)
     - [With `redux-observable` epics](#with-redux-observable-epics)
     - [With `redux-saga` sagas](#with-redux-saga-sagas)
 - [API Docs](#api-docs)
-  - [Type-helpers](#type-helpers)
-    - [`ActionType`](#actiontype)
-    - [`StateType`](#statetype)
-  - [Action-creators](#action-creators)
+  - [Action-Creators API](#action-creators-api)
     - [`action`](#action)
     - [`createAction`](#createaction)
     - [`createStandardAction`](#createstandardaction)
     - [`createCustomAction`](#createcustomaction)
     - [`createAsyncAction`](#createasyncaction)
-  - [Action-helpers](#action-helpers)
+  - [Reducer-Creators API](#reducer-creators-api)
+    - [`createReducer`](#createreducer)
+  - [Action-Helpers API](#action-helpers-api)
     - [`getType`](#gettype)
     - [`isActionOf`](#isactionof)
     - [`isOfType`](#isoftype)
+  - [Type-Helpers API](#type-helpers-api)
+    - [`ActionType`](#actiontype)
+    - [`StateType`](#statetype)
 - [Migration Guides](#migration-guides)
   - [`v3.x.x` to `v4.x.x`](#v3xx-to-v4xx)
   - [`v2.x.x` to `v3.x.x`](#v2xx-to-v3xx)
@@ -289,7 +292,7 @@ export type RootAction =
 
 [⇧ back to top](#table-of-contents)
 
-### Action-Helpers
+### Action Helpers
 
 Now I wan't to show you **action-helpers** and explain their use-cases. We're going to implement a side-effect responsible for showing a success toast when user adds a new todo.
 
@@ -372,11 +375,10 @@ if (isOfType(types.ADD, action)) {
 
 ### Reducers
 
-#### Using createReducer API
-
-We can prevent a lot of boilerplate code and type errors using this powerfull and completely typesafe API.
+#### Extending internal types to streamline type usage with `typesafe-actions`
 
 Extending internal `RootAction` type for `createReducer` API from the consumer code, so that you never have to use generic type parameters again in your application 😮 (check `/codesandbox` project for more):
+
 ```ts
 import { StateType, ActionType } from 'typesafe-actions';
 
@@ -385,55 +387,32 @@ declare module 'typesafe-actions' {
 }
 ```
 
-Using type-constants as keys in the object map:
-```ts
-import { createReducer, getType } from 'typesafe-actions'
+#### Using createReducer API
 
-const counterReducer = createReducer(0, {
-  ADD: (state, action) => state + action.payload, // state and action type is automatically inferred
-  [getType(increment)]: (state, _) => state + 1, // return type is validated to be an exact State type
-  ADD: ... // <= error is shown on duplicated or invalid actions
-  INVALID: ... // <= error is shown on duplicated or invalid actions
-})
-
-counterReducer(0, add(4)); // => 4
-counterReducer(0, increment()); // => 1
-```
+We can prevent a lot of boilerplate code and type errors using this powerfull and completely typesafe API.
 
 Using handleAction chain API:
 ```ts
 // using action-creators
-const counterReducer = createReducer(0) // <= no need for generic parameters
+const counterReducer = createReducer(0) // <= no need for generic type parameters
+  // state and action type is automatically inferred and return type is validated to be exact type
   .handleAction(add, (state, action) => state + action.payload)
   .handleAction(add, ... // <= error is shown on duplicated or invalid actions
   .handleAction(increment, (state, _) => state + 1)
   .handleAction(... // <= error is shown when all actions are handled
   
-  // handle multiple actions using array
+  // or handle multiple actions using array
   .handleAction([add, increment], (state, action) =>
     state + (action.type === 'ADD' ? action.payload : 1)
   );
 
-// all the same is working when using type-constants
+// all the same scenarios are working when using type-constants
 const counterReducer = createReducer(0)
   .handleAction('ADD', (state, action) => state + action.payload)
   .handleAction('INCREMENT', (state, _) => state + 1);
   
 counterReducer(0, add(4)); // => 4
 counterReducer(0, increment()); // => 1
-```
-
-Extend or compose various reducers together - every operation is completely typesafe:
-```ts
-const newCounterReducer = createReducer(0)
-  .handleAction('SUBTRACT', (state, action) => state - action.payload)
-  .handleAction('DECREMENT', (state, _) => state - 1);
-
-const bigReducer = createReducer(0, {
-  ...counterReducer.handlers, // typesafe
-  ...newCounterReducer.handlers, // typesafe
-  SUBTRACT: decrementReducer.handlers.DECREMENT, // <= error, wrong type
-})
 ```
 
 #### Using standard switch reducer
@@ -531,68 +510,7 @@ function* addTodoSaga(action: ReturnType<typeof fetchTodos.request>): Generator 
 
 ## API Docs
 
-### Type-helpers
-Below helper functions are very flexible generalizations, works great with nested structures and will cover numerous different use-cases.
-
-#### `ActionType`
-
-_Powerful type-helper that will infer union type from **import * as ...** or **action-creator map** object._
-
-```ts
-import { ActionType } from 'typesafe-actions';
-
-// with "import * as ..."
-import * as todos from './actions';
-export type TodosAction = ActionType<typeof todos>;
-// TodosAction: { type: 'action1' } | { type: 'action2' } | { type: 'action3' }
-
-// with nested action-creator map case
-const actions = {
-  action1: createAction('action1'),
-  nested: {
-    action2: createAction('action2'),
-    moreNested: {
-      action3: createAction('action3'),
-    },
-  },
-};
-export type RootAction = ActionType<typeof actions>;
-// RootAction: { type: 'action1' } | { type: 'action2' } | { type: 'action3' }
-```
-
-[⇧ back to top](#table-of-contents)
-
-#### `StateType`
-
-_Powerful type helper that will infer state object type from **reducer function** and **nested/combined reducers**._
-
-> **WARNING**: working with redux@4+ types
-
-```ts
-import { combineReducers } from 'redux';
-import { StateType } from 'typesafe-actions';
-
-// with reducer function
-const todosReducer = (state: Todo[] = [], action: TodosAction) => {
-  switch (action.type) {
-    case getType(todos.add):
-      return [...state, action.payload];
-    ...
-export type TodosState = StateType<typeof todosReducer>;
-
-// with nested/combined reducers
-const rootReducer = combineReducers({
-  router: routerReducer,
-  counters: countersReducer,
-});
-export type RootState = StateType<typeof rootReducer>;
-```
-
-[⇧ back to top](#table-of-contents)
-
----
-
-### Action-creators
+### Action-Creators API
 
 #### `action`
 
@@ -795,7 +713,76 @@ dispatch(fetchUsers.failure(err));
 
 ---
 
-### Action-helpers
+### Reducer-Creators API
+
+#### `createReducer`
+
+_Create a typesafe reducer_
+
+```ts
+createReducer<TState, TRootAction>(initialState, handlersMap?)
+  .handleAction(type, reducer)
+  .handleAction([type1, type2, ...typeN], reducer)
+  .handleAction(actionCreator, reducer)
+  .handleAction([actionCreator1, actionCreator2, ...actionCreatorN], reducer)
+```
+
+Examples:
+[> Advanced Usage Examples](src/create-reducer.spec.ts)
+
+Using type-constants as keys in the object map:
+```ts
+import { createReducer, getType } from 'typesafe-actions'
+
+// no need for generic type parameters - learn more in Tutorial
+const counterReducer = createReducer(0, { 
+  ADD: (state, action) => state + action.payload,
+  [getType(increment)]: (state, _) => state + 1,
+})
+
+counterReducer(0, add(4)); // => 4
+counterReducer(0, increment()); // => 1
+```
+
+Using handleAction chain API:
+```ts
+// using action-creators
+const counterReducer = createReducer(0)
+  .handleAction(add, (state, action) => state + action.payload)
+  .handleAction(increment, (state, _) => state + 1)
+  
+  // or handle multiple actions using array
+  .handleAction([add, increment], (state, action) =>
+    state + (action.type === 'ADD' ? action.payload : 1)
+  );
+
+// all the same scenarios are working when using type-constants
+const counterReducer = createReducer(0)
+  .handleAction('ADD', (state, action) => state + action.payload)
+  .handleAction('INCREMENT', (state, _) => state + 1);
+  
+counterReducer(0, add(4)); // => 4
+counterReducer(0, increment()); // => 1
+```
+
+Extend or compose various reducers together - every operation is completely typesafe:
+```ts
+const newCounterReducer = createReducer(0)
+  .handleAction('SUBTRACT', (state, action) => state - action.payload)
+  .handleAction('DECREMENT', (state, _) => state - 1);
+
+const bigReducer = createReducer(0, {
+  ...counterReducer.handlers, // typesafe
+  ...newCounterReducer.handlers, // typesafe
+  SUBTRACT: decrementReducer.handlers.DECREMENT, // <= error, wrong type
+})
+```
+
+[⇧ back to top](#table-of-contents)
+
+---
+
+### Action-Helpers API
 
 #### `getType`
 
@@ -934,6 +921,67 @@ if(isOfType([ADD, REMOVE], action)) {
   return iAcceptOnlyTodoType(action.payload);
   // action type is { type: "todos/ADD"; payload: Todo; } | { type: "todos/REMOVE"; payload: Todo; }
 }
+```
+
+[⇧ back to top](#table-of-contents)
+
+---
+
+### Type-Helpers API
+Below helper functions are very flexible generalizations, works great with nested structures and will cover numerous different use-cases.
+
+#### `ActionType`
+
+_Powerful type-helper that will infer union type from **import * as ...** or **action-creator map** object._
+
+```ts
+import { ActionType } from 'typesafe-actions';
+
+// with "import * as ..."
+import * as todos from './actions';
+export type TodosAction = ActionType<typeof todos>;
+// TodosAction: { type: 'action1' } | { type: 'action2' } | { type: 'action3' }
+
+// with nested action-creator map case
+const actions = {
+  action1: createAction('action1'),
+  nested: {
+    action2: createAction('action2'),
+    moreNested: {
+      action3: createAction('action3'),
+    },
+  },
+};
+export type RootAction = ActionType<typeof actions>;
+// RootAction: { type: 'action1' } | { type: 'action2' } | { type: 'action3' }
+```
+
+[⇧ back to top](#table-of-contents)
+
+#### `StateType`
+
+_Powerful type helper that will infer state object type from **reducer function** and **nested/combined reducers**._
+
+> **WARNING**: working with redux@4+ types
+
+```ts
+import { combineReducers } from 'redux';
+import { StateType } from 'typesafe-actions';
+
+// with reducer function
+const todosReducer = (state: Todo[] = [], action: TodosAction) => {
+  switch (action.type) {
+    case getType(todos.add):
+      return [...state, action.payload];
+    ...
+export type TodosState = StateType<typeof todosReducer>;
+
+// with nested/combined reducers
+const rootReducer = combineReducers({
+  router: routerReducer,
+  counters: countersReducer,
+});
+export type RootState = StateType<typeof rootReducer>;
 ```
 
 [⇧ back to top](#table-of-contents)

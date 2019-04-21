@@ -46,16 +46,16 @@ type HandleActionChainApi<
       >;
     };
 
-export function createReducer<TState, TAllActions extends Action = RootAction>(
+export function createReducer<TState, TRootAction extends Action = RootAction>(
   initialState: TState,
-  initialReducers: Record<
+  initialHandlers: Record<
     RootAction['type'],
     (state: TState, action: RootAction) => TState
   > = {}
 ) {
-  const handlers = { ...initialReducers };
+  const handlers = { ...initialHandlers };
 
-  const rootReducer: Reducer<TState, TAllActions> = (
+  const rootReducer: Reducer<TState, TRootAction> = (
     state = initialState,
     action
   ) => {
@@ -77,7 +77,7 @@ export function createReducer<TState, TAllActions extends Action = RootAction>(
       ? singleOrMultipleCreatorsAndTypes
       : [singleOrMultipleCreatorsAndTypes];
 
-    const newHandlers: typeof initialReducers = {};
+    const newHandlers: typeof initialHandlers = {};
     creatorsAndTypes
       .map(acOrType =>
         checkValidActionCreator(acOrType)
@@ -88,11 +88,11 @@ export function createReducer<TState, TAllActions extends Action = RootAction>(
       )
       .forEach(type => (newHandlers[type] = reducer));
 
-    return createReducer<TState, TAllActions>(initialState, {
+    return createReducer<TState, TRootAction>(initialState, {
       ...handlers,
       ...newHandlers,
     });
-  }) as HandleActionChainApi<TState, TAllActions, TAllActions>;
+  }) as HandleActionChainApi<TState, TRootAction, TRootAction>;
 
   return Object.assign(rootReducer, {
     handlers: { ...handlers },
