@@ -14,25 +14,29 @@ declare module './' {
 // TODO: add type-test cases
 
 const initialState = 0;
+
 describe('With Action Creators', () => {
-  const counterReducer1 = createReducer(initialState).addHandler(
+  // @dts-jest:pass:snap
+  const counterReducer1 = createReducer(initialState).handleAction(
     [add, increment],
     (state, action) => {
       return state + (action.type === 'ADD' ? action.payload : 1);
     }
   );
+  // @dts-jest:pass:snap
   const counterReducer2 = createReducer(initialState)
-    .addHandler([add], (state, action) => {
+    .handleAction([add], (state, action) => {
       return state + action.payload;
     })
-    .addHandler([increment], (state, _) => {
+    .handleAction([increment], (state, _) => {
       return state + 1;
     });
+  // @dts-jest:pass:snap
   const counterReducer3 = createReducer(initialState)
-    .addHandler(add, (state, action) => {
+    .handleAction(add, (state, action) => {
       return state + action.payload;
     })
-    .addHandler(increment, (state, _) => {
+    .handleAction(increment, (state, _) => {
       return state + 1;
     });
 
@@ -47,25 +51,28 @@ describe('With Action Creators', () => {
 });
 
 describe('With Action Types', () => {
-  const counterReducer1 = createReducer(initialState).addHandler(
+  //
+  // @dts-jest:pass:snap
+  const counterReducer1 = createReducer(initialState).handleAction(
     ['ADD', 'INCREMENT'],
     (state, action) => {
       return state + (action.type === 'ADD' ? action.payload : 1);
     }
   );
-
+  // @dts-jest:pass:snap
   const counterReducer2 = createReducer(initialState)
-    .addHandler(['ADD'], (state, action) => {
+    .handleAction(['ADD'], (state, action) => {
       return state + action.payload;
     })
-    .addHandler(['INCREMENT'], (state, _) => {
+    .handleAction(['INCREMENT'], (state, _) => {
       return state + 1;
     });
+  // @dts-jest:pass:snap
   const counterReducer3 = createReducer(initialState)
-    .addHandler('ADD', (state, action) => {
+    .handleAction('ADD', (state, action) => {
       return state + action.payload;
     })
-    .addHandler('INCREMENT', (state, _) => {
+    .handleAction('INCREMENT', (state, _) => {
       return state + 1;
     });
 

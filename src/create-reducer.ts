@@ -8,7 +8,7 @@ import {
 } from './utils/validation';
 import { Reducer, Action } from './type-helpers';
 
-type AddHandler<
+type HandleActionChainApi<
   S,
   TAllActions extends Action,
   TNotHandledActions extends Action
@@ -25,12 +25,12 @@ type AddHandler<
     ? TTypeAction
     : never
 >(
-  actionsTypes: TType | TCreator | TType[] | TCreator[],
-  actionsHandler: (state: S, action: TActionIntersection) => S
+  singleOrMultipleCreatorsAndTypes: TType | TType[] | TCreator | TCreator[],
+  reducer: (state: S, action: TActionIntersection) => S
 ) => Exclude<TNotHandledActions, TTypeAction & TCreatorAction> extends never
   ? Reducer<S, TAllActions>
   : Reducer<S, TAllActions> & {
-      addHandler: AddHandler<
+      handleAction: HandleActionChainApi<
         S,
         TAllActions,
         Exclude<TNotHandledActions, TTypeAction & TCreatorAction>
@@ -39,23 +39,25 @@ type AddHandler<
 
 export function createReducer<S, A extends Action = RootAction>(
   initialState: S
-) {
-  const handlers: Record<string, (state: S, action: RootAction) => S> = {};
+): Reducer<S, A> & {
+  handleAction: HandleActionChainApi<S, A, A>;
+} {
+  const reducers: Record<string, (state: S, action: RootAction) => S> = {};
 
-  const reducer: Reducer<S, A> = (state = initialState, action) => {
-    if (handlers.hasOwnProperty(action.type)) {
-      return handlers[action.type](state, action);
+  const rootReducer: Reducer<S, A> = (state = initialState, action) => {
+    if (reducers.hasOwnProperty(action.type)) {
+      return reducers[action.type](state, action);
     } else {
       return state;
     }
   };
 
-  const addHandler = ((actionsTypes, actionsHandler) => {
-    const creatorsOrTypes = Array.isArray(actionsTypes)
-      ? actionsTypes
-      : [actionsTypes];
+  const handleAction = ((singleOrMultipleCreatorsAndTypes, reducer) => {
+    const creatorsAndTypes = Array.isArray(singleOrMultipleCreatorsAndTypes)
+      ? singleOrMultipleCreatorsAndTypes
+      : [singleOrMultipleCreatorsAndTypes];
 
-    creatorsOrTypes
+    creatorsAndTypes
       .map(acOrType =>
         checkValidActionCreator(acOrType)
           ? getType(acOrType)
@@ -63,16 +65,14 @@ export function createReducer<S, A extends Action = RootAction>(
           ? acOrType
           : throwInvalidActionTypeOrActionCreator()
       )
-      .forEach(type => (handlers[type] = actionsHandler));
+      .forEach(type => (reducers[type] = reducer));
 
     return chainApi;
-  }) as AddHandler<S, A, A>;
+  }) as HandleActionChainApi<S, A, A>;
 
-  const chainApi: Reducer<S, A> & {
-    addHandler: AddHandler<S, A, A>;
-  } = Object.assign(reducer, {
-    addHandler,
-  });
+  const chainApi = Object.assign(rootReducer, {
+    handleAction,
+  } as const);
 
   return chainApi;
 }

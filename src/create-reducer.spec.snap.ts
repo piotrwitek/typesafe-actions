@@ -11,6 +11,8 @@ declare module './' {
   export type RootAction = ActionType<typeof actions>;
 }
 
+// TODO: add type-test cases
+
 const initialState = 0;
 describe('With Action Creators', () => {
   const counterReducer1 = createReducer(initialState).addHandler(
@@ -44,7 +46,6 @@ describe('With Action Creators', () => {
   });
 });
 
-// wroc do implementacji ze nie mozna podac dwoch tych samych parametrow
 describe('With Action Types', () => {
   const counterReducer1 = createReducer(initialState).addHandler(
     ['ADD', 'INCREMENT'],

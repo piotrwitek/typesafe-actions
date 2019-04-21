@@ -1,37 +1,66 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`fn(0, {} as any) 1`] = `"number"`;
+exports[`const counterReducer = createReducer(initialState).handleAction(
+    [add, increment],
+    (state, action) => {
+      return state + (action.type === 'ADD' ? action.payload : 1);
+    }
+  ) 1`] = `"any"`;
 
-exports[`fn(0, {} as any) 2`] = `"number"`;
+exports[`const counterReducer1 = createReducer(initialState).handleAction(
+    ['ADD', 'INCREMENT'],
+    (state, action) => {
+      return state + (action.type === 'ADD' ? action.payload : 1);
+    }
+  ) 1`] = `"any"`;
 
-exports[`fn(0, {} as any) 3`] = `"number"`;
+exports[`const counterReducer1 = createReducer(initialState).handleAction(
+    [add, increment],
+    (state, action) => {
+      return state + (action.type === 'ADD' ? action.payload : 1);
+    }
+  ) 1`] = `"any"`;
 
-exports[`fn(0, {} as any) 4`] = `"number"`;
+exports[`const counterReducer1 = createReducer(initialState).handleAction(
+    [add, increment],
+    (state, action) => state + (action.type === 'ADD' ? action.payload : 1)
+  ) 1`] = `"any"`;
 
-exports[`fn(0, {} as any) 5`] = `"number"`;
+exports[`const counterReducer1 = createReducer(initialState).handleAction(
+    [add],
+    (state, action) => {
+      return state + (action.type === 'ADD' ? action.payload : 1);
+    }
+  ) 1`] = `"any"`;
 
-exports[`fn(0, {} as any) 6`] = `"number"`;
+exports[`const counterReducer2 = createReducer(initialState)
+    .handleAction(['ADD'], (state, action) => {
+      return state + action.payload;
+    })
+    .handleAction(['INCREMENT'], (state, _) => {
+      return state + 1;
+    }) 1`] = `"any"`;
 
-exports[`fn(0, add(4)) 1`] = `"number"`;
+exports[`const counterReducer2 = createReducer(initialState)
+    .handleAction([add], (state, action) => {
+      return state + action.payload;
+    })
+    .handleAction([increment], (state, _) => {
+      return state + 1;
+    }) 1`] = `"any"`;
 
-exports[`fn(0, add(4)) 2`] = `"number"`;
+exports[`const counterReducer3 = createReducer(initialState)
+    .handleAction('ADD', (state, action) => {
+      return state + action.payload;
+    })
+    .handleAction('INCREMENT', (state, _) => {
+      return state + 1;
+    }) 1`] = `"any"`;
 
-exports[`fn(0, add(4)) 3`] = `"number"`;
-
-exports[`fn(0, add(4)) 4`] = `"number"`;
-
-exports[`fn(0, add(4)) 5`] = `"number"`;
-
-exports[`fn(0, add(4)) 6`] = `"number"`;
-
-exports[`fn(0, increment()) 1`] = `"number"`;
-
-exports[`fn(0, increment()) 2`] = `"number"`;
-
-exports[`fn(0, increment()) 3`] = `"number"`;
-
-exports[`fn(0, increment()) 4`] = `"number"`;
-
-exports[`fn(0, increment()) 5`] = `"number"`;
-
-exports[`fn(0, increment()) 6`] = `"number"`;
+exports[`const counterReducer3 = createReducer(initialState)
+    .handleAction(add, (state, action) => {
+      return state + action.payload;
+    })
+    .handleAction(increment, (state, _) => {
+      return state + 1;
+    }) 1`] = `"any"`;
