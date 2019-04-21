@@ -1,11 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`checkInvalidActionCreator should fail when input is valid action-creator checkInvalidActionCreator(ac) (type) should match snapshot 1`] = `"boolean"`;
+exports[`checkInvalidActionCreator(ac) 1`] = `"boolean"`;
 
-exports[`checkInvalidActionType should fail when input is valid action-type checkInvalidActionType('asdf') (type) should match snapshot 1`] = `"boolean"`;
+exports[`checkInvalidActionType('asdf') 1`] = `"boolean"`;
 
-exports[`checkInvalidActionType should fail when input is valid action-type checkInvalidActionType(Symbol() as any) (type) should match snapshot 1`] = `"boolean"`;
+exports[`checkInvalidActionType(Symbol() as any) 1`] = `"boolean"`;
 
-exports[`checkIsEmpty should pass when input is empty checkIsEmpty(null) (type) should match snapshot 1`] = `"boolean"`;
+exports[`checkIsEmpty(null) 1`] = `"boolean"`;
 
-exports[`checkIsEmpty should pass when input is empty checkIsEmpty(undefined) (type) should match snapshot 1`] = `"boolean"`;
+exports[`checkIsEmpty(undefined) 1`] = `"boolean"`;

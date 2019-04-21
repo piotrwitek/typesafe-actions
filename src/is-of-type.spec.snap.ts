@@ -46,57 +46,55 @@ const $action = [
 /** TESTS */
 
 describe('isOfType', () => {
-  it('should work with single action-type arg', () => {
-    expect(isOfType(types.WITH_TYPE_ONLY)(typeOnlyAction)).toBeTruthy();
-    expect(isOfType(types.WITH_TYPE_ONLY, typeOnlyAction)).toBeTruthy();
-    expect(isOfType(types.WITH_TYPE_ONLY)(payloadAction)).toBeFalsy();
-    expect(isOfType(types.WITH_TYPE_ONLY, payloadAction)).toBeFalsy();
-    expect(isOfType([types.WITH_TYPE_ONLY])(typeOnlyAction)).toBeTruthy();
-    expect(isOfType([types.WITH_TYPE_ONLY], typeOnlyAction)).toBeTruthy();
-    expect(isOfType([types.WITH_TYPE_ONLY])(payloadAction)).toBeFalsy();
-    expect(isOfType([types.WITH_TYPE_ONLY], payloadAction)).toBeFalsy();
+  describe('should work with single action-type arg', () => {
+    // @dts-jest:pass:snap -> boolean
+    isOfType(types.WITH_TYPE_ONLY)(typeOnlyAction); // => true
+    // @dts-jest:pass:snap -> boolean
+    isOfType(types.WITH_TYPE_ONLY, typeOnlyAction); // => true
+    // @dts-jest:pass:snap -> boolean
+    isOfType(types.WITH_TYPE_ONLY)(payloadAction); // => false
+    // @dts-jest:pass:snap -> boolean
+    isOfType(types.WITH_TYPE_ONLY, payloadAction); // => false
+    // @dts-jest:pass:snap -> boolean
+    isOfType([types.WITH_TYPE_ONLY])(typeOnlyAction); // => true
+    // @dts-jest:pass:snap -> boolean
+    isOfType([types.WITH_TYPE_ONLY], typeOnlyAction); // => true
+    // @dts-jest:pass:snap -> boolean
+    isOfType([types.WITH_TYPE_ONLY])(payloadAction); // => false
+    // @dts-jest:pass:snap -> boolean
+    isOfType([types.WITH_TYPE_ONLY], payloadAction); // => false
   });
 
-  it('should work with multiple action-type args', () => {
-    expect(
-      isOfType([types.WITH_TYPE_ONLY, types.WITH_PAYLOAD])(typeOnlyAction)
-    ).toBeTruthy();
-    expect(
-      isOfType([types.WITH_TYPE_ONLY, types.WITH_PAYLOAD], typeOnlyAction)
-    ).toBeTruthy();
-    expect(
-      isOfType([types.WITH_TYPE_ONLY, types.WITH_PAYLOAD])(payloadAction)
-    ).toBeTruthy();
-    expect(
-      isOfType([types.WITH_TYPE_ONLY, types.WITH_PAYLOAD], payloadAction)
-    ).toBeTruthy();
-    expect(
-      isOfType([types.WITH_TYPE_ONLY, types.WITH_PAYLOAD])(mappedPayloadAction)
-    ).toBeFalsy();
-    expect(
-      isOfType([types.WITH_TYPE_ONLY, types.WITH_PAYLOAD], mappedPayloadAction)
-    ).toBeFalsy();
+  describe('should work with multiple action-type args', () => {
+    // @dts-jest:pass:snap -> boolean
+    isOfType([types.WITH_TYPE_ONLY, types.WITH_PAYLOAD])(typeOnlyAction); // => true
+    // @dts-jest:pass:snap -> boolean
+    isOfType([types.WITH_TYPE_ONLY, types.WITH_PAYLOAD], typeOnlyAction); // => true
+    // @dts-jest:pass:snap -> boolean
+    isOfType([types.WITH_TYPE_ONLY, types.WITH_PAYLOAD])(payloadAction); // => true
+    // @dts-jest:pass:snap -> boolean
+    isOfType([types.WITH_TYPE_ONLY, types.WITH_PAYLOAD], payloadAction); // => true
+    // @dts-jest:pass:snap -> boolean
+    isOfType([types.WITH_TYPE_ONLY, types.WITH_PAYLOAD])(mappedPayloadAction); // => false
+    // @dts-jest:pass:snap -> boolean
+    isOfType([types.WITH_TYPE_ONLY, types.WITH_PAYLOAD], mappedPayloadAction); // => false
   });
 
-  it('should correctly assert for an array with 1 arg', () => {
+  describe('should correctly assert for an array with 1 arg', () => {
     const actual = $action.filter(isOfType(types.WITH_TYPE_ONLY));
     // @dts-jest:pass:snap -> T.EmptyAction<"WITH_TYPE_ONLY">[]
-    actual;
-    expect(actual).toHaveLength(1);
-    expect(actual).toEqual([typeOnlyExpected]);
+    actual; // => [typeOnlyExpected]
   });
 
-  it('should correctly assert for an array with 2 args', () => {
+  describe('should correctly assert for an array with 2 args', () => {
     const actual = $action.filter(
       isOfType([types.WITH_TYPE_ONLY, types.WITH_PAYLOAD])
     );
     // @dts-jest:pass:snap -> (T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number>)[]
-    actual;
-    expect(actual).toHaveLength(2);
-    expect(actual).toEqual([typeOnlyExpected, payloadExpected]);
+    actual; // => [typeOnlyExpected, payloadExpected]
   });
 
-  it('should correctly assert for an array with 3 args', () => {
+  describe('should correctly assert for an array with 3 args', () => {
     const actual = $action.filter(
       isOfType([
         types.WITH_TYPE_ONLY,
@@ -105,16 +103,10 @@ describe('isOfType', () => {
       ])
     );
     // @dts-jest:pass:snap -> (T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string>)[]
-    actual;
-    expect(actual).toHaveLength(3);
-    expect(actual).toEqual([
-      typeOnlyExpected,
-      payloadExpected,
-      payloadMetaExpected,
-    ]);
+    actual; // => [typeOnlyExpected,payloadExpected,payloadMetaExpected]
   });
 
-  it('should correctly assert for an array with 4 args', () => {
+  describe('should correctly assert for an array with 4 args', () => {
     const actual = $action.filter(
       isOfType([
         types.WITH_TYPE_ONLY,
@@ -123,18 +115,11 @@ describe('isOfType', () => {
         types.WITH_MAPPED_PAYLOAD,
       ])
     );
-    // @dts-jest:pass:snap -> (T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }))[]
-    actual;
-    expect(actual).toHaveLength(4);
-    expect(actual).toEqual([
-      typeOnlyExpected,
-      payloadExpected,
-      payloadMetaExpected,
-      mappedPayloadExpected,
-    ]);
+    // @dts-jest:pass:snap -> (T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string>)[]
+    actual; // => [typeOnlyExpected,payloadExpected,payloadMetaExpected,mappedPayloadExpected]
   });
 
-  it('should correctly assert for an array with 4 args', () => {
+  describe('should correctly assert for an array with 4 args', () => {
     const actual = $action.filter(
       isOfType([
         types.WITH_TYPE_ONLY,
@@ -144,19 +129,11 @@ describe('isOfType', () => {
         types.WITH_MAPPED_PAYLOAD_META,
       ])
     );
-    // @dts-jest:pass:snap -> (T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }))[]
-    actual;
-    expect(actual).toHaveLength(5);
-    expect(actual).toEqual([
-      typeOnlyExpected,
-      payloadExpected,
-      payloadMetaExpected,
-      mappedPayloadExpected,
-      mappedPayloadMetaExpected,
-    ]);
+    // @dts-jest:pass:snap -> (T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }))[]
+    actual; // => [typeOnlyExpected,payloadExpected,payloadMetaExpected,mappedPayloadExpected,mappedPayloadMetaExpected]
   });
 
-  it('should correctly assert type with "any" action', () => {
+  describe('should correctly assert type with "any" action', () => {
     const action: any = withMappedPayload(1234);
     if (
       isOfType(
@@ -165,8 +142,7 @@ describe('isOfType', () => {
       )
     ) {
       // @dts-jest:pass:snap -> any
-      action;
-      expect(action.payload).toBe(1234);
+      action; // => {"payload": 1234, "type": "WITH_MAPPED_PAYLOAD"}
     }
     if (
       isOfType([types.WITH_MAPPED_PAYLOAD, types.WITH_MAPPED_PAYLOAD_META])(
@@ -174,8 +150,7 @@ describe('isOfType', () => {
       )
     ) {
       // @dts-jest:pass:snap -> any
-      action;
-      expect(action.payload).toBe(1234);
+      action; // => {"payload": 1234, "type": "WITH_MAPPED_PAYLOAD"}
     }
   });
 });

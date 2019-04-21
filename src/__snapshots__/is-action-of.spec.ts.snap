@@ -1,43 +1,43 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`isActionOf should correctly assert for an array with 1 arg actual (type) should match snapshot 1`] = `"T.EmptyAction<\\"WITH_TYPE_ONLY\\">[]"`;
+exports[`action 1`] = `"({ type: \\"WITH_MAPPED_PAYLOAD\\"; } & { payload: number; }) | ({ type: \\"WITH_MAPPED_PAYLOAD_META\\"; } & { payload: number; meta: string; })"`;
 
-exports[`isActionOf should correctly assert for an array with 2 args actual (type) should match snapshot 1`] = `"(T.EmptyAction<\\"WITH_TYPE_ONLY\\"> | T.PayloadAction<\\"WITH_PAYLOAD\\", number>)[]"`;
+exports[`action 2`] = `"({ type: \\"WITH_MAPPED_PAYLOAD\\"; } & { payload: number; }) | ({ type: \\"WITH_MAPPED_PAYLOAD_META\\"; } & { payload: number; meta: string; })"`;
 
-exports[`isActionOf should correctly assert for an array with 3 args actual (type) should match snapshot 1`] = `"(T.EmptyAction<\\"WITH_TYPE_ONLY\\"> | T.PayloadAction<\\"WITH_PAYLOAD\\", number> | T.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string>)[]"`;
+exports[`actual 1`] = `"T.EmptyAction<\\"WITH_TYPE_ONLY\\">[]"`;
 
-exports[`isActionOf should correctly assert for an array with 4 args actual (type) should match snapshot 1`] = `"(T.EmptyAction<\\"WITH_TYPE_ONLY\\"> | T.PayloadAction<\\"WITH_PAYLOAD\\", number> | ({ type: \\"WITH_MAPPED_PAYLOAD\\"; } & { payload: number; }) | T.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string>)[]"`;
+exports[`actual 2`] = `"(T.EmptyAction<\\"WITH_TYPE_ONLY\\"> | T.PayloadAction<\\"WITH_PAYLOAD\\", number>)[]"`;
 
-exports[`isActionOf should correctly assert for an array with 5 args actual (type) should match snapshot 1`] = `"(T.EmptyAction<\\"WITH_TYPE_ONLY\\"> | T.PayloadAction<\\"WITH_PAYLOAD\\", number> | ({ type: \\"WITH_MAPPED_PAYLOAD\\"; } & { payload: number; }) | T.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string> | ({ type: \\"WITH_MAPPED_PAYLOAD_META\\"; } & { payload: number; meta: string; }))[]"`;
+exports[`actual 3`] = `"(T.EmptyAction<\\"WITH_TYPE_ONLY\\"> | T.PayloadAction<\\"WITH_PAYLOAD\\", number> | T.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string>)[]"`;
 
-exports[`isActionOf should correctly assert type with "any" action action (type) should match snapshot 1`] = `"({ type: \\"WITH_MAPPED_PAYLOAD\\"; } & { payload: number; }) | ({ type: \\"WITH_MAPPED_PAYLOAD_META\\"; } & { payload: number; meta: string; })"`;
+exports[`actual 4`] = `"(T.EmptyAction<\\"WITH_TYPE_ONLY\\"> | T.PayloadAction<\\"WITH_PAYLOAD\\", number> | ({ type: \\"WITH_MAPPED_PAYLOAD\\"; } & { payload: number; }) | T.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string>)[]"`;
 
-exports[`isActionOf should correctly assert type with "any" action action (type) should match snapshot 2`] = `"({ type: \\"WITH_MAPPED_PAYLOAD\\"; } & { payload: number; }) | ({ type: \\"WITH_MAPPED_PAYLOAD_META\\"; } & { payload: number; meta: string; })"`;
+exports[`actual 5`] = `"(T.EmptyAction<\\"WITH_TYPE_ONLY\\"> | T.PayloadAction<\\"WITH_PAYLOAD\\", number> | ({ type: \\"WITH_MAPPED_PAYLOAD\\"; } & { payload: number; }) | T.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string> | ({ type: \\"WITH_MAPPED_PAYLOAD_META\\"; } & { payload: number; meta: string; }))[]"`;
 
-exports[`isActionOf should work with multiple action-creator args isActionOf([withTypeOnly, withPayload])(mappedPayloadAction) (type) should match snapshot 1`] = `"boolean"`;
+exports[`isActionOf([withTypeOnly, withPayload])(mappedPayloadAction) 1`] = `"boolean"`;
 
-exports[`isActionOf should work with multiple action-creator args isActionOf([withTypeOnly, withPayload])(payloadAction) (type) should match snapshot 1`] = `"boolean"`;
+exports[`isActionOf([withTypeOnly, withPayload])(payloadAction) 1`] = `"boolean"`;
 
-exports[`isActionOf should work with multiple action-creator args isActionOf([withTypeOnly, withPayload])(typeOnlyAction) (type) should match snapshot 1`] = `"boolean"`;
+exports[`isActionOf([withTypeOnly, withPayload])(typeOnlyAction) 1`] = `"boolean"`;
 
-exports[`isActionOf should work with multiple action-creator args isActionOf([withTypeOnly, withPayload], mappedPayloadAction) (type) should match snapshot 1`] = `"boolean"`;
+exports[`isActionOf([withTypeOnly, withPayload], mappedPayloadAction) 1`] = `"boolean"`;
 
-exports[`isActionOf should work with multiple action-creator args isActionOf([withTypeOnly, withPayload], payloadAction) (type) should match snapshot 1`] = `"boolean"`;
+exports[`isActionOf([withTypeOnly, withPayload], payloadAction) 1`] = `"boolean"`;
 
-exports[`isActionOf should work with multiple action-creator args isActionOf([withTypeOnly, withPayload], typeOnlyAction) (type) should match snapshot 1`] = `"boolean"`;
+exports[`isActionOf([withTypeOnly, withPayload], typeOnlyAction) 1`] = `"boolean"`;
 
-exports[`isActionOf should work with single action-creator arg isActionOf([withTypeOnly])(payloadAction) (type) should match snapshot 1`] = `"boolean"`;
+exports[`isActionOf([withTypeOnly])(payloadAction) 1`] = `"boolean"`;
 
-exports[`isActionOf should work with single action-creator arg isActionOf([withTypeOnly])(typeOnlyAction) (type) should match snapshot 1`] = `"boolean"`;
+exports[`isActionOf([withTypeOnly])(typeOnlyAction) 1`] = `"boolean"`;
 
-exports[`isActionOf should work with single action-creator arg isActionOf([withTypeOnly], payloadAction) (type) should match snapshot 1`] = `"boolean"`;
+exports[`isActionOf([withTypeOnly], payloadAction) 1`] = `"boolean"`;
 
-exports[`isActionOf should work with single action-creator arg isActionOf([withTypeOnly], typeOnlyAction) (type) should match snapshot 1`] = `"boolean"`;
+exports[`isActionOf([withTypeOnly], typeOnlyAction) 1`] = `"boolean"`;
 
-exports[`isActionOf should work with single action-creator arg isActionOf(withTypeOnly)(payloadAction) (type) should match snapshot 1`] = `"boolean"`;
+exports[`isActionOf(withTypeOnly)(payloadAction) 1`] = `"boolean"`;
 
-exports[`isActionOf should work with single action-creator arg isActionOf(withTypeOnly)(typeOnlyAction) (type) should match snapshot 1`] = `"boolean"`;
+exports[`isActionOf(withTypeOnly)(typeOnlyAction) 1`] = `"boolean"`;
 
-exports[`isActionOf should work with single action-creator arg isActionOf(withTypeOnly, payloadAction) (type) should match snapshot 1`] = `"boolean"`;
+exports[`isActionOf(withTypeOnly, payloadAction) 1`] = `"boolean"`;
 
-exports[`isActionOf should work with single action-creator arg isActionOf(withTypeOnly, typeOnlyAction) (type) should match snapshot 1`] = `"boolean"`;
+exports[`isActionOf(withTypeOnly, typeOnlyAction) 1`] = `"boolean"`;

@@ -1,37 +1,37 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`With Action Creators fn(0, {} as any) (type) should match snapshot 1`] = `"number"`;
+exports[`fn(0, {} as any) 1`] = `"number"`;
 
-exports[`With Action Creators fn(0, {} as any) (type) should match snapshot 2`] = `"number"`;
+exports[`fn(0, {} as any) 2`] = `"number"`;
 
-exports[`With Action Creators fn(0, {} as any) (type) should match snapshot 3`] = `"number"`;
+exports[`fn(0, {} as any) 3`] = `"number"`;
 
-exports[`With Action Creators fn(0, add(4)) (type) should match snapshot 1`] = `"number"`;
+exports[`fn(0, {} as any) 4`] = `"number"`;
 
-exports[`With Action Creators fn(0, add(4)) (type) should match snapshot 2`] = `"number"`;
+exports[`fn(0, {} as any) 5`] = `"number"`;
 
-exports[`With Action Creators fn(0, add(4)) (type) should match snapshot 3`] = `"number"`;
+exports[`fn(0, {} as any) 6`] = `"number"`;
 
-exports[`With Action Creators fn(0, increment()) (type) should match snapshot 1`] = `"number"`;
+exports[`fn(0, add(4)) 1`] = `"number"`;
 
-exports[`With Action Creators fn(0, increment()) (type) should match snapshot 2`] = `"number"`;
+exports[`fn(0, add(4)) 2`] = `"number"`;
 
-exports[`With Action Creators fn(0, increment()) (type) should match snapshot 3`] = `"number"`;
+exports[`fn(0, add(4)) 3`] = `"number"`;
 
-exports[`With Action Types fn(0, {} as any) (type) should match snapshot 1`] = `"number"`;
+exports[`fn(0, add(4)) 4`] = `"number"`;
 
-exports[`With Action Types fn(0, {} as any) (type) should match snapshot 2`] = `"number"`;
+exports[`fn(0, add(4)) 5`] = `"number"`;
 
-exports[`With Action Types fn(0, {} as any) (type) should match snapshot 3`] = `"number"`;
+exports[`fn(0, add(4)) 6`] = `"number"`;
 
-exports[`With Action Types fn(0, add(4)) (type) should match snapshot 1`] = `"number"`;
+exports[`fn(0, increment()) 1`] = `"number"`;
 
-exports[`With Action Types fn(0, add(4)) (type) should match snapshot 2`] = `"number"`;
+exports[`fn(0, increment()) 2`] = `"number"`;
 
-exports[`With Action Types fn(0, add(4)) (type) should match snapshot 3`] = `"number"`;
+exports[`fn(0, increment()) 3`] = `"number"`;
 
-exports[`With Action Types fn(0, increment()) (type) should match snapshot 1`] = `"number"`;
+exports[`fn(0, increment()) 4`] = `"number"`;
 
-exports[`With Action Types fn(0, increment()) (type) should match snapshot 2`] = `"number"`;
+exports[`fn(0, increment()) 5`] = `"number"`;
 
-exports[`With Action Types fn(0, increment()) (type) should match snapshot 3`] = `"number"`;
+exports[`fn(0, increment()) 6`] = `"number"`;

@@ -11,8 +11,6 @@ declare module './' {
   export type RootAction = ActionType<typeof actions>;
 }
 
-// TODO: add type-test cases
-
 const initialState = 0;
 describe('With Action Creators', () => {
   const counterReducer1 = createReducer(initialState).addHandler(
@@ -37,15 +35,16 @@ describe('With Action Creators', () => {
     });
 
   [counterReducer1, counterReducer2, counterReducer3].forEach(fn => {
-    // @dts-jest:pass:snap
+    // @dts-jest:pass:snap -> number
     fn(0, {} as any); // => 0
-    // @dts-jest:pass:snap
+    // @dts-jest:pass:snap -> number
     fn(0, increment()); // => 1
-    // @dts-jest:pass:snap
+    // @dts-jest:pass:snap -> number
     fn(0, add(4)); // => 4
   });
 });
 
+// wroc do implementacji ze nie mozna podac dwoch tych samych parametrow
 describe('With Action Types', () => {
   const counterReducer1 = createReducer(initialState).addHandler(
     ['ADD', 'INCREMENT'],
@@ -70,11 +69,11 @@ describe('With Action Types', () => {
     });
 
   [counterReducer1, counterReducer2, counterReducer3].forEach(fn => {
-    // @dts-jest:pass:snap
+    // @dts-jest:pass:snap -> number
     fn(0, {} as any); // => 0
-    // @dts-jest:pass:snap
+    // @dts-jest:pass:snap -> number
     fn(0, increment()); // => 1
-    // @dts-jest:pass:snap
+    // @dts-jest:pass:snap -> number
     fn(0, add(4)); // => 4
   });
 });
