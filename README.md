@@ -1,5 +1,6 @@
 <div align="center">
-<h1>typesafe-actions</h1>
+
+# typesafe-actions
 
 Typesafe utilities designed to reduce types **verbosity**
 and **complexity**  in Redux Architecture.
@@ -17,7 +18,7 @@ _This library is part of the [React & Redux TypeScript Guide](https://github.com
 
 :star: _Found it useful? Want more updates?_ [**Show your support by giving a :star:**](https://github.com/piotrwitek/typesafe-actions/stargazers)
 
-:tada: _Now updated to be compatible with **TypeScript v3.4**_ :tada:
+:tada: _Now updated to support **TypeScript v3.4**_ :tada:
 
 <a href="https://www.buymeacoffee.com/zh9guxbA5">
   <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me a Coffee">
@@ -30,13 +31,13 @@ _This library is part of the [React & Redux TypeScript Guide](https://github.com
 
 ---
 
-**Features:**
+**Features**
 
-* __minimalistic__ - according to `rollup-plugin-filesize` (Bundle size: 3.48 KB, Gzipped size: 1.03 KB) check also on [bundlephobia](https://bundlephobia.com/result?p=typesafe-actions)
-* __secure and optimized__ - no external dependencies, bundled in 3 different formats (`cjs`, `esm` and `umd` for browser)
-* __focus on quality__ - complete test-suite for an entire API surface containing regular runtime tests and extra type-tests to guarantee **type soundness**
+- **minimalistic** - according to `rollup-plugin-filesize` (Bundle size: 3.48 KB, Gzipped size: 1.03 KB) check also on [bundlephobia](https://bundlephobia.com/result?p=typesafe-actions)
+- **secure and optimized** - no external dependencies, bundled in 3 different formats (`cjs`, `esm` and `umd` for browser)
+- **focus on quality** - complete test-suite for an entire API surface containing regular runtime tests and extra type-tests to guarantee **type soundness**
 
-**Codesandbox links:**
+**Codesandbox links**
 
 - Reference Todo-App implementation using `typesafe-actions`: [Link](https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/codesandbox)
 - Starter to help reproduce bug reports: [Link](https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/codesandbox)
@@ -63,7 +64,7 @@ _This library is part of the [React & Redux TypeScript Guide](https://github.com
   - [Action Helpers](#action-helpers)
     - [Using action-creators instances instead of type-constants](#using-action-creators-instances-instead-of-type-constants)
     - [Using regular type-constants](#using-regular-type-constants)
-  - [Reducers](#reducers)
+  - [Reducers](#reducers) 🌟 __NEW__
     - [Extending internal types to streamline type usage with `typesafe-actions`](#extending-internal-types-to-streamline-type-usage-with-typesafe-actions)
     - [Using createReducer API](#using-createreducer-api)
     - [Using standard switch reducer](#using-standard-switch-reducer)
@@ -78,7 +79,7 @@ _This library is part of the [React & Redux TypeScript Guide](https://github.com
     - [`createCustomAction`](#createcustomaction)
     - [`createAsyncAction`](#createasyncaction)
   - [Reducer-Creators API](#reducer-creators-api)
-    - [`createReducer`](#createreducer)
+    - [`createReducer`](#createreducer) 🌟 __NEW__
   - [Action-Helpers API](#action-helpers-api)
     - [`getType`](#gettype)
     - [`isActionOf`](#isactionof)
@@ -90,7 +91,7 @@ _This library is part of the [React & Redux TypeScript Guide](https://github.com
   - [`v3.x.x` to `v4.x.x`](#v3xx-to-v4xx)
   - [`v2.x.x` to `v3.x.x`](#v2xx-to-v3xx)
   - [`v1.x.x` to `v2.x.x`](#v1xx-to-v2xx)
-  - [Migrating from `redux-actions` to `typesafe-actions`](#migrating-from-redux-actions-to-typesafe-actions)
+  - [Migrating from `redux-actions` to `typesafe-actions`](#migrating-from-redux-actions-to-typesafe-actions) 🌟 __NEW__
 - [Recipes](#recipes)
   - [Restrict Meta type in `action` creator](#restrict-meta-type-in-action-creator)
 - [Compare to others](#compare-to-others)
@@ -133,10 +134,10 @@ yarn add typesafe-actions
 
 **TypeScript support**
 
-* `typesafe-actions@1.X.X` - minimal TS v2.7
-* `typesafe-actions@2.X.X` - minimal TS v2.9
-* `typesafe-actions@3.X.X` - minimal TS v3.2
-* `typesafe-actions@4.X.X` - minimal TS v3.2
+- `typesafe-actions@1.X.X` - minimal TS v2.7
+- `typesafe-actions@2.X.X` - minimal TS v2.9
+- `typesafe-actions@3.X.X` - minimal TS v3.2
+- `typesafe-actions@4.X.X` - minimal TS v3.2
 
 **Browser support**
 
@@ -170,7 +171,7 @@ We are open for contributions. If you're planning to contribute please make sure
 
 If you are using **Typesafe-Actions** please consider donating as this will guarantee the project will be updated and maintained in the long run.
 
-Specific issues can be funded by anyone interested in them being resolved. Issue funds will be transparently rewarded to the contributor handling the task through the issuehunt platform.
+Issues can be funded by anyone interested in them being resolved. Reward will be transparently distributed to the contributor handling the task through the IssueHunt platform.
 
 [![Let's fund issues in this repository](https://issuehunt.io/static/embed/issuehunt-button-v1.svg)](https://issuehunt.io/repos/110746954)
 
