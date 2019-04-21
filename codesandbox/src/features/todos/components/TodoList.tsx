@@ -1,4 +1,4 @@
-import { RootState } from 'MyTypes';
+import { RootState } from 'typesafe-actions';
 import * as React from 'react';
 import { connect } from 'react-redux';
 

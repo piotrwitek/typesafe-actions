@@ -1,8 +1,8 @@
+import { RootState } from 'typesafe-actions';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { loadTodosAsync, saveTodosAsync } from '../actions';
-import { RootState } from 'MyTypes';
 
 const mapStateToProps = (state: RootState) => ({
   isLoading: state.todos.isLoadingTodos,
