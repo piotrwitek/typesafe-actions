@@ -2,6 +2,8 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
+var tslib_1 = require('tslib');
+
 function checkIsEmpty(arg, argPosition) {
     if (argPosition === void 0) { argPosition = 1; }
     return arg == null;
@@ -138,22 +140,28 @@ function getType(actionCreator) {
     return actionCreator.getType();
 }
 
-function createReducer(initialState) {
-    var handlers = {};
-    var reducer = function (state, action) {
+function createReducer(initialState, initialReducers) {
+    if (initialReducers === void 0) { initialReducers = {}; }
+    var reducers = tslib_1.__assign({}, initialReducers);
+    var rootReducer = function (state, action) {
         if (state === void 0) { state = initialState; }
-        if (handlers.hasOwnProperty(action.type)) {
-            return handlers[action.type](state, action);
+        if (reducers.hasOwnProperty(action.type)) {
+            var reducer = reducers[action.type];
+            if (typeof reducer !== 'function') {
+                throw Error("Reducer under \"" + action.type + "\" key is not a valid reducer");
+            }
+            return reducer(state, action);
         }
         else {
             return state;
         }
     };
-    var addHandler = (function (actionsTypes, actionsHandler) {
-        var creatorsOrTypes = Array.isArray(actionsTypes)
-            ? actionsTypes
-            : [actionsTypes];
-        creatorsOrTypes
+    var handleAction = (function (singleOrMultipleCreatorsAndTypes, reducer) {
+        var creatorsAndTypes = Array.isArray(singleOrMultipleCreatorsAndTypes)
+            ? singleOrMultipleCreatorsAndTypes
+            : [singleOrMultipleCreatorsAndTypes];
+        var newReducers = {};
+        creatorsAndTypes
             .map(function (acOrType) {
             return checkValidActionCreator(acOrType)
                 ? getType(acOrType)
@@ -161,13 +169,13 @@ function createReducer(initialState) {
                     ? acOrType
                     : throwInvalidActionTypeOrActionCreator();
         })
-            .forEach(function (type) { return (handlers[type] = actionsHandler); });
-        return chainApi;
+            .forEach(function (type) { return (newReducers[type] = reducer); });
+        return createReducer(initialState, tslib_1.__assign({}, reducers, newReducers));
     });
-    var chainApi = Object.assign(reducer, {
-        addHandler: addHandler,
+    return Object.assign(rootReducer, {
+        reducers: tslib_1.__assign({}, reducers),
+        handleAction: handleAction,
     });
-    return chainApi;
 }
 
 function isOfType(actionTypeOrTypes, action) {

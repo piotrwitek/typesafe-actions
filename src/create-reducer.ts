@@ -9,44 +9,64 @@ import {
 import { Reducer, Action } from './type-helpers';
 
 type HandleActionChainApi<
-  S,
-  TAllActions extends Action,
-  TNotHandledActions extends Action
+  TState,
+  TNotHandledAction extends Action,
+  TRootAction extends Action
 > = <
-  TType extends TNotHandledActions['type'],
-  TTypeAction extends TNotHandledActions extends { type: TType }
-    ? TNotHandledActions
+  TType extends TNotHandledAction['type'],
+  TTypeAction extends TNotHandledAction extends { type: TType }
+    ? TNotHandledAction
     : never,
-  TCreator extends (...args: any[]) => TNotHandledActions,
-  TCreatorAction extends TNotHandledActions extends ReturnType<TCreator>
-    ? TNotHandledActions
+  TCreator extends (...args: any[]) => TNotHandledAction,
+  TCreatorAction extends TNotHandledAction extends ReturnType<TCreator>
+    ? TNotHandledAction
     : never,
   TActionIntersection extends TTypeAction extends TCreatorAction
     ? TTypeAction
     : never
 >(
   singleOrMultipleCreatorsAndTypes: TType | TType[] | TCreator | TCreator[],
-  reducer: (state: S, action: TActionIntersection) => S
-) => Exclude<TNotHandledActions, TTypeAction & TCreatorAction> extends never
-  ? Reducer<S, TAllActions>
-  : Reducer<S, TAllActions> & {
+  reducer: (state: TState, action: TActionIntersection) => TState
+) => [Exclude<TNotHandledAction, TTypeAction & TCreatorAction>] extends [never]
+  ? Reducer<TState, TRootAction> & {
+      reducers: Record<
+        TActionIntersection['type'],
+        (state: TState, action: TRootAction) => TState
+      >;
+    }
+  : Reducer<TState, TRootAction> & {
+      reducers: Record<
+        TActionIntersection['type'],
+        (state: TState, action: TRootAction) => TState
+      >;
       handleAction: HandleActionChainApi<
-        S,
-        TAllActions,
-        Exclude<TNotHandledActions, TTypeAction & TCreatorAction>
+        TState,
+        Exclude<TNotHandledAction, TTypeAction & TCreatorAction>,
+        TNotHandledAction
       >;
     };
 
-export function createReducer<S, A extends Action = RootAction>(
-  initialState: S
-): Reducer<S, A> & {
-  handleAction: HandleActionChainApi<S, A, A>;
-} {
-  const reducers: Record<string, (state: S, action: RootAction) => S> = {};
+export function createReducer<TState, TAllActions extends Action = RootAction>(
+  initialState: TState,
+  initialReducers: Record<
+    RootAction['type'],
+    (state: TState, action: RootAction) => TState
+  > = {}
+) {
+  const reducers = { ...initialReducers };
 
-  const rootReducer: Reducer<S, A> = (state = initialState, action) => {
+  const rootReducer: Reducer<TState, TAllActions> = (
+    state = initialState,
+    action
+  ) => {
     if (reducers.hasOwnProperty(action.type)) {
-      return reducers[action.type](state, action);
+      const reducer = reducers[action.type];
+      if (typeof reducer !== 'function') {
+        throw Error(
+          `Reducer under "${action.type}" key is not a valid reducer`
+        );
+      }
+      return reducer(state, action);
     } else {
       return state;
     }
@@ -57,6 +77,7 @@ export function createReducer<S, A extends Action = RootAction>(
       ? singleOrMultipleCreatorsAndTypes
       : [singleOrMultipleCreatorsAndTypes];
 
+    const newReducers: typeof initialReducers = {};
     creatorsAndTypes
       .map(acOrType =>
         checkValidActionCreator(acOrType)
@@ -65,14 +86,16 @@ export function createReducer<S, A extends Action = RootAction>(
           ? acOrType
           : throwInvalidActionTypeOrActionCreator()
       )
-      .forEach(type => (reducers[type] = reducer));
+      .forEach(type => (newReducers[type] = reducer));
 
-    return chainApi;
-  }) as HandleActionChainApi<S, A, A>;
+    return createReducer<TState, TAllActions>(initialState, {
+      ...reducers,
+      ...newReducers,
+    });
+  }) as HandleActionChainApi<TState, TAllActions, TAllActions>;
 
-  const chainApi = Object.assign(rootReducer, {
+  return Object.assign(rootReducer, {
+    reducers: { ...reducers },
     handleAction,
   } as const);
-
-  return chainApi;
 }
