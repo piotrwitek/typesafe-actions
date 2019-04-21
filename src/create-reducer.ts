@@ -29,13 +29,13 @@ type HandleActionChainApi<
   reducer: (state: TState, action: TActionIntersection) => TState
 ) => [Exclude<TNotHandledAction, TTypeAction & TCreatorAction>] extends [never]
   ? Reducer<TState, TRootAction> & {
-      reducers: Record<
+      handlers: Record<
         TActionIntersection['type'],
         (state: TState, action: TRootAction) => TState
       >;
     }
   : Reducer<TState, TRootAction> & {
-      reducers: Record<
+      handlers: Record<
         TActionIntersection['type'],
         (state: TState, action: TRootAction) => TState
       >;
@@ -53,14 +53,14 @@ export function createReducer<TState, TAllActions extends Action = RootAction>(
     (state: TState, action: RootAction) => TState
   > = {}
 ) {
-  const reducers = { ...initialReducers };
+  const handlers = { ...initialReducers };
 
   const rootReducer: Reducer<TState, TAllActions> = (
     state = initialState,
     action
   ) => {
-    if (reducers.hasOwnProperty(action.type)) {
-      const reducer = reducers[action.type];
+    if (handlers.hasOwnProperty(action.type)) {
+      const reducer = handlers[action.type];
       if (typeof reducer !== 'function') {
         throw Error(
           `Reducer under "${action.type}" key is not a valid reducer`
@@ -77,7 +77,7 @@ export function createReducer<TState, TAllActions extends Action = RootAction>(
       ? singleOrMultipleCreatorsAndTypes
       : [singleOrMultipleCreatorsAndTypes];
 
-    const newReducers: typeof initialReducers = {};
+    const newHandlers: typeof initialReducers = {};
     creatorsAndTypes
       .map(acOrType =>
         checkValidActionCreator(acOrType)
@@ -86,16 +86,16 @@ export function createReducer<TState, TAllActions extends Action = RootAction>(
           ? acOrType
           : throwInvalidActionTypeOrActionCreator()
       )
-      .forEach(type => (newReducers[type] = reducer));
+      .forEach(type => (newHandlers[type] = reducer));
 
     return createReducer<TState, TAllActions>(initialState, {
-      ...reducers,
-      ...newReducers,
+      ...handlers,
+      ...newHandlers,
     });
   }) as HandleActionChainApi<TState, TAllActions, TAllActions>;
 
   return Object.assign(rootReducer, {
-    reducers: { ...reducers },
+    handlers: { ...handlers },
     handleAction,
   } as const);
 }

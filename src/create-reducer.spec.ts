@@ -20,58 +20,54 @@ const initialState = 0;
 
   const counterReducer1 = reducerTest.handleAction(
     [add, increment],
-    (state, action) => {
-      return state + (action.type === 'ADD' ? action.payload : 1);
-    }
+    (state, action) => state + (action.type === 'ADD' ? action.payload : 1)
   );
   // @dts-jest:pass:snap
   counterReducer1;
   // @dts-jest:pass
-  Object.keys({ ...counterReducer1.reducers }); // => ["ADD", "INCREMENT"]
+  Object.keys({ ...counterReducer1.handlers }); // => ["ADD", "INCREMENT"]
   // @dts-jest:pass
-  Object.keys({ ...reducerTest.reducers }); // => []
+  Object.keys({ ...reducerTest.handlers }); // => []
 
   const counterReducer2 = reducerTest
-    .handleAction([add], (state, action) => {
-      return state + action.payload;
-    })
-    .handleAction([increment], (state, _) => {
-      return state + 1;
-    });
+    .handleAction([add], (state, action) => state + action.payload)
+    .handleAction([increment], (state, _) => state + 1);
   // @dts-jest:pass:snap
   counterReducer2;
   // @dts-jest:pass
-  Object.keys({ ...counterReducer2.reducers }); // => ["ADD", "INCREMENT"]
+  Object.keys({ ...counterReducer2.handlers }); // => ["ADD", "INCREMENT"]
   // @dts-jest:pass
-  Object.keys({ ...reducerTest.reducers }); // => []
+  Object.keys({ ...reducerTest.handlers }); // => []
 
-  const counterReducer3 = reducerTest.handleAction(add, (state, action) => {
-    return state + action.payload;
-  });
+  const counterReducer3 = reducerTest.handleAction(
+    add,
+    (state, action) => state + action.payload
+  );
   // @dts-jest:pass:snap
   counterReducer3;
   // @dts-jest:pass
-  Object.keys({ ...counterReducer3.reducers }); // => [ "ADD"]
+  Object.keys({ ...counterReducer3.handlers }); // => [ "ADD"]
   // @dts-jest:pass
-  Object.keys({ ...reducerTest.reducers }); // => []
+  Object.keys({ ...reducerTest.handlers }); // => []
 
-  const counterReducer4 = reducerTest.handleAction(increment, (state, _) => {
-    return state + 1;
-  });
+  const counterReducer4 = reducerTest.handleAction(
+    increment,
+    (state, _) => state + 1
+  );
   // @dts-jest:pass:snap
   counterReducer4;
   // @dts-jest:pass
-  Object.keys({ ...counterReducer4.reducers }); // => [ "INCREMENT"]
+  Object.keys({ ...counterReducer4.handlers }); // => [ "INCREMENT"]
   // @dts-jest:pass
-  Object.keys({ ...reducerTest.reducers }); // => []
+  Object.keys({ ...reducerTest.handlers }); // => []
 
   {
     [
       counterReducer1,
       counterReducer2,
       createReducer(initialState, {
-        [getType(add)]: counterReducer3.reducers.ADD,
-        [getType(increment)]: counterReducer4.reducers.INCREMENT,
+        [getType(add)]: counterReducer3.handlers.ADD,
+        [getType(increment)]: counterReducer4.handlers.INCREMENT,
       }),
     ].forEach(fn => {
       // @dts-jest:pass
@@ -90,58 +86,54 @@ const initialState = 0;
 
   const counterReducer1 = reducerTest.handleAction(
     ['ADD', 'INCREMENT'],
-    (state, action) => {
-      return state + (action.type === 'ADD' ? action.payload : 1);
-    }
+    (state, action) => state + (action.type === 'ADD' ? action.payload : 1)
   );
   // @dts-jest:pass:snap
   counterReducer1;
   // @dts-jest:pass
-  Object.keys({ ...counterReducer1.reducers }); // => ["ADD", "INCREMENT"]
+  Object.keys({ ...counterReducer1.handlers }); // => ["ADD", "INCREMENT"]
   // @dts-jest:pass
-  Object.keys({ ...reducerTest.reducers }); // => []
+  Object.keys({ ...reducerTest.handlers }); // => []
 
   const counterReducer2 = reducerTest
-    .handleAction(['ADD'], (state, action) => {
-      return state + action.payload;
-    })
-    .handleAction(['INCREMENT'], (state, _) => {
-      return state + 1;
-    });
+    .handleAction(['ADD'], (state, action) => state + action.payload)
+    .handleAction(['INCREMENT'], (state, _) => state + 1);
   // @dts-jest:pass:snap
   counterReducer2;
   // @dts-jest:pass
-  Object.keys({ ...counterReducer2.reducers }); // => ["ADD", "INCREMENT"]
+  Object.keys({ ...counterReducer2.handlers }); // => ["ADD", "INCREMENT"]
   // @dts-jest:pass
-  Object.keys({ ...reducerTest.reducers }); // => []
+  Object.keys({ ...reducerTest.handlers }); // => []
 
-  const counterReducer3 = reducerTest.handleAction('ADD', (state, action) => {
-    return state + action.payload;
-  });
+  const counterReducer3 = reducerTest.handleAction(
+    'ADD',
+    (state, action) => state + action.payload
+  );
   // @dts-jest:pass:snap
   counterReducer3;
   // @dts-jest:pass
-  Object.keys({ ...counterReducer3.reducers }); // => ["ADD"]
+  Object.keys({ ...counterReducer3.handlers }); // => ["ADD"]
   // @dts-jest:pass
-  Object.keys({ ...reducerTest.reducers }); // => []
+  Object.keys({ ...reducerTest.handlers }); // => []
 
-  const counterReducer4 = reducerTest.handleAction('INCREMENT', (state, _) => {
-    return state + 1;
-  });
+  const counterReducer4 = reducerTest.handleAction(
+    'INCREMENT',
+    (state, _) => state + 1
+  );
   // @dts-jest:pass:snap
   counterReducer4;
   // @dts-jest:pass
-  Object.keys({ ...counterReducer4.reducers }); // => [ "INCREMENT"]
+  Object.keys({ ...counterReducer4.handlers }); // => [ "INCREMENT"]
   // @dts-jest:pass
-  Object.keys({ ...reducerTest.reducers }); // => []
+  Object.keys({ ...reducerTest.handlers }); // => []
 
   {
     [
       counterReducer1,
       counterReducer2,
       createReducer(initialState, {
-        ADD: counterReducer3.reducers.ADD,
-        INCREMENT: counterReducer4.reducers.INCREMENT,
+        ADD: counterReducer3.handlers.ADD,
+        INCREMENT: counterReducer4.handlers.INCREMENT,
       }),
     ].forEach(fn => {
       // @dts-jest:pass

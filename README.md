@@ -60,10 +60,12 @@ _This library is part of the [React & Redux TypeScript Guide](https://github.com
     - [1. Basic actions](#1-basic-actions)
     - [2. FSA compliant actions](#2-fsa-compliant-actions)
     - [3. Custom actions (non-standard use-cases)](#3-custom-actions-non-standard-use-cases)
-  - [Reducers](#reducers)
   - [Action-Helpers](#action-helpers)
     - [Using action-creators instances instead of type-constants](#using-action-creators-instances-instead-of-type-constants)
     - [Using regular type-constants](#using-regular-type-constants)
+  - [Reducers](#reducers)
+    - [Using createReducer API](#using-createreducer-api)
+    - [Using standard switch reducer](#using-standard-switch-reducer)
   - [Async-Flows](#async-flows)
     - [With `redux-observable` epics](#with-redux-observable-epics)
     - [With `redux-saga` sagas](#with-redux-saga-sagas)
@@ -85,7 +87,7 @@ _This library is part of the [React & Redux TypeScript Guide](https://github.com
   - [`v3.x.x` to `v4.x.x`](#v3xx-to-v4xx)
   - [`v2.x.x` to `v3.x.x`](#v2xx-to-v3xx)
   - [`v1.x.x` to `v2.x.x`](#v1xx-to-v2xx)
-  - [Migrating from `redux-actions`](#migrating-from-redux-actions)
+  - [Migrating from `redux-actions` to `typesafe-actions`](#migrating-from-redux-actions-to-typesafe-actions)
 - [Recipes](#recipes)
   - [Restrict Meta type in `action` creator](#restrict-meta-type-in-action-creator)
 - [Compare to others](#compare-to-others)
@@ -185,7 +187,7 @@ To showcase the flexibility and the power of the **type-safety** provided by thi
 ### Constants
 
 > **RECOMMENDATION:**  
-> When using `typesafe-actions` in your project you won't need to export and reuse **string constants**. It's because **action-creators** created by this library have **action type** property on each action-creator instance that you easily access and use to match actions in reducers, epics, sagas, and basically any other library. This will simplify your codebase and remove some boilerplate code associated with the  usage of **string constants**. Check our `/codesandbox` application to see how such codebase look like in a real application.
+> When using `typesafe-actions` in your project you won't need to export and reuse **string constants**. It's because **action-creators** created by this library have static property with **action type** that you can easily access using **actions-helpers** and then use it in reducers, epics, sagas, and basically any other place. This will simplify your codebase and remove some boilerplate code associated with the usage of **string constants**. Check our `/codesandbox` application to learn some best-practices to create such codebase.
 
 **Limitations of TypeScript when working with string constants** - when using **string constants** as action `type` property, please make sure to use **simple string literal assignment with const**. This limitation is coming from the type-system, because all the **dynamic string operations** (e.g. string concatenation, template strings and also object used as a map) will widen the literal type to its super-type, `string`. As a result this will break contextual typing for **action** object in reducer cases.
 
@@ -287,28 +289,17 @@ export type RootAction =
 
 [⇧ back to top](#table-of-contents)
 
-### Reducers
+### Action-Helpers
 
-#### Using createReducer API
+Now I wan't to show you **action-helpers** and explain their use-cases. We're going to implement a side-effect responsible for showing a success toast when user adds a new todo.
 
-#### Using standard switch reducer
+Important thing to notice is that all these helpers are acting as a **type-guard** so they'll narrow **tagged union type** (`RootAction`) to a specific action type that we want.
 
-First we need to start by generating a **tagged union type** of actions (`TodosAction`). It's very easy to do by using `ActionType` **type-helper**.
+#### Using action-creators instances instead of type-constants
 
-```ts
-import { ActionType } from 'typesafe-actions';
+Instead of **type-constants** we can use **action-creators** instance to match specific actions in reducers and epics cases. It works by adding a static property on **action-creator** instance which contains the `type` string. 
 
-import * as todos from './actions';
-export type TodosAction = ActionType<typeof todos>;
-```
-
-Now we define a regular reducer function by annotating `state` and `action` arguments with their respective types (`TodosAction` for action type).
-
-```ts
-export default (state: Todo[] = [], action: TodosAction) => {
-```
-
-Now in the switch cases we can use the `type` property of action to constrain the type of `TodosAction` to a specific action in the corresponding block of code.
+The most common one is `getType`, which is useful for regular reducer switch cases:
 
 ```ts
   switch (action.type) {
@@ -318,19 +309,7 @@ Now in the switch cases we can use the `type` property of action to constrain th
     ...
 ```
 
-[⇧ back to top](#table-of-contents)
-
-### Action-Helpers
-
-Now I wan't to show you **action-helpers** and explain why they are useful. We're going to implement a side-effect responsible for showing a success toast when user adds a new todo.
-
-#### Using action-creators instances instead of type-constants
-
-Instead of **type-constants** we can use **action-creators** instance to match specific actions in reducers and epics cases. It works by adding a static property on **action-creator** instance which contains the `type` string. 
-
-We have an `isActionOf` helper which accept **action-creator** as parameter and it'll match all actions with corresponding type.
-
-Important thing is that this helper is acting as a **type-guard** so it'll narrow **tagged union type** (`RootAction`) to a specific action type that we want.
+Then we have the `isActionOf` helper which accept **action-creator** as first parameter matching actions with corresponding type passed as second parameter (it's a curried function).
 
 ```ts
 // epics.ts
@@ -375,7 +354,7 @@ const addTodoToast: Epic<RootAction, RootAction, RootState, Services> = (action$
     // { type: "todos/ADD"; payload: Todo; } | { type: "todos/TOGGLE"; payload: string; }
 ```
 
-> **TIP:** action-helpers are working in all types of conditional statements.
+> **TIP:** you can use action-helpers with other types of conditional statements.
 
 ```ts
 import { isActionOf, isOfType } from 'typesafe-actions';
@@ -387,6 +366,101 @@ if (isActionOf(actions.add, action)) {
 if (isOfType(types.ADD, action)) {
   // here action is narrowed to: { type: "todos/ADD"; payload: Todo; }
 }
+```
+
+[⇧ back to top](#table-of-contents)
+
+### Reducers
+
+#### Using createReducer API
+
+We can prevent a lot of boilerplate code and type errors using this powerfull and completely typesafe API.
+
+Extending internal `RootAction` type for `createReducer` API from the consumer code, so that you never have to use generic type parameters again in your application 😮 (check `/codesandbox` project for more):
+```ts
+import { StateType, ActionType } from 'typesafe-actions';
+
+declare module 'typesafe-actions' {
+  export type RootAction = ActionType<typeof import('./root-action').default>;
+}
+```
+
+Using type-constants as keys in the object map:
+```ts
+import { createReducer, getType } from 'typesafe-actions'
+
+const counterReducer = createReducer(0, {
+  ADD: (state, action) => state + action.payload, // state and action type is automatically inferred
+  [getType(increment)]: (state, _) => state + 1, // return type is validated to be an exact State type
+  ADD: ... // <= error is shown on duplicated or invalid actions
+  INVALID: ... // <= error is shown on duplicated or invalid actions
+})
+
+counterReducer(0, add(4)); // => 4
+counterReducer(0, increment()); // => 1
+```
+
+Using handleAction chain API:
+```ts
+// using action-creators
+const counterReducer = createReducer(0) // <= no need for generic parameters
+  .handleAction(add, (state, action) => state + action.payload)
+  .handleAction(add, ... // <= error is shown on duplicated or invalid actions
+  .handleAction(increment, (state, _) => state + 1)
+  .handleAction(... // <= error is shown when all actions are handled
+  
+  // handle multiple actions using array
+  .handleAction([add, increment], (state, action) =>
+    state + (action.type === 'ADD' ? action.payload : 1)
+  );
+
+// all the same is working when using type-constants
+const counterReducer = createReducer(0)
+  .handleAction('ADD', (state, action) => state + action.payload)
+  .handleAction('INCREMENT', (state, _) => state + 1);
+  
+counterReducer(0, add(4)); // => 4
+counterReducer(0, increment()); // => 1
+```
+
+Extend or compose various reducers together - every operation is completely typesafe:
+```ts
+const newCounterReducer = createReducer(0)
+  .handleAction('SUBTRACT', (state, action) => state - action.payload)
+  .handleAction('DECREMENT', (state, _) => state - 1);
+
+const bigReducer = createReducer(0, {
+  ...counterReducer.handlers, // typesafe
+  ...newCounterReducer.handlers, // typesafe
+  SUBTRACT: decrementReducer.handlers.DECREMENT, // <= error, wrong type
+})
+```
+
+#### Using standard switch reducer
+
+First we need to start by generating a **tagged union type** of actions (`TodosAction`). It's very easy to do by using `ActionType` **type-helper**.
+
+```ts
+import { ActionType } from 'typesafe-actions';
+
+import * as todos from './actions';
+export type TodosAction = ActionType<typeof todos>;
+```
+
+Now we define a regular reducer function by annotating `state` and `action` arguments with their respective types (`TodosAction` for action type).
+
+```ts
+export default (state: Todo[] = [], action: TodosAction) => {
+```
+
+Now in the switch cases we can use the `type` property of action to narrowing the union type of `TodosAction` to an action that is corresponding to that type.
+
+```ts
+  switch (action.type) {
+    case getType(add):
+      // below action type is narrowed to: { type: "todos/ADD"; payload: Todo; }
+      return [...state, action.payload];
+    ...
 ```
 
 [⇧ back to top](#table-of-contents)

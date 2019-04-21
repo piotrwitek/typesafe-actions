@@ -142,11 +142,11 @@ function getType(actionCreator) {
 
 function createReducer(initialState, initialReducers) {
     if (initialReducers === void 0) { initialReducers = {}; }
-    var reducers = tslib_1.__assign({}, initialReducers);
+    var handlers = tslib_1.__assign({}, initialReducers);
     var rootReducer = function (state, action) {
         if (state === void 0) { state = initialState; }
-        if (reducers.hasOwnProperty(action.type)) {
-            var reducer = reducers[action.type];
+        if (handlers.hasOwnProperty(action.type)) {
+            var reducer = handlers[action.type];
             if (typeof reducer !== 'function') {
                 throw Error("Reducer under \"" + action.type + "\" key is not a valid reducer");
             }
@@ -160,7 +160,7 @@ function createReducer(initialState, initialReducers) {
         var creatorsAndTypes = Array.isArray(singleOrMultipleCreatorsAndTypes)
             ? singleOrMultipleCreatorsAndTypes
             : [singleOrMultipleCreatorsAndTypes];
-        var newReducers = {};
+        var newHandlers = {};
         creatorsAndTypes
             .map(function (acOrType) {
             return checkValidActionCreator(acOrType)
@@ -169,11 +169,11 @@ function createReducer(initialState, initialReducers) {
                     ? acOrType
                     : throwInvalidActionTypeOrActionCreator();
         })
-            .forEach(function (type) { return (newReducers[type] = reducer); });
-        return createReducer(initialState, tslib_1.__assign({}, reducers, newReducers));
+            .forEach(function (type) { return (newHandlers[type] = reducer); });
+        return createReducer(initialState, tslib_1.__assign({}, handlers, newHandlers));
     });
     return Object.assign(rootReducer, {
-        reducers: tslib_1.__assign({}, reducers),
+        handlers: tslib_1.__assign({}, handlers),
         handleAction: handleAction,
     });
 }
