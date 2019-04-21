@@ -158,12 +158,12 @@ function createReducer(initialState) {
                     : throwInvalidActionTypeOrActionCreator();
         })
             .forEach(function (type) { return (handlers[type] = actionsHandler); });
-        return chain;
+        return chainApi;
     });
-    var chain = Object.assign(reducer, {
+    var chainApi = Object.assign(reducer, {
         addHandler: addHandler,
     });
-    return chain;
+    return chainApi;
 }
 
 function isOfType(actionTypeOrTypes, action) {
