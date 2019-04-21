@@ -1,6 +1,7 @@
+import * as T from './type-helpers'; // type-tests global
+import { ActionType } from './type-helpers';
 import { createStandardAction } from './create-standard-action';
 import { createReducer } from './create-reducer';
-import { ActionType } from './type-helpers';
 
 const add = createStandardAction('ADD')<number>();
 const increment = createStandardAction('INCREMENT')();
@@ -34,6 +35,8 @@ describe('With Action Creators', () => {
     });
 
   [counterReducer1, counterReducer2, counterReducer3].forEach(fn => {
+    // @dts-jest:pass:snap
+    fn(0, {} as any); // => 0
     // @dts-jest:pass:snap
     fn(0, increment()); // => 1
     // @dts-jest:pass:snap
