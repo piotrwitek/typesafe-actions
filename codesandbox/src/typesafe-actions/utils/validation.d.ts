@@ -1,0 +1,12 @@
+import { ActionCreator, TypeMeta, TypeConstant } from '../type-helpers';
+export declare function checkIsEmpty(arg: unknown, argPosition?: number): boolean;
+export declare function throwIsEmpty(argPosition?: number): never;
+export declare function checkValidActionCreator(arg: unknown): arg is ActionCreator<TypeConstant>;
+export declare function checkInvalidActionCreator(arg: unknown): boolean;
+export declare function throwInvalidActionCreator(argPosition?: number): never;
+export declare function checkInvalidActionCreatorInArray(arg: ActionCreator<TypeConstant> & TypeMeta<TypeConstant>, idx: number): void | never;
+export declare function checkValidActionType(arg: unknown): arg is string | symbol;
+export declare function checkInvalidActionType(arg: unknown): arg is string | symbol;
+export declare function throwInvalidActionType(argPosition?: number): never;
+export declare function checkInvalidActionTypeInArray(arg: TypeConstant, idx: number): void | never;
+export declare function throwInvalidActionTypeOrActionCreator(argPosition?: number): never;

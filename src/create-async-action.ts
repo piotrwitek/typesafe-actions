@@ -1,5 +1,5 @@
 import {
-  StringType,
+  TypeConstant,
   ActionBuilderConstructor,
   // ActionBuilderMap,
 } from './type-helpers';
@@ -7,9 +7,9 @@ import { createCustomAction } from './create-custom-action';
 import { checkInvalidActionTypeInArray } from './utils/validation';
 
 export interface AsyncActionBuilder<
-  T1 extends StringType,
-  T2 extends StringType,
-  T3 extends StringType
+  T1 extends TypeConstant,
+  T2 extends TypeConstant,
+  T3 extends TypeConstant
 > {
   // tslint:disable-next-line:callable-types
   <P1, P2, P3>(): AsyncActionBuilderConstructor<T1, T2, T3, P1, P2, P3>;
@@ -21,9 +21,9 @@ export interface AsyncActionBuilder<
 }
 
 export type AsyncActionBuilderConstructor<
-  T1 extends StringType,
-  T2 extends StringType,
-  T3 extends StringType,
+  T1 extends TypeConstant,
+  T2 extends TypeConstant,
+  T3 extends TypeConstant,
   P1,
   P2,
   P3
@@ -37,9 +37,9 @@ export type AsyncActionBuilderConstructor<
  * implementation
  */
 export function createAsyncAction<
-  T1 extends StringType,
-  T2 extends StringType,
-  T3 extends StringType
+  T1 extends TypeConstant,
+  T2 extends TypeConstant,
+  T3 extends TypeConstant
 >(
   requestType: T1,
   successType: T2,

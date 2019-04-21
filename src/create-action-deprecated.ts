@@ -2,9 +2,9 @@
  * DEPRECATED
  */
 
-import { StringType } from './type-helpers';
+import { TypeConstant } from './type-helpers';
 
-interface FSA<T extends StringType, P = {}, M = {}, E = boolean> {
+interface FSA<T extends TypeConstant, P = {}, M = {}, E = boolean> {
   type: T;
   payload?: P;
   meta?: M;
@@ -16,7 +16,7 @@ interface FSA<T extends StringType, P = {}, M = {}, E = boolean> {
  * @description create an action-creator of a given function that contains hidden "type" metadata
  */
 export function createActionDeprecated<
-  T extends StringType,
+  T extends TypeConstant,
   AC extends (...args: any[]) => FSA<T>
 >(actionType: T, creatorFunction: AC): AC;
 
@@ -25,7 +25,7 @@ export function createActionDeprecated<
  * @description create an action-creator of a given function that contains hidden "type" metadata
  */
 export function createActionDeprecated<
-  T extends StringType,
+  T extends TypeConstant,
   AC extends () => { type: T }
 >(actionType: T): AC;
 
@@ -33,7 +33,7 @@ export function createActionDeprecated<
  *  implementation
  */
 export function createActionDeprecated<
-  T extends StringType,
+  T extends TypeConstant,
   AC extends (...args: any[]) => FSA<T>
 >(actionType: T, creatorFunction?: AC): AC {
   let actionCreator: AC;

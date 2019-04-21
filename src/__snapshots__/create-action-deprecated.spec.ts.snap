@@ -1,11 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`with meta withMeta('Error message') (type) should match snapshot 1`] = `"{ type: \\"CREATE_ACTION_DEPRECATED\\"; meta: string; }"`;
+exports[`increment() 1`] = `"{ type: any; }"`;
 
-exports[`with payload and meta withPayloadAndMeta('Piotr', 'Hello!') (type) should match snapshot 1`] = `"{ type: \\"CREATE_ACTION_DEPRECATED\\"; payload: { message: string; }; meta: { username: string; message: string; }; }"`;
+exports[`withMeta('Error message') 1`] = `"{ type: \\"CREATE_ACTION_DEPRECATED\\"; meta: string; }"`;
 
-exports[`with payload withPayload(10) (type) should match snapshot 1`] = `"{ type: \\"CREATE_ACTION_DEPRECATED\\"; payload: number; }"`;
+exports[`withPayload(10) 1`] = `"{ type: \\"CREATE_ACTION_DEPRECATED\\"; payload: number; }"`;
 
-exports[`with symbol increment() (type) should match snapshot 1`] = `"{ type: any; }"`;
+exports[`withPayloadAndMeta('Piotr', 'Hello!') 1`] = `"{ type: \\"CREATE_ACTION_DEPRECATED\\"; payload: { message: string; }; meta: { username: string; message: string; }; }"`;
 
-exports[`with type only withTypeOnly() (type) should match snapshot 1`] = `"{ type: \\"CREATE_ACTION_DEPRECATED\\"; }"`;
+exports[`withTypeOnly() 1`] = `"{ type: \\"CREATE_ACTION_DEPRECATED\\"; }"`;

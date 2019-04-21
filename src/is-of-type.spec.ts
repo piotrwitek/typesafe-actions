@@ -39,10 +39,6 @@ const $action = [
   mappedPayloadMetaAction,
 ];
 
-// TODO: #3
-// should error when missing argument
-// should error when passed invalid arguments like primitives,object, empty array, array with nulls
-
 /** TESTS */
 
 describe('isOfType', () => {

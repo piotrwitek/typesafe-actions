@@ -30,7 +30,8 @@ describe('StateType', () => {
 
   // @dts-jest:pass:snap -> boolean
   testType<StateType<typeof reducer>>();
-  expect(reducer(undefined, withTypeOnly())).toBe(true);
+  // @dts-jest:pass:snap -> boolean
+  reducer(undefined, withTypeOnly()); // => true
 });
 
 describe('ActionType', () => {
@@ -242,80 +243,116 @@ describe('ActionType', () => {
   }
 
   describe('action-helpers - createStandardAction', () => {
-    it('should return action with type only', () => {
+    describe('should return action with type only', () => {
       const actual = withTypeOnly();
       const expected = { type: 'WITH_TYPE_ONLY' };
-      expect(getTypeReducer(actual)).toEqual(expected);
-      expect(isActionOfReducer(actual)).toEqual(expected);
-      expect(isActionOfCurriedReducer(actual)).toEqual(expected);
-      expect(isActionOfArrayReducer(actual)).toEqual(expected);
-      expect(isOfTypeReducer(actual)).toEqual(expected);
-      expect(isOfTypeCurriedReducer(actual)).toEqual(expected);
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      getTypeReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isActionOfReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isActionOfCurriedReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isActionOfArrayReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isOfTypeReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isOfTypeCurriedReducer(actual); // => expected
     });
 
-    it('should return action with payload', () => {
+    describe('should return action with payload', () => {
       const actual = withPayload(2);
       const expected = { type: 'WITH_PAYLOAD', payload: 2 };
-      expect(getTypeReducer(actual)).toEqual(expected);
-      expect(isActionOfReducer(actual)).toEqual(expected);
-      expect(isActionOfCurriedReducer(actual)).toEqual(expected);
-      expect(isActionOfArrayReducer(actual)).toEqual(expected);
-      expect(isOfTypeReducer(actual)).toEqual(expected);
-      expect(isOfTypeCurriedReducer(actual)).toEqual(expected);
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      getTypeReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isActionOfReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isActionOfCurriedReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isActionOfArrayReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isOfTypeReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isOfTypeCurriedReducer(actual); // => expected
     });
 
-    it('should return action with payload and meta', () => {
+    describe('should return action with payload and meta', () => {
       const actual = withPayloadMeta(2, 'metaValue');
       const expected = {
         type: 'WITH_PAYLOAD_META',
         payload: 2,
         meta: 'metaValue',
       };
-      expect(getTypeReducer(actual)).toEqual(expected);
-      expect(isActionOfReducer(actual)).toEqual(expected);
-      expect(isActionOfCurriedReducer(actual)).toEqual(expected);
-      expect(isActionOfArrayReducer(actual)).toEqual(expected);
-      expect(isOfTypeReducer(actual)).toEqual(expected);
-      expect(isOfTypeCurriedReducer(actual)).toEqual(expected);
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      getTypeReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isActionOfReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isActionOfCurriedReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isActionOfArrayReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isOfTypeReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isOfTypeCurriedReducer(actual); // => expected
     });
 
-    it('should return action with mapped payload', () => {
+    describe('should return action with mapped payload', () => {
       const actual = withMappedPayload(2);
       const expected = { type: 'WITH_MAPPED_PAYLOAD', payload: 2 };
-      expect(getTypeReducer(actual)).toEqual(expected);
-      expect(isActionOfReducer(actual)).toEqual(expected);
-      expect(isActionOfCurriedReducer(actual)).toEqual(expected);
-      expect(isActionOfArrayReducer(actual)).toEqual(expected);
-      expect(isOfTypeReducer(actual)).toEqual(expected);
-      expect(isOfTypeCurriedReducer(actual)).toEqual(expected);
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      getTypeReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isActionOfReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isActionOfCurriedReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isActionOfArrayReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isOfTypeReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isOfTypeCurriedReducer(actual); // => expected
     });
 
-    it('should return action with mapped payload and meta', () => {
+    describe('should return action with mapped payload and meta', () => {
       const actual = withMappedPayloadMeta(2, 'metaValue');
       const expected = {
         type: 'WITH_MAPPED_PAYLOAD_META',
         payload: 2,
         meta: 'metaValue',
       };
-      expect(getTypeReducer(actual)).toEqual(expected);
-      expect(isActionOfReducer(actual)).toEqual(expected);
-      expect(isActionOfCurriedReducer(actual)).toEqual(expected);
-      expect(isActionOfArrayReducer(actual)).toEqual(expected);
-      expect(isOfTypeReducer(actual)).toEqual(expected);
-      expect(isOfTypeCurriedReducer(actual)).toEqual(expected);
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      getTypeReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isActionOfReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isActionOfCurriedReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isActionOfArrayReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isOfTypeReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isOfTypeCurriedReducer(actual); // => expected
     });
 
-    it('should return action with async action', () => {
+    describe('should return action with async action', () => {
       const actual = asyncAction.request();
       const expected = {
         type: 'FETCH_USER_REQUEST',
       };
-      expect(getTypeReducer(actual)).toEqual(expected);
-      expect(isActionOfReducer(actual)).toEqual(expected);
-      expect(isActionOfCurriedReducer(actual)).toEqual(expected);
-      expect(isActionOfArrayReducer(actual)).toEqual(expected);
-      expect(isOfTypeReducer(actual)).toEqual(expected);
-      expect(isOfTypeCurriedReducer(actual)).toEqual(expected);
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      getTypeReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isActionOfReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isActionOfCurriedReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isActionOfArrayReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isOfTypeReducer(actual); // => expected
+      // @dts-jest:pass:snap -> { type: "VERY_DEEP_WITH_TYPE_ONLY"; } | T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadAction<"WITH_OPTIONAL_PAYLOAD", number | undefined> | T.PayloadMetaAction<"WITH_META", undefined, string> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_META"; } & { meta: string; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }) | T.EmptyAction<"FETCH_USER_REQUEST"> | T.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | T.PayloadAction<"FETCH_USER_FAILURE", Error> | undefined
+      isOfTypeCurriedReducer(actual); // => expected
     });
   });
 });

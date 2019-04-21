@@ -1,6 +1,6 @@
-import { RootAction, RootState, Services } from 'MyTypes';
 import { createStore, applyMiddleware } from 'redux';
 import { createEpicMiddleware } from 'redux-observable';
+import { RootAction, RootState, Services } from 'typesafe-actions';
 
 import { composeEnhancers } from './utils';
 import rootReducer from './root-reducer';

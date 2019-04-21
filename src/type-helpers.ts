@@ -2,151 +2,145 @@
  * PUBLIC API
  */
 
-export interface TypeMeta<T extends StringType> {
-  getType?: () => T;
-}
+/**
+ * @desc Type representing Type Constant
+ */
+export type TypeConstant = string;
 
-export type ActionCreator<T extends StringType> = (
+/**
+ * @desc Type representing Generic Action
+ */
+export type Action<TType extends TypeConstant = TypeConstant> = {
+  type: TType;
+};
+
+/**
+ * @desc Type representing Generic ActionCreator
+ */
+export type ActionCreator<TType extends TypeConstant> = (
   ...args: any[]
-) => { type: T };
+) => Action<TType>;
+
+/**
+ * @desc Type representing Generic Reducer
+ */
+export type Reducer<TState, TAction extends Action> = (
+  state: TState | undefined,
+  action: TAction
+) => TState;
+
+/**
+ * @desc Action without Payload
+ */
+export type EmptyAction<TType extends TypeConstant> = {
+  type: TType;
+};
+
+/**
+ * @desc Action with only Payload
+ */
+export type PayloadAction<TType extends TypeConstant, TPayload> = {
+  type: TType;
+  payload: TPayload;
+};
+
+/**
+ * @desc Action with only Meta
+ */
+export type MetaAction<TType extends TypeConstant, TMeta> = {
+  type: TType;
+  meta: TMeta;
+};
+
+/**
+ * @desc Action with both Payload and Meta
+ */
+export type PayloadMetaAction<TType extends TypeConstant, TPayload, TMeta> = {
+  type: TType;
+  payload: TPayload;
+  meta: TMeta;
+};
+
+/**
+ * @desc Action Creator producing EmptyAction
+ */
+export type EmptyAC<TType extends TypeConstant> = () => EmptyAction<TType>;
+
+/**
+ * @desc Action Creator producing PayloadAction
+ */
+export type PayloadAC<TType extends TypeConstant, TPayload> = (
+  payload: TPayload
+) => PayloadAction<TType, TPayload>;
+
+/**
+ * @desc Action Creator producing PayloadMetaAction
+ */
+export type PayloadMetaAC<TType extends TypeConstant, TPayload, TMeta> = (
+  payload: TPayload,
+  meta: TMeta
+) => PayloadMetaAction<TType, TPayload, TMeta>;
+
+/**
+ * @desc Type representing type getter on Action Creator instance
+ */
+export interface TypeMeta<TType extends TypeConstant> {
+  getType?: () => TType;
+}
 
 /**
  * @desc Infers Action union-type from action-creator map object
  */
 export type ActionType<
-  ActionCreatorOrMap extends any
-> = ActionCreatorOrMap extends ActionCreator<string>
-  ? ReturnType<ActionCreatorOrMap>
-  : ActionCreatorOrMap extends Record<any, any>
+  TActionCreatorOrMap extends any
+> = TActionCreatorOrMap extends ActionCreator<TypeConstant>
+  ? ReturnType<TActionCreatorOrMap>
+  : TActionCreatorOrMap extends Record<any, any>
   ? {
-      [K in keyof ActionCreatorOrMap]: ActionType<ActionCreatorOrMap[K]>
-    }[keyof ActionCreatorOrMap]
-  : ActionCreatorOrMap extends infer R // should be just never but compiler yell with circularly references itself error
+      [K in keyof TActionCreatorOrMap]: ActionType<TActionCreatorOrMap[K]>
+    }[keyof TActionCreatorOrMap]
+  : TActionCreatorOrMap extends infer R // TODO: should be just never but compiler yell with circularly references itself error
   ? never
   : never;
 
 /**
  * @desc Infers State object from reducer map object
  */
-export type StateType<ReducerOrMap> = ReducerOrMap extends (
-  ...args: any[]
-) => any
-  ? ReturnType<ReducerOrMap>
-  : ReducerOrMap extends object
-  ? { [K in keyof ReducerOrMap]: StateType<ReducerOrMap[K]> }
+export type StateType<
+  TReducerOrMap extends any
+> = TReducerOrMap extends Reducer<any, any>
+  ? ReturnType<TReducerOrMap>
+  : TReducerOrMap extends Record<any, any>
+  ? { [K in keyof TReducerOrMap]: StateType<TReducerOrMap[K]> }
   : never;
 
 /**
  * INTERNAL API
  */
 
-/**
- * @private
- * @desc Representing action-type of string
- */
-export type StringType = string;
-
-/**
- * @private
- * @desc Action without Payload
- * @type T - ActionType
- */
-export type EmptyAction<T extends StringType> = {
-  type: T;
-};
-
-/**
- * @private
- * @desc Action with only Payload
- * @type T - ActionType
- * @type P - Payload
- */
-export type PayloadAction<T extends StringType, P> = {
-  type: T;
-  payload: P;
-};
-
-/**
- * @private
- * @desc Action with only Meta
- * @type T - ActionType
- * @type P - Payload
- * @type M - Meta
- */
-export type MetaAction<T extends StringType, M> = {
-  type: T;
-  meta: M;
-};
-
-/**
- * @private
- * @desc Action with both Payload and Meta
- * @type T - ActionType
- * @type P - Payload
- * @type M - Meta
- */
-export type PayloadMetaAction<T extends StringType, P, M> = {
-  type: T;
-  payload: P;
-  meta: M;
-};
-
-/**
- * TODO: NOT USED
- * @private
- * @desc Flux Standard Action
- * @type T - ActionType
- * @type P - Payload
- * @type M - Meta
- */
-export interface FluxStandardAction<
-  T extends StringType,
-  P = undefined,
-  M = undefined
-> {
-  type: T;
-  payload: P;
-  meta: M;
-  error?: true;
-}
-
-/** @private */
-export type EmptyAC<T extends StringType> = () => EmptyAction<T>;
-
-/** @private */
-export type PayloadAC<T extends StringType, P> = (
-  payload: P
-) => PayloadAction<T, P>;
-
-/** @private */
-export type PayloadMetaAC<T extends StringType, P, M> = (
-  payload: P,
-  meta: M
-) => PayloadMetaAction<T, P, M>;
-
 /** @private */
 export type ActionBuilderConstructor<
-  T extends StringType,
+  TType extends TypeConstant,
   TPayload extends any = undefined,
   TMeta extends any = undefined
 > = [TMeta] extends [undefined]
   ? [TPayload] extends [undefined]
     ? unknown extends TPayload
-      ? PayloadAC<T, TPayload>
+      ? PayloadAC<TType, TPayload>
       : unknown extends TMeta
-      ? PayloadMetaAC<T, TPayload, TMeta>
-      : EmptyAC<T>
-    : PayloadAC<T, TPayload>
-  : PayloadMetaAC<T, TPayload, TMeta>;
+      ? PayloadMetaAC<TType, TPayload, TMeta>
+      : EmptyAC<TType>
+    : PayloadAC<TType, TPayload>
+  : PayloadMetaAC<TType, TPayload, TMeta>;
 
 /** @private */
 export type ActionBuilderMap<
-  T extends StringType,
-  TCustomAction extends any,
+  TType extends TypeConstant,
+  TActionProps extends any,
   TPayloadArg extends any = undefined,
   TMetaArg extends any = undefined
 > = [TMetaArg] extends [undefined]
   ? [TPayloadArg] extends [undefined]
-    ? () => { type: T } & TCustomAction
-    : (payload: TPayloadArg) => { type: T } & TCustomAction
-  : (payload: TPayloadArg, meta: TMetaArg) => { type: T } & TCustomAction;
+    ? () => { type: TType } & TActionProps
+    : (payload: TPayloadArg) => { type: TType } & TActionProps
+  : (payload: TPayloadArg, meta: TMetaArg) => { type: TType } & TActionProps;

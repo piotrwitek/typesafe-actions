@@ -1,94 +1,96 @@
-# typesafe-actions
+<div align="center">
+<h1>typesafe-actions</h1>
 
-Typesafe utilities for "action-creators" in Redux / Flux Architecture.
+Typesafe utilities designed to reduce types **verbosity**
+and **complexity**  in Redux Architecture.
 
-Featuring flexible functional API that's specifically designed to reduce types **verbosity**
-and **complexity** (explained in [motivation](#motivation)).
-
-_This lib is part of [React & Redux TypeScript Guide](https://github.com/piotrwitek/react-redux-typescript-guide)_ :book:  
-
+_This library is part of the [React & Redux TypeScript Guide](https://github.com/piotrwitek/react-redux-typescript-guide)_ ecosystem :book:  
 
 [![Latest Stable Version](https://img.shields.io/npm/v/typesafe-actions.svg)](https://www.npmjs.com/package/typesafe-actions)
 [![Build Status](https://semaphoreci.com/api/v1/piotrekwitek/typesafe-actions/branches/master/shields_badge.svg)](https://semaphoreci.com/piotrekwitek/typesafe-actions)
 [![dependencies Status](https://david-dm.org/piotrwitek/typesafe-actions/status.svg)](https://david-dm.org/piotrwitek/typesafe-actions)
-[![peerDependencies Status](https://david-dm.org/piotrwitek/typesafe-actions/peer-status.svg)](https://david-dm.org/piotrwitek/typesafe-actions?type=peer)
 [![License](https://img.shields.io/npm/l/typesafe-actions.svg?style=flat)](https://david-dm.org/piotrwitek/typesafe-actions?type=peer)
 
 [![NPM Downloads](https://img.shields.io/npm/dm/typesafe-actions.svg)](https://www.npmjs.com/package/typesafe-actions)
 [![NPM Downloads](https://img.shields.io/npm/dt/typesafe-actions.svg)](https://www.npmjs.com/package/typesafe-actions)
 [![Bundlephobia Size](https://img.shields.io/bundlephobia/minzip/typesafe-actions.svg)](https://www.npmjs.com/package/typesafe-actions)
 
-##### :star: _Found it useful? Want more updates?_ [**Show your support by giving a :star:**](https://github.com/piotrwitek/typesafe-actions/stargazers)  
+:star: _Found it useful? Want more updates?_ [**Show your support by giving a :star:**](https://github.com/piotrwitek/typesafe-actions/stargazers)
 
-_Now updated to be compatible with **TypeScript v3.4.1**_ :tada:  
+<a href="https://www.buymeacoffee.com/zh9guxbA5">
+  <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me a Coffee">
+</a>
+<a href="https://www.patreon.com/piotrekwitek">
+  <img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" alt="Become a Patron" width="160">
+</a>
 
-_Reference Todo-App implementation with `typesafe-actions` on [CodeSandbox](https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/codesandbox)_ :computer:  
+:tada: _Now updated to be compatible with **TypeScript v3.4**_ :tada:
 
-### Features
-
-* __minimalistic__ - according to `rollup-plugin-filesize` (Bundle size: 2.6 KB, Gzipped size: 808 B) check also on [bundlephobia](https://bundlephobia.com/result?p=typesafe-actions)
-* __secure and optimized__ - no external dependencies, bundled in 3 different formats (`cjs`, `esm` and `umd` for browser)
-* __focus on quality__ - complete test-suite for an entire API surface containing regular runtime tests and extra type-tests to guarantee **type soundness**
-
-## Bug Report CodeSandbox
-You can use this CodeSandbox to reproduce bug reports: https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/codesandbox
-
-## Contributing Guide
-We are open for contributions. If you're planning to contribute please make sure to read the contributing guide: [CONTRIBUTING.md](/CONTRIBUTING.md)
-
-## Sponsor
-**Typesafe-Actions** is an independent open-source project created by people investing their free time for the benefit of our community.
-
-If you are using **Typesafe-Actions** please consider donating as this will guarantee the project will be updated and maintained in the long run.
-
-Issues can be funded by anyone and the money will be transparently distributed to the contributors handling a particular issue.
-
-[![Let's fund issues in this repository](https://issuehunt.io/static/embed/issuehunt-button-v1.svg)](https://issuehunt.io/repos/110746954)
+</div>
 
 ---
 
-# Table of Contents
+**Features:**
+
+* __minimalistic__ - according to `rollup-plugin-filesize` (Bundle size: 3.48 KB, Gzipped size: 1.03 KB) check also on [bundlephobia](https://bundlephobia.com/result?p=typesafe-actions)
+* __secure and optimized__ - no external dependencies, bundled in 3 different formats (`cjs`, `esm` and `umd` for browser)
+* __focus on quality__ - complete test-suite for an entire API surface containing regular runtime tests and extra type-tests to guarantee **type soundness**
+
+**Codesandbox links:**
+
+- Reference Todo-App implementation using `typesafe-actions`: [Link](https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/codesandbox)
+- Starter to help reproduce bug reports: [Link](https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/codesandbox)
+
+---
+
+## Table of Contents
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
+- [Motivation](#motivation)
 - [Installation](#installation)
 - [Compatibility Notes](#compatibility-notes)
-  - [TypeScript support](#typescript-support)
-  - [Browser Polyfills](#browser-polyfills)
-- [Motivation](#motivation)
+- [Contributing Guide](#contributing-guide)
+- [Funding](#funding)
 - [Tutorial](#tutorial)
   - [Constants](#constants)
   - [Actions](#actions)
     - [1. Basic actions](#1-basic-actions)
     - [2. FSA compliant actions](#2-fsa-compliant-actions)
     - [3. Custom actions (non-standard use-cases)](#3-custom-actions-non-standard-use-cases)
-  - [Action-Helpers](#action-helpers)
+  - [Action Helpers](#action-helpers)
     - [Using action-creators instances instead of type-constants](#using-action-creators-instances-instead-of-type-constants)
     - [Using regular type-constants](#using-regular-type-constants)
+  - [Reducers](#reducers)
+    - [Extending internal types to streamline type usage with `typesafe-actions`](#extending-internal-types-to-streamline-type-usage-with-typesafe-actions)
+    - [Using createReducer API](#using-createreducer-api)
+    - [Using standard switch reducer](#using-standard-switch-reducer)
   - [Async-Flows](#async-flows)
     - [With `redux-observable` epics](#with-redux-observable-epics)
     - [With `redux-saga` sagas](#with-redux-saga-sagas)
 - [API Docs](#api-docs)
-  - [Type-helpers](#type-helpers)
-    - [`ActionType`](#actiontype)
-    - [`StateType`](#statetype)
-  - [Action-creators](#action-creators)
+  - [Action-Creators API](#action-creators-api)
     - [`action`](#action)
     - [`createAction`](#createaction)
     - [`createStandardAction`](#createstandardaction)
     - [`createCustomAction`](#createcustomaction)
     - [`createAsyncAction`](#createasyncaction)
-  - [Action-helpers](#action-helpers)
+  - [Reducer-Creators API](#reducer-creators-api)
+    - [`createReducer`](#createreducer)
+  - [Action-Helpers API](#action-helpers-api)
     - [`getType`](#gettype)
     - [`isActionOf`](#isactionof)
     - [`isOfType`](#isoftype)
+  - [Type-Helpers API](#type-helpers-api)
+    - [`ActionType`](#actiontype)
+    - [`StateType`](#statetype)
 - [Migration Guides](#migration-guides)
   - [`v3.x.x` to `v4.x.x`](#v3xx-to-v4xx)
   - [`v2.x.x` to `v3.x.x`](#v2xx-to-v3xx)
   - [`v1.x.x` to `v2.x.x`](#v1xx-to-v2xx)
-  - [Migrating from `redux-actions`](#migrating-from-redux-actions)
+  - [Migrating from `redux-actions` to `typesafe-actions`](#migrating-from-redux-actions-to-typesafe-actions)
 - [Recipes](#recipes)
   - [Restrict Meta type in `action` creator](#restrict-meta-type-in-action-creator)
 - [Compare to others](#compare-to-others)
@@ -98,6 +100,20 @@ Issues can be funded by anyone and the money will be transparently distributed t
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 --- 
+
+## Motivation
+
+When I started to combine Redux with TypeScript, I was trying to use [redux-actions](https://redux-actions.js.org/) to reduce the maintainability cost and boilerplate of **action-creators**. Unfortunately, the results were intimidating: incorrect type signatures and broken type-inference cascading throughout the entire code-base [(click here for a detailed comparison)](#redux-actions).
+
+Existing solutions in the wild have been either **too verbose because of redundant type annotations** (hard to maintain) or **used classes** (hinders readability and requires using the **new** keyword 😱)
+
+**So I created `typesafe-actions` to address all of the above pain points.**
+
+The core idea was to design an API that would mostly use the power of TypeScript **type-inference** 💪 to lift the "maintainability burden" of type annotations. In addition, I wanted to make it "look and feel" as close as possible to the idiomatic JavaScript ❤️ , so we don't have to write the redundant type annotations that which will create additional noise in your code.
+
+[⇧ back to top](#table-of-contents)
+
+---
 
 ## Installation
 
@@ -115,35 +131,48 @@ yarn add typesafe-actions
 
 ## Compatibility Notes
 
-### TypeScript support
+**TypeScript support**
+
 * `typesafe-actions@1.X.X` - minimal TS v2.7
 * `typesafe-actions@2.X.X` - minimal TS v2.9
 * `typesafe-actions@3.X.X` - minimal TS v3.2
 * `typesafe-actions@4.X.X` - minimal TS v3.2
 
-### Browser Polyfills
-If you support older browsers (e.g. IE < 11) and mobile devices please provide this polyfill:
+**Browser support**
+
+It's compatible with all modern browsers.
+
+For older browsers (e.g. IE <= 11) and mobile devices you need to provide these polyfills:
 - [Object.assign](https://developer.mozilla.org/pl/docs/Web/JavaScript/Referencje/Obiekty/Object/assign#Polyfill)
 - [Array.prototype.includes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes)
 
-You could also consider including a global polyfill in your bundled application, such as `@babel/polyfill`.
+**Recommended polyfill for IE**
+
+To provide the best compatibility for your application please include a popular polyfill package in your bundled application, such as `@babel/polyfill`.
 You can check the `React` guidelines on how to do that, specifically: https://reactjs.org/docs/javascript-environment-requirements.html
 
-> You can also check our codesandbox reference implementation which is using `@babel/polyfill` and was confirmed to be working with IE11
+It's included in our `/codesandbox` reference implementation which is using `@babel/polyfill` and is confirmed to be working with IE11. Please check it out!
 
 [⇧ back to top](#table-of-contents)
 
 ---
 
-## Motivation
+## Contributing Guide
 
-When I started to combine Redux with TypeScript, I was trying to use [redux-actions](https://redux-actions.js.org/) to reduce the maintainability cost and boilerplate of **action-creators**. Unfortunately, the results were intimidating: incorrect type signatures and broken type-inference cascading throughout the entire code-base [(click here for a detailed comparison)](#redux-actions).
+We are open for contributions. If you're planning to contribute please make sure to read the contributing guide: [CONTRIBUTING.md](/CONTRIBUTING.md)
 
-Existing solutions in the wild have been either **too verbose because of redundant type annotations** (hard to maintain) or **used classes** (hinders readability and requires using the **new** keyword 😱)
+[⇧ back to top](#table-of-contents)
 
-**So I created `typesafe-actions` to address all of the above pain points.**
+---
 
-The core idea was to design an API that would mostly use the power of TypeScript **type-inference** 💪 to lift the "maintainability burden" of type annotations. In addition, I wanted to make it "look and feel" as close as possible to the idiomatic JavaScript ❤️ , so we don't have to write the redundant type annotations that which will create additional noise in your code.
+## Funding
+**Typesafe-Actions** is an independent open-source project created by people investing their free time for the benefit of our community.
+
+If you are using **Typesafe-Actions** please consider donating as this will guarantee the project will be updated and maintained in the long run.
+
+Specific issues can be funded by anyone interested in them being resolved. Issue funds will be transparently rewarded to the contributor handling the task through the issuehunt platform.
+
+[![Let's fund issues in this repository](https://issuehunt.io/static/embed/issuehunt-button-v1.svg)](https://issuehunt.io/repos/110746954)
 
 [⇧ back to top](#table-of-contents)
 
@@ -153,11 +182,17 @@ The core idea was to design an API that would mostly use the power of TypeScript
 
 To showcase the flexibility and the power of the **type-safety** provided by this library, let's build the most common parts of a typical todo-app using a Redux architecture:
 
-> **WARNING**: Please make sure that you are familiar with the following concepts of programming languages to be able to follow along: [Type Inference](https://www.typescriptlang.org/docs/handbook/type-inference.html), [Control flow analysis](https://github.com/Microsoft/TypeScript/wiki/What%27s-new-in-TypeScript#control-flow-based-type-analysis), [Tagged union types](https://github.com/Microsoft/TypeScript/wiki/What%27s-new-in-TypeScript#tagged-union-types), [Generics](https://www.typescriptlang.org/docs/handbook/generics.html) and [Advanced Types](https://www.typescriptlang.org/docs/handbook/advanced-types.html).
+> **WARNING**  
+> Please make sure that you are familiar with the following concepts of programming languages to be able to follow along: [Type Inference](https://www.typescriptlang.org/docs/handbook/type-inference.html), [Control flow analysis](https://github.com/Microsoft/TypeScript/wiki/What%27s-new-in-TypeScript#control-flow-based-type-analysis), [Tagged union types](https://github.com/Microsoft/TypeScript/wiki/What%27s-new-in-TypeScript#tagged-union-types), [Generics](https://www.typescriptlang.org/docs/handbook/generics.html) and [Advanced Types](https://www.typescriptlang.org/docs/handbook/advanced-types.html).
+
+[⇧ back to top](#table-of-contents)
 
 ### Constants
 
-**String constants limitation in TypeScript** - when using **string constants** as action `type` property, please make sure to use **simple string literal assignment with const**. This limitation is coming from the type-system, because all the **dynamic string operations** (e.g. string concatenation, template strings and also object used as a map) will widen the literal type to its super-type, `string`. As a result this will break contextual typing for **action** object in reducer cases.
+> **RECOMMENDATION:**  
+> When using `typesafe-actions` in your project you won't need to export and reuse **string constants**. It's because **action-creators** created by this library have static property with **action type** that you can easily access using **actions-helpers** and then use it in reducers, epics, sagas, and basically any other place. This will simplify your codebase and remove some boilerplate code associated with the usage of **string constants**. Check our `/codesandbox` application to learn some best-practices to create such codebase.
+
+**Limitations of TypeScript when working with string constants** - when using **string constants** as action `type` property, please make sure to use **simple string literal assignment with const**. This limitation is coming from the type-system, because all the **dynamic string operations** (e.g. string concatenation, template strings and also object used as a map) will widen the literal type to its super-type, `string`. As a result this will break contextual typing for **action** object in reducer cases.
 
 ```ts
 // Example file: './constants.ts'
@@ -176,6 +211,8 @@ export default ({
   ADD: '@prefix/ADD', // => '@prefix/ADD'
 } as const) // working in TS v3.4 and above => https://github.com/Microsoft/TypeScript/pull/29510
 ```
+
+[⇧ back to top](#table-of-contents)
 
 ### Actions
 
@@ -237,19 +274,45 @@ const add = createCustomAction('todos/ADD', type => {
 
 > **TIP**: For more examples please check the [API Docs](#table-of-contents).
 
+> **RECOMMENDATION**  
+> Common approach is to create a `RootAction` in the central point of your redux store - it will represent all possible action types in your application. You can even merge it with third-party action types as shown below to make your model complete.
+
+```ts
+// types.d.ts
+// example of including `react-router` actions in `RootAction`
+import { RouterAction, LocationChangeAction } from 'react-router-redux';
+import { TodosAction } from '../features/todos';
+
+type ReactRouterAction = RouterAction | LocationChangeAction;
+
+export type RootAction =
+  | ReactRouterAction
+  | TodosAction;
+```
+
 [⇧ back to top](#table-of-contents)
 
-### Action-Helpers
+### Action Helpers
 
-Now I wan't to show you **action-helpers** and explain why they are useful. We're going to implement a side-effect responsible for showing a success toast when user adds a new todo.
+Now I wan't to show you **action-helpers** and explain their use-cases. We're going to implement a side-effect responsible for showing a success toast when user adds a new todo.
+
+Important thing to notice is that all these helpers are acting as a **type-guard** so they'll narrow **tagged union type** (`RootAction`) to a specific action type that we want.
 
 #### Using action-creators instances instead of type-constants
 
 Instead of **type-constants** we can use **action-creators** instance to match specific actions in reducers and epics cases. It works by adding a static property on **action-creator** instance which contains the `type` string. 
 
-We have an `isActionOf` helper which accept **action-creator** as parameter and it'll match all actions with corresponding type.
+The most common one is `getType`, which is useful for regular reducer switch cases:
 
-Important thing is that this helper is acting as a **type-guard** so it'll narrow **tagged union type** (`RootAction`) to a specific action type that we want.
+```ts
+  switch (action.type) {
+    case getType(todos.add):
+      // below action type is narrowed to: { type: "todos/ADD"; payload: Todo; }
+      return [...state, action.payload];
+    ...
+```
+
+Then we have the `isActionOf` helper which accept **action-creator** as first parameter matching actions with corresponding type passed as second parameter (it's a curried function).
 
 ```ts
 // epics.ts
@@ -294,7 +357,8 @@ const addTodoToast: Epic<RootAction, RootAction, RootState, Services> = (action$
     // { type: "todos/ADD"; payload: Todo; } | { type: "todos/TOGGLE"; payload: string; }
 ```
 
-> **TIP:** action-helpers are working in all types of conditional statements.
+> **TIP:** you can use action-helpers with other types of conditional statements.
+
 ```ts
 import { isActionOf, isOfType } from 'typesafe-actions';
 
@@ -311,38 +375,71 @@ if (isOfType(types.ADD, action)) {
 
 ### Reducers
 
-Here we'll start by generating a **tagged union type** of actions (`TodosAction`). It's very easy to do using `ActionType` **type-helper** provided by `typesafe-actions`.
+#### Extending internal types to streamline type usage with `typesafe-actions`
+
+Extending internal `RootAction` type for `createReducer` API from the consumer code, so that you never have to use generic type parameters again in your application 😮 (check `/codesandbox` project for more):
+
 ```ts
-import { ActionType, getType } from 'typesafe-actions';
+import { StateType, ActionType } from 'typesafe-actions';
+
+declare module 'typesafe-actions' {
+  export type RootAction = ActionType<typeof import('./root-action').default>;
+}
+```
+
+#### Using createReducer API
+
+We can prevent a lot of boilerplate code and type errors using this powerfull and completely typesafe API.
+
+Using handleAction chain API:
+```ts
+// using action-creators
+const counterReducer = createReducer(0) // <= no need for generic type parameters
+  // state and action type is automatically inferred and return type is validated to be exact type
+  .handleAction(add, (state, action) => state + action.payload)
+  .handleAction(add, ... // <= error is shown on duplicated or invalid actions
+  .handleAction(increment, (state, _) => state + 1)
+  .handleAction(... // <= error is shown when all actions are handled
+  
+  // or handle multiple actions using array
+  .handleAction([add, increment], (state, action) =>
+    state + (action.type === 'ADD' ? action.payload : 1)
+  );
+
+// all the same scenarios are working when using type-constants
+const counterReducer = createReducer(0)
+  .handleAction('ADD', (state, action) => state + action.payload)
+  .handleAction('INCREMENT', (state, _) => state + 1);
+  
+counterReducer(0, add(4)); // => 4
+counterReducer(0, increment()); // => 1
+```
+
+#### Using standard switch reducer
+
+First we need to start by generating a **tagged union type** of actions (`TodosAction`). It's very easy to do by using `ActionType` **type-helper**.
+
+```ts
+import { ActionType } from 'typesafe-actions';
 
 import * as todos from './actions';
 export type TodosAction = ActionType<typeof todos>;
 ```
-Now we define a regular reducer function by annotating `state` and `action` arguments with their respective types (`TodosAction` for action type)
+
+Now we define a regular reducer function by annotating `state` and `action` arguments with their respective types (`TodosAction` for action type).
+
 ```ts
 export default (state: Todo[] = [], action: TodosAction) => {
 ```
-Now in switch cases using the `type` property of action (which is a **tagged union type**), we can narrow the type of `TodosAction` in the corresponding code block to a specific action type that we expect.
+
+Now in the switch cases we can use the `type` property of action to narrowing the union type of `TodosAction` to an action that is corresponding to that type.
+
 ```ts
   switch (action.type) {
-    case getType(todos.add):
+    case getType(add):
       // below action type is narrowed to: { type: "todos/ADD"; payload: Todo; }
       return [...state, action.payload];
     ...
-```
-> **TIP**: we are using `getType` action-helper with the respective action-creator as an argument for the corresponding switch case. This will help to reduce boilerplate and completely remove the need to use **type-constants**. But if your team prefer to use regular type-constants, you can still use them.
-
-I recommend to create a `RootAction` in the central point of your redux store - it will model a complete representation of all possible action types in your application. You can even merge it with third-party action types as shown below to make your model even more complete.
-```ts
-// types.d.ts
-// example of including `react-router` actions in `RootAction`
-import { RouterAction, LocationChangeAction } from 'react-router-redux';
-type ReactRouterAction = RouterAction | LocationChangeAction;
-import { TodosAction } from '../features/todos';
-
-export type RootAction =
-  | ReactRouterAction
-  | TodosAction;
 ```
 
 [⇧ back to top](#table-of-contents)
@@ -386,7 +483,7 @@ With sagas it's not possible to achieve the same degree of type-safety as with e
 Typescript issues:
 - [Typescript does not currently infer types resulting from a `yield` statement](https://github.com/Microsoft/TypeScript/issues/2983) so you have to manually assert the type  e.g. `const response: Todo[] = yield call(...`
 
-*Here is the latest recommendation although it's not fully optimal. If you cooked something better, please open an issue so we can share it with the world.*
+*Here is the latest recommendation although it's not fully optimal. If you managed to cook something better, please open an issue to share your finding with us.*
 
 ```ts
 import { createAsyncAction } from 'typesafe-actions';
@@ -413,76 +510,14 @@ function* addTodoSaga(action: ReturnType<typeof fetchTodos.request>): Generator 
 
 ## API Docs
 
-### Type-helpers
-Below helper functions are very flexible generalizations, works great with nested structures and will cover numerous different use-cases.
-
-#### `ActionType`
-
-_Powerful type-helper that will infer union type from **import * as ...** or **action-creator map** object._
-
-```ts
-import { ActionType } from 'typesafe-actions';
-
-// with "import * as ..."
-import * as todos from './actions';
-export type TodosAction = ActionType<typeof todos>;
-// TodosAction: { type: 'action1' } | { type: 'action2' } | { type: 'action3' }
-
-// with nested action-creator map case
-const actions = {
-  action1: createAction('action1'),
-  nested: {
-    action2: createAction('action2'),
-    moreNested: {
-      action3: createAction('action3'),
-    },
-  },
-};
-export type RootAction = ActionType<typeof actions>;
-// RootAction: { type: 'action1' } | { type: 'action2' } | { type: 'action3' }
-```
-
-[⇧ back to top](#table-of-contents)
-
----
-
-#### `StateType`
-
-_Powerful type helper that will infer state object type from **reducer function** and **nested/combined reducers**._
-
-_**Redux compatibility**: working with redux@4+ types_
-
-```ts
-import { combineReducers } from 'redux';
-import { StateType } from 'typesafe-actions';
-
-// with reducer function
-const todosReducer = (state: Todo[] = [], action: TodosAction) => {
-  switch (action.type) {
-    case getType(todos.add):
-      return [...state, action.payload];
-    ...
-export type TodosState = StateType<typeof todosReducer>;
-
-// with nested/combined reducers
-const rootReducer = combineReducers({
-  router: routerReducer,
-  counters: countersReducer,
-});
-export type RootState = StateType<typeof rootReducer>;
-```
-
-[⇧ back to top](#table-of-contents)
-
----
-
-### Action-creators
+### Action-Creators API
 
 #### `action`
 
 _Simple **action factory function** to simplify creation of type-safe actions._
 
-**WARNING**: This approach will **NOT WORK** with **action-helpers** (such as `getType` and `isActionOf`) because it is creating **action objects** while all the other creator functions are returning **enhanced action-creators**.
+> **WARNING**:  
+> This approach will **NOT WORK** with **action-helpers** (such as `getType` and `isActionOf`) because it is creating **action objects** while all the other creator functions are returning **enhanced action-creators**.
 
 ```ts
 action(type, payload?, meta?)
@@ -504,7 +539,7 @@ const getUsers = (params?: string) =>
 // { type: 'GET_USERS'; meta: string | undefined; }
 ```
 
-_**TIP**: Starting from TypeScript v3.4 you can achieve similar results using new `as const` operator._
+> **TIP**: Starting from TypeScript v3.4 you can achieve similar results using new `as const` operator.
 
 ```ts
 const increment = () => ({ type: 'INCREMENT' } as const);
@@ -521,9 +556,8 @@ createAction(type)
 createAction(type, actionCallback => {
   return (namedArg1, namedArg2, ...namedArgN) => actionCallback(payload?, meta?)
 })
-
-_**TIP**: Injected `actionCallback` argument is similar to `action` API but doesn't need the "type" parameter_
 ```
+> **TIP**: Injected `actionCallback` argument is similar to `action` API but doesn't need the "type" parameter
 
 Examples:
 [> Advanced Usage Examples](src/create-action.spec.ts)
@@ -559,8 +593,6 @@ dispatch(getTodo('some_id', 'some_meta'));
 ```
 
 [⇧ back to top](#table-of-contents)
-
----
 
 #### `createStandardAction`
 
@@ -618,8 +650,6 @@ dispatch(notify('Hello!', { username: 'Piotr', type: 'announcement' }));
 
 [⇧ back to top](#table-of-contents)
 
----
-
 #### `createCustomAction`
 
 _Create an enhanced action-creator with unlimited number of arguments and custom properties on action object._
@@ -647,8 +677,6 @@ dispatch(add(1));
 ```
 
 [⇧ back to top](#table-of-contents)
-
----
 
 #### `createAsyncAction`
 
@@ -685,7 +713,76 @@ dispatch(fetchUsers.failure(err));
 
 ---
 
-### Action-helpers
+### Reducer-Creators API
+
+#### `createReducer`
+
+_Create a typesafe reducer_
+
+```ts
+createReducer<TState, TRootAction>(initialState, handlersMap?)
+  .handleAction(type, reducer)
+  .handleAction([type1, type2, ...typeN], reducer)
+  .handleAction(actionCreator, reducer)
+  .handleAction([actionCreator1, actionCreator2, ...actionCreatorN], reducer)
+```
+
+Examples:
+[> Advanced Usage Examples](src/create-reducer.spec.ts)
+
+Using type-constants as keys in the object map:
+```ts
+import { createReducer, getType } from 'typesafe-actions'
+
+// no need for generic type parameters - learn more in Tutorial
+const counterReducer = createReducer(0, { 
+  ADD: (state, action) => state + action.payload,
+  [getType(increment)]: (state, _) => state + 1,
+})
+
+counterReducer(0, add(4)); // => 4
+counterReducer(0, increment()); // => 1
+```
+
+Using handleAction chain API:
+```ts
+// using action-creators
+const counterReducer = createReducer(0)
+  .handleAction(add, (state, action) => state + action.payload)
+  .handleAction(increment, (state, _) => state + 1)
+  
+  // or handle multiple actions using array
+  .handleAction([add, increment], (state, action) =>
+    state + (action.type === 'ADD' ? action.payload : 1)
+  );
+
+// all the same scenarios are working when using type-constants
+const counterReducer = createReducer(0)
+  .handleAction('ADD', (state, action) => state + action.payload)
+  .handleAction('INCREMENT', (state, _) => state + 1);
+  
+counterReducer(0, add(4)); // => 4
+counterReducer(0, increment()); // => 1
+```
+
+Extend or compose various reducers together - every operation is completely typesafe:
+```ts
+const newCounterReducer = createReducer(0)
+  .handleAction('SUBTRACT', (state, action) => state - action.payload)
+  .handleAction('DECREMENT', (state, _) => state - 1);
+
+const bigReducer = createReducer(0, {
+  ...counterReducer.handlers, // typesafe
+  ...newCounterReducer.handlers, // typesafe
+  SUBTRACT: decrementReducer.handlers.DECREMENT, // <= error, wrong type
+})
+```
+
+[⇧ back to top](#table-of-contents)
+
+---
+
+### Action-Helpers API
 
 #### `getType`
 
@@ -721,15 +818,13 @@ if (action.type === getType(add)) {
 
 [⇧ back to top](#table-of-contents)
 
----
-
 #### `isActionOf`
 
 _Check if action is an instance of given enhanced action-creator(s)
 (it will narrow action type to a type of given action-creator(s))_
 
 
-**NOTE**: ActionCreator type is generated from the `createAction` API. Simple [action](#action) creators throw a `RuntimeError`
+> **WARNING**: Regular action creators and [action](#action) will not work with this helper
 
 ```ts
 // can be used as a binary function
@@ -777,8 +872,6 @@ if(isActionOf([addTodo, removeTodo], action)) {
 ```
 
 [⇧ back to top](#table-of-contents)
-
----
 
 #### `isOfType`
 
@@ -832,6 +925,69 @@ if(isOfType([ADD, REMOVE], action)) {
 
 [⇧ back to top](#table-of-contents)
 
+---
+
+### Type-Helpers API
+Below helper functions are very flexible generalizations, works great with nested structures and will cover numerous different use-cases.
+
+#### `ActionType`
+
+_Powerful type-helper that will infer union type from **import * as ...** or **action-creator map** object._
+
+```ts
+import { ActionType } from 'typesafe-actions';
+
+// with "import * as ..."
+import * as todos from './actions';
+export type TodosAction = ActionType<typeof todos>;
+// TodosAction: { type: 'action1' } | { type: 'action2' } | { type: 'action3' }
+
+// with nested action-creator map case
+const actions = {
+  action1: createAction('action1'),
+  nested: {
+    action2: createAction('action2'),
+    moreNested: {
+      action3: createAction('action3'),
+    },
+  },
+};
+export type RootAction = ActionType<typeof actions>;
+// RootAction: { type: 'action1' } | { type: 'action2' } | { type: 'action3' }
+```
+
+[⇧ back to top](#table-of-contents)
+
+#### `StateType`
+
+_Powerful type helper that will infer state object type from **reducer function** and **nested/combined reducers**._
+
+> **WARNING**: working with redux@4+ types
+
+```ts
+import { combineReducers } from 'redux';
+import { StateType } from 'typesafe-actions';
+
+// with reducer function
+const todosReducer = (state: Todo[] = [], action: TodosAction) => {
+  switch (action.type) {
+    case getType(todos.add):
+      return [...state, action.payload];
+    ...
+export type TodosState = StateType<typeof todosReducer>;
+
+// with nested/combined reducers
+const rootReducer = combineReducers({
+  router: routerReducer,
+  counters: countersReducer,
+});
+export type RootState = StateType<typeof rootReducer>;
+```
+
+[⇧ back to top](#table-of-contents)
+
+---
+
 ## Migration Guides
 
 ### `v3.x.x` to `v4.x.x`
@@ -852,9 +1008,7 @@ fetchUsers.request(); // <= no parameters required
 `v3.x.x` API is backward compatible with `v2.x.x`. You'll only need to update typescript dependency to `> v3.1`.
 
 ### `v1.x.x` to `v2.x.x`
-> NOTE: `typesafe-actions@1.x.x` should be used with `utility-types@1.x.x` which contains `$call` utility (removed in `utility-types@2.x.x`)
-
-In v2 we provide `createActionDeprecated` from v1 API to help with incremental migration.
+In v2 we provide a `createActionDeprecated` function compatible with v1 API to help with incremental migration.
 
 ```ts
 // in v1 we created action-creator like this:
@@ -885,11 +1039,29 @@ const getTodoCustom = createStandardAction('GET_TODO').map(
 );
 ```
 
-### Migrating from `redux-actions`
+### Migrating from `redux-actions` to `typesafe-actions`
 
-If you're using `redux-actions` you can replace `createAction` with any of the above styles. Currently there is no equivalent of `createActions` function, so it will need to be replaced with individual usages of `createAction`. The resulting hash of actions does not provide inference for the individual values.
+- createAction(s)
 
-Additionally, if migrating from JS -> TS, you can swap out `redux-actions` action-creators in your `handleActions` with action-creators from `typesafe-actions`. This works because the action creators exposed by `typesafe-actions` provide the `toString` method used by `redux-actions` to match actions to the correct reducer.
+```ts
+createAction(type, payloadCreator, metaCreator) => createStandardAction(type)() || createStandardAction(type).map(payloadMetaCreator)
+
+createActions() => // COMING SOON!
+```
+
+- handleAction(s)
+
+```ts
+handleAction(type, reducer, initialState) => createReducer(initialState).handleAction(type, reducer)
+
+handleActions(reducerMap, initialState) => createReducer(initialState, reducerMap)
+```
+
+> TIP: If migrating from JS -> TS, you can swap out action-creators from `redux-actions` with action-creators from `typesafe-actions` in your `handleActions` handlers. This works because the action-creators from `typesafe-actions` provide the same `toString` method implementation used by `redux-actions` to match actions to the correct reducer.
+
+- combineActions
+
+Not needed because each function in the API accept single value or array of values for action types or action creators.
 
 [⇧ back to top](#table-of-contents)
 
@@ -946,6 +1118,7 @@ const notify1 = createAction('NOTIFY');
 //   error: boolean | undefined;
 // }
 ```
+
 > with `redux-actions` you can notice the redundant nullable `payload` property and literal type of `type` property is lost (discrimination of union type would not be possible)
 
 ##### typesafe-actions
@@ -956,6 +1129,7 @@ const notify1 = () => action('NOTIFY');
 //   type: "NOTIFY";
 // }
 ```
+
 > with `typesafe-actions` there is no excess nullable types and no excess properties and the action "type" property is containing a literal type
 
 **- with payload**
@@ -974,6 +1148,7 @@ const notify2 = createAction('NOTIFY',
 //   error: boolean | undefined;
 // }
 ```
+
 > first the optional `message` parameter is lost, `username` semantic argument name is changed to some generic `t1`, `type` property is widened once again and `payload` is nullable because of broken inference
 
 ##### typesafe-actions
@@ -988,6 +1163,7 @@ const notify2 = (username: string, message?: string) => action(
 //   payload: { message: string; };
 // }
 ```
+
 > `typesafe-actions` infer very precise resulting type, notice working optional parameters and semantic argument names are preserved which is really important for great intellisense experience
 
 **- with payload and meta**
@@ -1010,6 +1186,7 @@ const notify3 = createAction('NOTIFY',
 //   error: boolean | undefined;
 // }
 ```
+
 > this time we got a completely broken arguments arity with no type-safety because of `any` type with all the earlier issues
 
 ##### typesafe-actions
@@ -1029,6 +1206,7 @@ const notify3 = (username: string, message?: string) => action(
 //   meta: { username: string; message: string | undefined; };
 // }
 ```
+
 > `typesafe-actions` never fail to `any` type, even with this advanced scenario all types are correct and provide complete type-safety and excellent developer experience 
 
 [⇧ back to top](#table-of-contents)

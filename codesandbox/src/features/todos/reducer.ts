@@ -1,50 +1,32 @@
-import { RootAction } from 'MyTypes';
 import { Todo } from 'MyModels';
 import { combineReducers } from 'redux';
-import { getType } from 'typesafe-actions';
+import { createReducer } from 'typesafe-actions';
 
-import * as actions from './actions';
+import { loadTodosAsync, addTodo, removeTodo } from './actions';
 
-export type SandboxState = Readonly<{
-  isLoadingTodos: boolean;
-  todos: Todo[];
-}>;
+export const isLoadingTodos = createReducer(false as boolean)
+  .handleAction([loadTodosAsync.request], (state, action) => true)
+  .handleAction(
+    [loadTodosAsync.success, loadTodosAsync.failure],
+    (state, action) => false
+  );
 
-export default combineReducers<SandboxState, RootAction>({
-  isLoadingTodos: (state = false, action) => {
-    switch (action.type) {
-      case getType(actions.loadTodosAsync.request):
-        return true;
-
-      case getType(actions.loadTodosAsync.success):
-      case getType(actions.loadTodosAsync.failure):
-        return false;
-
-      default:
-        return state;
-    }
+export const todos = createReducer([
+  {
+    id: '0',
+    title: 'You can add new todos using the form or load saved snapshot...',
   },
-  todos: (
-    state = [
-      {
-        id: '0',
-        title: 'You can add new todos using the form or load saved snapshot...',
-      },
-    ],
-    action
-  ) => {
-    switch (action.type) {
-      case getType(actions.addTodo):
-        return [...state, action.payload];
+] as Todo[])
+  .handleAction(loadTodosAsync.success, (state, action) => action.payload)
+  .handleAction(addTodo, (state, action) => [...state, action.payload])
+  .handleAction(removeTodo, (state, action) =>
+    state.filter(i => i.id !== action.payload)
+  );
 
-      case getType(actions.removeTodo):
-        return state.filter(i => i.id !== action.payload);
-
-      case getType(actions.loadTodosAsync.success):
-        return action.payload;
-
-      default:
-        return state;
-    }
-  },
+const todosReducer = combineReducers({
+  isLoadingTodos,
+  todos,
 });
+
+export default todosReducer;
+export type TodosState = ReturnType<typeof todosReducer>;

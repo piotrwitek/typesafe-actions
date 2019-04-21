@@ -1,7 +1,11 @@
-import { StringType, ActionCreator } from './type-helpers';
+import { TypeConstant, ActionCreator } from './type-helpers';
 import { action } from './action';
 
-export type PayloadMetaAction<T extends StringType, P, M> = P extends undefined
+export type PayloadMetaAction<
+  T extends TypeConstant,
+  P,
+  M
+> = P extends undefined
   ? M extends undefined
     ? { type: T }
     : { type: T; meta: M }
@@ -13,7 +17,7 @@ export type PayloadMetaAction<T extends StringType, P, M> = P extends undefined
  * @description typesafe action-creator factory
  */
 export function createAction<
-  T extends StringType,
+  T extends TypeConstant,
   AC extends ActionCreator<T> = () => { type: T }
 >(
   type: T,
