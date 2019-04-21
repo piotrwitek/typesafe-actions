@@ -1,10 +1,12 @@
-import { ActionType, createStandardAction, createReducer } from '.';
+import { createStandardAction } from './create-standard-action';
+import { createReducer } from './create-reducer';
+import { ActionType } from './type-helpers';
 
 const add = createStandardAction('ADD')<number>();
 const increment = createStandardAction('INCREMENT')();
 const actions = { add, increment };
 
-declare module '.' {
+declare module './' {
   export type RootAction = ActionType<typeof actions>;
 }
 
@@ -64,6 +66,8 @@ describe('With Action Types', () => {
     });
 
   [counterReducer1, counterReducer2, counterReducer3].forEach(fn => {
+    // @dts-jest:pass:snap
+    fn(0, {} as any); // => 0
     // @dts-jest:pass:snap
     fn(0, increment()); // => 1
     // @dts-jest:pass:snap

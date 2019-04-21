@@ -1,4 +1,4 @@
-import { StringType } from './type-helpers';
+import { TypeConstant } from './type-helpers';
 import {
   checkIsEmpty,
   throwIsEmpty,
@@ -6,52 +6,52 @@ import {
   throwInvalidActionCreator,
 } from './utils/validation';
 
-export function action<T extends StringType, E>(
+export function action<T extends TypeConstant, E>(
   type: T,
   payload: undefined,
   meta: undefined,
   error: E
 ): { type: T; error: E };
 
-export function action<T extends StringType, M, E>(
+export function action<T extends TypeConstant, M, E>(
   type: T,
   payload: undefined,
   meta: M,
   error: E
 ): { type: T; meta: M; error: E };
 
-export function action<T extends StringType, P, E>(
+export function action<T extends TypeConstant, P, E>(
   type: T,
   payload: P,
   meta: undefined,
   error: E
 ): { type: T; payload: P; error: E };
 
-export function action<T extends StringType, P, M, E>(
+export function action<T extends TypeConstant, P, M, E>(
   type: T,
   payload: P,
   meta: M,
   error: E
 ): { type: T; payload: P; meta: M; error: E };
 
-export function action<T extends StringType, M>(
+export function action<T extends TypeConstant, M>(
   type: T,
   payload: undefined,
   meta: M
 ): { type: T; meta: M };
 
-export function action<T extends StringType, P, M>(
+export function action<T extends TypeConstant, P, M>(
   type: T,
   payload: P,
   meta: M
 ): { type: T; payload: P; meta: M };
 
-export function action<T extends StringType, P>(
+export function action<T extends TypeConstant, P>(
   type: T,
   payload: P
 ): { type: T; payload: P };
 
-export function action<T extends StringType>(type: T): { type: T };
+export function action<T extends TypeConstant>(type: T): { type: T };
 
 /**
  * @description flux standard action factory
@@ -61,7 +61,7 @@ export function action<T extends StringType>(type: T): { type: T };
  * ```
  */
 export function action<
-  T extends StringType,
+  T extends TypeConstant,
   P = undefined,
   M = undefined,
   E = undefined

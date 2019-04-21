@@ -1,10 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`With Action Creators fn(0, add(4)) (type) should match snapshot 1`] = `"number"`;
+exports[`With Action Creators fn(0, add(4)) (type) should match snapshot 1`] = `
+"Argument of type 'PayloadAction<\\"ADD\\", number>' is not assignable to parameter of type 'EmptyAction<\\"INCREMENT\\">'.
+  Types of property 'type' are incompatible.
+    Type '\\"ADD\\"' is not assignable to type '\\"INCREMENT\\"'."
+`;
 
-exports[`With Action Creators fn(0, add(4)) (type) should match snapshot 2`] = `"number"`;
+exports[`With Action Creators fn(0, add(4)) (type) should match snapshot 2`] = `
+"Argument of type 'PayloadAction<\\"ADD\\", number>' is not assignable to parameter of type 'EmptyAction<\\"INCREMENT\\">'.
+  Types of property 'type' are incompatible.
+    Type '\\"ADD\\"' is not assignable to type '\\"INCREMENT\\"'."
+`;
 
-exports[`With Action Creators fn(0, add(4)) (type) should match snapshot 3`] = `"number"`;
+exports[`With Action Creators fn(0, add(4)) (type) should match snapshot 3`] = `
+"Argument of type 'PayloadAction<\\"ADD\\", number>' is not assignable to parameter of type 'EmptyAction<\\"INCREMENT\\">'.
+  Types of property 'type' are incompatible.
+    Type '\\"ADD\\"' is not assignable to type '\\"INCREMENT\\"'."
+`;
 
 exports[`With Action Creators fn(0, increment()) (type) should match snapshot 1`] = `"number"`;
 
@@ -12,11 +24,17 @@ exports[`With Action Creators fn(0, increment()) (type) should match snapshot 2`
 
 exports[`With Action Creators fn(0, increment()) (type) should match snapshot 3`] = `"number"`;
 
-exports[`With Action Types fn(0, add(4)) (type) should match snapshot 1`] = `"number"`;
+exports[`With Action Types fn(0, {} as any) (type) should match snapshot 1`] = `"number"`;
 
-exports[`With Action Types fn(0, add(4)) (type) should match snapshot 2`] = `"number"`;
+exports[`With Action Types fn(0, {} as any) (type) should match snapshot 2`] = `"number"`;
 
-exports[`With Action Types fn(0, add(4)) (type) should match snapshot 3`] = `"number"`;
+exports[`With Action Types fn(0, {} as any) (type) should match snapshot 3`] = `"number"`;
+
+exports[`With Action Types fn(0, add(4)) (type) should match snapshot 1`] = `"Argument of type 'PayloadAction<\\"ADD\\", number>' is not assignable to parameter of type 'EmptyAction<\\"INCREMENT\\">'."`;
+
+exports[`With Action Types fn(0, add(4)) (type) should match snapshot 2`] = `"Argument of type 'PayloadAction<\\"ADD\\", number>' is not assignable to parameter of type 'EmptyAction<\\"INCREMENT\\">'."`;
+
+exports[`With Action Types fn(0, add(4)) (type) should match snapshot 3`] = `"Argument of type 'PayloadAction<\\"ADD\\", number>' is not assignable to parameter of type 'EmptyAction<\\"INCREMENT\\">'."`;
 
 exports[`With Action Types fn(0, increment()) (type) should match snapshot 1`] = `"number"`;
 

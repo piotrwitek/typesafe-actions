@@ -1,4 +1,4 @@
-import { ActionCreator, StringType } from './type-helpers';
+import { ActionCreator, TypeConstant } from './type-helpers';
 import {
   checkIsEmpty,
   throwIsEmpty,
@@ -10,7 +10,7 @@ import {
  * @description create custom action-creator using constructor function with injected type argument
  */
 export function createCustomAction<
-  T extends StringType,
+  T extends TypeConstant,
   AC extends ActionCreator<T> = () => { type: T }
 >(type: T, createHandler?: (type: T) => AC): AC {
   if (checkIsEmpty(type)) {

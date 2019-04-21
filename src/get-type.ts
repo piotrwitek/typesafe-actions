@@ -1,4 +1,4 @@
-import { StringType, ActionCreator, TypeMeta } from './type-helpers';
+import { TypeConstant, ActionCreator, TypeMeta } from './type-helpers';
 import {
   checkIsEmpty,
   throwIsEmpty,
@@ -9,7 +9,7 @@ import {
 /**
  * @description get the "type literal" of a given action-creator
  */
-export function getType<T extends StringType>(
+export function getType<T extends TypeConstant>(
   actionCreator: ActionCreator<T> & TypeMeta<T>
 ): T {
   if (checkIsEmpty(actionCreator)) {

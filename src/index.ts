@@ -20,7 +20,22 @@ export { isOfType } from './is-of-type';
 export { isActionOf } from './is-action-of';
 
 // type-helpers
-export { ActionType, StateType, ActionCreator, TypeMeta } from './type-helpers';
+export {
+  TypeConstant,
+  Action,
+  ActionCreator,
+  Reducer,
+  EmptyAction,
+  PayloadAction,
+  MetaAction,
+  PayloadMetaAction,
+  EmptyAC,
+  PayloadAC,
+  PayloadMetaAC,
+  TypeMeta,
+  ActionType,
+  StateType,
+} from './type-helpers';
 
 // deprecated
 export { createActionDeprecated } from './create-action-deprecated';
