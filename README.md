@@ -17,12 +17,11 @@ _This library is part of the [React & Redux TypeScript Guide](https://github.com
 
 :star: _Found it useful? Want more updates?_ [**Show your support by giving a :star:**](https://github.com/piotrwitek/typesafe-actions/stargazers)
 
-<a href="https://www.patreon.com/piotrekwitek" target="_blank">
-  <img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" alt="Become a Patron" width="160">
+<a href="https://www.buymeacoffee.com/zh9guxbA5">
+  <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me a Coffee">
 </a>
-<br />
-<a href="https://www.buymeacoffee.com/zh9guxbA5" target="_blank">
-  <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me a Coffee" width="160">
+<a href="https://www.patreon.com/piotrekwitek">
+  <img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" alt="Become a Patron" width="160">
 </a>
 
 :tada: _Now updated to be compatible with **TypeScript v3.4**_ :tada:
@@ -54,7 +53,7 @@ _This library is part of the [React & Redux TypeScript Guide](https://github.com
 - [Installation](#installation)
 - [Compatibility Notes](#compatibility-notes)
 - [Contributing Guide](#contributing-guide)
-- [Funding issues](#funding-issues)
+- [Funding](#funding)
 - [Tutorial](#tutorial)
   - [Constants](#constants)
   - [Actions](#actions)
@@ -161,12 +160,12 @@ We are open for contributions. If you're planning to contribute please make sure
 
 ---
 
-## Funding issues
+## Funding
 **Typesafe-Actions** is an independent open-source project created by people investing their free time for the benefit of our community.
 
 If you are using **Typesafe-Actions** please consider donating as this will guarantee the project will be updated and maintained in the long run.
 
-Specific issues can be funded by anyone interested in it. Reward money will be transparently distributed to the contributor handling a particular issue on the issuehunt platform.
+Specific issues can be funded by anyone interested in them being resolved. Issue funds will be transparently rewarded to the contributor handling the task through the issuehunt platform.
 
 [![Let's fund issues in this repository](https://issuehunt.io/static/embed/issuehunt-button-v1.svg)](https://issuehunt.io/repos/110746954)
 
