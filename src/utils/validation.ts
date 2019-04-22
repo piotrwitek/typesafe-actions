@@ -1,4 +1,8 @@
-import { ActionCreator, TypeMeta, TypeConstant } from '../type-helpers';
+import {
+  ActionCreator,
+  ActionCreatorTypeMetadata,
+  TypeConstant,
+} from '../type-helpers';
 
 export function checkIsEmpty(arg: unknown, argPosition: number = 1) {
   return arg == null;
@@ -25,7 +29,7 @@ export function throwInvalidActionCreator(argPosition: number = 1): never {
 }
 
 export function checkInvalidActionCreatorInArray(
-  arg: ActionCreator<TypeConstant> & TypeMeta<TypeConstant>,
+  arg: ActionCreator<TypeConstant> & ActionCreatorTypeMetadata<TypeConstant>,
   idx: number
 ): void | never {
   if (arg == null) {
@@ -44,7 +48,7 @@ export function checkValidActionType(arg: unknown): arg is string | symbol {
   return typeof arg === 'string' || typeof arg === 'symbol';
 }
 
-export function checkInvalidActionType(arg: unknown): arg is string | symbol {
+export function checkInvalidActionType(arg: unknown) {
   return !checkValidActionType(arg);
 }
 

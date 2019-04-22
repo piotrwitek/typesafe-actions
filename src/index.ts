@@ -10,7 +10,6 @@
 // action-creators
 export { action } from './action';
 export { createAction } from './create-action';
-export { createStandardAction } from './create-standard-action';
 export { createCustomAction } from './create-custom-action';
 export { createAsyncAction, AsyncActionCreator } from './create-async-action';
 export { createReducer } from './create-reducer';
@@ -28,16 +27,15 @@ export {
   Reducer,
   EmptyAction,
   PayloadAction,
-  MetaAction,
   PayloadMetaAction,
-  EmptyAC,
-  PayloadAC,
-  PayloadMetaAC,
-  TypeMeta,
+  EmptyActionCreator,
+  PayloadActionCreator,
+  PayloadMetaActionCreator,
+  ActionCreatorTypeMetadata,
   ActionType,
   StateType,
   Types,
 } from './type-helpers';
 
 // deprecated
-export { createActionDeprecated } from './create-action-deprecated';
+export { default as deprecated } from './deprecated';

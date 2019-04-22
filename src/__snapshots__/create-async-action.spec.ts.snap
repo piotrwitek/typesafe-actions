@@ -2,29 +2,29 @@
 
 exports[`async action with any type fetchUsersAsync.failure(
       1
-    ) 1`] = `"T.PayloadAction<\\"FETCH_USERS_FAILURE\\", any>"`;
+    ) 1`] = `"TH.PayloadAction<\\"FETCH_USERS_FAILURE\\", any>"`;
 
 exports[`async action with any type fetchUsersAsync.request(
       1
-    ) 1`] = `"T.PayloadAction<\\"FETCH_USERS_REQUEST\\", any>"`;
+    ) 1`] = `"TH.PayloadAction<\\"FETCH_USERS_REQUEST\\", any>"`;
 
 exports[`async action with any type fetchUsersAsync.success([
       1,
-    ]) 1`] = `"T.PayloadAction<\\"FETCH_USERS_SUCCESS\\", any[]>"`;
+    ]) 1`] = `"TH.PayloadAction<\\"FETCH_USERS_SUCCESS\\", any[]>"`;
 
 exports[`async action with cancel fetchUsersAsync.cancel(
       'reason'
-    ) 1`] = `"T.PayloadAction<\\"FETCH_USERS_CANCEL\\", string>"`;
+    ) 1`] = `"TH.PayloadAction<\\"FETCH_USERS_CANCEL\\", string>"`;
 
 exports[`async action with cancel fetchUsersAsync.failure(
       Error('reason')
-    ) 1`] = `"T.PayloadAction<\\"FETCH_USERS_FAILURE\\", Error>"`;
+    ) 1`] = `"TH.PayloadAction<\\"FETCH_USERS_FAILURE\\", Error>"`;
 
-exports[`async action with cancel fetchUsersAsync.request() 1`] = `"T.EmptyAction<\\"FETCH_USERS_REQUEST\\">"`;
+exports[`async action with cancel fetchUsersAsync.request() 1`] = `"TH.EmptyAction<\\"FETCH_USERS_REQUEST\\">"`;
 
 exports[`async action with cancel fetchUsersAsync.success([
       { firstName: 'Piotr', lastName: 'Witek' },
-    ]) 1`] = `"T.PayloadAction<\\"FETCH_USERS_SUCCESS\\", User[]>"`;
+    ]) 1`] = `"TH.PayloadAction<\\"FETCH_USERS_SUCCESS\\", User[]>"`;
 
 exports[`async action with cancel fn(fetchUsersAsync) 1`] = `"AsyncActionCreator<[\\"FETCH_USERS_REQUEST\\", undefined], [\\"FETCH_USERS_SUCCESS\\", User[]], [\\"FETCH_USERS_FAILURE\\", Error], [\\"FETCH_USERS_CANCEL\\", string], \\"FETCH_USERS_REQUEST\\", undefined, \\"FETCH_USERS_SUCCESS\\", User[], \\"FETCH_USERS_FAILURE\\", Error, \\"FETCH_USERS_CANCEL\\", string>"`;
 
@@ -32,12 +32,12 @@ exports[`async action with undefined type fetchUsersAsync.cancel 1`] = `"never"`
 
 exports[`async action with undefined type fetchUsersAsync.failure(
       Error('reason')
-    ) 1`] = `"T.PayloadAction<\\"FETCH_USERS_FAILURE\\", Error>"`;
+    ) 1`] = `"TH.PayloadAction<\\"FETCH_USERS_FAILURE\\", Error>"`;
 
-exports[`async action with undefined type fetchUsersAsync.request() 1`] = `"T.EmptyAction<\\"FETCH_USERS_REQUEST\\">"`;
+exports[`async action with undefined type fetchUsersAsync.request() 1`] = `"TH.EmptyAction<\\"FETCH_USERS_REQUEST\\">"`;
 
 exports[`async action with undefined type fetchUsersAsync.success([
       { firstName: 'Piotr', lastName: 'Witek' },
-    ]) 1`] = `"T.PayloadAction<\\"FETCH_USERS_SUCCESS\\", User[]>"`;
+    ]) 1`] = `"TH.PayloadAction<\\"FETCH_USERS_SUCCESS\\", User[]>"`;
 
 exports[`async action with undefined type fn(fetchUsersAsync) 1`] = `"AsyncActionCreator<[\\"FETCH_USERS_REQUEST\\", undefined], [\\"FETCH_USERS_SUCCESS\\", User[]], [\\"FETCH_USERS_FAILURE\\", Error], never, \\"FETCH_USERS_REQUEST\\", undefined, \\"FETCH_USERS_SUCCESS\\", User[], \\"FETCH_USERS_FAILURE\\", Error, never, never>"`;

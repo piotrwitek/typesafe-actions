@@ -1,12 +1,12 @@
 import * as T from './type-helpers'; // type-tests global
 import { ActionType } from './type-helpers';
-import { createStandardAction } from './create-standard-action';
+import { createAction } from './create-action';
 import { createReducer } from './create-reducer';
 import { getType } from './get-type';
 
-const add = createStandardAction('ADD')<number>();
-const increment = createStandardAction('INCREMENT')();
-const decrement = createStandardAction('DECREMENT')();
+const add = createAction('ADD')<number>();
+const increment = createAction('INCREMENT')();
+const decrement = createAction('DECREMENT')();
 const actions = {
   add,
   increment,
@@ -106,10 +106,10 @@ const initialState = 0;
   };
 
   const actions2 = {
-    foo1: createStandardAction('foo1')<string>(),
-    foo2: createStandardAction('foo2')<string>(),
-    foo3: createStandardAction('foo3')(),
-    foo4: createStandardAction('foo4')(),
+    foo1: createAction('foo1')<string>(),
+    foo2: createAction('foo2')<string>(),
+    foo3: createAction('foo3')(),
+    foo4: createAction('foo4')(),
   };
 
   type Action = ActionType<typeof actions2>;

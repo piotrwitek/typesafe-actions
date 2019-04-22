@@ -1,4 +1,4 @@
-import * as T from './type-helpers';
+import * as TH from './type-helpers';
 import { isActionOf } from './is-action-of';
 
 import { actions } from './type-helpers-fixtures';
@@ -78,13 +78,13 @@ describe('isActionOf', () => {
 
   describe('should correctly assert for an array with 1 arg', () => {
     const actual = $action.filter(isActionOf([withTypeOnly]));
-    // @dts-jest:pass:snap -> T.EmptyAction<"WITH_TYPE_ONLY">[]
+    // @dts-jest:pass:snap -> TH.EmptyAction<"WITH_TYPE_ONLY">[]
     actual; // => [typeOnlyExpected]
   });
 
   describe('should correctly assert for an array with 2 args', () => {
     const actual = $action.filter(isActionOf([withTypeOnly, withPayload]));
-    // @dts-jest:pass:snap -> (T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number>)[]
+    // @dts-jest:pass:snap -> (TH.EmptyAction<"WITH_TYPE_ONLY"> | TH.PayloadAction<"WITH_PAYLOAD", number>)[]
     actual; // => [typeOnlyExpected, payloadExpected]
   });
 
@@ -92,7 +92,7 @@ describe('isActionOf', () => {
     const actual = $action.filter(
       isActionOf([withTypeOnly, withPayload, withPayloadMeta])
     );
-    // @dts-jest:pass:snap -> (T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string>)[]
+    // @dts-jest:pass:snap -> (TH.EmptyAction<"WITH_TYPE_ONLY"> | TH.PayloadAction<"WITH_PAYLOAD", number> | TH.PayloadMetaAction<"WITH_PAYLOAD_META", number, string>)[]
     actual; // => [typeOnlyExpected,payloadExpected,payloadMetaExpected]
   });
 
@@ -105,7 +105,7 @@ describe('isActionOf', () => {
         withMappedPayload,
       ])
     );
-    // @dts-jest:pass:snap -> (T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string>)[]
+    // @dts-jest:pass:snap -> (TH.EmptyAction<"WITH_TYPE_ONLY"> | TH.PayloadAction<"WITH_PAYLOAD", number> | TH.PayloadAction<"WITH_MAPPED_PAYLOAD", number> | TH.PayloadMetaAction<"WITH_PAYLOAD_META", number, string>)[]
     actual; // => [typeOnlyExpected,payloadExpected,payloadMetaExpected,mappedPayloadExpected]
   });
 
@@ -119,20 +119,20 @@ describe('isActionOf', () => {
         withMappedPayloadMeta,
       ])
     );
-    // @dts-jest:pass:snap -> (T.EmptyAction<"WITH_TYPE_ONLY"> | T.PayloadAction<"WITH_PAYLOAD", number> | ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | T.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; }))[]
+    // @dts-jest:pass:snap -> (TH.EmptyAction<"WITH_TYPE_ONLY"> | TH.PayloadAction<"WITH_PAYLOAD", number> | TH.PayloadAction<"WITH_MAPPED_PAYLOAD", number> | TH.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | TH.PayloadMetaAction<"WITH_MAPPED_PAYLOAD_META", number, string>)[]
     actual; // => [typeOnlyExpected,payloadExpected,payloadMetaExpected,mappedPayloadExpected,mappedPayloadMetaExpected]
   });
 
   describe('should correctly assert type with "any" action', () => {
-    const action: any = withMappedPayload(1234);
-    if (isActionOf([withMappedPayload, withMappedPayloadMeta], action)) {
-      // @dts-jest:pass:snap -> ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; })
-      action; // => {"payload": 1234, "type": "WITH_MAPPED_PAYLOAD"}
-    }
+    const action: any = withPayload(1234);
 
-    if (isActionOf([withMappedPayload, withMappedPayloadMeta])(action)) {
-      // @dts-jest:pass:snap -> ({ type: "WITH_MAPPED_PAYLOAD"; } & { payload: number; }) | ({ type: "WITH_MAPPED_PAYLOAD_META"; } & { payload: number; meta: string; })
-      action; // => {"payload": 1234, "type": "WITH_MAPPED_PAYLOAD"}
+    if (isActionOf([withPayload, withPayloadMeta], action)) {
+      // @dts-jest:pass:snap -> TH.PayloadAction<"WITH_PAYLOAD", number> | TH.PayloadMetaAction<"WITH_PAYLOAD_META", number, string>
+      action; // => {"payload": 1234, "type": "WITH_PAYLOAD"}
+    }
+    if (isActionOf([withPayload, withPayloadMeta])(action)) {
+      // @dts-jest:pass:snap -> TH.PayloadAction<"WITH_PAYLOAD", number> | TH.PayloadMetaAction<"WITH_PAYLOAD_META", number, string>
+      action; // => {"payload": 1234, "type": "WITH_PAYLOAD"}
     }
   });
 });

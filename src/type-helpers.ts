@@ -56,13 +56,13 @@ export type PayloadAction<TType extends TypeConstant, TPayload> = {
   payload: TPayload;
 };
 
-/**
- * @desc Action with only Meta
- */
-export type MetaAction<TType extends TypeConstant, TMeta> = {
-  type: TType;
-  meta: TMeta;
-};
+// /**
+//  * @desc Action with only Meta
+//  */
+// export type MetaAction<TType extends TypeConstant, TMeta> = {
+//   type: TType;
+//   meta: TMeta;
+// };
 
 /**
  * @desc Action with both Payload and Meta
@@ -76,19 +76,33 @@ export type PayloadMetaAction<TType extends TypeConstant, TPayload, TMeta> = {
 /**
  * @desc Action Creator producing EmptyAction
  */
-export type EmptyAC<TType extends TypeConstant> = () => EmptyAction<TType>;
+export type EmptyActionCreator<TType extends TypeConstant> = () => EmptyAction<
+  TType
+>;
 
 /**
  * @desc Action Creator producing PayloadAction
  */
-export type PayloadAC<TType extends TypeConstant, TPayload> = (
+export type PayloadActionCreator<TType extends TypeConstant, TPayload> = (
   payload: TPayload
 ) => PayloadAction<TType, TPayload>;
+
+// /**
+//  * @desc Action Creator producing MetaAction
+//  */
+// export type MetaActionCreator<TType extends TypeConstant, TMeta> = (
+//   payload: undefined,
+//   meta: TMeta
+// ) => MetaAction<TType, TMeta>;
 
 /**
  * @desc Action Creator producing PayloadMetaAction
  */
-export type PayloadMetaAC<TType extends TypeConstant, TPayload, TMeta> = (
+export type PayloadMetaActionCreator<
+  TType extends TypeConstant,
+  TPayload,
+  TMeta
+> = (
   payload: TPayload,
   meta: TMeta
 ) => PayloadMetaAction<TType, TPayload, TMeta>;
@@ -96,7 +110,7 @@ export type PayloadMetaAC<TType extends TypeConstant, TPayload, TMeta> = (
 /**
  * @desc Type representing type getter on Action Creator instance
  */
-export interface TypeMeta<TType extends TypeConstant> {
+export interface ActionCreatorTypeMetadata<TType extends TypeConstant> {
   getType?: () => TType;
 }
 
@@ -131,28 +145,36 @@ export type StateType<
  */
 
 /** @private */
-export type ActionBuilderConstructor<
+export type ActionCreatorBuilder<
   TType extends TypeConstant,
   TPayload extends any = undefined,
   TMeta extends any = undefined
 > = [TMeta] extends [undefined]
   ? [TPayload] extends [undefined]
     ? unknown extends TPayload
-      ? PayloadAC<TType, TPayload>
+      ? PayloadActionCreator<TType, TPayload>
       : unknown extends TMeta
-      ? PayloadMetaAC<TType, TPayload, TMeta>
-      : EmptyAC<TType>
-    : PayloadAC<TType, TPayload>
-  : PayloadMetaAC<TType, TPayload, TMeta>;
+      ? PayloadMetaActionCreator<TType, TPayload, TMeta>
+      : EmptyActionCreator<TType>
+    : PayloadActionCreator<TType, TPayload>
+  : PayloadMetaActionCreator<TType, TPayload, TMeta>;
 
 /** @private */
-export type ActionBuilderMap<
+export type ActionBuilder<
   TType extends TypeConstant,
-  TActionProps extends any,
-  TPayloadArg extends any = undefined,
-  TMetaArg extends any = undefined
-> = [TMetaArg] extends [undefined]
-  ? [TPayloadArg] extends [undefined]
-    ? () => { type: TType } & TActionProps
-    : (payload: TPayloadArg) => { type: TType } & TActionProps
-  : (payload: TPayloadArg, meta: TMetaArg) => { type: TType } & TActionProps;
+  TPayload extends any = undefined,
+  TMeta extends any = undefined
+> = [TMeta] extends [undefined]
+  ? [TPayload] extends [undefined]
+    ? unknown extends TPayload
+      ? PayloadAction<TType, TPayload>
+      : unknown extends TMeta
+      ? PayloadMetaAction<TType, TPayload, TMeta>
+      : EmptyAction<TType>
+    : PayloadAction<TType, TPayload>
+  : PayloadMetaAction<TType, TPayload, TMeta>;
+
+/** @private */
+export type ResolveType<T extends any> = T extends Function
+  ? T
+  : { [K in keyof T]: T[K] };

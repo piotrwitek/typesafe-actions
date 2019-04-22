@@ -1,4 +1,4 @@
-import * as T from './type-helpers';
+import * as TH from './type-helpers';
 import { createAsyncAction, AsyncActionCreator } from './create-async-action';
 
 type User = { firstName: string; lastName: string };

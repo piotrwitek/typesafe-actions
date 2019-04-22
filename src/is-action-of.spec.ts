@@ -1,4 +1,4 @@
-import * as T from './type-helpers';
+import * as TH from './type-helpers';
 import { isActionOf } from './is-action-of';
 
 import { actions } from './type-helpers-fixtures';
@@ -124,15 +124,15 @@ describe('isActionOf', () => {
   });
 
   describe('should correctly assert type with "any" action', () => {
-    const action: any = withMappedPayload(1234);
-    if (isActionOf([withMappedPayload, withMappedPayloadMeta], action)) {
-      // @dts-jest:pass:snap
-      action; // => {"payload": 1234, "type": "WITH_MAPPED_PAYLOAD"}
-    }
+    const action: any = withPayload(1234);
 
-    if (isActionOf([withMappedPayload, withMappedPayloadMeta])(action)) {
+    if (isActionOf([withPayload, withPayloadMeta], action)) {
       // @dts-jest:pass:snap
-      action; // => {"payload": 1234, "type": "WITH_MAPPED_PAYLOAD"}
+      action; // => {"payload": 1234, "type": "WITH_PAYLOAD"}
+    }
+    if (isActionOf([withPayload, withPayloadMeta])(action)) {
+      // @dts-jest:pass:snap
+      action; // => {"payload": 1234, "type": "WITH_PAYLOAD"}
     }
   });
 });

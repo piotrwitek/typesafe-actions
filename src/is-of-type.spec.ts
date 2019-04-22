@@ -1,4 +1,4 @@
-import * as T from './type-helpers';
+import * as TH from './type-helpers';
 import { isOfType } from './is-of-type';
 
 import { actions, types } from './type-helpers-fixtures';

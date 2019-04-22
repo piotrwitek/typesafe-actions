@@ -1,4 +1,4 @@
-import { TypeMeta } from './type-helpers';
+import { ActionCreatorTypeMetadata } from './type-helpers';
 import {
   checkInvalidActionCreatorInArray,
   checkIsEmpty,
@@ -8,7 +8,7 @@ import {
 export type ActionCreator<T extends { type: string }> = ((
   ...args: any[]
 ) => T) &
-  TypeMeta<T['type']>;
+  ActionCreatorTypeMetadata<T['type']>;
 
 /**
  * @description (curried assert function) check if an action is the instance of given action-creator(s)

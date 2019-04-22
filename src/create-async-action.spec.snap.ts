@@ -1,4 +1,4 @@
-import * as T from './type-helpers';
+import * as TH from './type-helpers';
 import { createAsyncAction, AsyncActionCreator } from './create-async-action';
 
 type User = { firstName: string; lastName: string };
@@ -21,19 +21,19 @@ type User = { firstName: string; lastName: string };
   // @dts-jest:pass:snap -> AsyncActionCreator<["FETCH_USERS_REQUEST", undefined], ["FETCH_USERS_SUCCESS", User[]], ["FETCH_USERS_FAILURE", Error], never, "FETCH_USERS_REQUEST", undefined, "FETCH_USERS_SUCCESS", User[], "FETCH_USERS_FAILURE", Error, never, never>
   fn(fetchUsersAsync);
 
-  // @dts-jest:pass:snap -> T.EmptyAction<"FETCH_USERS_REQUEST">
+  // @dts-jest:pass:snap -> TH.EmptyAction<"FETCH_USERS_REQUEST">
   fetchUsersAsync.request(); /* => {
     type: 'FETCH_USERS_REQUEST'
   } */
 
-  // @dts-jest:pass:snap -> T.PayloadAction<"FETCH_USERS_SUCCESS", User[]>
+  // @dts-jest:pass:snap -> TH.PayloadAction<"FETCH_USERS_SUCCESS", User[]>
   fetchUsersAsync.success([
     { firstName: 'Piotr', lastName: 'Witek' },
   ]); /* => {
     type: 'FETCH_USERS_SUCCESS', payload: [{ firstName: 'Piotr', lastName: 'Witek' }]
   } */
 
-  // @dts-jest:pass:snap -> T.PayloadAction<"FETCH_USERS_FAILURE", Error>
+  // @dts-jest:pass:snap -> TH.PayloadAction<"FETCH_USERS_FAILURE", Error>
   fetchUsersAsync.failure(
     Error('reason')
   ); /* => {
@@ -52,21 +52,21 @@ type User = { firstName: string; lastName: string };
     'FETCH_USERS_FAILURE'
   )<any, any[], any>();
 
-  // @dts-jest:pass:snap -> T.PayloadAction<"FETCH_USERS_REQUEST", any>
+  // @dts-jest:pass:snap -> TH.PayloadAction<"FETCH_USERS_REQUEST", any>
   fetchUsersAsync.request(
     1
   ); /* => {
     type: 'FETCH_USERS_REQUEST', payload: 1,
   } */
 
-  // @dts-jest:pass:snap -> T.PayloadAction<"FETCH_USERS_SUCCESS", any[]>
+  // @dts-jest:pass:snap -> TH.PayloadAction<"FETCH_USERS_SUCCESS", any[]>
   fetchUsersAsync.success([
     1,
   ]); /* => {
     type: 'FETCH_USERS_SUCCESS', payload: [1],
   } */
 
-  // @dts-jest:pass:snap -> T.PayloadAction<"FETCH_USERS_FAILURE", any>
+  // @dts-jest:pass:snap -> TH.PayloadAction<"FETCH_USERS_FAILURE", any>
   fetchUsersAsync.failure(
     1
   ); /* => {
@@ -94,26 +94,26 @@ type User = { firstName: string; lastName: string };
   // @dts-jest:pass:snap -> AsyncActionCreator<["FETCH_USERS_REQUEST", undefined], ["FETCH_USERS_SUCCESS", User[]], ["FETCH_USERS_FAILURE", Error], ["FETCH_USERS_CANCEL", string], "FETCH_USERS_REQUEST", undefined, "FETCH_USERS_SUCCESS", User[], "FETCH_USERS_FAILURE", Error, "FETCH_USERS_CANCEL", string>
   fn(fetchUsersAsync);
 
-  // @dts-jest:pass:snap -> T.EmptyAction<"FETCH_USERS_REQUEST">
+  // @dts-jest:pass:snap -> TH.EmptyAction<"FETCH_USERS_REQUEST">
   fetchUsersAsync.request(); /* => {
     type: 'FETCH_USERS_REQUEST'
   } */
 
-  // @dts-jest:pass:snap -> T.PayloadAction<"FETCH_USERS_SUCCESS", User[]>
+  // @dts-jest:pass:snap -> TH.PayloadAction<"FETCH_USERS_SUCCESS", User[]>
   fetchUsersAsync.success([
     { firstName: 'Piotr', lastName: 'Witek' },
   ]); /* => {
     type: 'FETCH_USERS_SUCCESS', payload: [{ firstName: 'Piotr', lastName: 'Witek' }]
   } */
 
-  // @dts-jest:pass:snap -> T.PayloadAction<"FETCH_USERS_FAILURE", Error>
+  // @dts-jest:pass:snap -> TH.PayloadAction<"FETCH_USERS_FAILURE", Error>
   fetchUsersAsync.failure(
     Error('reason')
   ); /* => {
     type: 'FETCH_USERS_FAILURE', payload: Error('reason')
   } */
 
-  // @dts-jest:pass:snap -> T.PayloadAction<"FETCH_USERS_CANCEL", string>
+  // @dts-jest:pass:snap -> TH.PayloadAction<"FETCH_USERS_CANCEL", string>
   fetchUsersAsync.cancel(
     'reason'
   ); /* => {

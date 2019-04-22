@@ -1,45 +1,77 @@
-import { TypeConstant, ActionCreator } from './type-helpers';
-import { action } from './action';
+import {
+  TypeConstant,
+  ActionCreatorBuilder,
+  ActionCreatorTypeMetadata,
+  ActionBuilder,
+} from './type-helpers';
+import { createCustomAction } from './create-custom-action';
+import {
+  checkIsEmpty,
+  throwIsEmpty,
+  checkInvalidActionType,
+  throwInvalidActionType,
+} from './utils/validation';
 
-export type PayloadMetaAction<
-  T extends TypeConstant,
-  P,
-  M
-> = P extends undefined
-  ? M extends undefined
-    ? { type: T }
-    : { type: T; meta: M }
-  : M extends undefined
-  ? { type: T; payload: P }
-  : { type: T; payload: P; meta: M };
+export function createAction<
+  TType extends TypeConstant,
+  TPayload extends any = undefined,
+  TMeta extends any = undefined,
+  TArgs extends any[] = any[]
+>(
+  type: TType,
+  payloadCreator: undefined | ((...args: TArgs) => TPayload),
+  metaCreator?: (...args: TArgs) => TMeta
+): () => (...args: TArgs) => ActionBuilder<TType, TPayload, TMeta>;
+
+export function createAction<TType extends TypeConstant>(
+  type: TType
+): <TPayload = undefined, TMeta = undefined>() => ActionCreatorBuilder<
+  TType,
+  TPayload,
+  TMeta
+>;
 
 /**
- * @description typesafe action-creator factory
+ * @description create an action-creator
  */
 export function createAction<
-  T extends TypeConstant,
-  AC extends ActionCreator<T> = () => { type: T }
+  TType extends TypeConstant,
+  TPayload extends any = undefined,
+  TMeta extends any = undefined,
+  TArgs extends any[] = any[]
 >(
-  type: T,
-  createHandler?: (
-    actionCallback: <P = undefined, M = undefined>(
-      payload?: P,
-      meta?: M
-    ) => PayloadMetaAction<T, P, M>
-  ) => AC
-): AC {
-  // validation is already done in action function
+  type: TType,
+  payloadCreator?: undefined | ((...args: TArgs) => TPayload),
+  metaCreator?: (...args: TArgs) => TMeta
+):
+  | (() => (...args: TArgs) => ActionBuilder<TType, TPayload, TMeta>)
+  | (<TPayload = undefined, TMeta = undefined>() => ActionCreatorBuilder<
+      TType,
+      TPayload,
+      TMeta
+    >) {
+  if (checkIsEmpty(type)) {
+    throwIsEmpty(1);
+  }
 
-  const actionCreator: AC =
-    createHandler == null
-      ? ((() => action(type)) as AC)
-      : createHandler(action.bind(null, type) as Parameters<
-          typeof createHandler
-        >[0]);
+  if (checkInvalidActionType(type)) {
+    throwInvalidActionType(1);
+  }
 
-  return Object.assign(actionCreator, {
-    getType: () => type,
-    // redux-actions compatibility
-    toString: () => type,
-  });
+  return <TPayload, TMeta = undefined>() => {
+    return createCustomAction(type, (...args: TArgs) => {
+      let payload = args[0];
+      let meta = args[1];
+
+      if (payloadCreator != null || metaCreator != null) {
+        payload = payloadCreator != null ? payloadCreator(...args) : undefined;
+        meta = metaCreator != null ? metaCreator(...args) : undefined;
+      }
+
+      return {
+        ...(payload !== undefined && { payload }),
+        ...(meta !== undefined && { meta }),
+      };
+    }) as ActionCreatorBuilder<TType, TPayload, TMeta>;
+  };
 }
