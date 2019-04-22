@@ -138,7 +138,7 @@ const initialState = 0;
         ADD: counterReducer3.handlers.ADD,
         INCREMENT: counterReducer4.handlers.INCREMENT,
       }),
-      createReducer(initialState, {
+      createReducer<number, ActionType<typeof actions>>(initialState, {
         ADD: (state, action) => state + action.payload,
       }),
     ].forEach(fn => {

@@ -8,9 +8,13 @@ declare type HandleActionChainApi<TState, TNotHandledAction extends Action, TRoo
     handlers: Record<TActionIntersection['type'], (state: TState, action: TRootAction) => TState>;
     handleAction: HandleActionChainApi<TState, Exclude<TNotHandledAction, TTypeAction & TCreatorAction>, TNotHandledAction>;
 };
-export declare function createReducer<TState, TRootAction extends Action = RootAction>(initialState: TState, initialHandlers?: Record<RootAction['type'], (state: TState, action: RootAction) => TState>): Reducer<TState, TRootAction> & {
+export declare function createReducer<TState, TRootAction extends Action = RootAction>(initialState: TState, initialHandlers?: {
+    [TType in TRootAction['type']]?: TRootAction extends {
+        type: TType;
+    } ? ((state: TState, action: TRootAction) => TState) : never;
+}): Reducer<TState, TRootAction> & {
     handlers: {
-        readonly [x: string]: (state: TState, action: any) => TState;
+        readonly [x: string]: ((state: TState, action: any) => TState) | undefined;
     };
     readonly handleAction: HandleActionChainApi<TState, TRootAction, TRootAction>;
 };
