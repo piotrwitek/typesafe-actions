@@ -1,3 +1,9 @@
+/**
+ * @author Piotr Witek <piotrek.witek@gmail.com> (http://piotrwitek.github.io)
+ * @copyright Copyright (c) 2017 Piotr Witek
+ * @license MIT
+ */
+/** Public API */
 export { action } from './action';
 export { createAction } from './create-action';
 export { createStandardAction } from './create-standard-action';

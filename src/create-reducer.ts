@@ -46,14 +46,28 @@ type HandleActionChainApi<
       >;
     };
 
+type GetAction<T extends Action, P extends T['type']> = T extends {
+  type: P;
+}
+  ? T
+  : never;
+
+type InitialHandler<TState, TRootAction extends Action> = {
+  [P in TRootAction['type']]?: (
+    state: TState,
+    action: GetAction<TRootAction, P>
+  ) => TState
+};
+
 export function createReducer<TState, TRootAction extends Action = RootAction>(
   initialState: TState,
-  initialHandlers: Record<
-    RootAction['type'],
-    (state: TState, action: RootAction) => TState
-  > = {}
+  initialHandlers: InitialHandler<TState, TRootAction> = {}
 ) {
-  const handlers = { ...initialHandlers };
+  const handlers: Partial<
+    Record<RootAction['type'], (state: TState, action: RootAction) => TState>
+  > = {
+    ...initialHandlers,
+  };
 
   const rootReducer: Reducer<TState, TRootAction> = (
     state = initialState,
@@ -77,7 +91,7 @@ export function createReducer<TState, TRootAction extends Action = RootAction>(
       ? singleOrMultipleCreatorsAndTypes
       : [singleOrMultipleCreatorsAndTypes];
 
-    const newHandlers: typeof initialHandlers = {};
+    const newHandlers: typeof handlers = {};
     creatorsAndTypes
       .map(acOrType =>
         checkValidActionCreator(acOrType)

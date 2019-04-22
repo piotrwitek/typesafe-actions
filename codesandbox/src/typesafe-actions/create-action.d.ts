@@ -12,6 +12,9 @@ export declare type PayloadMetaAction<T extends TypeConstant, P, M> = P extends 
     payload: P;
     meta: M;
 };
+/**
+ * @description typesafe action-creator factory
+ */
 export declare function createAction<T extends TypeConstant, AC extends ActionCreator<T> = () => {
     type: T;
 }>(type: T, createHandler?: (actionCallback: <P = undefined, M = undefined>(payload?: P, meta?: M) => PayloadMetaAction<T, P, M>) => AC): AC;

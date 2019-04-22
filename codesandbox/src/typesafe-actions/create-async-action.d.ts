@@ -7,4 +7,7 @@ export declare type AsyncActionBuilderConstructor<T1 extends TypeConstant, T2 ex
     success: ActionBuilderConstructor<T2, P2>;
     failure: ActionBuilderConstructor<T3, P3>;
 };
+/**
+ * implementation
+ */
 export declare function createAsyncAction<T1 extends TypeConstant, T2 extends TypeConstant, T3 extends TypeConstant>(requestType: T1, successType: T2, failureType: T3): AsyncActionBuilder<T1, T2, T3>;

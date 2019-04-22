@@ -19,7 +19,7 @@
     "noEmitOnError": true,
     // "noUnusedLocals": true,
     "pretty": true,
-    "removeComments": true,
+    "removeComments": false,
     "sourceMap": true,
     "stripInternal": true,
     "allowSyntheticDefaultImports": true,

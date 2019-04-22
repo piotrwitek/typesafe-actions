@@ -6,7 +6,8 @@ import { getType } from './get-type';
 
 const add = createStandardAction('ADD')<number>();
 const increment = createStandardAction('INCREMENT')();
-const actions = { add, increment };
+const decrement = createStandardAction('DECREMENT')();
+const actions = { add, increment, decrement };
 
 declare module './' {
   export type RootAction = ActionType<typeof actions>;
@@ -68,6 +69,14 @@ const initialState = 0;
       createReducer(initialState, {
         [getType(add)]: counterReducer3.handlers.ADD,
         [getType(increment)]: counterReducer4.handlers.INCREMENT,
+      }),
+      createReducer(initialState, {
+        [getType(add)]: (state: any, action: any) => state + action.payload,
+        [getType(increment)]: (state: any, _: any) => state + 1,
+      }),
+      createReducer<number, ActionType<typeof actions>>(initialState, {
+        [getType(add)]: (state: any, action: any) => state + action.payload,
+        [getType(increment)]: (state: any, _: any) => state + 1,
       }),
     ].forEach(fn => {
       // @dts-jest:pass
@@ -134,6 +143,14 @@ const initialState = 0;
       createReducer(initialState, {
         ADD: counterReducer3.handlers.ADD,
         INCREMENT: counterReducer4.handlers.INCREMENT,
+      }),
+      createReducer(initialState, {
+        ADD: (state, action) => state + action.payload,
+        INCREMENT: (state, action) => state + 1,
+      }),
+      createReducer<number, ActionType<typeof actions>>(initialState, {
+        ADD: (state, action) => state + action.payload,
+        INCREMENT: (state, action) => state + 1,
       }),
     ].forEach(fn => {
       // @dts-jest:pass
