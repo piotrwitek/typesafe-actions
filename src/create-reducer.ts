@@ -46,13 +46,22 @@ type HandleActionChainApi<
       >;
     };
 
+type GetAction<T extends Action, P extends T['type']> = T extends {
+  type: P;
+}
+  ? T
+  : never;
+
+type InitialHandler<TState, TRootAction extends Action> = {
+  [P in TRootAction['type']]?: (
+    state: TState,
+    action: GetAction<TRootAction, P>
+  ) => TState
+};
+
 export function createReducer<TState, TRootAction extends Action = RootAction>(
   initialState: TState,
-  initialHandlers: {
-    [TType in TRootAction['type']]?: TRootAction extends { type: TType }
-      ? ((state: TState, action: TRootAction) => TState)
-      : never
-  } = {}
+  initialHandlers: InitialHandler<TState, TRootAction> = {}
 ) {
   const handlers: Partial<
     Record<RootAction['type'], (state: TState, action: RootAction) => TState>
@@ -96,7 +105,7 @@ export function createReducer<TState, TRootAction extends Action = RootAction>(
     return createReducer<TState, TRootAction>(initialState, {
       ...handlers,
       ...newHandlers,
-    } as any);
+    });
   }) as HandleActionChainApi<TState, TRootAction, TRootAction>;
 
   return Object.assign(rootReducer, {
