@@ -9,8 +9,10 @@ const increment = createStandardAction('INCREMENT')();
 const decrement = createStandardAction('DECREMENT')();
 const actions = { add, increment, decrement };
 
-declare module './' {
-  export type RootAction = ActionType<typeof actions>;
+declare module './type-helpers' {
+  interface Types {
+    RootAction: ActionType<typeof actions>;
+  }
 }
 
 const initialState = 0;

@@ -378,14 +378,24 @@ if (isOfType(types.ADD, action)) {
 
 #### Extending internal types to streamline type usage with `typesafe-actions`
 
-Extending internal `RootAction` type for `createReducer` API from the consumer code, so that you never have to use generic type parameters again in your application 😮 (check `/codesandbox` project for more):
+We can extend internal types of `typesafe-actions` module with `RootAction` definition of our application so that you don't need to pass generic type arguments with `createReducer` API:
 
 ```ts
+// types.d.ts
 import { StateType, ActionType } from 'typesafe-actions';
 
+export type RootAction = ActionType<typeof import('./actions').default>;
+
 declare module 'typesafe-actions' {
-  export type RootAction = ActionType<typeof import('./root-action').default>;
+  interface Types {
+    RootAction: RootAction;
+  }
 }
+
+// now you can use
+createReducer(...)
+// instead of
+createReducer<State, Action>(...)
 ```
 
 #### Using createReducer API
@@ -395,7 +405,7 @@ We can prevent a lot of boilerplate code and type errors using this powerfull an
 Using handleAction chain API:
 ```ts
 // using action-creators
-const counterReducer = createReducer(0) // <= no need for generic type parameters
+const counterReducer = createReducer(0)
   // state and action type is automatically inferred and return type is validated to be exact type
   .handleAction(add, (state, action) => state + action.payload)
   .handleAction(add, ... // <= error is shown on duplicated or invalid actions

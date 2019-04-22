@@ -1,12 +1,12 @@
-// @ts-ignore
-import { RootAction } from './';
 import { getType } from './get-type';
 import {
   checkValidActionCreator,
   checkValidActionType,
   throwInvalidActionTypeOrActionCreator,
 } from './utils/validation';
-import { Reducer, Action } from './type-helpers';
+import { Reducer, Action, Types } from './type-helpers';
+
+export type RootAction = Types extends { RootAction: infer T } ? T : any;
 
 type HandleActionChainApi<
   TState,
@@ -64,7 +64,7 @@ export function createReducer<TState, TRootAction extends Action = RootAction>(
   initialHandlers: InitialHandler<TState, TRootAction> = {}
 ) {
   const handlers: Partial<
-    Record<RootAction['type'], (state: TState, action: RootAction) => TState>
+    Record<any, (state: TState, action: any) => TState>
   > = {
     ...initialHandlers,
   };

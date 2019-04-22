@@ -1,5 +1,7 @@
-import { RootAction } from './';
-import { Reducer, Action } from './type-helpers';
+import { Reducer, Action, Types } from './type-helpers';
+export declare type RootAction = Types extends {
+    RootAction: infer T;
+} ? T : any;
 declare type HandleActionChainApi<TState, TNotHandledAction extends Action, TRootAction extends Action> = <TType extends TNotHandledAction['type'], TTypeAction extends TNotHandledAction extends {
     type: TType;
 } ? TNotHandledAction : never, TCreator extends (...args: any[]) => TNotHandledAction, TCreatorAction extends TNotHandledAction extends ReturnType<TCreator> ? TNotHandledAction : never, TActionIntersection extends TTypeAction extends TCreatorAction ? TTypeAction : never>(singleOrMultipleCreatorsAndTypes: TType | TType[] | TCreator | TCreator[], reducer: (state: TState, action: TActionIntersection) => TState) => [Exclude<TNotHandledAction, TTypeAction & TCreatorAction>] extends [never] ? Reducer<TState, TRootAction> & {

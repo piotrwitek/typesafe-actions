@@ -3,6 +3,18 @@
  */
 
 /**
+ * @desc Interface for internal types augmentation
+ * @example ```
+ * declare module 'typesafe-actions' {
+ *   export type RootAction = ActionType<typeof import('./root-action').default>;
+ *   export interface Types {
+ *     RootAction: RootAction;
+ *   }
+ * } ```
+ */
+export interface Types {}
+
+/**
  * @desc Type representing Type Constant
  */
 export type TypeConstant = string;

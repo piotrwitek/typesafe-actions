@@ -4,6 +4,7 @@
   "compilerOptions": {
     "declaration": true,
     "emitDeclarationOnly": true,
+    "removeComments": false,
     "module": "esnext",
     "outDir": "./dist/"
   }

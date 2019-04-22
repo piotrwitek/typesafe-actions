@@ -7,6 +7,7 @@
     "import-blacklist": [true, "rxjs"],
     "interface-over-type-literal": false,
     "interface-name": false,
+    "jsdoc-format": false,
     "max-line-length": [false, 120],
     "member-access": false,
     "member-ordering": [true, { "order": "fields-first" }],

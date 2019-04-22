@@ -1,4 +1,5 @@
 /**
+ * @name typesafe-actions
  * @author Piotr Witek <piotrek.witek@gmail.com> (http://piotrwitek.github.io)
  * @copyright Copyright (c) 2017 Piotr Witek
  * @license MIT
@@ -35,6 +36,7 @@ export {
   TypeMeta,
   ActionType,
   StateType,
+  Types,
 } from './type-helpers';
 
 // deprecated
