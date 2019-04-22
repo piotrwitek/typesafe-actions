@@ -64,7 +64,7 @@ _This library is part of the [React & Redux TypeScript Guide](https://github.com
   - [Action Helpers](#action-helpers)
     - [Using action-creators instances instead of type-constants](#using-action-creators-instances-instead-of-type-constants)
     - [Using regular type-constants](#using-regular-type-constants)
-  - [Reducers](#reducers) 🌟 __NEW__
+  - [Reducers](#reducers)
     - [Extending internal types to streamline type usage with `typesafe-actions`](#extending-internal-types-to-streamline-type-usage-with-typesafe-actions)
     - [Using createReducer API](#using-createreducer-api)
     - [Using standard switch reducer](#using-standard-switch-reducer)
@@ -79,7 +79,7 @@ _This library is part of the [React & Redux TypeScript Guide](https://github.com
     - [`createCustomAction`](#createcustomaction)
     - [`createAsyncAction`](#createasyncaction)
   - [Reducer-Creators API](#reducer-creators-api)
-    - [`createReducer`](#createreducer) 🌟 __NEW__
+    - [`createReducer`](#createreducer)
   - [Action-Helpers API](#action-helpers-api)
     - [`getType`](#gettype)
     - [`isActionOf`](#isactionof)
@@ -91,7 +91,7 @@ _This library is part of the [React & Redux TypeScript Guide](https://github.com
   - [`v3.x.x` to `v4.x.x`](#v3xx-to-v4xx)
   - [`v2.x.x` to `v3.x.x`](#v2xx-to-v3xx)
   - [`v1.x.x` to `v2.x.x`](#v1xx-to-v2xx)
-  - [Migrating from `redux-actions` to `typesafe-actions`](#migrating-from-redux-actions-to-typesafe-actions) 🌟 __NEW__
+  - [Migrating from `redux-actions` to `typesafe-actions`](#migrating-from-redux-actions-to-typesafe-actions)
 - [Recipes](#recipes)
   - [Restrict Meta type in `action` creator](#restrict-meta-type-in-action-creator)
 - [Compare to others](#compare-to-others)
