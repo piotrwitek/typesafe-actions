@@ -69,6 +69,9 @@ const initialState = 0;
         [getType(add)]: counterReducer3.handlers.ADD,
         [getType(increment)]: counterReducer4.handlers.INCREMENT,
       }),
+      createReducer(initialState, {
+        [getType(add)]: (state, action) => state + action.payload,
+      }),
     ].forEach(fn => {
       // @dts-jest:pass
       fn(0, {} as any); // => 0
@@ -134,6 +137,9 @@ const initialState = 0;
       createReducer(initialState, {
         ADD: counterReducer3.handlers.ADD,
         INCREMENT: counterReducer4.handlers.INCREMENT,
+      }),
+      createReducer(initialState, {
+        ADD: (state, action) => state + action.payload,
       }),
     ].forEach(fn => {
       // @dts-jest:pass
