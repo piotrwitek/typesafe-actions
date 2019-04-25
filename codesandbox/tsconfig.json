@@ -3,12 +3,6 @@
   "exclude": ["src/**/*.spec.*"],
   "extends": "./node_modules/react-redux-typescript-scripts/tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "./", // relative paths base
-    "paths": {
-      "typesafe-actions": ["src/typesafe-actions/index"]
-    },
-    "allowJs": false,
-    "checkJs": false,
     "jsx": "react"
   }
 }

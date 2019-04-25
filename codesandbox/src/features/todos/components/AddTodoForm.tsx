@@ -40,7 +40,7 @@ class AddTodoForm extends React.Component<Props, State> {
           onChange={this.handleTitleChange}
         />
         &nbsp;
-        <button type="button" onClick={this.handleAddClick} disabled={!title}>
+        <button type="submit" onClick={this.handleAddClick} disabled={!title}>
           Add
         </button>
       </form>
