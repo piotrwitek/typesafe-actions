@@ -531,7 +531,7 @@ _Simple **action factory function** to simplify creation of type-safe actions._
 > This approach will **NOT WORK** with **action-helpers** (such as `getType` and `isActionOf`) because it is creating **action objects** while all the other creator functions are returning **enhanced action-creators**.
 
 ```ts
-action(type, payload?, meta?)
+action(type, payload?, meta?, error?)
 ```
 
 Examples:

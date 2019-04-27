@@ -57,7 +57,7 @@ export function action<T extends TypeConstant>(type: T): { type: T };
  * @description flux standard action factory
  * @example
  * ```
- * const add = (amount: number, meta?: MetaShape) => action('INCREMENT', amount, meta);
+ * const add = (amount: number, meta?: Meta, error?: boolean) => action('INCREMENT', amount, meta, error);
  * ```
  */
 export function action<
