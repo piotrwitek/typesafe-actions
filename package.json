@@ -32,7 +32,7 @@
     "doctoc": "doctoc --maxlevel=4 README.md",
     "prebuild": "rm -rf dist/ && tsc -p ./tsconfig.declaration.json",
     "build": "tsc -p . && rollup -c",
-    "postbuild": "cp -a dist/. codesandbox/src/typesafe-actions/ && rm -rf out",
+    "postbuild": "rm -rf out",
     "prepublishOnly": "npm run reinstall && npm run ci-check && npm run build"
   },
   "dependencies": {},
