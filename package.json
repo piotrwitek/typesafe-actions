@@ -1,6 +1,6 @@
 {
   "name": "typesafe-actions",
-  "version": "4.1.3",
+  "version": "4.1.4",
   "description": "Typesafe Action Creators for Redux / Flux Architectures (in TypeScript)",
   "author": "Piotr Witek <piotrek.witek@gmail.com> (http://piotrwitek.github.io)",
   "repository": "https://github.com/piotrwitek/typesafe-actions",
