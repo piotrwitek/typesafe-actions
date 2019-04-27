@@ -7,7 +7,11 @@ import { getType } from './get-type';
 const add = createStandardAction('ADD')<number>();
 const increment = createStandardAction('INCREMENT')();
 const decrement = createStandardAction('DECREMENT')();
-const actions = { add, increment, decrement };
+const actions = {
+  add,
+  increment,
+  decrement,
+};
 
 declare module './type-helpers' {
   interface Types {
@@ -163,4 +167,50 @@ const initialState = 0;
       fn(0, add(4)); // => 4
     });
   }
+}
+
+{
+  type State = {
+    foo: string;
+  };
+
+  const defaultState: State = {
+    foo: '',
+  };
+
+  const actions2 = {
+    foo1: createStandardAction('foo1')(),
+    foo2: createStandardAction('foo2')(),
+    foo3: createStandardAction('foo3')(),
+    foo4: createStandardAction('foo4')(),
+  };
+
+  type Action = ActionType<typeof actions2>;
+
+  const reducer = createReducer<State, Action>(defaultState)
+    .handleAction(actions2.foo1, (state, action) => {
+      return {
+        ...state,
+      };
+    })
+    .handleAction(actions2.foo2, (state, action) => {
+      return {
+        ...state,
+      };
+    })
+    .handleAction(actions2.foo3, (state, action) => {
+      return {
+        ...state,
+      };
+    })
+    .handleAction(actions2.foo4, (state, action) => {
+      return {
+        ...state,
+      };
+    });
+
+  reducer(defaultState, actions2.foo1()); // error
+  reducer(defaultState, actions2.foo2()); // error
+  reducer(defaultState, actions2.foo3()); // ok
+  reducer(defaultState, actions2.foo4()); // ok
 }

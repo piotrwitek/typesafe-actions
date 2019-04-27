@@ -42,7 +42,7 @@ type HandleActionChainApi<
       handleAction: HandleActionChainApi<
         TState,
         Exclude<TNotHandledAction, TTypeAction & TCreatorAction>,
-        TNotHandledAction
+        TRootAction
       >;
     };
 
