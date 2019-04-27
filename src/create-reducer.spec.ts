@@ -169,18 +169,19 @@ const initialState = 0;
   }
 }
 
+// @dts-jest:group Type refinement checks
 {
   type State = {
-    foo: string;
+    foo: string | null;
   };
 
   const defaultState: State = {
-    foo: '',
+    foo: null,
   };
 
   const actions2 = {
-    foo1: createStandardAction('foo1')(),
-    foo2: createStandardAction('foo2')(),
+    foo1: createStandardAction('foo1')<string>(),
+    foo2: createStandardAction('foo2')<string>(),
     foo3: createStandardAction('foo3')(),
     foo4: createStandardAction('foo4')(),
   };
@@ -189,28 +190,65 @@ const initialState = 0;
 
   const reducer = createReducer<State, Action>(defaultState)
     .handleAction(actions2.foo1, (state, action) => {
+      // @dts-jest:pass:snap
+      state;
+      // @dts-jest:pass:snap
+      action;
+
       return {
         ...state,
+        foo: action.payload,
       };
     })
     .handleAction(actions2.foo2, (state, action) => {
+      // @dts-jest:pass:snap
+      state;
+      // @dts-jest:pass:snap
+      action;
+
       return {
         ...state,
+        foo: action.payload,
       };
     })
     .handleAction(actions2.foo3, (state, action) => {
+      // @dts-jest:pass:snap
+      state;
+      // @dts-jest:pass:snap
+      action;
+
       return {
         ...state,
+        foo: 'empty',
       };
     })
     .handleAction(actions2.foo4, (state, action) => {
+      // @dts-jest:pass:snap
+      state;
+      // @dts-jest:pass:snap
+      action;
+
       return {
         ...state,
+        foo: 'empty',
       };
     });
 
-  reducer(defaultState, actions2.foo1()); // error
-  reducer(defaultState, actions2.foo2()); // error
-  reducer(defaultState, actions2.foo3()); // ok
-  reducer(defaultState, actions2.foo4()); // ok
+  {
+    [
+      reducer(defaultState, actions2.foo1('check')),
+      reducer(defaultState, actions2.foo2('check')),
+    ].forEach(reducerResult => {
+      // @dts-jest:pass:snap
+      reducerResult; // => { foo: "check" }
+    });
+
+    [
+      reducer(defaultState, actions2.foo3()),
+      reducer(defaultState, actions2.foo4()),
+    ].forEach(reducerResult => {
+      // @dts-jest:pass:snap
+      reducerResult; // => { foo: "empty" }
+    });
+  }
 }
