@@ -5,7 +5,8 @@ it.skip('skip', () => undefined);
 
 type User = { firstName: string; lastName: string };
 
-describe('async action with undefined type', () => {
+// @dts-jest:group async action with undefined type
+{
   const fetchUsers = createAsyncAction(
     'FETCH_USERS_REQUEST',
     'FETCH_USERS_SUCCESS',
@@ -30,9 +31,10 @@ describe('async action with undefined type', () => {
   ); /* => {
     type: 'FETCH_USERS_FAILURE', payload: Error('reason')
   } */
-});
+}
 
-describe('async action with any type', () => {
+// @dts-jest:group async action with any type
+{
   const fetchUsers = createAsyncAction(
     'FETCH_USERS_REQUEST',
     'FETCH_USERS_SUCCESS',
@@ -59,9 +61,46 @@ describe('async action with any type', () => {
   ); /* => {
     type: 'FETCH_USERS_FAILURE', payload: 1,
   } */
-});
+}
 
-// describe('should create an async action with mappers', () => {
+// @dts-jest:group async action with cancel
+{
+  const fetchUsers = createAsyncAction(
+    'FETCH_USERS_REQUEST',
+    'FETCH_USERS_SUCCESS',
+    'FETCH_USERS_FAILURE',
+    'FETCH_USERS_CANCEL'
+  )<undefined, User[], Error, string>();
+
+  // @dts-jest:pass:snap
+  fetchUsers.request(); /* => {
+    type: 'FETCH_USERS_REQUEST'
+  } */
+
+  // @dts-jest:pass:snap
+  fetchUsers.success([
+    { firstName: 'Piotr', lastName: 'Witek' },
+  ]); /* => {
+    type: 'FETCH_USERS_SUCCESS', payload: [{ firstName: 'Piotr', lastName: 'Witek' }]
+  } */
+
+  // @dts-jest:pass:snap
+  fetchUsers.failure(
+    Error('reason')
+  ); /* => {
+    type: 'FETCH_USERS_FAILURE', payload: Error('reason')
+  } */
+
+  // @dts-jest:pass:snap
+  fetchUsers.cancel(
+    'reason'
+  ); /* => {
+    type: 'FETCH_USERS_CANCEL', payload: 'reason'
+  } */
+}
+
+// @dts-jest:group async action with mappers
+// {
 //   const fetchUserMappers = createAsyncAction(
 //     'FETCH_USER_REQUEST',
 //     'FETCH_USER_SUCCESS',
@@ -96,9 +135,10 @@ describe('async action with any type', () => {
 //     type: 'FETCH_USER_FAILURE',
 //     payload: 'hardcoded error',
 //   });
-// });
+// }
 
-// describe('should create an async action with unions', () => {
+// @dts-jest:group async action with unions
+// {
 //   const fetchUserMappers = createAsyncAction(
 //     'FETCH_USER_REQUEST',
 //     'FETCH_USER_SUCCESS',
@@ -130,7 +170,7 @@ describe('async action with any type', () => {
 //     type: 'FETCH_USER_FAILURE',
 //     payload: true,
 //   });
-// });
+// }
 
 // NEW API PROPOSAL:
 // - WITH MAP

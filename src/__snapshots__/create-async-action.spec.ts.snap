@@ -1,23 +1,37 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`fetchUsers.failure(
-    1
-  ) 1`] = `"T.PayloadAction<\\"FETCH_USERS_FAILURE\\", any>"`;
+exports[`async action with any type fetchUsers.failure(
+      1
+    ) 1`] = `"T.PayloadAction<\\"FETCH_USERS_FAILURE\\", any>"`;
 
-exports[`fetchUsers.failure(
-    Error('reason')
-  ) 1`] = `"T.PayloadAction<\\"FETCH_USERS_FAILURE\\", Error>"`;
+exports[`async action with any type fetchUsers.request(
+      1
+    ) 1`] = `"T.PayloadAction<\\"FETCH_USERS_REQUEST\\", any>"`;
 
-exports[`fetchUsers.request(
-    1
-  ) 1`] = `"T.PayloadAction<\\"FETCH_USERS_REQUEST\\", any>"`;
+exports[`async action with any type fetchUsers.success([
+      1,
+    ]) 1`] = `"T.PayloadAction<\\"FETCH_USERS_SUCCESS\\", any[]>"`;
 
-exports[`fetchUsers.request() 1`] = `"T.EmptyAction<\\"FETCH_USERS_REQUEST\\">"`;
+exports[`async action with cancel fetchUsers.cancel(
+      'reason'
+    ) 1`] = `"T.PayloadAction<\\"FETCH_USERS_CANCEL\\", string>"`;
 
-exports[`fetchUsers.success([
-    { firstName: 'Piotr', lastName: 'Witek' },
-  ]) 1`] = `"T.PayloadAction<\\"FETCH_USERS_SUCCESS\\", User[]>"`;
+exports[`async action with cancel fetchUsers.failure(
+      Error('reason')
+    ) 1`] = `"T.PayloadAction<\\"FETCH_USERS_FAILURE\\", Error>"`;
 
-exports[`fetchUsers.success([
-    1,
-  ]) 1`] = `"T.PayloadAction<\\"FETCH_USERS_SUCCESS\\", any[]>"`;
+exports[`async action with cancel fetchUsers.request() 1`] = `"T.EmptyAction<\\"FETCH_USERS_REQUEST\\">"`;
+
+exports[`async action with cancel fetchUsers.success([
+      { firstName: 'Piotr', lastName: 'Witek' },
+    ]) 1`] = `"T.PayloadAction<\\"FETCH_USERS_SUCCESS\\", User[]>"`;
+
+exports[`async action with undefined type fetchUsers.failure(
+      Error('reason')
+    ) 1`] = `"T.PayloadAction<\\"FETCH_USERS_FAILURE\\", Error>"`;
+
+exports[`async action with undefined type fetchUsers.request() 1`] = `"T.EmptyAction<\\"FETCH_USERS_REQUEST\\">"`;
+
+exports[`async action with undefined type fetchUsers.success([
+      { firstName: 'Piotr', lastName: 'Witek' },
+    ]) 1`] = `"T.PayloadAction<\\"FETCH_USERS_SUCCESS\\", User[]>"`;

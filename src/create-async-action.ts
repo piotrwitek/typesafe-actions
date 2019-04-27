@@ -7,74 +7,93 @@ import { createCustomAction } from './create-custom-action';
 import { checkInvalidActionTypeInArray } from './utils/validation';
 
 export interface AsyncActionBuilder<
-  T1 extends TypeConstant,
-  T2 extends TypeConstant,
-  T3 extends TypeConstant
+  TType1 extends TypeConstant,
+  TType2 extends TypeConstant,
+  TType3 extends TypeConstant,
+  TType4 extends TypeConstant
 > {
   // tslint:disable-next-line:callable-types
-  <P1, P2, P3>(): AsyncActionBuilderConstructor<T1, T2, T3, P1, P2, P3>;
-  // withMappers<A1 = undefined, P1 = undefined, A2 = undefined, P2 = undefined, A3 = undefined, P3 = undefined>(
-  //   requestMapper: (a?: A1) => P1,
-  //   successMapper: (a?: A2) => P2,
-  //   failureMapper: (a?: A3) => P3
-  // ): AsyncActionBuilderWithMappers<T1, T2, T3, A1, P1, A2, P2, A3, P3>;
+  <TPayload1, TPayload2, TPayload3, TPayload4>(): {
+    request: ActionBuilderConstructor<TType1, TPayload1>;
+    success: ActionBuilderConstructor<TType2, TPayload2>;
+    failure: ActionBuilderConstructor<TType3, TPayload3>;
+    cancel: ActionBuilderConstructor<TType4, TPayload4>;
+  };
+  <TPayload1, TPayload2, TPayload3>(): {
+    request: ActionBuilderConstructor<TType1, TPayload1>;
+    success: ActionBuilderConstructor<TType2, TPayload2>;
+    failure: ActionBuilderConstructor<TType3, TPayload3>;
+  };
 }
-
-export type AsyncActionBuilderConstructor<
-  T1 extends TypeConstant,
-  T2 extends TypeConstant,
-  T3 extends TypeConstant,
-  P1,
-  P2,
-  P3
-> = {
-  request: ActionBuilderConstructor<T1, P1>;
-  success: ActionBuilderConstructor<T2, P2>;
-  failure: ActionBuilderConstructor<T3, P3>;
-};
 
 /**
  * implementation
  */
 export function createAsyncAction<
-  T1 extends TypeConstant,
-  T2 extends TypeConstant,
-  T3 extends TypeConstant
+  TType1 extends TypeConstant,
+  TType2 extends TypeConstant,
+  TType3 extends TypeConstant,
+  TType4 extends TypeConstant
 >(
-  requestType: T1,
-  successType: T2,
-  failureType: T3
-): AsyncActionBuilder<T1, T2, T3> {
+  requestType: TType1,
+  successType: TType2,
+  failureType: TType3,
+  cancelType?: TType4
+): AsyncActionBuilder<TType1, TType2, TType3, TType4> {
   [requestType, successType, failureType].forEach(
     checkInvalidActionTypeInArray
   );
 
-  function constructor<P1, P2, P3>(): AsyncActionBuilderConstructor<
-    T1,
-    T2,
-    T3,
-    P1,
-    P2,
-    P3
-  > {
+  const constructor = (<TPayload1, TPayload2, TPayload3, TPayload4>() => {
     return {
-      request: createCustomAction(requestType, type => (payload?: P1) => ({
-        type,
-        payload,
-      })) as ActionBuilderConstructor<T1, P1>,
-      success: createCustomAction(successType, type => (payload?: P2) => ({
-        type,
-        payload,
-      })) as ActionBuilderConstructor<T2, P2>,
-      failure: createCustomAction(failureType, type => (payload?: P3) => ({
-        type,
-        payload,
-      })) as ActionBuilderConstructor<T3, P3>,
+      request: createCustomAction(
+        requestType,
+        type => (payload: TPayload1) => ({
+          type,
+          payload,
+        })
+      ),
+      success: createCustomAction(
+        successType,
+        type => (payload: TPayload2) => ({
+          type,
+          payload,
+        })
+      ),
+      failure: createCustomAction(
+        failureType,
+        type => (payload: TPayload3) => ({
+          type,
+          payload,
+        })
+      ),
+      cancel:
+        cancelType &&
+        createCustomAction(cancelType, type => (payload: TPayload4) => ({
+          type,
+          payload,
+        })),
     };
-  }
+  }) as AsyncActionBuilder<TType1, TType2, TType3, TType4>;
 
-  return Object.assign(constructor);
+  const api = Object.assign<
+    AsyncActionBuilder<TType1, TType2, TType3, TType4>,
+    {}
+  >(constructor, {
+    // extension point for chain api
+  });
+
+  return api;
 }
+
+// export interface AsyncActionBuilder<
+// {
+// withMappers<A1 = undefined, P1 = undefined, A2 = undefined, P2 = undefined, A3 = undefined, P3 = undefined>(
+//   requestMapper: (a?: A1) => P1,
+//   successMapper: (a?: A2) => P2,
+//   failureMapper: (a?: A3) => P3
+// ): AsyncActionBuilderWithMappers<T1, T2, T3, A1, P1, A2, P2, A3, P3>;
+// }
 
 // export type AsyncActionBuilderWithMappers<
 //   T1 extends StringType,
