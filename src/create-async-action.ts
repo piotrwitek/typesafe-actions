@@ -5,6 +5,7 @@ import {
 } from './type-helpers';
 import { createCustomAction } from './create-custom-action';
 import { checkInvalidActionTypeInArray } from './utils/validation';
+import { createStandardAction } from './create-standard-action';
 
 export interface AsyncActionBuilder<
   TType1 extends TypeConstant,
@@ -46,33 +47,10 @@ export function createAsyncAction<
 
   const constructor = (<TPayload1, TPayload2, TPayload3, TPayload4>() => {
     return {
-      request: createCustomAction(
-        requestType,
-        type => (payload: TPayload1) => ({
-          type,
-          payload,
-        })
-      ),
-      success: createCustomAction(
-        successType,
-        type => (payload: TPayload2) => ({
-          type,
-          payload,
-        })
-      ),
-      failure: createCustomAction(
-        failureType,
-        type => (payload: TPayload3) => ({
-          type,
-          payload,
-        })
-      ),
-      cancel:
-        cancelType &&
-        createCustomAction(cancelType, type => (payload: TPayload4) => ({
-          type,
-          payload,
-        })),
+      request: createStandardAction(requestType)<TPayload1>(),
+      success: createStandardAction(successType)<TPayload2>(),
+      failure: createStandardAction(failureType)<TPayload3>(),
+      cancel: cancelType && createStandardAction(cancelType)<TPayload4>(),
     };
   }) as AsyncActionBuilder<TType1, TType2, TType3, TType4>;
 

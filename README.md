@@ -468,22 +468,24 @@ This will mitigate **redux verbosity** and greatly reduce the maintenance cost o
 // actions.ts
 import { createAsyncAction } from 'typesafe-actions';
 
-const fetchTodos = createAsyncAction(
+const fetchTodosAsync = createAsyncAction(
   'FETCH_TODOS_REQUEST',
   'FETCH_TODOS_SUCCESS',
-  'FETCH_TODOS_FAILURE'
-)<string, Todo[], Error>();
+  'FETCH_TODOS_FAILURE',
+  'FETCH_TODOS_CANCEL'
+)<string, Todo[], Error, string>();
 
 // epics.ts
-import { fetchTodos } from './actions';
+import { fetchTodosAsync } from './actions';
 
 const fetchTodosFlow: Epic<RootAction, RootAction, RootState, Services> = (action$, store, { todosApi }) =>
   action$.pipe(
-    filter(isActionOf(fetchTodos.request)),
+    filter(isActionOf(fetchTodosAsync.request)),
     switchMap(action =>
       from(todosApi.getAll(action.payload)).pipe(
-        map(fetchTodos.success),
-        catchError(pipe(fetchTodos.failure, of))
+        map(fetchTodosAsync.success),
+        catchError(pipe(fetchTodosAsync.failure, of)),
+        takeUntil(action$.pipe(filter(isActionOf(fetchTodosAsync.cancel)))),
       )
     );
 ```
@@ -499,18 +501,18 @@ Typescript issues:
 ```ts
 import { createAsyncAction } from 'typesafe-actions';
 
-const fetchTodos = createAsyncAction(
+const fetchTodosAsync = createAsyncAction(
   'FETCH_TODOS_REQUEST',
   'FETCH_TODOS_SUCCESS',
   'FETCH_TODOS_FAILURE'
 )<string, Todo[], Error>();
 
-function* addTodoSaga(action: ReturnType<typeof fetchTodos.request>): Generator {
+function* addTodoSaga(action: ReturnType<typeof fetchTodosAsync.request>): Generator {
     const response: Todo[] = yield call(todosApi.getAll, action.payload);
 
-    yield put(fetchTodos.success(response));
+    yield put(fetchTodosAsync.success(response));
   } catch (err) {
-    yield put(fetchTodos.failure(err));
+    yield put(fetchTodosAsync.failure(err));
   }
 }
 ```
@@ -695,8 +697,8 @@ _Create an object containing three enhanced action-creators to simplify handling
 
 ```ts
 createAsyncAction(
-  requestType, successType, failureType
-)<TRequestPayload, TSuccessPayload, TErrorPayload>
+  requestType, successType, failureType, cancelType?
+)<TRequestPayload, TSuccessPayload, TFailurePayload, TCancelPayload?>()
 ```
 
 > **TIP**: Using `undefined` as generic type parameter you can make the action-creator function require NO parameters.
@@ -707,17 +709,27 @@ Examples:
 ```ts
 import { createAsyncAction } from 'typesafe-actions';
 
-const fetchUsers = createAsyncAction(
+const fetchUsersAsync = createAsyncAction(
   'FETCH_USERS_REQUEST',
   'FETCH_USERS_SUCCESS',
   'FETCH_USERS_FAILURE'
 )<string, User[], Error>();
 
-dispatch(fetchUsers.request(params));
+dispatch(fetchUsersAsync.request(params));
 
-dispatch(fetchUsers.success(response));
+dispatch(fetchUsersAsync.success(response));
 
-dispatch(fetchUsers.failure(err));
+dispatch(fetchUsersAsync.failure(err));
+
+// There is 4th optional argument to declare cancel action
+const fetchUsersAsync = createAsyncAction(
+  'FETCH_USERS_REQUEST',
+  'FETCH_USERS_SUCCESS',
+  'FETCH_USERS_FAILURE'
+  'FETCH_USERS_CANCEL'
+)<string, User[], Error, string>();
+
+dispatch(fetchUsersAsync.cancel('reason'));
 ```
 
 [⇧ back to top](#table-of-contents)
@@ -1007,12 +1019,12 @@ From `v4.x.x` all action creators will use `undefined` instead of `void` as a ge
 const increment = createStandardAction('INCREMENT')<undefined>();
 increment(); // <= no parameters required
 
-const fetchUsers = createAsyncAction(
+const fetchUsersAsync = createAsyncAction(
   'FETCH_USERS_REQUEST',
   'FETCH_USERS_SUCCESS',
   'FETCH_USERS_FAILURE'
 )<undefined, User[], Error>();
-fetchUsers.request(); // <= no parameters required
+fetchUsersAsync.request(); // <= no parameters required
 ```
 
 ### `v2.x.x` to `v3.x.x`
