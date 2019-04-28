@@ -15,9 +15,10 @@
 
 For bugfixes:
 * [ ] I have added at least one unit test to confirm the bug have been fixed
+* [ ] I have checked and updated TOC and API Docs when necessary
 
 For new features:
-* [ ] I have updated API docs and tutorial (if applicable)
-* [ ] I have added short examples to demonstrate new feature usage
+* [ ] I have added entry in TOC and API Docs
+* [ ] I have added a short example in API Docs to demonstrate new usage
 * [ ] I have added type unit tests with `dts-jest`
 * [ ] I have added runtime unit tests with `dts-jest`
