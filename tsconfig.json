@@ -7,14 +7,14 @@
     /* Strict Type-Checking Options */
     "strict": true,
     /* Others */
-    "lib": ["dom", "es2017"],
+    "lib": ["dom", "es6", "es2016.array.include"],
     "types": ["jest"],
     "outDir": "out/", // target for compiled files
-    "target": "es5",
+    "target": "es6",
     "module": "esnext",
     "moduleResolution": "node",
     "declaration": false, // emit declarations
-    "importHelpers": true, // importing helper functions from tslib
+    "importHelpers": false, // importing helper functions from tslib
     "noEmitHelpers": true, // disable emitting inline helper functions
     "noEmitOnError": true,
     // "noUnusedLocals": true,
