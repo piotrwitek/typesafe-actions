@@ -701,10 +701,10 @@ createAsyncAction(
 )<TRequestPayload, TSuccessPayload, TFailurePayload, TCancelPayload?>()
 ```
 
-**Return Type:**
+##### `AsyncActionCreator`
 
 ```ts
-type AsyncAction<
+type AsyncActionCreator<
   [TRequestType, TRequestPayload],
   [TSuccessType, TSuccessPayload],
   [TFailureType, TFailurePayload],
@@ -723,7 +723,7 @@ Examples:
 [> Advanced Usage Examples](src/create-async-action.spec.ts)
 
 ```ts
-import { createAsyncAction } from 'typesafe-actions';
+import { createAsyncAction, AsyncActionCreator } from 'typesafe-actions';
 
 const fetchUsersAsync = createAsyncAction(
   'FETCH_USERS_REQUEST',
@@ -737,6 +737,15 @@ dispatch(fetchUsersAsync.success(response));
 
 dispatch(fetchUsersAsync.failure(err));
 
+const fn = (
+  a: AsyncActionCreator<
+    ['FETCH_USERS_REQUEST', string],
+    ['FETCH_USERS_SUCCESS', User[]],
+    ['FETCH_USERS_FAILURE', Error]
+  >
+) => a;
+fn(fetchUsersAsync);
+
 // There is 4th optional argument to declare cancel action
 const fetchUsersAsync = createAsyncAction(
   'FETCH_USERS_REQUEST',
@@ -746,6 +755,16 @@ const fetchUsersAsync = createAsyncAction(
 )<string, User[], Error, string>();
 
 dispatch(fetchUsersAsync.cancel('reason'));
+
+const fn = (
+  a: AsyncActionCreator<
+    ['FETCH_USERS_REQUEST', string],
+    ['FETCH_USERS_SUCCESS', User[]],
+    ['FETCH_USERS_FAILURE', Error],
+    ['FETCH_USERS_CANCEL', string]
+  >
+) => a;
+fn(fetchUsersAsync);
 ```
 
 [⇧ back to top](#table-of-contents)

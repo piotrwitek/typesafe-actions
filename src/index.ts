@@ -12,7 +12,7 @@ export { action } from './action';
 export { createAction } from './create-action';
 export { createStandardAction } from './create-standard-action';
 export { createCustomAction } from './create-custom-action';
-export { createAsyncAction, AsyncAction } from './create-async-action';
+export { createAsyncAction, AsyncActionCreator } from './create-async-action';
 export { createReducer } from './create-reducer';
 
 // action-helpers

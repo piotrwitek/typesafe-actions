@@ -6,7 +6,7 @@ import {
 import { checkInvalidActionTypeInArray } from './utils/validation';
 import { createStandardAction } from './create-standard-action';
 
-export type AsyncAction<
+export type AsyncActionCreator<
   TRequest extends [T1, P1],
   TSuccess extends [T2, P2],
   TFailure extends [T3, P3],
@@ -34,13 +34,13 @@ export interface AsyncActionBuilder<
   TType3 extends TypeConstant,
   TType4 extends TypeConstant
 > {
-  <TPayload1, TPayload2, TPayload3, TPayload4>(): AsyncAction<
+  <TPayload1, TPayload2, TPayload3, TPayload4>(): AsyncActionCreator<
     [TType1, TPayload1],
     [TType2, TPayload2],
     [TType3, TPayload3],
     [TType4, TPayload4]
   >;
-  <TPayload1, TPayload2, TPayload3>(): AsyncAction<
+  <TPayload1, TPayload2, TPayload3>(): AsyncActionCreator<
     [TType1, TPayload1],
     [TType2, TPayload2],
     [TType3, TPayload3]
