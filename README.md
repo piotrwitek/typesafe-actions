@@ -701,6 +701,22 @@ createAsyncAction(
 )<TRequestPayload, TSuccessPayload, TFailurePayload, TCancelPayload?>()
 ```
 
+**Return Type:**
+
+```ts
+type AsyncAction<
+  [TRequestType, TRequestPayload],
+  [TSuccessType, TSuccessPayload],
+  [TFailureType, TFailurePayload],
+  [TCancelType, TCancelPayload]?
+> = {
+  request: StandardActionCreator<TRequestType, TRequestPayload>,
+  success: StandardActionCreator<TSuccessType, TSuccessPayload>,
+  failure: StandardActionCreator<TFailureType, TFailurePayload>,
+  cancel?: StandardActionCreator<TCancelType, TCancelPayload>,
+}
+```
+
 > **TIP**: Using `undefined` as generic type parameter you can make the action-creator function require NO parameters.
 
 Examples:
