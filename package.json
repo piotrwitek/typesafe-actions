@@ -15,11 +15,10 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "npm run pre-push"
+      "pre-push": "npm run ci-check"
     }
   },
   "scripts": {
-    "pre-push": "npm run prettier:fix && npm run lint && npm run tsc && npm run test:update && npm run doctoc",
     "ci-check": "npm run prettier && npm run lint && npm run tsc && npm run test && npm run doctoc",
     "reinstall": "rm -rf node_modules/ dist/ && npm install",
     "prettier": "prettier --list-different 'src/**/*.ts' || (echo '\nPlease fix code formatting by running:\nnpm run prettier:fix\n'; exit 1)",

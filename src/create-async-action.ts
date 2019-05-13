@@ -3,9 +3,30 @@ import {
   ActionBuilderConstructor,
   // ActionBuilderMap,
 } from './type-helpers';
-import { createCustomAction } from './create-custom-action';
 import { checkInvalidActionTypeInArray } from './utils/validation';
 import { createStandardAction } from './create-standard-action';
+
+export type AsyncActionCreator<
+  TRequest extends [T1, P1],
+  TSuccess extends [T2, P2],
+  TFailure extends [T3, P3],
+  TCancel extends [T4, P4] = never,
+  T1 extends TypeConstant = TRequest[0],
+  P1 = TRequest[1],
+  T2 extends TypeConstant = TSuccess[0],
+  P2 = TSuccess[1],
+  T3 extends TypeConstant = TFailure[0],
+  P3 = TFailure[1],
+  T4 extends TypeConstant = TCancel[0],
+  P4 = TCancel[1]
+> = {
+  request: ActionBuilderConstructor<T1, P1>;
+  success: ActionBuilderConstructor<T2, P2>;
+  failure: ActionBuilderConstructor<T3, P3>;
+  cancel: TCancel extends [TypeConstant, any]
+    ? ActionBuilderConstructor<T4, P4>
+    : never;
+};
 
 export interface AsyncActionBuilder<
   TType1 extends TypeConstant,
@@ -13,18 +34,17 @@ export interface AsyncActionBuilder<
   TType3 extends TypeConstant,
   TType4 extends TypeConstant
 > {
-  // tslint:disable-next-line:callable-types
-  <TPayload1, TPayload2, TPayload3, TPayload4>(): {
-    request: ActionBuilderConstructor<TType1, TPayload1>;
-    success: ActionBuilderConstructor<TType2, TPayload2>;
-    failure: ActionBuilderConstructor<TType3, TPayload3>;
-    cancel: ActionBuilderConstructor<TType4, TPayload4>;
-  };
-  <TPayload1, TPayload2, TPayload3>(): {
-    request: ActionBuilderConstructor<TType1, TPayload1>;
-    success: ActionBuilderConstructor<TType2, TPayload2>;
-    failure: ActionBuilderConstructor<TType3, TPayload3>;
-  };
+  <TPayload1, TPayload2, TPayload3, TPayload4>(): AsyncActionCreator<
+    [TType1, TPayload1],
+    [TType2, TPayload2],
+    [TType3, TPayload3],
+    [TType4, TPayload4]
+  >;
+  <TPayload1, TPayload2, TPayload3>(): AsyncActionCreator<
+    [TType1, TPayload1],
+    [TType2, TPayload2],
+    [TType3, TPayload3]
+  >;
 }
 
 /**
