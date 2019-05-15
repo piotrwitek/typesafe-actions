@@ -42,7 +42,7 @@ type User = { firstName: string; lastName: string };
     type: 'FETCH_USERS_FAILURE', payload: Error('reason')
   } */
 
-  // @dts-jest:pass:snap
+  // @dts-jest:fail:snap
   fetchUsersAsync.cancel;
 }
 

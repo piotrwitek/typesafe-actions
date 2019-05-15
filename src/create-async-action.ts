@@ -6,6 +6,11 @@ import {
 import { checkInvalidActionTypeInArray } from './utils/validation';
 import { createStandardAction } from './create-standard-action';
 
+export type ExcludeNever<T extends object> = Pick<
+  T,
+  { [Key in keyof T]: T[Key] extends never ? never : Key }[keyof T]
+>;
+
 export type AsyncActionCreator<
   TRequest extends [T1, P1],
   TSuccess extends [T2, P2],
@@ -19,14 +24,14 @@ export type AsyncActionCreator<
   P3 = TFailure[1],
   T4 extends TypeConstant = TCancel[0],
   P4 = TCancel[1]
-> = {
+> = ExcludeNever<{
   request: ActionBuilderConstructor<T1, P1>;
   success: ActionBuilderConstructor<T2, P2>;
   failure: ActionBuilderConstructor<T3, P3>;
   cancel: TCancel extends [TypeConstant, any]
     ? ActionBuilderConstructor<T4, P4>
     : never;
-};
+}>;
 
 export interface AsyncActionBuilder<
   TType1 extends TypeConstant,

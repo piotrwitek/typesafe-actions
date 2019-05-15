@@ -20,7 +20,7 @@ type User = { firstName: string; lastName: string };
       ['FETCH_USERS_FAILURE', Error]
     >
   ) => a;
-  // @dts-jest:pass:snap -> AsyncActionCreator<["FETCH_USERS_REQUEST", undefined], ["FETCH_USERS_SUCCESS", User[]], ["FETCH_USERS_FAILURE", Error], never, "FETCH_USERS_REQUEST", undefined, "FETCH_USERS_SUCCESS", User[], "FETCH_USERS_FAILURE", Error, never, never>
+  // @dts-jest:pass:snap -> Pick<{ request: T.EmptyAC<"FETCH_USERS_REQUEST">; success: T.PayloadAC<"FETCH_USERS_SUCCESS", User[]>; failure: T.PayloadAC<"FETCH_USERS_FAILURE", Error>; cancel: never; }, "request" | "success" | "failure">
   fn(fetchUsersAsync);
 
   // @dts-jest:pass:snap -> T.EmptyAction<"FETCH_USERS_REQUEST">
@@ -42,7 +42,7 @@ type User = { firstName: string; lastName: string };
     type: 'FETCH_USERS_FAILURE', payload: Error('reason')
   } */
 
-  // @dts-jest:pass:snap -> never
+  // @dts-jest:fail:snap -> Property 'cancel' does not exist on type 'Pick<{ request: EmptyAC<"FETCH_USERS_REQUEST">; success: PayloadAC<"FETCH_USERS_SUCCESS", User[]>; failure: PayloadAC<"FETCH_USERS_FAILURE", Error>; cancel: never; }, "request" | "success" | "failure">'.
   fetchUsersAsync.cancel;
 }
 
@@ -93,7 +93,7 @@ type User = { firstName: string; lastName: string };
       ['FETCH_USERS_CANCEL', string]
     >
   ) => a;
-  // @dts-jest:pass:snap -> AsyncActionCreator<["FETCH_USERS_REQUEST", undefined], ["FETCH_USERS_SUCCESS", User[]], ["FETCH_USERS_FAILURE", Error], ["FETCH_USERS_CANCEL", string], "FETCH_USERS_REQUEST", undefined, "FETCH_USERS_SUCCESS", User[], "FETCH_USERS_FAILURE", Error, "FETCH_USERS_CANCEL", string>
+  // @dts-jest:pass:snap -> Pick<{ request: T.EmptyAC<"FETCH_USERS_REQUEST">; success: T.PayloadAC<"FETCH_USERS_SUCCESS", User[]>; failure: T.PayloadAC<"FETCH_USERS_FAILURE", Error>; cancel: T.PayloadAC<"FETCH_USERS_CANCEL", string>; }, "request" | "success" | "failure" | "cancel">
   fn(fetchUsersAsync);
 
   // @dts-jest:pass:snap -> T.EmptyAction<"FETCH_USERS_REQUEST">
