@@ -1,8 +1,6 @@
 import * as T from './type-helpers';
 import { createStandardAction } from './create-standard-action';
 
-it.skip('skip', () => undefined);
-
 describe('constructor', () => {
   describe('toString() method return a type', () => {
     const actionCreator = createStandardAction('CREATE_STANDARD_ACTION')();

@@ -1,6 +1,4 @@
 *
-!src/*.ts
-src/*.spec.ts
 !dist/*
 !LICENSE
 !README.md

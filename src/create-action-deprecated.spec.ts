@@ -1,8 +1,6 @@
 import * as T from './type-helpers';
 import { createActionDeprecated } from './create-action-deprecated';
 
-it.skip('skip', () => undefined);
-
 describe('with symbol', () => {
   const CREATE_ACTION_DEPRECATED = Symbol(1);
   const increment = createActionDeprecated(CREATE_ACTION_DEPRECATED as any);

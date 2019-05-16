@@ -4,8 +4,6 @@ import { createStandardAction } from './create-standard-action';
 import { createCustomAction } from './create-custom-action';
 import { getType } from './get-type';
 
-it.skip('skip', () => undefined);
-
 describe('from createAction', () => {
   // @dts-jest:pass:snap
   getType(createAction('CREATE_ACTION')); // => 'CREATE_ACTION'
