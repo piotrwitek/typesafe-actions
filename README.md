@@ -65,9 +65,9 @@ _This library is part of the [React & Redux TypeScript Guide](https://github.com
     - [Using action-creators instances instead of type-constants](#using-action-creators-instances-instead-of-type-constants)
     - [Using regular type-constants](#using-regular-type-constants)
   - [Reducers](#reducers)
-    - [Extending internal types to streamline type usage with `typesafe-actions`](#extending-internal-types-to-streamline-type-usage-with-typesafe-actions)
-    - [Using createReducer API](#using-createreducer-api)
-    - [Using standard switch reducer](#using-standard-switch-reducer)
+    - [Extending internal types to enable type-free syntax with `createReducer`](#extending-internal-types-to-enable-type-free-syntax-with-createreducer)
+    - [Using createReducer API with type-free syntax](#using-createreducer-api-with-type-free-syntax)
+    - [Alternative usage with regular switch reducer](#alternative-usage-with-regular-switch-reducer)
   - [Async-Flows](#async-flows)
     - [With `redux-observable` epics](#with-redux-observable-epics)
     - [With `redux-saga` sagas](#with-redux-saga-sagas)
@@ -376,7 +376,7 @@ if (isOfType(types.ADD, action)) {
 
 ### Reducers
 
-#### Extending internal types to streamline type usage with `typesafe-actions`
+#### Extending internal types to enable type-free syntax with `createReducer`
 
 We can extend internal types of `typesafe-actions` module with `RootAction` definition of our application so that you don't need to pass generic type arguments with `createReducer` API:
 
@@ -398,7 +398,7 @@ createReducer(...)
 createReducer<State, Action>(...)
 ```
 
-#### Using createReducer API
+#### Using createReducer API with type-free syntax
 
 We can prevent a lot of boilerplate code and type errors using this powerfull and completely typesafe API.
 
@@ -426,7 +426,7 @@ counterReducer(0, add(4)); // => 4
 counterReducer(0, increment()); // => 1
 ```
 
-#### Using standard switch reducer
+#### Alternative usage with regular switch reducer
 
 First we need to start by generating a **tagged union type** of actions (`TodosAction`). It's very easy to do by using `ActionType` **type-helper**.
 
@@ -788,12 +788,23 @@ createReducer<TState, TRootAction>(initialState, handlersMap?)
 Examples:
 [> Advanced Usage Examples](src/create-reducer.spec.ts)
 
+> **TIP:** You can use reducer API with a **type-free** syntax by [Extending internal types](#extending-internal-types-to-enable-type-free-syntax-with-createreducer), otherwise you'll have to pass generic type arguments like in below examples
+```ts
+// type-free syntax doesn't require generic type arguments
+const counterReducer = createReducer(0, { 
+  ADD: (state, action) => state + action.payload,
+  [getType(increment)]: (state, _) => state + 1,
+})
+```
+
 Using type-constants as keys in the object map:
 ```ts
 import { createReducer, getType } from 'typesafe-actions'
 
-// no need for generic type parameters - learn more in Tutorial
-const counterReducer = createReducer(0, { 
+type State = number;
+type Action = { type: 'ADD', payload: number } | { type: 'INCREMENT' };
+
+const counterReducer = createReducer<State, Action>(0, { 
   ADD: (state, action) => state + action.payload,
   [getType(increment)]: (state, _) => state + 1,
 })
@@ -805,17 +816,17 @@ counterReducer(0, increment()); // => 1
 Using handleAction chain API:
 ```ts
 // using action-creators
-const counterReducer = createReducer(0)
+const counterReducer = createReducer<State, Action>(0)
   .handleAction(add, (state, action) => state + action.payload)
   .handleAction(increment, (state, _) => state + 1)
-  
-  // or handle multiple actions using array
+
+  // handle multiple actions by using array
   .handleAction([add, increment], (state, action) =>
     state + (action.type === 'ADD' ? action.payload : 1)
   );
 
 // all the same scenarios are working when using type-constants
-const counterReducer = createReducer(0)
+const counterReducer = createReducer<State, Action>(0)
   .handleAction('ADD', (state, action) => state + action.payload)
   .handleAction('INCREMENT', (state, _) => state + 1);
   
@@ -825,11 +836,11 @@ counterReducer(0, increment()); // => 1
 
 Extend or compose various reducers together - every operation is completely typesafe:
 ```ts
-const newCounterReducer = createReducer(0)
+const newCounterReducer = createReducer<State, Action>(0)
   .handleAction('SUBTRACT', (state, action) => state - action.payload)
   .handleAction('DECREMENT', (state, _) => state - 1);
 
-const bigReducer = createReducer(0, {
+const bigReducer = createReducer<State, Action>(0, {
   ...counterReducer.handlers, // typesafe
   ...newCounterReducer.handlers, // typesafe
   SUBTRACT: decrementReducer.handlers.DECREMENT, // <= error, wrong type
