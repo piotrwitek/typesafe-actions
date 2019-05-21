@@ -1,8 +1,6 @@
 import * as T from './type-helpers';
 import { createAsyncAction, AsyncActionCreator } from './create-async-action';
 
-it.skip('skip', () => undefined);
-
 type User = { firstName: string; lastName: string };
 
 // @dts-jest:group async action with undefined type

@@ -1,5 +1,5 @@
 {
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "typings"],
   "exclude": ["src/**/*.snap.ts", "src/**/*.spec.ts"],
   "compilerOptions": {
     "baseUrl": "./",
@@ -7,10 +7,10 @@
     /* Strict Type-Checking Options */
     "strict": true,
     /* Others */
-    "lib": ["dom", "es6", "es2016.array.include"],
+    "lib": ["dom", "es2015", "es2016.array.include"],
     "types": ["jest"],
     "outDir": "out/", // target for compiled files
-    "target": "es6",
+    "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
     "declaration": false, // emit declarations

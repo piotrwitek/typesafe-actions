@@ -1,8 +1,6 @@
 import * as T from './type-helpers';
 import { createAction } from './create-action';
 
-it.skip('skip', () => undefined);
-
 describe('toString() method return a type', () => {
   const actionCreator = createAction('CREATE_ACTION');
   // @dts-jest:pass:snap
