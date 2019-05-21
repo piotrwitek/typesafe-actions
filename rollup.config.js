@@ -17,7 +17,15 @@ import pkg from './package.json';
 const babelOptions = (format /* : 'cjs' | 'es' | 'umd' */) => ({
   exclude: /node_modules/,
   extensions: ['.ts', '.tsx', '.js', '.jsx', '.es', '.mjs', '.json'],
-  presets: [['@babel/preset-env']],
+  presets: [
+    [
+      '@babel/preset-env',
+      {
+        useBuiltIns: 'entry',
+        loose: true,
+      },
+    ],
+  ],
   plugins: [
     require.resolve('babel-plugin-annotate-pure-calls'),
     require.resolve('babel-plugin-dev-expression'),
