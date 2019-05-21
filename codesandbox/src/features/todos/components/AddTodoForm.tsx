@@ -31,7 +31,11 @@ class AddTodoForm extends React.Component<Props, State> {
     const { title } = this.state;
 
     return (
-      <form>
+      <form
+        onSubmit={ev => {
+          ev.preventDefault();
+        }}
+      >
         <input
           style={{ width: 450 }}
           type="text"
