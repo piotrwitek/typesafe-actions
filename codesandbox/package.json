@@ -18,32 +18,43 @@
     "eject": "react-scripts-ts eject"
   },
   "dependencies": {
-    "@babel/polyfill": "7.4.4",
-    "@types/jest": "24.0.11",
-    "@types/react": "16.8.14",
+    "@types/jest": "24.0.13",
+    "@types/react": "16.8.19",
     "@types/react-dom": "16.8.4",
-    "@types/react-redux": "7.0.8",
-    "@types/react-router-dom": "4.3.2",
+    "@types/react-redux": "7.0.9",
+    "@types/react-router-dom": "4.3.3",
     "@types/react-router-redux": "5.0.18",
     "cuid": "2.1.6",
-    "jest": "24.7.1",
+    "jest": "24.8.0",
     "react": "16.8.6",
+    "react-app-polyfill": "1.0.1",
     "react-dom": "16.8.6",
-    "react-redux": "7.0.2",
-    "react-redux-typescript-scripts": "1.5.0",
+    "react-redux": "7.0.3",
+    "react-redux-typescript-scripts": "1.6.2",
     "react-router-dom": "4.3.1",
     "react-router-redux": "5.0.0-alpha.9",
     "react-scripts-ts": "3.1.0",
     "redux": "4.0.1",
     "redux-observable": "1.1.0",
     "reselect": "4.0.0",
-    "rxjs": "6.5.1",
+    "rxjs": "6.5.2",
     "tslib": "1.9.3",
-    "tslint": "5.16.0",
+    "tslint": "5.17.0",
     "tslint-react": "4.0.0",
     "typesafe-actions": "4.4.0",
-    "typescript": "3.4.5",
-    "utility-types": "3.5.0"
+    "typescript": "3.5.1",
+    "utility-types": "3.7.0"
   },
-  "devDependencies": {}
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
 }

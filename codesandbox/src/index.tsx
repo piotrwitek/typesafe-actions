@@ -1,6 +1,8 @@
-// tslint:disable-next-line: no-import-side-effect
-import '@babel/polyfill';
-// tslint:disable-next-line: no-import-side-effect
+// tslint:disable no-import-side-effect
+// tslint:disable no-submodule-imports
+// This must be the first line in src/index.js
+import 'react-app-polyfill/ie11';
+import 'react-app-polyfill/stable';
 import 'tslib';
 
 import * as React from 'react';

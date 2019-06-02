@@ -143,16 +143,15 @@ yarn add typesafe-actions
 
 It's compatible with all modern browsers.
 
-For older browsers (e.g. IE <= 11) and mobile devices you need to provide these polyfills:
+For older browsers support (e.g. IE <= 11) and some mobile devices you need to provide the following polyfills:
 - [Object.assign](https://developer.mozilla.org/pl/docs/Web/JavaScript/Referencje/Obiekty/Object/assign#Polyfill)
 - [Array.prototype.includes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes)
 
 **Recommended polyfill for IE**
 
-To provide the best compatibility for your application please include a popular polyfill package in your bundled application, such as `@babel/polyfill`.
-You can check the `React` guidelines on how to do that, specifically: https://reactjs.org/docs/javascript-environment-requirements.html
-
-It's included in our `/codesandbox` reference implementation which is using `@babel/polyfill` and is confirmed to be working with IE11. Please check it out!
+To provide the best compatibility please include a popular polyfill package in your application, such as `core-js` or `react-app-polyfill` for `create-react-app`.
+Please check the `React` guidelines to learn how to do that: [LINK](https://reactjs.org/docs/javascript-environment-requirements.html)
+A polyfill fo IE11 is included in our `/codesandbox` application.
 
 [⇧ back to top](#table-of-contents)
 
