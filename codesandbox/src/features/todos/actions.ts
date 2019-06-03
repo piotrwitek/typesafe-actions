@@ -12,11 +12,13 @@ export const removeTodo = createAction('REMOVE_TODO')<string>();
 export const loadTodosAsync = createAsyncAction(
   'LOAD_TODOS_REQUEST',
   'LOAD_TODOS_SUCCESS',
-  'LOAD_TODOS_FAILURE'
-)<undefined, Todo[], string>();
+  'LOAD_TODOS_FAILURE',
+  'LOAD_TODOS_CANCEL'
+)<undefined, Todo[], string, undefined>();
 
 export const saveTodosAsync = createAsyncAction(
   'SAVE_TODOS_REQUEST',
   'SAVE_TODOS_SUCCESS',
-  'SAVE_TODOS_FAILURE'
-)<undefined, undefined, string>();
+  'SAVE_TODOS_FAILURE',
+  'SAVE_TODOS_CANCEL'
+)<undefined, undefined, string, undefined>();

@@ -113,6 +113,7 @@ _Found it useful? Want more updates?_
 - [Compatibility Notes](#compatibility-notes)
 - [Recipes](#recipes)
   - [Restrict Meta type in `action` creator](#restrict-meta-type-in-action-creator)
+  - [Generic async-action handler](#generic-async-action-handler)
 - [Compare to others](#compare-to-others)
   - [`redux-actions`](#redux-actions)
 - [Motivation](#motivation)
@@ -1225,6 +1226,29 @@ export const validAction = (payload: string) =>
 export const invalidAction = (payload: string) =>
   actionWithRestrictedMeta('type', payload, { analytics: { excessProp: 'no way!' } }); // Error
 // Object literal may only specify known properties, and 'excessProp' does not exist in type '{ eventName: string; }
+```
+
+### Generic async-action handler
+```tsx
+export const createAsyncActionEpic = <
+  TAsyncAction extends AsyncActionCreator<any, any, any, any>
+>(
+  asyncAction: TAsyncAction,
+  action$: Observable<any>,
+  source$: Observable<ReturnType<TAsyncAction['success']>['payload']>
+): Observable<
+  ReturnType<TAsyncAction['success']> | ReturnType<TAsyncAction['failure']>
+> =>
+  action$.pipe(
+    filter(isActionOf(asyncAction.request)),
+    switchMap(() =>
+      source$.pipe(
+        map(asyncAction.success),
+        catchError(message => of(asyncAction.failure(message) as any)),
+        takeUntil(action$.pipe(filter(isActionOf(saveTodosAsync.cancel))))
+      )
+    )
+  );
 ```
 
 [⇧ back to top](#table-of-contents)
