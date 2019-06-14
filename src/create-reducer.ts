@@ -13,27 +13,21 @@ type CreateReducerChainApi<
   TState,
   TPrevNotHandledAction extends Action,
   TRootAction extends Action
-> = <
-  TType extends TPrevNotHandledAction['type'],
-  THandledTypeAction extends TPrevNotHandledAction extends Action<TType>
-    ? TPrevNotHandledAction
-    : never,
-  TCreator extends (...args: any[]) => TPrevNotHandledAction,
-  THandledCreatorAction extends TPrevNotHandledAction extends ReturnType<
-    TCreator
-  >
-    ? TPrevNotHandledAction
-    : never
->(
-  singleOrMultipleCreatorsAndTypes: TType | TType[] | TCreator | TCreator[],
+> = <TCurrentCreator extends (...args: any[]) => TPrevNotHandledAction>(
+  singleOrMultipleCreatorsAndTypes: TCurrentCreator | TCurrentCreator[],
   reducer: (
     state: TState,
-    action: THandledTypeAction extends THandledCreatorAction
-      ? THandledTypeAction
+    action: TPrevNotHandledAction extends ReturnType<TCurrentCreator>
+      ? TPrevNotHandledAction
       : never
   ) => TState
 ) => [
-  Exclude<TPrevNotHandledAction, THandledTypeAction & THandledCreatorAction>
+  Exclude<
+    TPrevNotHandledAction,
+    TPrevNotHandledAction extends ReturnType<TCurrentCreator>
+      ? TPrevNotHandledAction
+      : never
+  >
 ] extends [never]
   ? Reducer<TState, TRootAction> & {
       handlers: Record<
@@ -47,7 +41,9 @@ type CreateReducerChainApi<
           TRootAction,
           Exclude<
             TPrevNotHandledAction,
-            THandledTypeAction & THandledCreatorAction
+            TPrevNotHandledAction extends ReturnType<TCurrentCreator>
+              ? TPrevNotHandledAction
+              : never
           >
         >['type'],
         (state: TState, action: TRootAction) => TState
@@ -56,7 +52,9 @@ type CreateReducerChainApi<
         TState,
         Exclude<
           TPrevNotHandledAction,
-          THandledTypeAction & THandledCreatorAction
+          TPrevNotHandledAction extends ReturnType<TCurrentCreator>
+            ? TPrevNotHandledAction
+            : never
         >,
         TRootAction
       >;
