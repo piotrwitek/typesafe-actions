@@ -33,7 +33,10 @@
     "prebuild": "rm -rf dist/ .size-snapshot.json && tsc -p ./tsconfig.declaration.json",
     "build": "tsc -p . && rollup -c",
     "postbuild": "rm -rf out",
-    "prepublishOnly": "npm run reinstall && npm run ci-check && npm run build"
+    "prepublishOnly": "npm run reinstall && npm run ci-check && npm run build",
+    "benchmark:2": "rm -rf out && node --max-old-space-size=8000 ./node_modules/typescript/lib/tsc.js --diagnostics --outDir out benchmarks/2-actions.ts",
+    "benchmark:10": "rm -rf out && node --max-old-space-size=8000 ./node_modules/typescript/lib/tsc.js --diagnostics --outDir out benchmarks/10-actions.ts",
+    "benchmark:50": "rm -rf out && node --max-old-space-size=8000 ./node_modules/typescript/lib/tsc.js --diagnostics --outDir out benchmarks/50-actions.ts"
   },
   "dependencies": {},
   "devDependencies": {
