@@ -95,80 +95,6 @@ const initialState = 0;
   }
 }
 
-// @dts-jest:group With Action Types
-{
-  const reducerTest = createReducer(initialState);
-
-  const counterReducer1 = reducerTest.handleAction(
-    ['ADD', 'INCREMENT'],
-    (state, action) => state + (action.type === 'ADD' ? action.payload : 1)
-  );
-  // @dts-jest:pass:snap -> Record<"ADD" | "INCREMENT", (state: number, action: T.PayloadAction<"ADD", number> | T.EmptyAction<"INCREMENT"> | T.EmptyAction<"DECREMENT">) => number>
-  counterReducer1.handlers;
-  // @dts-jest:pass
-  Object.keys({ ...counterReducer1.handlers }); // => ["ADD", "INCREMENT"]
-  // @dts-jest:pass
-  Object.keys({ ...reducerTest.handlers }); // => []
-
-  const counterReducer2 = reducerTest
-    .handleAction(['ADD'], (state, action) => state + action.payload)
-    .handleAction(['INCREMENT'], (state, _) => state + 1);
-  // @dts-jest:pass:snap -> Record<"ADD" | "INCREMENT", (state: number, action: T.PayloadAction<"ADD", number> | T.EmptyAction<"INCREMENT"> | T.EmptyAction<"DECREMENT">) => number>
-  counterReducer2.handlers;
-  // @dts-jest:pass
-  Object.keys({ ...counterReducer2.handlers }); // => ["ADD", "INCREMENT"]
-  // @dts-jest:pass
-  Object.keys({ ...reducerTest.handlers }); // => []
-
-  const counterReducer3 = reducerTest.handleAction(
-    'ADD',
-    (state, action) => state + action.payload
-  );
-  // @dts-jest:pass:snap -> Record<"ADD", (state: number, action: T.PayloadAction<"ADD", number> | T.EmptyAction<"INCREMENT"> | T.EmptyAction<"DECREMENT">) => number>
-  counterReducer3.handlers;
-  // @dts-jest:pass
-  Object.keys({ ...counterReducer3.handlers }); // => ["ADD"]
-  // @dts-jest:pass
-  Object.keys({ ...reducerTest.handlers }); // => []
-
-  const counterReducer4 = reducerTest.handleAction(
-    'INCREMENT',
-    (state, _) => state + 1
-  );
-  // @dts-jest:pass:snap -> Record<"INCREMENT", (state: number, action: T.PayloadAction<"ADD", number> | T.EmptyAction<"INCREMENT"> | T.EmptyAction<"DECREMENT">) => number>
-  counterReducer4.handlers;
-  // @dts-jest:pass
-  Object.keys({ ...counterReducer4.handlers }); // => [ "INCREMENT"]
-  // @dts-jest:pass
-  Object.keys({ ...reducerTest.handlers }); // => []
-
-  {
-    [
-      counterReducer1,
-      counterReducer2,
-      createReducer(initialState, {
-        ADD: counterReducer3.handlers.ADD,
-        INCREMENT: counterReducer4.handlers.INCREMENT,
-      }),
-      createReducer(initialState, {
-        ADD: (state, action) => state + action.payload,
-        INCREMENT: (state, action) => state + 1,
-      }),
-      createReducer<number, ActionType<typeof actions>>(initialState, {
-        ADD: (state, action) => state + action.payload,
-        INCREMENT: (state, action) => state + 1,
-      }),
-    ].forEach(fn => {
-      // @dts-jest:pass
-      fn(0, {} as any); // => 0
-      // @dts-jest:pass
-      fn(0, increment()); // => 1
-      // @dts-jest:pass
-      fn(0, add(4)); // => 4
-    });
-  }
-}
-
 // @dts-jest:group Type refinement checks
 {
   type State = {
@@ -252,6 +178,80 @@ const initialState = 0;
     ].forEach(reducerResult => {
       // @dts-jest:pass:snap -> { foo: string | null; }
       reducerResult; // => { foo: "empty" }
+    });
+  }
+}
+
+// @dts-jest:group With Action Types
+{
+  const reducerTest = createReducer(initialState);
+
+  const counterReducer1 = reducerTest.handleAction(
+    ['ADD', 'INCREMENT'],
+    (state, action) => state + (action.type === 'ADD' ? action.payload : 1)
+  );
+  // @dts-jest:pass:snap -> Record<"ADD" | "INCREMENT", (state: number, action: T.PayloadAction<"ADD", number> | T.EmptyAction<"INCREMENT"> | T.EmptyAction<"DECREMENT">) => number>
+  counterReducer1.handlers;
+  // @dts-jest:pass
+  Object.keys({ ...counterReducer1.handlers }); // => ["ADD", "INCREMENT"]
+  // @dts-jest:pass
+  Object.keys({ ...reducerTest.handlers }); // => []
+
+  const counterReducer2 = reducerTest
+    .handleAction(['ADD'], (state, action) => state + action.payload)
+    .handleAction(['INCREMENT'], (state, _) => state + 1);
+  // @dts-jest:pass:snap -> Record<"ADD" | "INCREMENT", (state: number, action: T.PayloadAction<"ADD", number> | T.EmptyAction<"INCREMENT"> | T.EmptyAction<"DECREMENT">) => number>
+  counterReducer2.handlers;
+  // @dts-jest:pass
+  Object.keys({ ...counterReducer2.handlers }); // => ["ADD", "INCREMENT"]
+  // @dts-jest:pass
+  Object.keys({ ...reducerTest.handlers }); // => []
+
+  const counterReducer3 = reducerTest.handleAction(
+    'ADD',
+    (state, action) => state + action.payload
+  );
+  // @dts-jest:pass:snap -> Record<"ADD", (state: number, action: T.PayloadAction<"ADD", number> | T.EmptyAction<"INCREMENT"> | T.EmptyAction<"DECREMENT">) => number>
+  counterReducer3.handlers;
+  // @dts-jest:pass
+  Object.keys({ ...counterReducer3.handlers }); // => ["ADD"]
+  // @dts-jest:pass
+  Object.keys({ ...reducerTest.handlers }); // => []
+
+  const counterReducer4 = reducerTest.handleAction(
+    'INCREMENT',
+    (state, _) => state + 1
+  );
+  // @dts-jest:pass:snap -> Record<"INCREMENT", (state: number, action: T.PayloadAction<"ADD", number> | T.EmptyAction<"INCREMENT"> | T.EmptyAction<"DECREMENT">) => number>
+  counterReducer4.handlers;
+  // @dts-jest:pass
+  Object.keys({ ...counterReducer4.handlers }); // => [ "INCREMENT"]
+  // @dts-jest:pass
+  Object.keys({ ...reducerTest.handlers }); // => []
+
+  {
+    [
+      counterReducer1,
+      counterReducer2,
+      createReducer(initialState, {
+        ADD: counterReducer3.handlers.ADD,
+        INCREMENT: counterReducer4.handlers.INCREMENT,
+      }),
+      createReducer(initialState, {
+        ADD: (state, action) => state + action.payload,
+        INCREMENT: (state, action) => state + 1,
+      }),
+      createReducer<number, ActionType<typeof actions>>(initialState, {
+        ADD: (state, action) => state + action.payload,
+        INCREMENT: (state, action) => state + 1,
+      }),
+    ].forEach(fn => {
+      // @dts-jest:pass
+      fn(0, {} as any); // => 0
+      // @dts-jest:pass
+      fn(0, increment()); // => 1
+      // @dts-jest:pass
+      fn(0, add(4)); // => 4
     });
   }
 }

@@ -1,8 +1,6 @@
 import * as T from './type-helpers'; // type-tests global
 import { action } from './action';
 
-it.skip('skip', () => undefined);
-
 describe('with symbol', () => {
   const ACTION = Symbol(1);
   const withSymbol = () => action(ACTION as any);
