@@ -6,19 +6,20 @@ import {
 } from './utils/validation';
 import { Reducer, Action, Types } from './type-helpers';
 
-// RootAction is injected from consumer or any
-export type RootAction = Types extends { RootAction: infer T } ? T : any;
-
 type CreateReducerChainApi<
   TState,
-  TPrevNotHandledAction extends Action,
+  TNotHandledActionPrev extends Action,
   TRootAction extends Action
-> = <TCurrentCreator extends (...args: any[]) => TPrevNotHandledAction>(
-  singleOrMultipleCreatorsAndTypes: TCurrentCreator | TCurrentCreator[],
-  reducer: (state: TState, action: ReturnType<TCurrentCreator>) => TState
-) => [Exclude<TPrevNotHandledAction, ReturnType<TCurrentCreator>>] extends [
-  never
-]
+> = <
+  TCreator extends (...args: any[]) => TNotHandledActionPrev,
+  TNotHandledActionNext extends Exclude<
+    TNotHandledActionPrev,
+    ReturnType<TCreator>
+  >
+>(
+  singleOrMultipleCreatorsAndTypes: TCreator | TCreator[],
+  reducer: (state: TState, action: ReturnType<TCreator>) => TState
+) => [TNotHandledActionNext] extends [never]
   ? Reducer<TState, TRootAction> & {
       handlers: Record<
         TRootAction['type'],
@@ -27,15 +28,12 @@ type CreateReducerChainApi<
     }
   : Reducer<TState, TRootAction> & {
       handlers: Record<
-        Exclude<
-          TRootAction,
-          Exclude<TPrevNotHandledAction, ReturnType<TCurrentCreator>>
-        >['type'],
+        Exclude<TRootAction, TNotHandledActionNext>['type'],
         (state: TState, action: TRootAction) => TState
       >;
       handleAction: CreateReducerChainApi<
         TState,
-        Exclude<TPrevNotHandledAction, ReturnType<TCurrentCreator>>,
+        TNotHandledActionNext,
         TRootAction
       >;
     };
@@ -51,6 +49,8 @@ type InitialHandler<TState, TRootAction extends Action> = {
     action: GetAction<TRootAction, P>
   ) => TState
 };
+
+type RootAction = Types extends { RootAction: infer T } ? T : any;
 
 export function createReducer<TState, TRootAction extends Action = RootAction>(
   initialState: TState,

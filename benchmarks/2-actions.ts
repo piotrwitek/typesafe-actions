@@ -1,4 +1,4 @@
-import { ActionType, createAction, createReducer } from '../dist';
+import { ActionType, createAction, createReducer } from '../src';
 
 const actions = {
   a1: createAction('a1'),
