@@ -69,22 +69,20 @@ type InitialHandler<TState, TRootAction extends Action> = {
   [P in TRootAction['type']]?: (
     state: TState,
     action: GetAction<TRootAction, P>
-  ) => TState
+  ) => TState;
 };
 
 export function createReducer<TState, TRootAction extends Action = RootAction>(
   initialState: TState,
   initialHandlers: InitialHandler<TState, TRootAction> = {}
 ) {
-  const handlers: Partial<
-    Record<any, (state: TState, action: any) => TState>
-  > = {
+  const handlers: any = {
     ...initialHandlers,
   };
 
   const rootReducer: Reducer<TState, TRootAction> = (
     state = initialState,
-    action
+    action: TRootAction
   ) => {
     if (handlers.hasOwnProperty(action.type)) {
       const reducer = handlers[action.type];

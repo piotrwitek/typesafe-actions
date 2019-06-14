@@ -109,7 +109,7 @@ export type ActionType<
   ? ReturnType<TActionCreatorOrMap>
   : TActionCreatorOrMap extends Record<any, any>
   ? {
-      [K in keyof TActionCreatorOrMap]: ActionType<TActionCreatorOrMap[K]>
+      [K in keyof TActionCreatorOrMap]: ActionType<TActionCreatorOrMap[K]>;
     }[keyof TActionCreatorOrMap]
   : TActionCreatorOrMap extends infer R // TODO: should be just never but compiler yell with circularly references itself error
   ? never
