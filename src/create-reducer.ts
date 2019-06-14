@@ -15,20 +15,10 @@ type CreateReducerChainApi<
   TRootAction extends Action
 > = <TCurrentCreator extends (...args: any[]) => TPrevNotHandledAction>(
   singleOrMultipleCreatorsAndTypes: TCurrentCreator | TCurrentCreator[],
-  reducer: (
-    state: TState,
-    action: TPrevNotHandledAction extends ReturnType<TCurrentCreator>
-      ? TPrevNotHandledAction
-      : never
-  ) => TState
-) => [
-  Exclude<
-    TPrevNotHandledAction,
-    TPrevNotHandledAction extends ReturnType<TCurrentCreator>
-      ? TPrevNotHandledAction
-      : never
-  >
-] extends [never]
+  reducer: (state: TState, action: ReturnType<TCurrentCreator>) => TState
+) => [Exclude<TPrevNotHandledAction, ReturnType<TCurrentCreator>>] extends [
+  never
+]
   ? Reducer<TState, TRootAction> & {
       handlers: Record<
         TRootAction['type'],
@@ -39,23 +29,13 @@ type CreateReducerChainApi<
       handlers: Record<
         Exclude<
           TRootAction,
-          Exclude<
-            TPrevNotHandledAction,
-            TPrevNotHandledAction extends ReturnType<TCurrentCreator>
-              ? TPrevNotHandledAction
-              : never
-          >
+          Exclude<TPrevNotHandledAction, ReturnType<TCurrentCreator>>
         >['type'],
         (state: TState, action: TRootAction) => TState
       >;
       handleAction: CreateReducerChainApi<
         TState,
-        Exclude<
-          TPrevNotHandledAction,
-          TPrevNotHandledAction extends ReturnType<TCurrentCreator>
-            ? TPrevNotHandledAction
-            : never
-        >,
+        Exclude<TPrevNotHandledAction, ReturnType<TCurrentCreator>>,
         TRootAction
       >;
     };
