@@ -8,18 +8,24 @@ import { Reducer, Action, Types } from './type-helpers';
 
 type CreateReducerChainApi<
   TState,
-  TNotHandledActionPrev extends Action,
+  TPrevNotHandledAction extends Action,
   TRootAction extends Action
 > = <
-  TCreator extends (...args: any[]) => TNotHandledActionPrev,
-  TNotHandledActionNext extends Exclude<
-    TNotHandledActionPrev,
-    ReturnType<TCreator>
-  >
+  TType extends TPrevNotHandledAction['type'],
+  TCreator extends (...args: any[]) => TPrevNotHandledAction,
+  TNextNotHandledAction extends Exclude<
+    TPrevNotHandledAction,
+    Action<TType> & ReturnType<TCreator>
+  >,
+  TAction extends TPrevNotHandledAction extends Action<TType>
+    ? TPrevNotHandledAction extends ReturnType<TCreator>
+      ? TPrevNotHandledAction
+      : never
+    : never
 >(
-  singleOrMultipleCreatorsAndTypes: TCreator | TCreator[],
-  reducer: (state: TState, action: ReturnType<TCreator>) => TState
-) => [TNotHandledActionNext] extends [never]
+  singleOrMultipleCreatorsAndTypes: TType | TType[] | TCreator | TCreator[],
+  reducer: (state: TState, action: TAction) => TState
+) => [TNextNotHandledAction] extends [never]
   ? Reducer<TState, TRootAction> & {
       handlers: Record<
         TRootAction['type'],
@@ -28,12 +34,12 @@ type CreateReducerChainApi<
     }
   : Reducer<TState, TRootAction> & {
       handlers: Record<
-        Exclude<TRootAction, TNotHandledActionNext>['type'],
+        Exclude<TRootAction, TNextNotHandledAction>['type'],
         (state: TState, action: TRootAction) => TState
       >;
       handleAction: CreateReducerChainApi<
         TState,
-        TNotHandledActionNext,
+        TNextNotHandledAction,
         TRootAction
       >;
     };

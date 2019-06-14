@@ -33,3 +33,11 @@ exports[`With Action Creators counterReducer2.handlers 1`] = `"Record<\\"ADD\\" 
 exports[`With Action Creators counterReducer3.handlers 1`] = `"Record<\\"ADD\\", (state: number, action: T.PayloadAction<\\"ADD\\", number> | T.EmptyAction<\\"INCREMENT\\"> | T.EmptyAction<\\"DECREMENT\\">) => number>"`;
 
 exports[`With Action Creators counterReducer4.handlers 1`] = `"Record<\\"INCREMENT\\", (state: number, action: T.PayloadAction<\\"ADD\\", number> | T.EmptyAction<\\"INCREMENT\\"> | T.EmptyAction<\\"DECREMENT\\">) => number>"`;
+
+exports[`With Action Types counterReducer1.handlers 1`] = `"Record<\\"ADD\\" | \\"INCREMENT\\", (state: number, action: T.PayloadAction<\\"ADD\\", number> | T.EmptyAction<\\"INCREMENT\\"> | T.EmptyAction<\\"DECREMENT\\">) => number>"`;
+
+exports[`With Action Types counterReducer2.handlers 1`] = `"Record<\\"ADD\\" | \\"INCREMENT\\", (state: number, action: T.PayloadAction<\\"ADD\\", number> | T.EmptyAction<\\"INCREMENT\\"> | T.EmptyAction<\\"DECREMENT\\">) => number>"`;
+
+exports[`With Action Types counterReducer3.handlers 1`] = `"Record<\\"ADD\\", (state: number, action: T.PayloadAction<\\"ADD\\", number> | T.EmptyAction<\\"INCREMENT\\"> | T.EmptyAction<\\"DECREMENT\\">) => number>"`;
+
+exports[`With Action Types counterReducer4.handlers 1`] = `"Record<\\"INCREMENT\\", (state: number, action: T.PayloadAction<\\"ADD\\", number> | T.EmptyAction<\\"INCREMENT\\"> | T.EmptyAction<\\"DECREMENT\\">) => number>"`;
