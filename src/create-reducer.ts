@@ -53,7 +53,7 @@ type InitialHandler<TState, TRootAction extends Action> = {
   [P in TRootAction['type']]?: (
     state: TState,
     action: GetAction<TRootAction, P>
-  ) => TState
+  ) => TState;
 };
 
 type RootAction = Types extends { RootAction: infer T } ? T : any;
