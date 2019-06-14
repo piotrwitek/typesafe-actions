@@ -23,13 +23,15 @@ type CreateReducerChainApi<
     TCreator
   >
     ? TPrevNotHandledAction
-    : never,
-  THandledAction extends THandledTypeAction extends THandledCreatorAction
-    ? THandledTypeAction
     : never
 >(
   singleOrMultipleCreatorsAndTypes: TType | TType[] | TCreator | TCreator[],
-  reducer: (state: TState, action: THandledAction) => TState
+  reducer: (
+    state: TState,
+    action: THandledTypeAction extends THandledCreatorAction
+      ? THandledTypeAction
+      : never
+  ) => TState
 ) => [
   Exclude<TPrevNotHandledAction, THandledTypeAction & THandledCreatorAction>
 ] extends [never]
@@ -69,7 +71,7 @@ type InitialHandler<TState, TRootAction extends Action> = {
   [P in TRootAction['type']]?: (
     state: TState,
     action: GetAction<TRootAction, P>
-  ) => TState;
+  ) => TState
 };
 
 export function createReducer<TState, TRootAction extends Action = RootAction>(
