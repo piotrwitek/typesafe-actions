@@ -18,7 +18,7 @@ _This library is part of the [React & Redux TypeScript Guide](https://github.com
 
 :star: _Found it useful? Want more updates?_ [**Show your support by giving a :star:**](https://github.com/piotrwitek/typesafe-actions/stargazers)
 
-:tada: _Now updated to support **TypeScript v3.4**_ :tada:
+:tada: _Now updated to support **TypeScript v3.5**_ :tada:
 
 <a href="https://www.buymeacoffee.com/zh9guxbA5">
   <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me a Coffee">
@@ -33,9 +33,11 @@ _This library is part of the [React & Redux TypeScript Guide](https://github.com
 
 **Features**
 
-- **minimalistic** - according to `rollup-plugin-filesize` (Bundle size: 3.48 KB, Gzipped size: 1.03 KB) check also on [bundlephobia](https://bundlephobia.com/result?p=typesafe-actions)
-- **secure and optimized** - no external dependencies, bundled in 3 different formats (`cjs`, `esm` and `umd` for browser)
-- **focus on quality** - complete test-suite for an entire API surface containing regular runtime tests and extra type-tests to guarantee **type soundness**
+- **minimalistic** - according to `size-snapshot` (Minified: 3.48 KB, Gzipped: 1.03 KB), check also on [bundlephobia](https://bundlephobia.com/result?p=typesafe-actions)
+- **secure and optimized** - no external dependencies, bundled in 3 different formats (`cjs`, `esm` and `umd` for browser) with separate optimized bundles for dev & prod (same as `react`)
+- **focus on quality** - complete test-suite for an entire API surface containing regular runtime tests and extra type-tests to guarantee **type soundness** and to prevent regressions in the future TypeScript versions
+- **focus on performance** - integrated performance benchmarks to guarantee that the computational complexity of types are in check and there are no slow-downs when your application grow `npm run benchmark:[2,10,50]`
+
 
 **Codesandbox links**
 
