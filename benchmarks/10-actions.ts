@@ -1,6 +1,6 @@
 import { ActionType, createAction, createReducer } from '../src';
 
-const actions = {
+export const actions = {
   a1: createAction('a1'),
   a2: createAction('a2'),
   a3: createAction('a3'),
@@ -16,12 +16,15 @@ const actions = {
 export type RootAction = ActionType<typeof actions>;
 
 // handling half the available actions for proportional benchmark test cases
-const reducer = createReducer<number, RootAction>(0)
+export const reducer1 = createReducer<number, RootAction>(0)
   .handleAction(actions.a1, state => state)
   .handleAction(actions.a2, state => state)
   .handleAction(actions.a3, state => state)
   .handleAction(actions.a4, state => state)
   .handleAction(actions.a5, state => state);
-
-// tslint:disable-next-line: no-console
-console.log(reducer(0, { type: 'a1' }));
+export const reducer2 = createReducer<number, RootAction>(0)
+  .handleAction(actions.a6, state => state)
+  .handleAction(actions.a7, state => state)
+  .handleAction(actions.a8, state => state)
+  .handleAction(actions.a9, state => state)
+  .handleAction(actions.a10, state => state);
