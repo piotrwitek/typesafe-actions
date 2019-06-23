@@ -34,9 +34,8 @@
     "build": "tsc -p . && rollup -c",
     "postbuild": "rm -rf out",
     "prepublishOnly": "npm run reinstall && npm run ci-check && npm run build",
-    "benchmark:2": " node --max-old-space-size=8000 ./node_modules/.bin/tsc --diagnostics --outDir out benchmarks/2-actions.ts && rm -rf out",
     "benchmark:10": "node --max-old-space-size=8000 ./node_modules/.bin/tsc --diagnostics --outDir out benchmarks/10-actions.ts  && rm -rf out",
-    "benchmark:50": "node --max-old-space-size=8000 ./node_modules/.bin/tsc --diagnostics --outDir out benchmarks/50-actions.ts && rm -rf out"
+    "benchmark:150": "node --max-old-space-size=8000 ./node_modules/.bin/tsc --diagnostics --outDir out benchmarks/150-actions.ts && rm -rf out"
   },
   "devDependencies": {
     "@babel/core": "7.4.5",
