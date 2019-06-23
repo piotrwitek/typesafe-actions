@@ -15,20 +15,20 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "npm run ci-check"
+      "pre-push": "npm run prettier:fix && npm run lint && npm run tsc && npm run test:update && npm run doctoc"
     }
   },
   "scripts": {
-    "ci-check": "npm run prettier && npm run lint && npm run tsc && npm run test && npm run doctoc",
+    "ci-check": "npm run prettier && npm run lint && npm run tsc && npm run test",
     "reinstall": "rm -rf node_modules/ dist/ && npm install",
     "prettier": "prettier --list-different 'src/**/*.ts' || (echo '\nPlease fix code formatting by running:\nnpm run prettier:fix\n'; exit 1)",
     "prettier:fix": "prettier --write 'src/**/*.ts'",
     "lint": "tslint --project './tsconfig.json'",
     "tsc": "tsc -p . --noEmit",
     "tsc:watch": "tsc -p . --noEmit -w",
-    "test": "jest --config jest.config.json",
+    "test": "jest --config jest.config.json && dts-jest-remap ./src/*.spec.ts --rename {{basename}}.snap.{{extname}} --check",
+    "test:update": "jest --config jest.config.json --no-cache -u && dts-jest-remap ./src/*.spec.ts --rename {{basename}}.snap.{{extname}}",
     "test:watch": "jest --config jest.config.json --watch",
-    "test:update": "jest --config jest.config.json --no-cache -u && dts-jest-remap ./src/*.spec.ts --rename '{{basename}}.snap.{{extname}}'",
     "doctoc": "doctoc --maxlevel=4 README.md",
     "prebuild": "rm -rf dist/ .size-snapshot.json && tsc -p ./tsconfig.declaration.json",
     "build": "tsc -p . && rollup -c",
