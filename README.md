@@ -780,10 +780,12 @@ _Create a typesafe reducer_
 
 ```ts
 createReducer<TState, TRootAction>(initialState, handlersMap?)
-  .handleAction(type, reducer)
-  .handleAction([type1, type2, ...typeN], reducer)
+// or
+createReducer<TState, TRootAction>(initialState)
   .handleAction(actionCreator, reducer)
   .handleAction([actionCreator1, actionCreator2, ...actionCreatorN], reducer)
+  .handleType(type, reducer)
+  .handleType([type1, type2, ...typeN], reducer)
 ```
 
 Examples:
@@ -798,7 +800,7 @@ const counterReducer = createReducer(0, {
 })
 ```
 
-Using type-constants as keys in the object map:
+**Object map style:**
 ```ts
 import { createReducer, getType } from 'typesafe-actions'
 
@@ -809,12 +811,9 @@ const counterReducer = createReducer<State, Action>(0, {
   ADD: (state, action) => state + action.payload,
   [getType(increment)]: (state, _) => state + 1,
 })
-
-counterReducer(0, add(4)); // => 4
-counterReducer(0, increment()); // => 1
 ```
 
-Using handleAction chain API:
+**Chain API style:**
 ```ts
 // using action-creators
 const counterReducer = createReducer<State, Action>(0)
@@ -828,14 +827,11 @@ const counterReducer = createReducer<State, Action>(0)
 
 // all the same scenarios are working when using type-constants
 const counterReducer = createReducer<State, Action>(0)
-  .handleAction('ADD', (state, action) => state + action.payload)
-  .handleAction('INCREMENT', (state, _) => state + 1);
-  
-counterReducer(0, add(4)); // => 4
-counterReducer(0, increment()); // => 1
+  .handleType('ADD', (state, action) => state + action.payload)
+  .handleType('INCREMENT', (state, _) => state + 1);
 ```
 
-Extend or compose various reducers together - every operation is completely typesafe:
+**Extend or compose reducers - every operation is completely typesafe:**
 ```ts
 const newCounterReducer = createReducer<State, Action>(0)
   .handleAction('SUBTRACT', (state, action) => state - action.payload)
