@@ -313,4 +313,5 @@ export const reducer2 = createReducer<number, RootAction>(0)
   .handleAction(actions.c22, state => state)
   .handleAction(actions.c23, state => state)
   .handleAction(actions.c24, state => state)
-  .handleAction(actions.c25, state => state);
+  .handleAction(actions.c25, state => state)
+  .handleType(['c26', 'c27', 'c28', 'c29', 'c30'], (s, a) => s);
