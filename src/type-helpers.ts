@@ -29,7 +29,7 @@ export type Action<TType extends TypeConstant = TypeConstant> = {
 /**
  * @desc Type representing Generic ActionCreator
  */
-export type ActionCreator<TType extends TypeConstant> = (
+export type ActionCreator<TType extends TypeConstant = TypeConstant> = (
   ...args: any[]
 ) => Action<TType>;
 

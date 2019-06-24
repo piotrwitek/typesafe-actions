@@ -4,28 +4,20 @@ import {
   checkValidActionType,
   throwInvalidActionTypeOrActionCreator,
 } from './utils/validation';
-import { Reducer, Action, Types } from './type-helpers';
+import { Reducer, Action, Types, ActionCreator } from './type-helpers';
 
-type CreateReducerChainApi<
+type HandleActionChainApi<
   TState,
-  TPrevNotHandledAction extends Action,
+  TInputAction extends Action,
   TRootAction extends Action
 > = <
-  TType extends TPrevNotHandledAction['type'],
-  TCreator extends (...args: any[]) => TPrevNotHandledAction,
-  TNextNotHandledAction extends Exclude<
-    TPrevNotHandledAction,
-    Action<TType> & ReturnType<TCreator>
-  >,
-  TAction extends TPrevNotHandledAction extends Action<TType>
-    ? TPrevNotHandledAction extends ReturnType<TCreator>
-      ? TPrevNotHandledAction
-      : never
-    : never
+  TActionCreator extends (...args: any[]) => TInputAction,
+  THandledAction extends ReturnType<TActionCreator>,
+  TOutputAction extends Exclude<TInputAction, THandledAction>
 >(
-  singleOrMultipleCreatorsAndTypes: TType | TType[] | TCreator | TCreator[],
-  reducer: (state: TState, action: TAction) => TState
-) => [TNextNotHandledAction] extends [never]
+  singleOrMultipleCreatorsAndTypes: TActionCreator | TActionCreator[],
+  reducer: (state: TState, action: THandledAction) => TState
+) => [TOutputAction] extends [never]
   ? Reducer<TState, TRootAction> & {
       handlers: Record<
         TRootAction['type'],
@@ -34,14 +26,38 @@ type CreateReducerChainApi<
     }
   : Reducer<TState, TRootAction> & {
       handlers: Record<
-        Exclude<TRootAction, TNextNotHandledAction>['type'],
+        Exclude<TRootAction, TOutputAction>['type'],
         (state: TState, action: TRootAction) => TState
       >;
-      handleAction: CreateReducerChainApi<
-        TState,
-        TNextNotHandledAction,
-        TRootAction
+      handleAction: HandleActionChainApi<TState, TOutputAction, TRootAction>;
+      handleType: HandleTypeChainApi<TState, TOutputAction, TRootAction>;
+    };
+
+type HandleTypeChainApi<
+  TState,
+  TInputAction extends Action,
+  TRootAction extends Action
+> = <
+  TType extends TInputAction['type'],
+  THandledAction extends Extract<TInputAction, Action<TType>>,
+  TOutputAction extends Exclude<TInputAction, THandledAction>
+>(
+  singleOrMultipleCreatorsAndTypes: TType | TType[],
+  reducer: (state: TState, action: THandledAction) => TState
+) => [TOutputAction] extends [never]
+  ? Reducer<TState, TRootAction> & {
+      handlers: Record<
+        TRootAction['type'],
+        (state: TState, action: TRootAction) => TState
       >;
+    }
+  : Reducer<TState, TRootAction> & {
+      handlers: Record<
+        Exclude<TRootAction, TOutputAction>['type'],
+        (state: TState, action: TRootAction) => TState
+      >;
+      handleAction: HandleActionChainApi<TState, TOutputAction, TRootAction>;
+      handleType: HandleTypeChainApi<TState, TOutputAction, TRootAction>;
     };
 
 type GetAction<
@@ -83,19 +99,20 @@ export function createReducer<TState, TRootAction extends Action = RootAction>(
     }
   };
 
-  const handleAction = ((singleOrMultipleCreatorsAndTypes, reducer) => {
+  const reducerHandler = ((singleOrMultipleCreatorsAndTypes, reducer) => {
     const creatorsAndTypes = Array.isArray(singleOrMultipleCreatorsAndTypes)
       ? singleOrMultipleCreatorsAndTypes
       : [singleOrMultipleCreatorsAndTypes];
 
     const newHandlers: typeof handlers = {};
     creatorsAndTypes
-      .map(acOrType =>
-        checkValidActionCreator(acOrType)
-          ? getType(acOrType)
-          : checkValidActionType(acOrType)
-          ? acOrType
-          : throwInvalidActionTypeOrActionCreator()
+      .map(
+        (acOrType: TRootAction['type'] | ((...args: any[]) => TRootAction)) =>
+          checkValidActionCreator(acOrType)
+            ? getType(acOrType)
+            : checkValidActionType(acOrType)
+            ? acOrType
+            : throwInvalidActionTypeOrActionCreator()
       )
       .forEach(type => (newHandlers[type] = reducer));
 
@@ -103,11 +120,22 @@ export function createReducer<TState, TRootAction extends Action = RootAction>(
       ...handlers,
       ...newHandlers,
     });
-  }) as CreateReducerChainApi<TState, TRootAction, TRootAction>;
+  }) as
+    | HandleActionChainApi<TState, TRootAction, TRootAction>
+    | HandleTypeChainApi<TState, TRootAction, TRootAction>;
 
   const chainApi = Object.assign(rootReducer, {
     handlers: { ...handlers },
-    handleAction,
+    handleAction: reducerHandler as HandleActionChainApi<
+      TState,
+      TRootAction,
+      TRootAction
+    >,
+    handleType: reducerHandler as HandleTypeChainApi<
+      TState,
+      TRootAction,
+      TRootAction
+    >,
   } as const);
 
   return chainApi;
