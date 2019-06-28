@@ -131,10 +131,10 @@ export function createReducer<TState, TRootAction extends Action = RootAction>(
   }) as Reducer<TState, TRootAction> &
     Readonly<{
       handlers: InitialHandler<TState, RootAction>;
-      readonly handleAction: [unknown] extends [TRootAction]
+      handleAction: [unknown] extends [TRootAction]
         ? any
         : HandleActionChainApi<TState, TRootAction, TRootAction>;
-      readonly handleType: [unknown] extends [TRootAction]
+      handleType: [unknown] extends [TRootAction]
         ? any
         : HandleTypeChainApi<TState, TRootAction, TRootAction>;
     }>;
