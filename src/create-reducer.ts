@@ -17,20 +17,20 @@ type HandleActionChainApi<
 >(
   singleOrMultipleCreatorsAndTypes: TActionCreator | TActionCreator[],
   reducer: (state: TState, action: THandledAction) => TState
-) => [TOutputAction] extends [never]
+) => [TOutputAction] extends [Action]
   ? Reducer<TState, TRootAction> & {
-      handlers: Record<
-        TRootAction['type'],
-        (state: TState, action: TRootAction) => TState
-      >;
-    }
-  : Reducer<TState, TRootAction> & {
       handlers: Record<
         Exclude<TRootAction, TOutputAction>['type'],
         (state: TState, action: TRootAction) => TState
       >;
       handleAction: HandleActionChainApi<TState, TOutputAction, TRootAction>;
       handleType: HandleTypeChainApi<TState, TOutputAction, TRootAction>;
+    }
+  : Reducer<TState, TRootAction> & {
+      handlers: Record<
+        TRootAction['type'],
+        (state: TState, action: TRootAction) => TState
+      >;
     };
 
 type HandleTypeChainApi<
@@ -44,20 +44,20 @@ type HandleTypeChainApi<
 >(
   singleOrMultipleCreatorsAndTypes: TType | TType[],
   reducer: (state: TState, action: THandledAction) => TState
-) => [TOutputAction] extends [never]
+) => [TOutputAction] extends [Action]
   ? Reducer<TState, TRootAction> & {
-      handlers: Record<
-        TRootAction['type'],
-        (state: TState, action: TRootAction) => TState
-      >;
-    }
-  : Reducer<TState, TRootAction> & {
       handlers: Record<
         Exclude<TRootAction, TOutputAction>['type'],
         (state: TState, action: TRootAction) => TState
       >;
       handleAction: HandleActionChainApi<TState, TOutputAction, TRootAction>;
       handleType: HandleTypeChainApi<TState, TOutputAction, TRootAction>;
+    }
+  : Reducer<TState, TRootAction> & {
+      handlers: Record<
+        TRootAction['type'],
+        (state: TState, action: TRootAction) => TState
+      >;
     };
 
 type GetAction<
@@ -126,17 +126,18 @@ export function createReducer<TState, TRootAction extends Action = RootAction>(
 
   const chainApi = Object.assign(rootReducer, {
     handlers: { ...handlers },
-    handleAction: reducerHandler as HandleActionChainApi<
-      TState,
-      TRootAction,
-      TRootAction
-    >,
-    handleType: reducerHandler as HandleTypeChainApi<
-      TState,
-      TRootAction,
-      TRootAction
-    >,
-  } as const);
+    handleAction: reducerHandler,
+    handleType: reducerHandler,
+  }) as Reducer<TState, TRootAction> &
+    Readonly<{
+      handlers: InitialHandler<TState, RootAction>;
+      readonly handleAction: [unknown] extends [TRootAction]
+        ? any
+        : HandleActionChainApi<TState, TRootAction, TRootAction>;
+      readonly handleType: [unknown] extends [TRootAction]
+        ? any
+        : HandleTypeChainApi<TState, TRootAction, TRootAction>;
+    }>;
 
   return chainApi;
 }
