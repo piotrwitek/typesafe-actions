@@ -24,7 +24,6 @@ type HandleActionChainApi<
         (state: TState, action: TRootAction) => TState
       >;
       handleAction: HandleActionChainApi<TState, TOutputAction, TRootAction>;
-      handleType: HandleTypeChainApi<TState, TOutputAction, TRootAction>;
     }
   : Reducer<TState, TRootAction> & {
       handlers: Record<
@@ -50,7 +49,6 @@ type HandleTypeChainApi<
         Exclude<TRootAction, TOutputAction>['type'],
         (state: TState, action: TRootAction) => TState
       >;
-      handleAction: HandleActionChainApi<TState, TOutputAction, TRootAction>;
       handleType: HandleTypeChainApi<TState, TOutputAction, TRootAction>;
     }
   : Reducer<TState, TRootAction> & {
