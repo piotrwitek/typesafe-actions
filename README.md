@@ -325,7 +325,7 @@ import { isActionOf } from 'typesafe-actions';
 
 import { add } from './actions';
 
-const addTodoToast: Epic<RootAction, RootAction, RootState, Services> = (action$, store, { toastService }) =>
+const addTodoToast: Epic<RootAction, RootAction, RootState, Services> = (action$, state$, { toastService }) =>
   action$.pipe(
     filter(isActionOf(add)),
     tap(action => { // here action type is narrowed to: { type: "todos/ADD"; payload: Todo; }
@@ -350,7 +350,7 @@ import { isOfType } from 'typesafe-actions';
 
 import { ADD } from './constants';
 
-const addTodoToast: Epic<RootAction, RootAction, RootState, Services> = (action$, store, { toastService }) =>
+const addTodoToast: Epic<RootAction, RootAction, RootState, Services> = (action$, state$, { toastService }) =>
   action$.pipe(
     filter(isOfType(ADD)),
     tap(action => { // here action type is narrowed to: { type: "todos/ADD"; payload: Todo; }
@@ -482,7 +482,7 @@ const fetchTodosAsync = createAsyncAction(
 // epics.ts
 import { fetchTodosAsync } from './actions';
 
-const fetchTodosFlow: Epic<RootAction, RootAction, RootState, Services> = (action$, store, { todosApi }) =>
+const fetchTodosFlow: Epic<RootAction, RootAction, RootState, Services> = (action$, state$, { todosApi }) =>
   action$.pipe(
     filter(isActionOf(fetchTodosAsync.request)),
     switchMap(action =>
