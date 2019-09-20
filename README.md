@@ -1064,18 +1064,7 @@ export type RootState = StateType<typeof rootReducer>;
 ## Migration Guides
 
 ### `v3.x.x` to `v4.x.x`
-From `v4.x.x` all action creators will use `undefined` instead of `void` as a generic type parameter to make the action-creator function require NO parameters.
-```ts
-const increment = createStandardAction('INCREMENT')<undefined>();
-increment(); // <= no parameters required
-
-const fetchUsersAsync = createAsyncAction(
-  'FETCH_USERS_REQUEST',
-  'FETCH_USERS_SUCCESS',
-  'FETCH_USERS_FAILURE'
-)<undefined, User[], Error>();
-fetchUsersAsync.request(); // <= no parameters required
-```
+No breaking changes!
 
 ### `v2.x.x` to `v3.x.x`
 `v3.x.x` API is backward compatible with `v2.x.x`. You'll only need to update typescript dependency to `> v3.1`.
