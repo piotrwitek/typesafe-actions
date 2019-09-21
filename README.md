@@ -488,7 +488,7 @@ const fetchTodosFlow: Epic<RootAction, RootAction, RootState, Services> = (actio
     switchMap(action =>
       from(todosApi.getAll(action.payload)).pipe(
         map(fetchTodosAsync.success),
-        catchError(pipe(fetchTodosAsync.failure, of)),
+        catchError((message: string) => of(fetchTodosAsync.failure(message))),
         takeUntil(action$.pipe(filter(isActionOf(fetchTodosAsync.cancel)))),
       )
     );
