@@ -702,22 +702,23 @@ _Create an object containing three enhanced action-creators to simplify handling
 ```ts
 createAsyncAction(
   requestType, successType, failureType, cancelType?
-)<TRequestPayload, TSuccessPayload, TFailurePayload, TCancelPayload?>()
+)<TRequestPayload, TSuccessPayload, TFailurePayload, TCancelPayload?,
+  TRequestMeta?,   TSuccessMeta?,   TFailureMeta?,   TCancelMeta?>()
 ```
 
 ##### `AsyncActionCreator`
 
 ```ts
 type AsyncActionCreator<
-  [TRequestType, TRequestPayload],
-  [TSuccessType, TSuccessPayload],
-  [TFailureType, TFailurePayload],
-  [TCancelType, TCancelPayload]?
+  [TRequestType, TRequestPayload, TRequestMeta?],
+  [TSuccessType, TSuccessPayload, TSuccessMeta?],
+  [TFailureType, TFailurePayload, TFailureMeta?],
+  [TCancelType, TCancelPayload, TCancelMeta?]?
 > = {
-  request: StandardActionCreator<TRequestType, TRequestPayload>,
-  success: StandardActionCreator<TSuccessType, TSuccessPayload>,
-  failure: StandardActionCreator<TFailureType, TFailurePayload>,
-  cancel?: StandardActionCreator<TCancelType, TCancelPayload>,
+  request: StandardActionCreator<TRequestType, TRequestPayload, TRequestMeta>,
+  success: StandardActionCreator<TSuccessType, TSuccessPayload, TSuccessMeta>,
+  failure: StandardActionCreator<TFailureType, TFailurePayload, TFailureMeta>,
+  cancel?: StandardActionCreator<TCancelType, TCancelPayload, TCancelMeta>,
 }
 ```
 

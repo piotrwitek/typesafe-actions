@@ -6,47 +6,106 @@ import {
 import { checkInvalidActionTypeInArray } from './utils/validation';
 import { createStandardAction } from './create-standard-action';
 
-export type AsyncActionCreator<
-  TRequest extends [T1, P1],
-  TSuccess extends [T2, P2],
-  TFailure extends [T3, P3],
-  TCancel extends [T4, P4] = never,
-  T1 extends TypeConstant = TRequest[0],
-  P1 = TRequest[1],
-  T2 extends TypeConstant = TSuccess[0],
-  P2 = TSuccess[1],
-  T3 extends TypeConstant = TFailure[0],
-  P3 = TFailure[1],
-  T4 extends TypeConstant = TCancel[0],
-  P4 = TCancel[1]
+type ActionParams = [TypeConstant, any, any] | [TypeConstant, any];
+
+type ActionParamsConstructor<
+  TType extends TypeConstant,
+  TPayload extends any = undefined,
+  TMeta extends any = undefined
+> = [TMeta] extends [undefined] ? [TType, TPayload] : [TType, TPayload, TMeta];
+
+type ActionBuilderConstructorFromActionParams<
+  TActionParams extends ActionParams
+> = TActionParams['length'] extends 3
+  ? ActionBuilderConstructor<
+      TActionParams[0],
+      TActionParams[1],
+      TActionParams[2]
+    >
+  : ActionBuilderConstructor<TActionParams[0], TActionParams[1]>;
+
+type AsyncActionCreatorWithoutCancel<
+  TRequest extends ActionParams,
+  TSuccess extends ActionParams,
+  TFailure extends ActionParams
 > = {
-  request: ActionBuilderConstructor<T1, P1>;
-  success: ActionBuilderConstructor<T2, P2>;
-  failure: ActionBuilderConstructor<T3, P3>;
-  cancel: TCancel extends [TypeConstant, any]
-    ? ActionBuilderConstructor<T4, P4>
-    : never;
+  request: ActionBuilderConstructorFromActionParams<TRequest>;
+  success: ActionBuilderConstructorFromActionParams<TSuccess>;
+  failure: ActionBuilderConstructorFromActionParams<TFailure>;
 };
+
+export type AsyncActionCreator<
+  TRequest extends ActionParams,
+  TSuccess extends ActionParams,
+  TFailure extends ActionParams,
+  TCancel extends ActionParams | undefined = undefined
+> = AsyncActionCreatorWithoutCancel<TRequest, TSuccess, TFailure> &
+  (TCancel extends ActionParams
+    ? {
+        cancel: ActionBuilderConstructorFromActionParams<TCancel>;
+      }
+    : {});
 
 export interface AsyncActionBuilder<
   TType1 extends TypeConstant,
   TType2 extends TypeConstant,
   TType3 extends TypeConstant,
-  TType4 extends TypeConstant
+  TType4 extends TypeConstant | undefined = undefined
 > {
-  <TPayload1, TPayload2, TPayload3, TPayload4>(): AsyncActionCreator<
-    [TType1, TPayload1],
-    [TType2, TPayload2],
-    [TType3, TPayload3],
-    [TType4, TPayload4]
+  <
+    TPayload1,
+    TPayload2,
+    TPayload3,
+    TPayload4,
+    TMeta1 = undefined,
+    TMeta2 = undefined,
+    TMeta3 = undefined,
+    TMeta4 = undefined
+  >(): AsyncActionCreator<
+    ActionParamsConstructor<TType1, TPayload1, TMeta1>,
+    ActionParamsConstructor<TType2, TPayload2, TMeta2>,
+    ActionParamsConstructor<TType3, TPayload3, TMeta3>,
+    TType4 extends TypeConstant
+      ? ActionParamsConstructor<TType4, TPayload4, TMeta4>
+      : undefined
   >;
-  <TPayload1, TPayload2, TPayload3>(): AsyncActionCreator<
-    [TType1, TPayload1],
-    [TType2, TPayload2],
-    [TType3, TPayload3]
+  <
+    TPayload1,
+    TPayload2,
+    TPayload3,
+    TMeta1 = undefined,
+    TMeta2 = undefined,
+    TMeta3 = undefined
+  >(): AsyncActionCreator<
+    ActionParamsConstructor<TType1, TPayload1, TMeta1>,
+    ActionParamsConstructor<TType2, TPayload2, TMeta2>,
+    ActionParamsConstructor<TType3, TPayload3, TMeta3>
   >;
 }
+/*
+export function createAsyncAction<
+  TType1 extends TypeConstant,
+  TType2 extends TypeConstant,
+  TType3 extends TypeConstant,
+  TType4 extends TypeConstant
+  >(
+  requestType: TType1,
+  successType: TType2,
+  failureType: TType3
+): AsyncActionBuilder<TType1, TType2, TType3, never>;
 
+export function createAsyncAction<
+  TType1 extends TypeConstant,
+  TType2 extends TypeConstant,
+  TType3 extends TypeConstant,
+  TType4 extends TypeConstant
+  >(
+  requestType: TType1,
+  successType: TType2,
+  failureType: TType3,
+  cancelType: TType4
+): AsyncActionBuilder<TType1, TType2, TType3, TType4>;
+*/
 /**
  * implementation
  */
@@ -54,7 +113,7 @@ export function createAsyncAction<
   TType1 extends TypeConstant,
   TType2 extends TypeConstant,
   TType3 extends TypeConstant,
-  TType4 extends TypeConstant
+  TType4 extends TypeConstant | undefined = undefined
 >(
   requestType: TType1,
   successType: TType2,
@@ -65,13 +124,24 @@ export function createAsyncAction<
     checkInvalidActionTypeInArray
   );
 
-  const constructor = (<TPayload1, TPayload2, TPayload3, TPayload4>() => {
+  const constructor = (<
+    TPayload1,
+    TPayload2,
+    TPayload3,
+    TPayload4,
+    TMeta1,
+    TMeta2,
+    TMeta3,
+    TMeta4
+  >() => {
     return {
-      request: createStandardAction(requestType)<TPayload1>(),
-      success: createStandardAction(successType)<TPayload2>(),
-      failure: createStandardAction(failureType)<TPayload3>(),
-      cancel: cancelType && createStandardAction(cancelType)<TPayload4>(),
-    };
+      request: createStandardAction(requestType)<TPayload1, TMeta1>(),
+      success: createStandardAction(successType)<TPayload2, TMeta2>(),
+      failure: createStandardAction(failureType)<TPayload3, TMeta3>(),
+      cancel:
+        cancelType &&
+        createStandardAction(cancelType as TypeConstant)<TPayload4, TMeta4>(),
+    } as any;
   }) as AsyncActionBuilder<TType1, TType2, TType3, TType4>;
 
   const api = Object.assign<

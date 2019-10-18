@@ -26,9 +26,48 @@ exports[`async action with cancel fetchUsersAsync.success([
       { firstName: 'Piotr', lastName: 'Witek' },
     ]) 1`] = `"T.PayloadAction<\\"FETCH_USERS_SUCCESS\\", User[]>"`;
 
-exports[`async action with cancel fn(fetchUsersAsync) 1`] = `"AsyncActionCreator<[\\"FETCH_USERS_REQUEST\\", undefined], [\\"FETCH_USERS_SUCCESS\\", User[]], [\\"FETCH_USERS_FAILURE\\", Error], [\\"FETCH_USERS_CANCEL\\", string], \\"FETCH_USERS_REQUEST\\", undefined, \\"FETCH_USERS_SUCCESS\\", User[], \\"FETCH_USERS_FAILURE\\", Error, \\"FETCH_USERS_CANCEL\\", string>"`;
+exports[`async action with cancel fn(fetchUsersAsync) 1`] = `"AsyncActionCreator<[\\"FETCH_USERS_REQUEST\\", undefined], [\\"FETCH_USERS_SUCCESS\\", User[]], [\\"FETCH_USERS_FAILURE\\", Error], [\\"FETCH_USERS_CANCEL\\", string]>"`;
 
-exports[`async action with undefined type fetchUsersAsync.cancel 1`] = `"never"`;
+exports[`async action with meta fetchUsersAsync.cancel(
+      'reason',
+      4
+    ) 1`] = `"T.PayloadMetaAction<\\"FETCH_USERS_CANCEL\\", string, 4>"`;
+
+exports[`async action with meta fetchUsersAsync.failure(
+      Error('reason')
+    ) 1`] = `"T.PayloadAction<\\"FETCH_USERS_FAILURE\\", Error>"`;
+
+exports[`async action with meta fetchUsersAsync.request(
+      undefined,
+      1
+    ) 1`] = `"T.PayloadMetaAction<\\"FETCH_USERS_REQUEST\\", undefined, 1>"`;
+
+exports[`async action with meta fetchUsersAsync.success(
+      [{ firstName: 'Piotr', lastName: 'Witek' }],
+      2
+    ) 1`] = `"T.PayloadMetaAction<\\"FETCH_USERS_SUCCESS\\", User[], 2>"`;
+
+exports[`async action with meta fn(fetchUsersAsync) 1`] = `"AsyncActionCreator<[\\"FETCH_USERS_REQUEST\\", undefined, 1], [\\"FETCH_USERS_SUCCESS\\", User[], 2], [\\"FETCH_USERS_FAILURE\\", Error], [\\"FETCH_USERS_CANCEL\\", string, 4]>"`;
+
+exports[`async action with meta without cancel fetchUsersAsync.cancel 1`] = `"Property 'cancel' does not exist on type 'AsyncActionCreatorWithoutCancel<[\\"FETCH_USERS_REQUEST\\", undefined, 1], [\\"FETCH_USERS_SUCCESS\\", User[], 2], [\\"FETCH_USERS_FAILURE\\", Error]>'."`;
+
+exports[`async action with meta without cancel fetchUsersAsync.failure(
+      Error('reason')
+    ) 1`] = `"T.PayloadAction<\\"FETCH_USERS_FAILURE\\", Error>"`;
+
+exports[`async action with meta without cancel fetchUsersAsync.request(
+      undefined,
+      1
+    ) 1`] = `"T.PayloadMetaAction<\\"FETCH_USERS_REQUEST\\", undefined, 1>"`;
+
+exports[`async action with meta without cancel fetchUsersAsync.success(
+      [{ firstName: 'Piotr', lastName: 'Witek' }],
+      2
+    ) 1`] = `"T.PayloadMetaAction<\\"FETCH_USERS_SUCCESS\\", User[], 2>"`;
+
+exports[`async action with meta without cancel fn(fetchUsersAsync) 1`] = `"{ request: T.PayloadMetaAC<\\"FETCH_USERS_REQUEST\\", undefined, 1>; success: T.PayloadMetaAC<\\"FETCH_USERS_SUCCESS\\", User[], 2>; failure: T.PayloadAC<\\"FETCH_USERS_FAILURE\\", Error>; }"`;
+
+exports[`async action with undefined type fetchUsersAsync.cancel 1`] = `"Property 'cancel' does not exist on type 'AsyncActionCreatorWithoutCancel<[\\"FETCH_USERS_REQUEST\\", undefined], [\\"FETCH_USERS_SUCCESS\\", User[]], [\\"FETCH_USERS_FAILURE\\", Error]>'."`;
 
 exports[`async action with undefined type fetchUsersAsync.failure(
       Error('reason')
@@ -40,4 +79,4 @@ exports[`async action with undefined type fetchUsersAsync.success([
       { firstName: 'Piotr', lastName: 'Witek' },
     ]) 1`] = `"T.PayloadAction<\\"FETCH_USERS_SUCCESS\\", User[]>"`;
 
-exports[`async action with undefined type fn(fetchUsersAsync) 1`] = `"AsyncActionCreator<[\\"FETCH_USERS_REQUEST\\", undefined], [\\"FETCH_USERS_SUCCESS\\", User[]], [\\"FETCH_USERS_FAILURE\\", Error], never, \\"FETCH_USERS_REQUEST\\", undefined, \\"FETCH_USERS_SUCCESS\\", User[], \\"FETCH_USERS_FAILURE\\", Error, never, never>"`;
+exports[`async action with undefined type fn(fetchUsersAsync) 1`] = `"{ request: T.EmptyAC<\\"FETCH_USERS_REQUEST\\">; success: T.PayloadAC<\\"FETCH_USERS_SUCCESS\\", User[]>; failure: T.PayloadAC<\\"FETCH_USERS_FAILURE\\", Error>; }"`;

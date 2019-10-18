@@ -40,7 +40,7 @@ type User = { firstName: string; lastName: string };
     type: 'FETCH_USERS_FAILURE', payload: Error('reason')
   } */
 
-  // @dts-jest:pass:snap
+  // @dts-jest:fail:snap
   fetchUsersAsync.cancel;
 }
 
@@ -121,6 +121,102 @@ type User = { firstName: string; lastName: string };
   } */
 }
 
+// @dts-jest:group async action with meta
+{
+  const fetchUsersAsync = createAsyncAction(
+    'FETCH_USERS_REQUEST',
+    'FETCH_USERS_SUCCESS',
+    'FETCH_USERS_FAILURE',
+    'FETCH_USERS_CANCEL'
+  )<undefined, User[], Error, string, 1, 2, undefined, 4>();
+
+  const fn = (
+    a: AsyncActionCreator<
+      ['FETCH_USERS_REQUEST', undefined, 1],
+      ['FETCH_USERS_SUCCESS', User[], 2],
+      ['FETCH_USERS_FAILURE', Error],
+      ['FETCH_USERS_CANCEL', string, 4]
+    >
+  ) => a;
+  // @dts-jest:pass:snap
+  fn(fetchUsersAsync);
+
+  // @dts-jest:pass:snap
+  fetchUsersAsync.request(
+    undefined,
+    1
+  ); /* => {
+    type: 'FETCH_USERS_REQUEST', meta: 1
+  } */
+
+  // @dts-jest:pass:snap
+  fetchUsersAsync.success(
+    [{ firstName: 'Piotr', lastName: 'Witek' }],
+    2
+  ); /* => {
+    type: 'FETCH_USERS_SUCCESS', meta: 2, payload: [{ firstName: 'Piotr', lastName: 'Witek' }]
+  } */
+
+  // @dts-jest:pass:snap
+  fetchUsersAsync.failure(
+    Error('reason')
+  ); /* => {
+    type: 'FETCH_USERS_FAILURE', payload: Error('reason')
+  } */
+
+  // @dts-jest:pass:snap
+  fetchUsersAsync.cancel(
+    'reason',
+    4
+  ); /* => {
+    type: 'FETCH_USERS_CANCEL', meta: 4, payload: 'reason'
+  } */
+}
+
+// @dts-jest:group async action with meta without cancel
+{
+  const fetchUsersAsync = createAsyncAction(
+    'FETCH_USERS_REQUEST',
+    'FETCH_USERS_SUCCESS',
+    'FETCH_USERS_FAILURE'
+  )<undefined, User[], Error, undefined, 1, 2, undefined>();
+
+  const fn = (
+    a: AsyncActionCreator<
+      ['FETCH_USERS_REQUEST', undefined, 1],
+      ['FETCH_USERS_SUCCESS', User[], 2],
+      ['FETCH_USERS_FAILURE', Error]
+    >
+  ) => a;
+  // @dts-jest:pass:snap
+  fn(fetchUsersAsync);
+
+  // @dts-jest:pass:snap
+  fetchUsersAsync.request(
+    undefined,
+    1
+  ); /* => {
+    type: 'FETCH_USERS_REQUEST', meta: 1
+  } */
+
+  // @dts-jest:pass:snap
+  fetchUsersAsync.success(
+    [{ firstName: 'Piotr', lastName: 'Witek' }],
+    2
+  ); /* => {
+    type: 'FETCH_USERS_SUCCESS', meta: 2, payload: [{ firstName: 'Piotr', lastName: 'Witek' }]
+  } */
+
+  // @dts-jest:pass:snap
+  fetchUsersAsync.failure(
+    Error('reason')
+  ); /* => {
+    type: 'FETCH_USERS_FAILURE', payload: Error('reason')
+  } */
+
+  // @dts-jest:fail:snap
+  fetchUsersAsync.cancel;
+}
 // @dts-jest:group async action with mappers
 // {
 //   const fetchUserMappers = createAsyncAction(

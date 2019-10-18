@@ -18,7 +18,7 @@ type User = { firstName: string; lastName: string };
       ['FETCH_USERS_FAILURE', Error]
     >
   ) => a;
-  // @dts-jest:pass:snap -> AsyncActionCreator<["FETCH_USERS_REQUEST", undefined], ["FETCH_USERS_SUCCESS", User[]], ["FETCH_USERS_FAILURE", Error], never, "FETCH_USERS_REQUEST", undefined, "FETCH_USERS_SUCCESS", User[], "FETCH_USERS_FAILURE", Error, never, never>
+  // @dts-jest:pass:snap -> { request: T.EmptyAC<"FETCH_USERS_REQUEST">; success: T.PayloadAC<"FETCH_USERS_SUCCESS", User[]>; failure: T.PayloadAC<"FETCH_USERS_FAILURE", Error>; }
   fn(fetchUsersAsync);
 
   // @dts-jest:pass:snap -> T.EmptyAction<"FETCH_USERS_REQUEST">
@@ -40,7 +40,7 @@ type User = { firstName: string; lastName: string };
     type: 'FETCH_USERS_FAILURE', payload: Error('reason')
   } */
 
-  // @dts-jest:pass:snap -> never
+  // @dts-jest:fail:snap -> Property 'cancel' does not exist on type 'AsyncActionCreatorWithoutCancel<["FETCH_USERS_REQUEST", undefined], ["FETCH_USERS_SUCCESS", User[]], ["FETCH_USERS_FAILURE", Error]>'.
   fetchUsersAsync.cancel;
 }
 
@@ -91,7 +91,7 @@ type User = { firstName: string; lastName: string };
       ['FETCH_USERS_CANCEL', string]
     >
   ) => a;
-  // @dts-jest:pass:snap -> AsyncActionCreator<["FETCH_USERS_REQUEST", undefined], ["FETCH_USERS_SUCCESS", User[]], ["FETCH_USERS_FAILURE", Error], ["FETCH_USERS_CANCEL", string], "FETCH_USERS_REQUEST", undefined, "FETCH_USERS_SUCCESS", User[], "FETCH_USERS_FAILURE", Error, "FETCH_USERS_CANCEL", string>
+  // @dts-jest:pass:snap -> AsyncActionCreator<["FETCH_USERS_REQUEST", undefined], ["FETCH_USERS_SUCCESS", User[]], ["FETCH_USERS_FAILURE", Error], ["FETCH_USERS_CANCEL", string]>
   fn(fetchUsersAsync);
 
   // @dts-jest:pass:snap -> T.EmptyAction<"FETCH_USERS_REQUEST">
@@ -121,6 +121,102 @@ type User = { firstName: string; lastName: string };
   } */
 }
 
+// @dts-jest:group async action with meta
+{
+  const fetchUsersAsync = createAsyncAction(
+    'FETCH_USERS_REQUEST',
+    'FETCH_USERS_SUCCESS',
+    'FETCH_USERS_FAILURE',
+    'FETCH_USERS_CANCEL'
+  )<undefined, User[], Error, string, 1, 2, undefined, 4>();
+
+  const fn = (
+    a: AsyncActionCreator<
+      ['FETCH_USERS_REQUEST', undefined, 1],
+      ['FETCH_USERS_SUCCESS', User[], 2],
+      ['FETCH_USERS_FAILURE', Error],
+      ['FETCH_USERS_CANCEL', string, 4]
+    >
+  ) => a;
+  // @dts-jest:pass:snap -> AsyncActionCreator<["FETCH_USERS_REQUEST", undefined, 1], ["FETCH_USERS_SUCCESS", User[], 2], ["FETCH_USERS_FAILURE", Error], ["FETCH_USERS_CANCEL", string, 4]>
+  fn(fetchUsersAsync);
+
+  // @dts-jest:pass:snap -> T.PayloadMetaAction<"FETCH_USERS_REQUEST", undefined, 1>
+  fetchUsersAsync.request(
+    undefined,
+    1
+  ); /* => {
+    type: 'FETCH_USERS_REQUEST', meta: 1
+  } */
+
+  // @dts-jest:pass:snap -> T.PayloadMetaAction<"FETCH_USERS_SUCCESS", User[], 2>
+  fetchUsersAsync.success(
+    [{ firstName: 'Piotr', lastName: 'Witek' }],
+    2
+  ); /* => {
+    type: 'FETCH_USERS_SUCCESS', meta: 2, payload: [{ firstName: 'Piotr', lastName: 'Witek' }]
+  } */
+
+  // @dts-jest:pass:snap -> T.PayloadAction<"FETCH_USERS_FAILURE", Error>
+  fetchUsersAsync.failure(
+    Error('reason')
+  ); /* => {
+    type: 'FETCH_USERS_FAILURE', payload: Error('reason')
+  } */
+
+  // @dts-jest:pass:snap -> T.PayloadMetaAction<"FETCH_USERS_CANCEL", string, 4>
+  fetchUsersAsync.cancel(
+    'reason',
+    4
+  ); /* => {
+    type: 'FETCH_USERS_CANCEL', meta: 4, payload: 'reason'
+  } */
+}
+
+// @dts-jest:group async action with meta without cancel
+{
+  const fetchUsersAsync = createAsyncAction(
+    'FETCH_USERS_REQUEST',
+    'FETCH_USERS_SUCCESS',
+    'FETCH_USERS_FAILURE'
+  )<undefined, User[], Error, undefined, 1, 2, undefined>();
+
+  const fn = (
+    a: AsyncActionCreator<
+      ['FETCH_USERS_REQUEST', undefined, 1],
+      ['FETCH_USERS_SUCCESS', User[], 2],
+      ['FETCH_USERS_FAILURE', Error]
+    >
+  ) => a;
+  // @dts-jest:pass:snap -> { request: T.PayloadMetaAC<"FETCH_USERS_REQUEST", undefined, 1>; success: T.PayloadMetaAC<"FETCH_USERS_SUCCESS", User[], 2>; failure: T.PayloadAC<"FETCH_USERS_FAILURE", Error>; }
+  fn(fetchUsersAsync);
+
+  // @dts-jest:pass:snap -> T.PayloadMetaAction<"FETCH_USERS_REQUEST", undefined, 1>
+  fetchUsersAsync.request(
+    undefined,
+    1
+  ); /* => {
+    type: 'FETCH_USERS_REQUEST', meta: 1
+  } */
+
+  // @dts-jest:pass:snap -> T.PayloadMetaAction<"FETCH_USERS_SUCCESS", User[], 2>
+  fetchUsersAsync.success(
+    [{ firstName: 'Piotr', lastName: 'Witek' }],
+    2
+  ); /* => {
+    type: 'FETCH_USERS_SUCCESS', meta: 2, payload: [{ firstName: 'Piotr', lastName: 'Witek' }]
+  } */
+
+  // @dts-jest:pass:snap -> T.PayloadAction<"FETCH_USERS_FAILURE", Error>
+  fetchUsersAsync.failure(
+    Error('reason')
+  ); /* => {
+    type: 'FETCH_USERS_FAILURE', payload: Error('reason')
+  } */
+
+  // @dts-jest:fail:snap -> Property 'cancel' does not exist on type 'AsyncActionCreatorWithoutCancel<["FETCH_USERS_REQUEST", undefined, 1], ["FETCH_USERS_SUCCESS", User[], 2], ["FETCH_USERS_FAILURE", Error]>'.
+  fetchUsersAsync.cancel;
+}
 // @dts-jest:group async action with mappers
 // {
 //   const fetchUserMappers = createAsyncAction(
