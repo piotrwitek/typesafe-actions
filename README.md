@@ -503,15 +503,19 @@ Typescript issues:
 *Here is the latest recommendation although it's not fully optimal. If you managed to cook something better, please open an issue to share your finding with us.*
 
 ```ts
-import { createAsyncAction } from 'typesafe-actions';
+import { createAsyncAction, createReducer } from 'typesafe-actions';
+import { put, call, takeEvery } from 'redux-saga/effetcs';
 
+// Create the set of async actions
 const fetchTodosAsync = createAsyncAction(
   'FETCH_TODOS_REQUEST',
   'FETCH_TODOS_SUCCESS',
   'FETCH_TODOS_FAILURE'
 )<string, Todo[], Error>();
 
+// Handle request saga
 function* addTodoSaga(action: ReturnType<typeof fetchTodosAsync.request>): Generator {
+  try {
     const response: Todo[] = yield call(todosApi.getAll, action.payload);
 
     yield put(fetchTodosAsync.success(response));
@@ -519,6 +523,17 @@ function* addTodoSaga(action: ReturnType<typeof fetchTodosAsync.request>): Gener
     yield put(fetchTodosAsync.failure(err));
   }
 }
+
+// Main saga
+function* mainSaga() {
+    yield all([
+        takeEvery(fetchTodosAsync.request, addTodoSaga),
+    ]);
+}
+
+// Handle success reducer
+export const todoReducer = createReducer({})
+    .handleAction(fetchTodosAsync.success, (state, action) => ({ ...state, todos: action.payload }));
 ```
 
 [⇧ back to top](#table-of-contents)
