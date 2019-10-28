@@ -1,17 +1,13 @@
 import { Todo } from 'MyModels';
 import cuid from 'cuid';
-import { createStandardAction, createAsyncAction } from 'typesafe-actions';
+import { createAction, createAsyncAction } from 'typesafe-actions';
 
-export const addTodo = createStandardAction('ADD_TODO').map(
-  ({ title }: { title: string }): { payload: Todo } => ({
-    payload: {
-      title,
-      id: cuid(),
-    },
-  })
-);
+export const addTodo = createAction('ADD_TODO', (title: string) => ({
+  id: cuid(),
+  title,
+}))<Todo>();
 
-export const removeTodo = createStandardAction('REMOVE_TODO')<string>();
+export const removeTodo = createAction('REMOVE_TODO')<string>();
 
 export const loadTodosAsync = createAsyncAction(
   'LOAD_TODOS_REQUEST',
