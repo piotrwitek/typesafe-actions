@@ -21,9 +21,10 @@ describe('with type only', () => {
 });
 
 describe('with payload', () => {
-  const withPayload = createCustomAction('CREATE_CUSTOM_ACTION', type => {
-    return (amount: number) => ({ type, payload: amount });
-  });
+  const withPayload = createCustomAction(
+    'CREATE_CUSTOM_ACTION',
+    (id: number) => ({ payload: id })
+  );
   // @dts-jest:pass:snap -> { type: "CREATE_CUSTOM_ACTION"; payload: number; }
   withPayload(1); // => { type: 'CREATE_CUSTOM_ACTION', payload: 1 }
 });
@@ -31,9 +32,7 @@ describe('with payload', () => {
 describe('with optional payload', () => {
   const withOptionalPayload = createCustomAction(
     'CREATE_CUSTOM_ACTION',
-    type => {
-      return (id?: number) => ({ type, payload: id });
-    }
+    (id?: number) => ({ payload: id })
   );
   // @dts-jest:pass:snap -> { type: "CREATE_CUSTOM_ACTION"; payload: number | undefined; }
   withOptionalPayload(); // => { type: 'CREATE_CUSTOM_ACTION' }
@@ -42,9 +41,10 @@ describe('with optional payload', () => {
 });
 
 describe('with meta', () => {
-  const withMeta = createCustomAction('CREATE_CUSTOM_ACTION', type => {
-    return (token: string) => ({ type, meta: token });
-  });
+  const withMeta = createCustomAction(
+    'CREATE_CUSTOM_ACTION',
+    (token: string) => ({ meta: token })
+  );
   // @dts-jest:pass:snap -> { type: "CREATE_CUSTOM_ACTION"; meta: string; }
   withMeta('token'); // => { type: 'CREATE_CUSTOM_ACTION', meta: 'token' }
 });
@@ -52,8 +52,7 @@ describe('with meta', () => {
 describe('with payload and meta', () => {
   const withPayloadAndMeta = createCustomAction(
     'CREATE_CUSTOM_ACTION',
-    type => (message: string, scope: string) => ({
-      type,
+    (message: string, scope: string) => ({
       payload: message,
       meta: scope,
     })

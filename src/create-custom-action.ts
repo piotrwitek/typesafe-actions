@@ -1,4 +1,8 @@
-import { ActionCreator, TypeConstant } from './type-helpers';
+import {
+  TypeConstant,
+  ResolveType,
+  ActionCreatorTypeMetadata,
+} from './type-helpers';
 import {
   checkIsEmpty,
   throwIsEmpty,
@@ -10,9 +14,14 @@ import {
  * @description create custom action-creator using constructor function with injected type argument
  */
 export function createCustomAction<
-  T extends TypeConstant,
-  AC extends ActionCreator<T> = () => { type: T }
->(type: T, createHandler?: (type: T) => AC): AC {
+  TType extends TypeConstant,
+  TArgs extends any[] = [],
+  TReturn extends any = {}
+>(
+  type: TType,
+  createHandler?: (...args: TArgs) => TReturn
+): ((...args: TArgs) => ResolveType<{ type: TType } & TReturn>) &
+  ActionCreatorTypeMetadata<TType> {
   if (checkIsEmpty(type)) {
     throwIsEmpty(1);
   }
@@ -21,12 +30,17 @@ export function createCustomAction<
     throwInvalidActionType(1);
   }
 
-  const actionCreator: AC =
-    createHandler != null ? createHandler(type) : ((() => ({ type })) as AC);
+  const actionCreator = (...args: TArgs) => {
+    const customProps =
+      createHandler != null ? createHandler(...args) : undefined;
+    return { type, ...customProps } as ResolveType<{ type: TType } & TReturn>;
+  };
 
-  return Object.assign(actionCreator, {
+  const typeMeta = {
     getType: () => type,
     // redux-actions compatibility
     toString: () => type,
-  });
+  } as ActionCreatorTypeMetadata<TType>;
+
+  return Object.assign(actionCreator, typeMeta);
 }

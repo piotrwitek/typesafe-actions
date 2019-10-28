@@ -1,18 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`action 1`] = `"({ type: \\"WITH_MAPPED_PAYLOAD\\"; } & { payload: number; }) | ({ type: \\"WITH_MAPPED_PAYLOAD_META\\"; } & { payload: number; meta: string; })"`;
+exports[`action 1`] = `"TH.PayloadAction<\\"WITH_PAYLOAD\\", number> | TH.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string>"`;
 
-exports[`action 2`] = `"({ type: \\"WITH_MAPPED_PAYLOAD\\"; } & { payload: number; }) | ({ type: \\"WITH_MAPPED_PAYLOAD_META\\"; } & { payload: number; meta: string; })"`;
+exports[`action 2`] = `"TH.PayloadAction<\\"WITH_PAYLOAD\\", number> | TH.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string>"`;
 
-exports[`actual 1`] = `"T.EmptyAction<\\"WITH_TYPE_ONLY\\">[]"`;
+exports[`actual 1`] = `"TH.EmptyAction<\\"WITH_TYPE_ONLY\\">[]"`;
 
-exports[`actual 2`] = `"(T.EmptyAction<\\"WITH_TYPE_ONLY\\"> | T.PayloadAction<\\"WITH_PAYLOAD\\", number>)[]"`;
+exports[`actual 2`] = `"(TH.EmptyAction<\\"WITH_TYPE_ONLY\\"> | TH.PayloadAction<\\"WITH_PAYLOAD\\", number>)[]"`;
 
-exports[`actual 3`] = `"(T.EmptyAction<\\"WITH_TYPE_ONLY\\"> | T.PayloadAction<\\"WITH_PAYLOAD\\", number> | T.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string>)[]"`;
+exports[`actual 3`] = `"(TH.EmptyAction<\\"WITH_TYPE_ONLY\\"> | TH.PayloadAction<\\"WITH_PAYLOAD\\", number> | TH.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string>)[]"`;
 
-exports[`actual 4`] = `"(T.EmptyAction<\\"WITH_TYPE_ONLY\\"> | T.PayloadAction<\\"WITH_PAYLOAD\\", number> | ({ type: \\"WITH_MAPPED_PAYLOAD\\"; } & { payload: number; }) | T.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string>)[]"`;
+exports[`actual 4`] = `"(TH.EmptyAction<\\"WITH_TYPE_ONLY\\"> | TH.PayloadAction<\\"WITH_PAYLOAD\\", number> | TH.PayloadAction<\\"WITH_MAPPED_PAYLOAD\\", number> | TH.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string>)[]"`;
 
-exports[`actual 5`] = `"(T.EmptyAction<\\"WITH_TYPE_ONLY\\"> | T.PayloadAction<\\"WITH_PAYLOAD\\", number> | ({ type: \\"WITH_MAPPED_PAYLOAD\\"; } & { payload: number; }) | T.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string> | ({ type: \\"WITH_MAPPED_PAYLOAD_META\\"; } & { payload: number; meta: string; }))[]"`;
+exports[`actual 5`] = `"(TH.EmptyAction<\\"WITH_TYPE_ONLY\\"> | TH.PayloadAction<\\"WITH_PAYLOAD\\", number> | TH.PayloadAction<\\"WITH_MAPPED_PAYLOAD\\", number> | TH.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string> | TH.PayloadMetaAction<\\"WITH_MAPPED_PAYLOAD_META\\", number, string>)[]"`;
 
 exports[`isActionOf([withTypeOnly, withPayload])(mappedPayloadAction) 1`] = `"boolean"`;
 

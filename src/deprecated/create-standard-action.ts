@@ -1,18 +1,26 @@
-import {
-  TypeConstant,
-  ActionBuilderConstructor,
-  ActionBuilderMap,
-} from './type-helpers';
-import { createCustomAction } from './create-custom-action';
+import { TypeConstant, ActionCreatorBuilder } from '../type-helpers';
 import {
   checkIsEmpty,
   throwIsEmpty,
   checkInvalidActionType,
   throwInvalidActionType,
-} from './utils/validation';
+} from '../utils/validation';
+import { createCustomAction } from './create-custom-action';
+
+/** @private */
+export type ActionBuilderMap<
+  TType extends TypeConstant,
+  TActionProps extends any,
+  TPayloadArg extends any = undefined,
+  TMetaArg extends any = undefined
+> = [TMetaArg] extends [undefined]
+  ? [TPayloadArg] extends [undefined]
+    ? () => { type: TType } & TActionProps
+    : (payload: TPayloadArg) => { type: TType } & TActionProps
+  : (payload: TPayloadArg, meta: TMetaArg) => { type: TType } & TActionProps;
 
 export interface ActionBuilder<T extends TypeConstant> {
-  <P = undefined, M = undefined>(): ActionBuilderConstructor<T, P, M>;
+  <P = undefined, M = undefined>(): ActionCreatorBuilder<T, P, M>;
   map<R, P = undefined, M = undefined>(
     fn: (payload: P, meta: M) => R
   ): ActionBuilderMap<T, R, P, M>;
@@ -32,12 +40,12 @@ export function createStandardAction<T extends TypeConstant>(
     throwInvalidActionType(1);
   }
 
-  function constructor<P, M = undefined>(): ActionBuilderConstructor<T, P, M> {
+  function constructor<P, M = undefined>(): ActionCreatorBuilder<T, P, M> {
     return createCustomAction(type, _type => (payload: P, meta: M) => ({
       type: _type,
       payload,
       meta,
-    })) as ActionBuilderConstructor<T, P, M>;
+    })) as ActionCreatorBuilder<T, P, M>;
   }
 
   function map<R, P, M>(
