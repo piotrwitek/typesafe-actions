@@ -19,20 +19,19 @@ _This library is part of the [React & Redux TypeScript Guide](https://github.com
 
 
 
-:star: _Found it useful? Want more updates?_ [**Show your support by giving a :star:**](https://github.com/piotrwitek/typesafe-actions/stargazers)
+_Found it useful? Want more updates?_
 
-:tada: _Now updated to support **TypeScript v3.5**_ :tada:
+[**Show your support by giving a :star:**](https://github.com/piotrwitek/typesafe-actions/stargazers)
 
 <a href="https://www.buymeacoffee.com/zh9guxbA5">
   <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me a Coffee">
 </a>
-<a href="https://www.patreon.com/piotrekwitek">
-  <img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" alt="Become a Patron" width="160">
-</a>
 
-</div>
+<br/><hr/>
+:tada: _Now updated to support **TypeScript v3.7**_ :tada:
+<hr/><br/>
 
----
+ </div>
 
 **Features**
 
@@ -183,7 +182,7 @@ Issues can be funded by anyone interested in them being resolved. Reward will be
 
 ---
 
-## Tutorial
+## Tutorial v4 (v5 is WIP [#188](https://github.com/piotrwitek/typesafe-actions/issues/188))
 
 To showcase the flexibility and the power of the **type-safety** provided by this library, let's build the most common parts of a typical todo-app using a Redux architecture:
 
@@ -1073,15 +1072,82 @@ export type RootState = StateType<typeof rootReducer>;
 ---
 
 ## Migration Guides
+### `v4.x.x` to `v5.x.x`
+**Breaking changes:**
+1. In `v5` all the deprecated `v4` creator functions are available under `deprecated` named import to help with incremental migration.
+```ts
+// before
+import { createAction, createStandardAction, createCustomAction } from "typesafe-actions"
+
+// after
+import { deprecated } from "typesafe-actions"
+const { createAction, createStandardAction, createCustomAction } = deprecated;
+```
+2. `createStandardAction` was renamed to `createAction` and `.map` method was removed in favor of simpler `redux-actions` style API.
+```ts
+// before
+const withMappedPayloadAndMeta = createStandardAction(
+  'CREATE_STANDARD_ACTION'
+).map(({ username, message }: Notification) => ({
+  payload: `${username}: ${message}`,
+  meta: { username, message },
+}));
+
+// after
+const withMappedPayloadAndMeta = createAction(
+  'CREATE_STANDARD_ACTION',
+  ({ username, message }: Notification) => `${username}: ${message}`, // payload creator
+  ({ username, message }: Notification) => ({ username, message }) // meta creator
+)();
+```
+1. `v4` version of `createAction` was removed. I suggest to refactor to use a new `createAction` as in point `2`, which was simplified and extended to support `redux-actions` style API.
+```ts
+// before
+const withPayloadAndMeta = createAction('CREATE_ACTION', resolve => {
+  return (id: number, token: string) => resolve(id, token);
+});
+  
+// after
+const withPayloadAndMeta = createAction(
+  'CREATE_ACTION',
+  (id: number, token: string) => id, // payload creator
+  (id: number, token: string) => token // meta creator
+})();
+```
+1. `createCustomAction` - API was greatly simplified, now it's used like this:
+```ts
+// before
+const add = createCustomAction('CUSTOM', type => {
+  return (first: number, second: number) => ({ type, customProp1: first, customProp2: second });
+});
+
+// after
+const add = createCustomAction(
+  'CUSTOM',
+  (first: number, second: number) => ({ customProp1: first, customProp2: second })
+);
+```
+5. `AsyncActionCreator` should be just renamed to `AsyncActionCreatorBuilder`.
+```ts
+// before
+import { AsyncActionCreator } from "typesafe-actions"
+
+//after
+import { AsyncActionCreatorBuilder } from "typesafe-actions"
+```
 
 ### `v3.x.x` to `v4.x.x`
-No breaking changes!
+**No breaking changes!**
 
 ### `v2.x.x` to `v3.x.x`
-`v3.x.x` API is backward compatible with `v2.x.x`. You'll only need to update typescript dependency to `> v3.1`.
+**No breaking changes!**
+
+You only need to update typescript dependency to `> v3.1`.
 
 ### `v1.x.x` to `v2.x.x`
-In v2 we provide a `createActionDeprecated` function compatible with v1 API to help with incremental migration.
+**Breaking changes:**
+1. `createAction`
+- In `v2` we provide a `createActionDeprecated` function compatible with `v1` `createAction` to help with incremental migration.
 
 ```ts
 // in v1 we created action-creator like this:
@@ -1095,7 +1161,7 @@ const getTodo = createAction('GET_TODO',
 
 getTodo('some_id', 'some_meta'); // { type: 'GET_TODO', payload: 'some_id', meta: 'some_meta' }
 
-// in v2 API we offer few different styles - please choose your preference
+// in v2 we offer few different options - please choose your preference
 const getTodoNoHelpers = (id: string, meta: string) => action('GET_TODO', id, meta);
 
 const getTodoWithHelpers = createAction('GET_TODO', action => {
