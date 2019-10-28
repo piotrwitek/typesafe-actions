@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { addTodo } from '../actions';
 
 const dispatchProps = {
-  addItem: (title: string) => addTodo({ title }),
+  addItem: addTodo,
 };
 
 type Props = {
