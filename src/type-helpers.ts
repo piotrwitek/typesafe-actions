@@ -260,22 +260,32 @@ export type AsyncActionCreatorBuilder<
     ? TCancel[1][1]
     : never,
   TArgs4 extends any[] = TCancel extends [TType4, any, any] ? TCancel[1] : never
-> = {
-  request: [TArgs1] extends [never]
-    ? ActionCreatorBuilder<TType1, TPayload1, TMeta1>
-    : (...args: TArgs1) => ActionBuilder<TType1, TPayload1, TMeta1>;
-  success: [TArgs2] extends [never]
-    ? ActionCreatorBuilder<TType2, TPayload2, TMeta2>
-    : (...args: TArgs2) => ActionBuilder<TType2, TPayload2, TMeta2>;
-  failure: [TArgs3] extends [never]
-    ? ActionCreatorBuilder<TType3, TPayload3, TMeta3>
-    : (...args: TArgs3) => ActionBuilder<TType3, TPayload3, TMeta3>;
-  cancel: [TCancel] extends [never]
-    ? never
-    : [TArgs4] extends [never]
-    ? ActionCreatorBuilder<TType4, TPayload4, TMeta4>
-    : (...args: TArgs4) => ActionBuilder<TType4, TPayload4, TMeta4>;
-};
+> = [TCancel] extends [never]
+  ? {
+      request: [TArgs1] extends [never]
+        ? ActionCreatorBuilder<TType1, TPayload1, TMeta1>
+        : (...args: TArgs1) => ActionBuilder<TType1, TPayload1, TMeta1>;
+      success: [TArgs2] extends [never]
+        ? ActionCreatorBuilder<TType2, TPayload2, TMeta2>
+        : (...args: TArgs2) => ActionBuilder<TType2, TPayload2, TMeta2>;
+      failure: [TArgs3] extends [never]
+        ? ActionCreatorBuilder<TType3, TPayload3, TMeta3>
+        : (...args: TArgs3) => ActionBuilder<TType3, TPayload3, TMeta3>;
+    }
+  : {
+      request: [TArgs1] extends [never]
+        ? ActionCreatorBuilder<TType1, TPayload1, TMeta1>
+        : (...args: TArgs1) => ActionBuilder<TType1, TPayload1, TMeta1>;
+      success: [TArgs2] extends [never]
+        ? ActionCreatorBuilder<TType2, TPayload2, TMeta2>
+        : (...args: TArgs2) => ActionBuilder<TType2, TPayload2, TMeta2>;
+      failure: [TArgs3] extends [never]
+        ? ActionCreatorBuilder<TType3, TPayload3, TMeta3>
+        : (...args: TArgs3) => ActionBuilder<TType3, TPayload3, TMeta3>;
+      cancel: [TArgs4] extends [never]
+        ? ActionCreatorBuilder<TType4, TPayload4, TMeta4>
+        : (...args: TArgs4) => ActionBuilder<TType4, TPayload4, TMeta4>;
+    };
 
 /**
  * INTERNAL API
@@ -285,3 +295,9 @@ export type AsyncActionCreatorBuilder<
 export type ResolveType<T extends any> = T extends (...args: any[]) => {}
   ? T
   : { [K in keyof T]: T[K] };
+
+/** @private */
+export type ExcludeNever<T extends object> = Pick<
+  T,
+  { [Key in keyof T]: T[Key] extends never ? never : Key }[keyof T]
+>;
