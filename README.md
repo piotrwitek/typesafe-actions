@@ -533,7 +533,7 @@ function* mainSaga() {
 
 // Handle success reducer
 export const todoReducer = createReducer({})
-    .handleAction(loginAsync.success, (state, action) => ({ ...state, todos: action.payload }));
+    .handleAction(fetchTodosAsync.success, (state, action) => ({ ...state, todos: action.payload }));
 ```
 
 [⇧ back to top](#table-of-contents)
