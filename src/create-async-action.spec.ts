@@ -31,7 +31,7 @@ type User = { firstName: string; lastName: string };
     type: 'FETCH_USERS_FAILURE', payload: Error('reason')
   } */
 
-  // @dts-jest:pass:snap
+  // @dts-jest:fail:snap
   fetchUsersAsync.cancel;
 
   const fn = (
@@ -44,6 +44,7 @@ type User = { firstName: string; lastName: string };
     a.request;
     a.success;
     a.failure;
+    // @ts-ignore
     a.cancel;
     return a;
   };
@@ -80,7 +81,7 @@ type User = { firstName: string; lastName: string };
     type: 'FETCH_USERS_FAILURE', payload: 1,
   } */
 
-  // @dts-jest:pass:snap
+  // @dts-jest:fail:snap
   fetchUsersAsync.cancel;
 
   const fn = (
@@ -93,6 +94,7 @@ type User = { firstName: string; lastName: string };
     a.request;
     a.success;
     a.failure;
+    // @ts-ignore
     a.cancel;
     return a;
   };
@@ -186,7 +188,7 @@ type User = { firstName: string; lastName: string };
     type: 'FETCH_USERS_FAILURE', payload: Error('reason'), meta: 111
   } */
 
-  // @dts-jest:pass:snap
+  // @dts-jest:fail:snap
   fetchUsersAsync.cancel;
 
   const fn = (
@@ -199,6 +201,7 @@ type User = { firstName: string; lastName: string };
     a.request;
     a.success;
     a.failure;
+    // @ts-ignore
     a.cancel;
     return a;
   };
@@ -300,7 +303,7 @@ type User = { firstName: string; lastName: string };
     type: 'FETCH_USER_FAILURE', payload: Error('reason'), meta: 111
   } */
 
-  // @dts-jest:pass:snap
+  // @dts-jest:fail:snap
   fetchUserMappers.cancel;
 
   const fn = (
@@ -313,6 +316,7 @@ type User = { firstName: string; lastName: string };
     a.request;
     a.success;
     a.failure;
+    // @ts-ignore
     a.cancel;
     return a;
   };

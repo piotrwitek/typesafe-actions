@@ -11,7 +11,33 @@ export function throwInvalidAsyncActionArgument(argPosition: number): never {
   );
 }
 
-interface AsyncActionType<
+type AsyncActionHandler<
+  TType extends TypeConstant,
+  TArgs extends any[],
+  TPayloadMeta
+> = [TArgs] extends [never]
+  ? ActionCreatorBuilder<
+      TType,
+      unknown extends TPayloadMeta
+        ? any
+        : [TPayloadMeta] extends [[infer T, any]]
+        ? T
+        : TPayloadMeta,
+      unknown extends TPayloadMeta
+        ? undefined
+        : [TPayloadMeta] extends [[any, infer T]]
+        ? T
+        : undefined
+    >
+  : (
+      ...args: TArgs
+    ) => ActionBuilder<
+      TType,
+      [TPayloadMeta] extends [[infer T, any]] ? T : TPayloadMeta,
+      [TPayloadMeta] extends [[any, infer T]] ? T : undefined
+    >;
+
+interface AsyncAction<
   TType1 extends TypeConstant,
   TPayload1 extends any,
   TMeta1 extends any,
@@ -51,94 +77,18 @@ interface AsyncActionType<
       | [TPayload4, TMeta4] = TMeta3 extends undefined
       ? TPayload4
       : [TPayload4, TMeta4]
-  >(): {
-    request: [TArgs1] extends [never]
-      ? ActionCreatorBuilder<
-          TType1,
-          unknown extends TPayloadMeta1
-            ? any
-            : [TPayloadMeta1] extends [[infer T, any]]
-            ? T
-            : TPayloadMeta1,
-          unknown extends TPayloadMeta1
-            ? undefined
-            : [TPayloadMeta1] extends [[any, infer T]]
-            ? T
-            : undefined
-        >
-      : (
-          ...args: TArgs1
-        ) => ActionBuilder<
-          TType1,
-          [TPayloadMeta1] extends [[infer T, any]] ? T : TPayloadMeta1,
-          [TPayloadMeta1] extends [[any, infer T]] ? T : undefined
-        >;
-    success: [TArgs2] extends [never]
-      ? ActionCreatorBuilder<
-          TType2,
-          unknown extends TPayloadMeta2
-            ? any
-            : [TPayloadMeta2] extends [[infer T, any]]
-            ? T
-            : TPayloadMeta2,
-          unknown extends TPayloadMeta2
-            ? undefined
-            : [TPayloadMeta2] extends [[any, infer T]]
-            ? T
-            : undefined
-        >
-      : (
-          ...args: TArgs2
-        ) => ActionBuilder<
-          TType2,
-          [TPayloadMeta2] extends [[infer T, any]] ? T : TPayloadMeta2,
-          [TPayloadMeta2] extends [[any, infer T]] ? T : undefined
-        >;
-    failure: [TArgs3] extends [never]
-      ? ActionCreatorBuilder<
-          TType3,
-          unknown extends TPayloadMeta3
-            ? any
-            : [TPayloadMeta3] extends [[infer T, any]]
-            ? T
-            : TPayloadMeta3,
-          unknown extends TPayloadMeta3
-            ? undefined
-            : [TPayloadMeta3] extends [[any, infer T]]
-            ? T
-            : undefined
-        >
-      : (
-          ...args: TArgs3
-        ) => ActionBuilder<
-          TType3,
-          [TPayloadMeta3] extends [[infer T, any]] ? T : TPayloadMeta3,
-          [TPayloadMeta3] extends [[any, infer T]] ? T : undefined
-        >;
-    cancel: [TType4] extends [never]
-      ? never
-      : [TArgs4] extends [never]
-      ? ActionCreatorBuilder<
-          TType4,
-          unknown extends TPayloadMeta4
-            ? any
-            : [TPayloadMeta4] extends [[infer T, any]]
-            ? T
-            : TPayloadMeta4,
-          unknown extends TPayloadMeta4
-            ? undefined
-            : [TPayloadMeta4] extends [[any, infer T]]
-            ? T
-            : undefined
-        >
-      : (
-          ...args: TArgs4
-        ) => ActionBuilder<
-          TType4,
-          [TPayloadMeta4] extends [[infer T, any]] ? T : TPayloadMeta4,
-          [TPayloadMeta4] extends [[any, infer T]] ? T : undefined
-        >;
-  };
+  >(): [TType4] extends [never]
+    ? {
+        request: AsyncActionHandler<TType1, TArgs1, TPayloadMeta1>;
+        success: AsyncActionHandler<TType2, TArgs2, TPayloadMeta2>;
+        failure: AsyncActionHandler<TType3, TArgs3, TPayloadMeta3>;
+      }
+    : {
+        request: AsyncActionHandler<TType1, TArgs1, TPayloadMeta1>;
+        success: AsyncActionHandler<TType2, TArgs2, TPayloadMeta2>;
+        failure: AsyncActionHandler<TType3, TArgs3, TPayloadMeta3>;
+        cancel: AsyncActionHandler<TType4, TArgs4, TPayloadMeta4>;
+      };
 }
 
 export function createAsyncAction<
@@ -151,7 +101,7 @@ export function createAsyncAction<
   successArg: TType2,
   failureArg: TType3,
   cancelArg?: TType4
-): AsyncActionType<
+): AsyncAction<
   TType1,
   unknown,
   unknown,
@@ -252,7 +202,7 @@ export function createAsyncAction<
     | TType4
     | [TType4, TPayloadCreator4]
     | [TType4, TPayloadCreator4, TMetaCreator4]
-): AsyncActionType<
+): AsyncAction<
   TType1,
   TPayload1,
   TMeta1,
@@ -356,7 +306,7 @@ export function createAsyncAction<
     | TType4
     | [TType4, TPayloadCreator4]
     | [TType4, TPayloadCreator4, TMetaCreator4]
-): AsyncActionType<
+): AsyncAction<
   TType1,
   TPayload1,
   TMeta1,
@@ -404,7 +354,7 @@ export function createAsyncAction<
       failure,
       cancel,
     };
-  }) as AsyncActionType<
+  }) as AsyncAction<
     TType1,
     TPayload1,
     TMeta1,
