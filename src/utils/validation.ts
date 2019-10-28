@@ -4,11 +4,11 @@ import {
   TypeConstant,
 } from '../type-helpers';
 
-export function checkIsEmpty(arg: unknown, argPosition: number = 1) {
+export function checkIsEmpty(arg: unknown) {
   return arg == null;
 }
 
-export function throwIsEmpty(argPosition: number = 1): never {
+export function throwIsEmpty(argPosition: number): never {
   throw new Error(`Argument ${argPosition} is empty.`);
 }
 
@@ -22,7 +22,7 @@ export function checkInvalidActionCreator(arg: unknown) {
   return !checkValidActionCreator(arg);
 }
 
-export function throwInvalidActionCreator(argPosition: number = 1): never {
+export function throwInvalidActionCreator(argPosition: number): never {
   throw new Error(
     `Argument ${argPosition} is invalid, it should be an action-creator instance from "typesafe-actions"`
   );
@@ -52,7 +52,7 @@ export function checkInvalidActionType(arg: unknown) {
   return !checkValidActionType(arg);
 }
 
-export function throwInvalidActionType(argPosition: number = 1): never {
+export function throwInvalidActionType(argPosition: number): never {
   throw new Error(
     `Argument ${argPosition} is invalid, it should be an action type of type: string | symbol`
   );
@@ -74,7 +74,7 @@ export function checkInvalidActionTypeInArray(
 }
 
 export function throwInvalidActionTypeOrActionCreator(
-  argPosition: number = 1
+  argPosition: number
 ): never {
   throw new Error(
     `Argument ${argPosition} is invalid, it should be an action-creator instance from "typesafe-actions" or action type of type: string | symbol`

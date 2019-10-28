@@ -12,17 +12,6 @@ import {
   throwInvalidActionType,
 } from './utils/validation';
 
-export function createAction<
-  TType extends TypeConstant,
-  TPayload extends any = undefined,
-  TMeta extends any = undefined,
-  TArgs extends any[] = any[]
->(
-  type: TType,
-  payloadCreator: undefined | ((...args: TArgs) => TPayload),
-  metaCreator?: (...args: TArgs) => TMeta
-): () => (...args: TArgs) => ActionBuilder<TType, TPayload, TMeta>;
-
 export function createAction<TType extends TypeConstant>(
   type: TType
 ): <TPayload = undefined, TMeta = undefined>() => ActionCreatorBuilder<
@@ -31,20 +20,37 @@ export function createAction<TType extends TypeConstant>(
   TMeta
 >;
 
+export function createAction<
+  TType extends TypeConstant,
+  TCreatorPayload extends any = undefined,
+  TCreatorMeta extends any = undefined,
+  TArgs extends any[] = any[]
+>(
+  type: TType,
+  payloadCreator: undefined | ((...args: TArgs) => TCreatorPayload),
+  metaCreator?: (...args: TArgs) => TCreatorMeta
+): <
+  TPayload extends TCreatorPayload = TCreatorPayload,
+  TMeta extends TCreatorMeta = TCreatorMeta
+>() => (...args: TArgs) => ActionBuilder<TType, TPayload, TMeta>;
+
 /**
  * @description create an action-creator
  */
 export function createAction<
   TType extends TypeConstant,
-  TPayload extends any = undefined,
-  TMeta extends any = undefined,
+  TCreatorPayload extends any = undefined,
+  TCreatorMeta extends any = undefined,
   TArgs extends any[] = any[]
 >(
   type: TType,
-  payloadCreator?: undefined | ((...args: TArgs) => TPayload),
-  metaCreator?: (...args: TArgs) => TMeta
+  payloadCreator?: undefined | ((...args: TArgs) => TCreatorPayload),
+  metaCreator?: (...args: TArgs) => TCreatorMeta
 ):
-  | (() => (...args: TArgs) => ActionBuilder<TType, TPayload, TMeta>)
+  | (<
+      TPayload extends TCreatorPayload = TCreatorPayload,
+      TMeta extends TCreatorMeta = TCreatorMeta
+    >() => (...args: TArgs) => ActionBuilder<TType, TPayload, TMeta>)
   | (<TPayload = undefined, TMeta = undefined>() => ActionCreatorBuilder<
       TType,
       TPayload,

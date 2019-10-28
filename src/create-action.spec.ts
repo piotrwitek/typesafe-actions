@@ -111,61 +111,62 @@ describe('Redux Actions', () => {
   describe('with payload - primitive param', () => {
     const withPayload = createAction(
       'CREATE_ACTION',
-      (payload: string) => payload
-    )();
+      (arg: { payload: string }) => arg.payload
+    )<string>();
     // @dts-jest:pass:snap
-    withPayload('info message'); // => { type: 'CREATE_ACTION', payload: 'info message' }
+    withPayload({ payload: 'info message' }); // => { type: 'CREATE_ACTION', payload: 'info message' }
   });
 
   describe('with payload - union param', () => {
     const withPayload = createAction(
       'CREATE_ACTION',
-      (payload: string | null | number) => payload
-    )();
+      (arg: { payload: string | null | number }) => arg.payload
+    )<string | null | number>();
     // @dts-jest:pass:snap
-    withPayload('info message'); // => { type: 'CREATE_ACTION', payload: 'info message' }
+    withPayload({ payload: 'info message' }); // => { type: 'CREATE_ACTION', payload: 'info message' }
     // @dts-jest:pass:snap
-    withPayload(null); // => { type: 'CREATE_ACTION', payload: null }
+    withPayload({ payload: null }); // => { type: 'CREATE_ACTION', payload: null }
     // @dts-jest:pass:snap
-    withPayload(3); // => { type: 'CREATE_ACTION', payload: 3 }
+    withPayload({ payload: 3 }); // => { type: 'CREATE_ACTION', payload: 3 }
   });
 
   describe('with meta - primitive param', () => {
     const withMeta = createAction(
       'CREATE_ACTION',
       undefined,
-      (meta: string) => meta
-    )();
+      (arg: { meta: string }) => arg.meta
+    )<undefined, string>();
     // @dts-jest:pass:snap
-    withMeta('info message'); // => { type: 'CREATE_ACTION', meta: 'info message' }
+    withMeta({ meta: 'info message' }); // => { type: 'CREATE_ACTION', meta: 'info message' }
   });
 
   describe('with meta - union param', () => {
     const withMeta = createAction(
       'CREATE_ACTION',
       undefined,
-      (meta: string | null | number) => meta
-    )();
+      (arg: { meta: string | null | number }) => arg.meta
+    )<undefined, string | null | number>();
     // @dts-jest:pass:snap
-    withMeta('info message'); // => { type: 'CREATE_ACTION', meta: 'info message' }
+    withMeta({ meta: 'info message' }); // => { type: 'CREATE_ACTION', meta: 'info message' }
     // @dts-jest:pass:snap
-    withMeta(null); // => { type: 'CREATE_ACTION', meta: null }
+    withMeta({ meta: null }); // => { type: 'CREATE_ACTION', meta: null }
     // @dts-jest:pass:snap
-    withMeta(3); // => { type: 'CREATE_ACTION', meta: 3 }
+    withMeta({ meta: 3 }); // => { type: 'CREATE_ACTION', meta: 3 }
   });
 
   describe('with payload and meta - primitive params', () => {
     const withPayloadAndMeta = createAction(
       'CREATE_ACTION',
-      (username: string, message: string) => `${username}: ${message}`,
+      (arg: { username: string; message: string }) =>
+        `${arg.username}: ${arg.message}`,
 
-      (username: string, message: string) => ({
-        username,
-        message,
+      (arg: { username: string; message: string }) => ({
+        username: arg.username,
+        message: arg.message,
       })
-    )();
+    )<string, { username: string; message: string }>();
     // tslint:disable:max-line-length
     // @dts-jest:pass:snap
-    withPayloadAndMeta('Piotr', 'Hello!'); // => { type: 'CREATE_ACTION', payload: 'Piotr: Hello!', meta: { username: 'Piotr', message: 'Hello!' } }
+    withPayloadAndMeta({ username: 'Piotr', message: 'Hello!' }); // => { type: 'CREATE_ACTION', payload: 'Piotr: Hello!', meta: { username: 'Piotr', message: 'Hello!' } }
   });
 });

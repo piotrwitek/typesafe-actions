@@ -1,51 +1,275 @@
 import {
   TypeConstant,
   ActionCreatorBuilder,
-  // ActionBuilderMap,
+  ActionBuilder,
 } from './type-helpers';
-import { checkInvalidActionTypeInArray } from './utils/validation';
 import { createAction } from './create-action';
 
-export type AsyncActionCreator<
-  TRequest extends [T1, P1],
-  TSuccess extends [T2, P2],
-  TFailure extends [T3, P3],
-  TCancel extends [T4, P4] = never,
-  T1 extends TypeConstant = TRequest[0],
-  P1 = TRequest[1],
-  T2 extends TypeConstant = TSuccess[0],
-  P2 = TSuccess[1],
-  T3 extends TypeConstant = TFailure[0],
-  P3 = TFailure[1],
-  T4 extends TypeConstant = TCancel[0],
-  P4 = TCancel[1]
-> = {
-  request: ActionCreatorBuilder<T1, P1>;
-  success: ActionCreatorBuilder<T2, P2>;
-  failure: ActionCreatorBuilder<T3, P3>;
-  cancel: TCancel extends [TypeConstant, any]
-    ? ActionCreatorBuilder<T4, P4>
-    : never;
-};
+export function throwInvalidAsyncActionArgument(argPosition: number): never {
+  throw new Error(
+    `Argument ${argPosition} is invalid, it should be an action type of "string | symbol" or a tuple of "[string | symbol, Function, Function?]"`
+  );
+}
 
-export interface AsyncActionBuilder<
+interface AsyncActionType<
+  TType1 extends TypeConstant,
+  TPayload1 extends any,
+  TMeta1 extends any,
+  TArgs1 extends any[],
+  TType2 extends TypeConstant,
+  TPayload2 extends any,
+  TMeta2 extends any,
+  TArgs2 extends any[],
+  TType3 extends TypeConstant,
+  TPayload3 extends any,
+  TMeta3 extends any,
+  TArgs3 extends any[],
+  TType4 extends TypeConstant,
+  TPayload4 extends any,
+  TMeta4 extends any,
+  TArgs4 extends any[]
+> {
+  // tslint:disable-next-line: callable-types
+  <
+    TPayloadMeta1 extends
+      | TPayload1
+      | [TPayload1, TMeta1] = TMeta1 extends undefined
+      ? TPayload1
+      : [TPayload1, TMeta1],
+    TPayloadMeta2 extends
+      | TPayload2
+      | [TPayload2, TMeta2] = TMeta2 extends undefined
+      ? TPayload2
+      : [TPayload2, TMeta2],
+    TPayloadMeta3 extends
+      | TPayload3
+      | [TPayload3, TMeta3] = TMeta3 extends undefined
+      ? TPayload3
+      : [TPayload3, TMeta3],
+    TPayloadMeta4 extends
+      | TPayload4
+      | [TPayload4, TMeta4] = TMeta3 extends undefined
+      ? TPayload4
+      : [TPayload4, TMeta4]
+  >(): {
+    request: [TArgs1] extends [never]
+      ? ActionCreatorBuilder<
+          TType1,
+          unknown extends TPayloadMeta1
+            ? any
+            : [TPayloadMeta1] extends [[infer T, any]]
+            ? T
+            : TPayloadMeta1,
+          unknown extends TPayloadMeta1
+            ? undefined
+            : [TPayloadMeta1] extends [[any, infer T]]
+            ? T
+            : undefined
+        >
+      : (
+          ...args: TArgs1
+        ) => ActionBuilder<
+          TType1,
+          [TPayloadMeta1] extends [[infer T, any]] ? T : TPayloadMeta1,
+          [TPayloadMeta1] extends [[any, infer T]] ? T : undefined
+        >;
+    success: [TArgs2] extends [never]
+      ? ActionCreatorBuilder<
+          TType2,
+          unknown extends TPayloadMeta2
+            ? any
+            : [TPayloadMeta2] extends [[infer T, any]]
+            ? T
+            : TPayloadMeta2,
+          unknown extends TPayloadMeta2
+            ? undefined
+            : [TPayloadMeta2] extends [[any, infer T]]
+            ? T
+            : undefined
+        >
+      : (
+          ...args: TArgs2
+        ) => ActionBuilder<
+          TType2,
+          [TPayloadMeta2] extends [[infer T, any]] ? T : TPayloadMeta2,
+          [TPayloadMeta2] extends [[any, infer T]] ? T : undefined
+        >;
+    failure: [TArgs3] extends [never]
+      ? ActionCreatorBuilder<
+          TType3,
+          unknown extends TPayloadMeta3
+            ? any
+            : [TPayloadMeta3] extends [[infer T, any]]
+            ? T
+            : TPayloadMeta3,
+          unknown extends TPayloadMeta3
+            ? undefined
+            : [TPayloadMeta3] extends [[any, infer T]]
+            ? T
+            : undefined
+        >
+      : (
+          ...args: TArgs3
+        ) => ActionBuilder<
+          TType3,
+          [TPayloadMeta3] extends [[infer T, any]] ? T : TPayloadMeta3,
+          [TPayloadMeta3] extends [[any, infer T]] ? T : undefined
+        >;
+    cancel: [TType4] extends [never]
+      ? never
+      : [TArgs4] extends [never]
+      ? ActionCreatorBuilder<
+          TType4,
+          unknown extends TPayloadMeta4
+            ? any
+            : [TPayloadMeta4] extends [[infer T, any]]
+            ? T
+            : TPayloadMeta4,
+          unknown extends TPayloadMeta4
+            ? undefined
+            : [TPayloadMeta4] extends [[any, infer T]]
+            ? T
+            : undefined
+        >
+      : (
+          ...args: TArgs4
+        ) => ActionBuilder<
+          TType4,
+          [TPayloadMeta4] extends [[infer T, any]] ? T : TPayloadMeta4,
+          [TPayloadMeta4] extends [[any, infer T]] ? T : undefined
+        >;
+  };
+}
+
+export function createAsyncAction<
   TType1 extends TypeConstant,
   TType2 extends TypeConstant,
   TType3 extends TypeConstant,
-  TType4 extends TypeConstant
-> {
-  <TPayload1, TPayload2, TPayload3, TPayload4>(): AsyncActionCreator<
-    [TType1, TPayload1],
-    [TType2, TPayload2],
-    [TType3, TPayload3],
-    [TType4, TPayload4]
-  >;
-  <TPayload1, TPayload2, TPayload3>(): AsyncActionCreator<
-    [TType1, TPayload1],
-    [TType2, TPayload2],
-    [TType3, TPayload3]
-  >;
-}
+  TType4 extends TypeConstant = never
+>(
+  requestArg: TType1,
+  successArg: TType2,
+  failureArg: TType3,
+  cancelArg?: TType4
+): AsyncActionType<
+  TType1,
+  unknown,
+  unknown,
+  never,
+  TType2,
+  unknown,
+  unknown,
+  never,
+  TType3,
+  unknown,
+  unknown,
+  never,
+  TType4,
+  unknown,
+  unknown,
+  never
+>;
+
+export function createAsyncAction<
+  TType1 extends TypeConstant,
+  TType2 extends TypeConstant,
+  TType3 extends TypeConstant,
+  TType4 extends TypeConstant = never,
+  TPayloadCreator1 extends
+    | ((...args: TArgs1) => TPayload1)
+    | undefined = undefined,
+  TPayloadCreator2 extends
+    | ((...args: TArgs2) => TPayload2)
+    | undefined = undefined,
+  TPayloadCreator3 extends
+    | ((...args: TArgs3) => TPayload3)
+    | undefined = undefined,
+  TPayloadCreator4 extends
+    | ((...args: TArgs4) => TPayload4)
+    | undefined = undefined,
+  TMetaCreator1 extends ((...args: TArgs1) => TMeta1) | undefined = undefined,
+  TMetaCreator2 extends ((...args: TArgs2) => TMeta2) | undefined = undefined,
+  TMetaCreator3 extends ((...args: TArgs3) => TMeta3) | undefined = undefined,
+  TMetaCreator4 extends ((...args: TArgs4) => TMeta4) | undefined = undefined,
+  TPayload1 extends any = TPayloadCreator1 extends ((...args: any[]) => infer T)
+    ? T
+    : undefined,
+  TMeta1 extends any = TMetaCreator1 extends ((...args: any[]) => infer T)
+    ? T
+    : undefined,
+  TPayload2 extends any = TPayloadCreator2 extends ((...args: any[]) => infer T)
+    ? T
+    : undefined,
+  TMeta2 extends any = TMetaCreator2 extends ((...args: any[]) => infer T)
+    ? T
+    : undefined,
+  TPayload3 extends any = TPayloadCreator3 extends ((...args: any[]) => infer T)
+    ? T
+    : undefined,
+  TMeta3 extends any = TMetaCreator3 extends ((...args: any[]) => infer T)
+    ? T
+    : undefined,
+  TPayload4 extends any = TPayloadCreator4 extends ((...args: any[]) => infer T)
+    ? T
+    : undefined,
+  TMeta4 extends any = TMetaCreator4 extends ((...args: any[]) => infer T)
+    ? T
+    : undefined,
+  TArgs1 extends any[] = TPayloadCreator1 extends ((...args: infer T) => any)
+    ? T
+    : TMetaCreator1 extends ((...args: infer T) => any)
+    ? T
+    : never,
+  TArgs2 extends any[] = TPayloadCreator2 extends ((...args: infer T) => any)
+    ? T
+    : TMetaCreator2 extends ((...args: infer T) => any)
+    ? T
+    : never,
+  TArgs3 extends any[] = TPayloadCreator3 extends ((...args: infer T) => any)
+    ? T
+    : TMetaCreator3 extends ((...args: infer T) => any)
+    ? T
+    : never,
+  TArgs4 extends any[] = TPayloadCreator4 extends ((...args: infer T) => any)
+    ? T
+    : TMetaCreator4 extends ((...args: infer T) => any)
+    ? T
+    : never
+>(
+  requestArg:
+    | TType1
+    | [TType1, TPayloadCreator1]
+    | [TType1, TPayloadCreator1, TMetaCreator1],
+  successArg:
+    | TType2
+    | [TType2, TPayloadCreator2]
+    | [TType2, TPayloadCreator2, TMetaCreator2],
+  failureArg:
+    | TType3
+    | [TType3, TPayloadCreator3]
+    | [TType3, TPayloadCreator3, TMetaCreator3],
+  cancelArg?:
+    | TType4
+    | [TType4, TPayloadCreator4]
+    | [TType4, TPayloadCreator4, TMetaCreator4]
+): AsyncActionType<
+  TType1,
+  TPayload1,
+  TMeta1,
+  TArgs1,
+  TType2,
+  TPayload2,
+  TMeta2,
+  TArgs2,
+  TType3,
+  TPayload3,
+  TMeta3,
+  TArgs3,
+  TType4,
+  TPayload4,
+  TMeta4,
+  TArgs4
+>;
 
 /**
  * @description create an async action-creator object that contains `request`, `success` and `failure` actions as props
@@ -54,41 +278,150 @@ export function createAsyncAction<
   TType1 extends TypeConstant,
   TType2 extends TypeConstant,
   TType3 extends TypeConstant,
-  TType4 extends TypeConstant
+  TType4 extends TypeConstant = never,
+  TPayloadCreator1 extends
+    | ((...args: TArgs1) => TPayload1)
+    | undefined = undefined,
+  TPayloadCreator2 extends
+    | ((...args: TArgs2) => TPayload2)
+    | undefined = undefined,
+  TPayloadCreator3 extends
+    | ((...args: TArgs3) => TPayload3)
+    | undefined = undefined,
+  TPayloadCreator4 extends
+    | ((...args: TArgs4) => TPayload4)
+    | undefined = undefined,
+  TMetaCreator1 extends ((...args: TArgs1) => TMeta1) | undefined = undefined,
+  TMetaCreator2 extends ((...args: TArgs2) => TMeta2) | undefined = undefined,
+  TMetaCreator3 extends ((...args: TArgs3) => TMeta3) | undefined = undefined,
+  TMetaCreator4 extends ((...args: TArgs4) => TMeta4) | undefined = undefined,
+  TPayload1 extends any = TPayloadCreator1 extends ((...args: any[]) => infer T)
+    ? T
+    : undefined,
+  TMeta1 extends any = TMetaCreator1 extends ((...args: any[]) => infer T)
+    ? T
+    : undefined,
+  TPayload2 extends any = TPayloadCreator2 extends ((...args: any[]) => infer T)
+    ? T
+    : undefined,
+  TMeta2 extends any = TMetaCreator2 extends ((...args: any[]) => infer T)
+    ? T
+    : undefined,
+  TPayload3 extends any = TPayloadCreator3 extends ((...args: any[]) => infer T)
+    ? T
+    : undefined,
+  TMeta3 extends any = TMetaCreator3 extends ((...args: any[]) => infer T)
+    ? T
+    : undefined,
+  TPayload4 extends any = TPayloadCreator4 extends ((...args: any[]) => infer T)
+    ? T
+    : undefined,
+  TMeta4 extends any = TMetaCreator4 extends ((...args: any[]) => infer T)
+    ? T
+    : undefined,
+  TArgs1 extends any[] = TPayloadCreator1 extends ((...args: infer T) => any)
+    ? T
+    : TMetaCreator1 extends ((...args: infer T) => any)
+    ? T
+    : never,
+  TArgs2 extends any[] = TPayloadCreator2 extends ((...args: infer T) => any)
+    ? T
+    : TMetaCreator2 extends ((...args: infer T) => any)
+    ? T
+    : never,
+  TArgs3 extends any[] = TPayloadCreator3 extends ((...args: infer T) => any)
+    ? T
+    : TMetaCreator3 extends ((...args: infer T) => any)
+    ? T
+    : never,
+  TArgs4 extends any[] = TPayloadCreator4 extends ((...args: infer T) => any)
+    ? T
+    : TMetaCreator4 extends ((...args: infer T) => any)
+    ? T
+    : never
 >(
-  requestType: TType1,
-  successType: TType2,
-  failureType: TType3,
-  cancelType?: TType4
-): AsyncActionBuilder<TType1, TType2, TType3, TType4> {
-  [requestType, successType, failureType].forEach(
-    checkInvalidActionTypeInArray
-  );
+  requestArg:
+    | TType1
+    | [TType1, TPayloadCreator1]
+    | [TType1, TPayloadCreator1, TMetaCreator1],
+  successArg:
+    | TType2
+    | [TType2, TPayloadCreator2]
+    | [TType2, TPayloadCreator2, TMetaCreator2],
+  failureArg:
+    | TType3
+    | [TType3, TPayloadCreator3]
+    | [TType3, TPayloadCreator3, TMetaCreator3],
+  cancelArg?:
+    | TType4
+    | [TType4, TPayloadCreator4]
+    | [TType4, TPayloadCreator4, TMetaCreator4]
+): AsyncActionType<
+  TType1,
+  TPayload1,
+  TMeta1,
+  TArgs1,
+  TType2,
+  TPayload2,
+  TMeta2,
+  TArgs2,
+  TType3,
+  TPayload3,
+  TMeta3,
+  TArgs3,
+  TType4,
+  TPayload4,
+  TMeta4,
+  TArgs4
+> {
+  const constructor = (<
+    TP1 = undefined,
+    TM1 = undefined,
+    TP2 = undefined,
+    TM2 = undefined,
+    TP3 = undefined,
+    TM3 = undefined,
+    TP4 = undefined,
+    TM4 = undefined
+  >() => {
+    const results = [requestArg, successArg, failureArg, cancelArg].map(
+      (arg, index) => {
+        if (Array.isArray(arg)) {
+          return createAction(arg[0], arg[1] as any, arg[2] as any)();
+        } else if (typeof arg === 'string' || typeof arg === 'symbol') {
+          return createAction(arg as string)();
+        } else if (index < 3) {
+          throwInvalidAsyncActionArgument(index);
+        }
+      }
+    );
 
-  const constructor = (<TPayload1, TPayload2, TPayload3, TPayload4>() => {
+    const [request, success, failure, cancel] = results;
+
     return {
-      request: createAction(requestType)<TPayload1>(),
-      success: createAction(successType)<TPayload2>(),
-      failure: createAction(failureType)<TPayload3>(),
-      cancel: cancelType && createAction(cancelType)<TPayload4>(),
+      request,
+      success,
+      failure,
+      cancel,
     };
-  }) as AsyncActionBuilder<TType1, TType2, TType3, TType4>;
+  }) as AsyncActionType<
+    TType1,
+    TPayload1,
+    TMeta1,
+    TArgs1,
+    TType2,
+    TPayload2,
+    TMeta2,
+    TArgs2,
+    TType3,
+    TPayload3,
+    TMeta3,
+    TArgs3,
+    TType4,
+    TPayload4,
+    TMeta4,
+    TArgs4
+  >;
 
-  const api = Object.assign<
-    AsyncActionBuilder<TType1, TType2, TType3, TType4>,
-    {}
-  >(constructor, {
-    // extension point for chain api
-  });
-
-  return api;
+  return constructor;
 }
-
-// export interface AsyncActionBuilder<
-// {
-// withMappers<A1 = undefined, P1 = undefined, A2 = undefined, P2 = undefined, A3 = undefined, P3 = undefined>(
-//   requestMapper: (a?: A1) => P1,
-//   successMapper: (a?: A2) => P2,
-//   failureMapper: (a?: A3) => P3
-// ): AsyncActionBuilderWithMappers<T1, T2, T3, A1, P1, A2, P2, A3, P3>;
-// }

@@ -11,7 +11,7 @@
 export { action } from './action';
 export { createAction } from './create-action';
 export { createCustomAction } from './create-custom-action';
-export { createAsyncAction, AsyncActionCreator } from './create-async-action';
+export { createAsyncAction } from './create-async-action';
 export { createReducer } from './create-reducer';
 
 // action-helpers
@@ -21,20 +21,23 @@ export { isActionOf } from './is-action-of';
 
 // type-helpers
 export {
+  Types,
+  ActionType,
+  StateType,
   TypeConstant,
   Action,
-  ActionCreator,
   Reducer,
   EmptyAction,
   PayloadAction,
   PayloadMetaAction,
+  ActionCreator,
   EmptyActionCreator,
   PayloadActionCreator,
   PayloadMetaActionCreator,
   ActionCreatorTypeMetadata,
-  ActionType,
-  StateType,
-  Types,
+  ActionBuilder,
+  ActionCreatorBuilder,
+  AsyncActionCreatorBuilder,
 } from './type-helpers';
 
 // deprecated

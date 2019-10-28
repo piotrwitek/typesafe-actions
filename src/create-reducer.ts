@@ -4,7 +4,7 @@ import {
   checkValidActionType,
   throwInvalidActionTypeOrActionCreator,
 } from './utils/validation';
-import { Reducer, Action, Types, ActionCreator } from './type-helpers';
+import { Reducer, Action, Types } from './type-helpers';
 
 type HandleActionChainApi<
   TState,
@@ -97,20 +97,27 @@ export function createReducer<TState, TRootAction extends Action = RootAction>(
     }
   };
 
-  const reducerHandler = ((singleOrMultipleCreatorsAndTypes, reducer) => {
+  const reducerHandler = ((
+    singleOrMultipleCreatorsAndTypes: any,
+    reducer: any
+  ) => {
     const creatorsAndTypes = Array.isArray(singleOrMultipleCreatorsAndTypes)
       ? singleOrMultipleCreatorsAndTypes
       : [singleOrMultipleCreatorsAndTypes];
 
     const newHandlers: typeof handlers = {};
+
     creatorsAndTypes
       .map(
-        (acOrType: TRootAction['type'] | ((...args: any[]) => TRootAction)) =>
+        (
+          acOrType: TRootAction['type'] | ((...args: any[]) => TRootAction),
+          index
+        ) =>
           checkValidActionCreator(acOrType)
             ? getType(acOrType)
             : checkValidActionType(acOrType)
             ? acOrType
-            : throwInvalidActionTypeOrActionCreator()
+            : throwInvalidActionTypeOrActionCreator(index + 1)
       )
       .forEach(type => (newHandlers[type] = reducer));
 

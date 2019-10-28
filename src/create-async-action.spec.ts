@@ -1,25 +1,16 @@
 import * as TH from './type-helpers';
-import { createAsyncAction, AsyncActionCreator } from './create-async-action';
+import { AsyncActionCreatorBuilder } from './type-helpers';
+import { createAsyncAction } from './create-async-action';
 
 type User = { firstName: string; lastName: string };
 
-// @dts-jest:group async action with undefined type
+// @dts-jest:group async action without cancel
 {
   const fetchUsersAsync = createAsyncAction(
     'FETCH_USERS_REQUEST',
     'FETCH_USERS_SUCCESS',
     'FETCH_USERS_FAILURE'
   )<undefined, User[], Error>();
-
-  const fn = (
-    a: AsyncActionCreator<
-      ['FETCH_USERS_REQUEST', undefined],
-      ['FETCH_USERS_SUCCESS', User[]],
-      ['FETCH_USERS_FAILURE', Error]
-    >
-  ) => a;
-  // @dts-jest:pass:snap
-  fn(fetchUsersAsync);
 
   // @dts-jest:pass:snap
   fetchUsersAsync.request(); /* => {
@@ -42,6 +33,22 @@ type User = { firstName: string; lastName: string };
 
   // @dts-jest:pass:snap
   fetchUsersAsync.cancel;
+
+  const fn = (
+    a: AsyncActionCreatorBuilder<
+      ['FETCH_USERS_REQUEST', undefined],
+      ['FETCH_USERS_SUCCESS', User[]],
+      ['FETCH_USERS_FAILURE', Error]
+    >
+  ) => {
+    a.request;
+    a.success;
+    a.failure;
+    a.cancel;
+    return a;
+  };
+  // @dts-jest:pass:snap
+  fn(fetchUsersAsync);
 }
 
 // @dts-jest:group async action with any type
@@ -72,6 +79,25 @@ type User = { firstName: string; lastName: string };
   ); /* => {
     type: 'FETCH_USERS_FAILURE', payload: 1,
   } */
+
+  // @dts-jest:pass:snap
+  fetchUsersAsync.cancel;
+
+  const fn = (
+    a: AsyncActionCreatorBuilder<
+      ['FETCH_USERS_REQUEST', any],
+      ['FETCH_USERS_SUCCESS', any[]],
+      ['FETCH_USERS_FAILURE', any]
+    >
+  ) => {
+    a.request;
+    a.success;
+    a.failure;
+    a.cancel;
+    return a;
+  };
+  // @dts-jest:pass:snap
+  fn(fetchUsersAsync);
 }
 
 // @dts-jest:group async action with cancel
@@ -82,17 +108,6 @@ type User = { firstName: string; lastName: string };
     'FETCH_USERS_FAILURE',
     'FETCH_USERS_CANCEL'
   )<undefined, User[], Error, string>();
-
-  const fn = (
-    a: AsyncActionCreator<
-      ['FETCH_USERS_REQUEST', undefined],
-      ['FETCH_USERS_SUCCESS', User[]],
-      ['FETCH_USERS_FAILURE', Error],
-      ['FETCH_USERS_CANCEL', string]
-    >
-  ) => a;
-  // @dts-jest:pass:snap
-  fn(fetchUsersAsync);
 
   // @dts-jest:pass:snap
   fetchUsersAsync.request(); /* => {
@@ -119,85 +134,251 @@ type User = { firstName: string; lastName: string };
   ); /* => {
     type: 'FETCH_USERS_CANCEL', payload: 'reason'
   } */
+
+  const fn = (
+    a: AsyncActionCreatorBuilder<
+      ['FETCH_USERS_REQUEST', undefined],
+      ['FETCH_USERS_SUCCESS', User[]],
+      ['FETCH_USERS_FAILURE', Error],
+      ['FETCH_USERS_CANCEL', string]
+    >
+  ) => {
+    {
+      a.request;
+      a.success;
+      a.failure;
+      a.cancel;
+      return a;
+    }
+  };
+  // @dts-jest:pass:snap
+  fn(fetchUsersAsync);
+}
+
+// @dts-jest:group async action with meta
+{
+  const fetchUsersAsync = createAsyncAction(
+    'FETCH_USERS_REQUEST',
+    'FETCH_USERS_SUCCESS',
+    'FETCH_USERS_FAILURE'
+  )<[undefined, number], User[], [Error, number]>();
+
+  // @dts-jest:pass:snap
+  fetchUsersAsync.request(
+    undefined,
+    111
+  ); /* => {
+    type: 'FETCH_USERS_REQUEST', meta: 111
+  } */
+
+  // @dts-jest:pass:snap
+  fetchUsersAsync.success([
+    { firstName: 'Piotr', lastName: 'Witek' },
+  ]); /* => {
+    type: 'FETCH_USERS_SUCCESS', payload: [{ firstName: 'Piotr', lastName: 'Witek' }]
+  } */
+
+  // @dts-jest:pass:snap
+  fetchUsersAsync.failure(
+    Error('reason'),
+    111
+  ); /* => {
+    type: 'FETCH_USERS_FAILURE', payload: Error('reason'), meta: 111
+  } */
+
+  // @dts-jest:pass:snap
+  fetchUsersAsync.cancel;
+
+  const fn = (
+    a: AsyncActionCreatorBuilder<
+      ['FETCH_USERS_REQUEST', [undefined, number]],
+      ['FETCH_USERS_SUCCESS', User[]],
+      ['FETCH_USERS_FAILURE', [Error, number]]
+    >
+  ) => {
+    a.request;
+    a.success;
+    a.failure;
+    a.cancel;
+    return a;
+  };
+  // @dts-jest:pass:snap
+  fn(fetchUsersAsync);
+}
+
+// @dts-jest:group async action with meta with cancel
+{
+  const fetchUsersAsync = createAsyncAction(
+    'FETCH_USERS_REQUEST',
+    'FETCH_USERS_SUCCESS',
+    'FETCH_USERS_FAILURE',
+    'FETCH_USERS_CANCEL'
+  )<[undefined, number], User[], [Error, number], string>();
+
+  // @dts-jest:pass:snap
+  fetchUsersAsync.request(
+    undefined,
+    111
+  ); /* => {
+    type: 'FETCH_USERS_REQUEST', meta: 111
+  } */
+
+  // @dts-jest:pass:snap
+  fetchUsersAsync.success([
+    { firstName: 'Piotr', lastName: 'Witek' },
+  ]); /* => {
+    type: 'FETCH_USERS_SUCCESS', payload: [{ firstName: 'Piotr', lastName: 'Witek' }]
+  } */
+
+  // @dts-jest:pass:snap
+  fetchUsersAsync.failure(
+    Error('reason'),
+    111
+  ); /* => {
+    type: 'FETCH_USERS_FAILURE', payload: Error('reason'), meta: 111
+  } */
+
+  // @dts-jest:pass:snap
+  fetchUsersAsync.cancel(
+    'reason'
+  ); /* => {
+    type: 'FETCH_USERS_CANCEL', payload: 'reason'
+  } */
+
+  const fn = (
+    a: AsyncActionCreatorBuilder<
+      ['FETCH_USERS_REQUEST', [undefined, number]],
+      ['FETCH_USERS_SUCCESS', User[]],
+      ['FETCH_USERS_FAILURE', [Error, number]],
+      ['FETCH_USERS_CANCEL', string]
+    >
+  ) => {
+    a.request;
+    a.success;
+    a.failure;
+    a.cancel;
+    return a;
+  };
+  // @dts-jest:pass:snap
+  fn(fetchUsersAsync);
 }
 
 // @dts-jest:group async action with mappers
-// {
-//   const fetchUserMappers = createAsyncAction(
-//     'FETCH_USER_REQUEST',
-//     'FETCH_USER_SUCCESS',
-//     'FETCH_USER_FAILURE'
-//   ).withMappers(
-//     (id: string) => ({ id }), // request mapper
-//     ({ firstName, lastName }: User) => `${firstName} ${lastName}`, // success mapper
-//     () => 'hardcoded error' // error mapper
-//   );
+{
+  const fetchUserMappers = createAsyncAction(
+    'FETCH_USER_REQUEST',
+    [
+      'FETCH_USER_SUCCESS',
+      ({ firstName, lastName }: User) => `${firstName} ${lastName}`,
+    ],
+    [
+      'FETCH_USER_FAILURE',
+      (error: Error, meta: number) => error,
+      (error: Error, meta: number) => meta,
+    ]
+  )();
 
-//   const requestResult: {
-//     type: 'FETCH_USER_REQUEST';
-//     payload: { id: string };
-//   } = fetchUserMappers.request('fake_id');
-//   expect(requestResult).toEqual({ type: 'FETCH_USER_REQUEST', payload: { id: 'fake_id' } });
-//   const successResult: {
-//     type: 'FETCH_USER_SUCCESS';
-//     payload: string;
-//   } = fetchUserMappers.success({
-//     firstName: 'Piotr',
-//     lastName: 'Witek',
-//   });
-//   expect(successResult).toEqual({
-//     type: 'FETCH_USER_SUCCESS',
-//     payload: 'Piotr Witek',
-//   });
-//   const failureResult: {
-//     type: 'FETCH_USER_FAILURE';
-//     payload: string;
-//   } = fetchUserMappers.failure();
-//   expect(failureResult).toEqual({
-//     type: 'FETCH_USER_FAILURE',
-//     payload: 'hardcoded error',
-//   });
-// }
+  // @dts-jest:pass:snap
+  fetchUserMappers.request(); /* => {
+    type: 'FETCH_USER_REQUEST'
+  } */
 
-// @dts-jest:group async action with unions
-// {
-//   const fetchUserMappers = createAsyncAction(
-//     'FETCH_USER_REQUEST',
-//     'FETCH_USER_SUCCESS',
-//     'FETCH_USER_FAILURE'
-//   ).withMappers(
-//     (id: string | number) => ({ id }), // request mapper
-//     ({ firstName, lastName }: User | undefined) => `${firstName} ${lastName}`, // success mapper
-//     (error: boolean | string) => error // error mapper
-//   );
+  // @dts-jest:pass:snap
+  fetchUserMappers.success({
+    firstName: 'Piotr',
+    lastName: 'Witek',
+  }); /* => {
+    type: 'FETCH_USER_SUCCESS',
+    payload: 'Piotr Witek',
+  } */
 
-//   const requestResult: {
-//     type: 'FETCH_USER_REQUEST';
-//     payload: { id: string | number };
-//   } = fetchUserMappers.request(2);
-//   expect(requestResult).toEqual({ type: 'FETCH_USER_REQUEST', payload: { id: 2 } });
-//   const successResult: {
-//     type: 'FETCH_USER_SUCCESS';
-//     payload: string | undefined;
-//   } = fetchUserMappers.success(undefined);
-//   expect(successResult).toEqual({
-//     type: 'FETCH_USER_SUCCESS',
-//     payload: undefined,
-//   });
-//   const failureResult: {
-//     type: 'FETCH_USER_FAILURE';
-//     payload: boolean | string;
-//   } = fetchUserMappers.failure(true);
-//   expect(failureResult).toEqual({
-//     type: 'FETCH_USER_FAILURE',
-//     payload: true,
-//   });
-// }
+  // @dts-jest:pass:snap
+  fetchUserMappers.failure(
+    Error('reason'),
+    111
+  ); /* => {
+    type: 'FETCH_USER_FAILURE', payload: Error('reason'), meta: 111
+  } */
 
-// NEW API PROPOSAL:
-// - WITH MAP
-// const getTodoAsyncMap = createAsyncAction(
-//   'GET_TODO_REQUEST',
-//   'GET_TODO_SUCCESS',
-//   'GET_TODO_FAILURE'
-// ).map(...);
+  // @dts-jest:pass:snap
+  fetchUserMappers.cancel;
+
+  const fn = (
+    a: AsyncActionCreatorBuilder<
+      ['FETCH_USER_REQUEST', undefined],
+      ['FETCH_USER_SUCCESS', [User], string],
+      ['FETCH_USER_FAILURE', [Error, number], [Error, number]]
+    >
+  ) => {
+    a.request;
+    a.success;
+    a.failure;
+    a.cancel;
+    return a;
+  };
+  // @dts-jest:pass:snap
+  fn(fetchUserMappers);
+}
+
+// @dts-jest:group async action with mappers with cancel
+{
+  const fetchUserMappers = createAsyncAction(
+    'FETCH_USER_REQUEST',
+    [
+      'FETCH_USER_SUCCESS',
+      ({ firstName, lastName }: User) => `${firstName} ${lastName}`,
+    ],
+    [
+      'FETCH_USER_FAILURE',
+      (error: Error, meta: number) => error,
+      (error: Error, meta: number) => meta,
+    ],
+    ['FETCH_USER_CANCEL', undefined, (meta: number) => meta]
+  )();
+
+  // @dts-jest:pass:snap
+  fetchUserMappers.request(); /* => {
+    type: 'FETCH_USER_REQUEST'
+  } */
+
+  // @dts-jest:pass:snap
+  fetchUserMappers.success({
+    firstName: 'Piotr',
+    lastName: 'Witek',
+  }); /* => {
+    type: 'FETCH_USER_SUCCESS',
+    payload: 'Piotr Witek',
+  } */
+
+  // @dts-jest:pass:snap
+  fetchUserMappers.failure(
+    Error('reason'),
+    111
+  ); /* => {
+    type: 'FETCH_USER_FAILURE', payload: Error('reason'), meta: 111
+  } */
+
+  // @dts-jest:pass:snap
+  fetchUserMappers.cancel(
+    111
+  ); /* => {
+    type: 'FETCH_USER_CANCEL', meta: 111
+  } */
+
+  const fn = (
+    a: AsyncActionCreatorBuilder<
+      ['FETCH_USER_REQUEST', undefined],
+      ['FETCH_USER_SUCCESS', [User], string],
+      ['FETCH_USER_FAILURE', [Error, number], [Error, number]],
+      ['FETCH_USER_CANCEL', [number], [undefined, number]]
+    >
+  ) => {
+    a.request;
+    a.success;
+    a.failure;
+    a.cancel;
+    return a;
+  };
+  // @dts-jest:pass:snap
+  fn(fetchUserMappers);
+}
