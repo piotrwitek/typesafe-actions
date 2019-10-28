@@ -1,4 +1,4 @@
-import * as T from './type-helpers';
+import * as TH from './type-helpers';
 import { testType } from './utils/testing';
 import { getType } from './get-type';
 import { isOfType } from './is-of-type';

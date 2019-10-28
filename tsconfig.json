@@ -1,6 +1,5 @@
 {
   "include": ["src/**/*", "typings"],
-  "exclude": ["src/**/*.snap.ts", "src/**/*.spec.ts"],
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {},
