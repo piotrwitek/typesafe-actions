@@ -40,7 +40,12 @@ function createConfig(
 ) {
   return {
     input: opts.input,
-    external: id => !id.startsWith('./') && !path.isAbsolute(id),
+    external: id => {
+      // external modules except local and absolute
+      return (
+        !(id.startsWith('./') || id.startsWith('../')) && !path.isAbsolute(id)
+      );
+    },
     output: {
       file: `dist/${pkg.name}.${format}.${env}.js`,
       format,
