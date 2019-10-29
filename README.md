@@ -78,7 +78,7 @@ _Found it useful? Want more updates?_
   - [Async-Flows](#async-flows)
     - [With `redux-observable` epics](#with-redux-observable-epics)
     - [With `redux-saga` sagas](#with-redux-saga-sagas)
-- [API Docs](#api-docs)
+- [API Docs v4 (v5 is WIP #189)](#api-docs-v4-v5-is-wip-189)
   - [Action-Creators API](#action-creators-api)
     - [`action`](#action)
     - [`createAction`](#createaction)
@@ -543,7 +543,7 @@ export const todoReducer = createReducer({})
 
 ---
 
-## API Docs
+## API Docs v4 (v5 is WIP [#189](https://github.com/piotrwitek/typesafe-actions/issues/189))
 
 ### Action-Creators API
 
