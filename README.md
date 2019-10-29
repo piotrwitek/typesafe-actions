@@ -29,6 +29,9 @@ _Found it useful? Want more updates?_
 
 <br/><hr/>
 :tada: _Now updated to support **TypeScript v3.7**_ :tada:
+
+:warning: Library was recently updated to v5 :warning:
+<br/>*Current API Docs and Tutorial are outdated (from v4), so temporarily please use this issue as [v5.x.x API Docs](https://github.com/piotrwitek/typesafe-actions/issues/143).*
 <hr/><br/>
 
  </div>
