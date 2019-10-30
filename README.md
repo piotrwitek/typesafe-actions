@@ -23,8 +23,11 @@ _Found it useful? Want more updates?_
 
 [**Show your support by giving a :star:**](https://github.com/piotrwitek/typesafe-actions/stargazers)
 
-<a href="https://www.buymeacoffee.com/zh9guxbA5">
+<a href="https://www.buymeacoffee.com/piotrekwitek">
   <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me a Coffee">
+</a>
+<a href="https://www.patreon.com/piotrekwitek">
+  <img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" alt="Become a Patron" width="160">
 </a>
 
 <br/><hr/>
