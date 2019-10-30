@@ -13,11 +13,9 @@ _This library is part of the [React & Redux TypeScript Guide](https://github.com
 [![Bundlephobia Size](https://img.shields.io/bundlephobia/minzip/typesafe-actions.svg)](https://www.npmjs.com/package/typesafe-actions)
 
 [![Build Status](https://semaphoreci.com/api/v1/piotrekwitek/typesafe-actions/branches/master/shields_badge.svg)](https://semaphoreci.com/piotrekwitek/typesafe-actions)
-[![Dependencies Status](https://david-dm.org/piotrwitek/typesafe-actions/status.svg)](https://david-dm.org/piotrwitek/typesafe-actions)
+[![Dependency Status](https://img.shields.io/david/piotrwitek/typesafe-actions.svg)](https://david-dm.org/piotrwitek/typesafe-actions)
 [![License](https://img.shields.io/npm/l/typesafe-actions.svg?style=flat)](https://david-dm.org/piotrwitek/typesafe-actions?type=peer)
 [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/typesafe-actions)
-
-
 
 _Found it useful? Want more updates?_
 
@@ -31,10 +29,12 @@ _Found it useful? Want more updates?_
 </a>
 
 <br/><hr/>
+
 :tada: _Now updated to support **TypeScript v3.7**_ :tada:
 
 :warning: Library was recently updated to v5 :warning:
 <br/>*Current API Docs and Tutorial are outdated (from v4), so temporarily please use this issue as [v5.x.x API Docs](https://github.com/piotrwitek/typesafe-actions/issues/143).*
+
 <hr/><br/>
 
  </div>
