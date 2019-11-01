@@ -3,7 +3,7 @@
 # typesafe-actions
 
 Typesafe utilities designed to reduce types **verbosity**
-and **complexity**  in Redux Architecture.
+and **complexity** in Redux Architecture.
 
 _This library is part of the [React & Redux TypeScript Guide](https://github.com/piotrwitek/react-redux-typescript-guide)_ ecosystem :book:  
 
@@ -21,12 +21,17 @@ _Found it useful? Want more updates?_
 
 [**Show your support by giving a :star:**](https://github.com/piotrwitek/typesafe-actions/stargazers)
 
+_Or become a sponsor_
+
+
 <a href="https://www.buymeacoffee.com/piotrekwitek">
   <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me a Coffee">
 </a>
 <a href="https://www.patreon.com/piotrekwitek">
   <img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" alt="Become a Patron" width="160">
 </a>
+
+[![Let's fund issues in this repository](https://issuehunt.io/static/embed/issuehunt-button-v1.svg)](https://issuehunt.io/repos/110746954)
 
 <br/><hr/>
 
@@ -52,6 +57,12 @@ _Found it useful? Want more updates?_
 - Reference Todo-App implementation using `typesafe-actions`: [Link](https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/codesandbox)
 - Starter to help reproduce bug reports: [Link](https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/codesandbox)
 
+
+**Contributing**
+
+We are open for contributions. If you're planning to contribute please make sure to read the contributing guide as it can save you from wasting your time: [CONTRIBUTING.md](/CONTRIBUTING.md)
+
+[⇧ back to top](#table-of-contents)
 ---
 
 ## Table of Contents
@@ -145,10 +156,11 @@ yarn add typesafe-actions
 
 **TypeScript support**
 
-- `typesafe-actions@1.X.X` - minimal TS v2.7
-- `typesafe-actions@2.X.X` - minimal TS v2.9
-- `typesafe-actions@3.X.X` - minimal TS v3.2
+- `typesafe-actions@5.X.X` - minimal TS v3.2
 - `typesafe-actions@4.X.X` - minimal TS v3.2
+- `typesafe-actions@3.X.X` - minimal TS v3.2
+- `typesafe-actions@2.X.X` - minimal TS v2.9
+- `typesafe-actions@1.X.X` - minimal TS v2.7
 
 **Browser support**
 
@@ -168,11 +180,7 @@ A polyfill fo IE11 is included in our `/codesandbox` application.
 
 ---
 
-## Contributing Guide
 
-We are open for contributions. If you're planning to contribute please make sure to read the contributing guide: [CONTRIBUTING.md](/CONTRIBUTING.md)
-
-[⇧ back to top](#table-of-contents)
 
 ---
 
