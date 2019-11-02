@@ -31,9 +31,9 @@ _Or become a sponsor_
   <img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" alt="Become a Patron" width="160">
 </a>
 
-[![Let's fund issues in this repository](https://issuehunt.io/static/embed/issuehunt-button-v1.svg)](https://issuehunt.io/repos/110746954)
-
 <br/><hr/>
+
+## What's new?
 
 :tada: _Now updated to support **TypeScript v3.7**_ :tada:
 
@@ -42,27 +42,21 @@ _Or become a sponsor_
 
 <hr/><br/>
 
- </div>
+</div>
 
-**Features**
+### **Playgrounds & Examples**
+
+- Todo-App playground: [Codesandbox](https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/codesandbox)
+- React, Redux, TypeScript - RealWorld App: [Github](https://github.com/piotrwitek/react-redux-typescript-realworld-app) | [Demo](https://react-redux-typescript-realworld-app.netlify.com/)
+
+### **Goals**
 
 - **minimalistic** - according to `size-snapshot` (Minified: 3.48 KB, Gzipped: 1.03 KB), check also on [bundlephobia](https://bundlephobia.com/result?p=typesafe-actions)
-- **secure and optimized** - no external dependencies, bundled in 3 different formats (`cjs`, `esm` and `umd` for browser) with separate optimized bundles for dev & prod (same as `react`)
+- **secure** - no third-party dependencies
+- **optimized distribution packages** - bundled in 3 different formats (`cjs`, `esm` and `umd`) with separate bundles for dev & prod (same as `react`)
 - **focus on quality** - complete test-suite for an entire API surface containing regular runtime tests and extra type-tests to guarantee **type soundness** and to prevent regressions in the future TypeScript versions
 - **focus on performance** - integrated performance benchmarks to guarantee that the computational complexity of types are in check and there are no slow-downs when your application grow `npm run benchmark:XXX`
 
-
-**Codesandbox links**
-
-- Reference Todo-App implementation using `typesafe-actions`: [Link](https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/codesandbox)
-- Starter to help reproduce bug reports: [Link](https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/codesandbox)
-
-
-**Contributing**
-
-We are open for contributions. If you're planning to contribute please make sure to read the contributing guide as it can save you from wasting your time: [CONTRIBUTING.md](/CONTRIBUTING.md)
-
-[⇧ back to top](#table-of-contents)
 ---
 
 ## Table of Contents
@@ -122,7 +116,7 @@ We are open for contributions. If you're planning to contribute please make sure
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
---- 
+---
 
 ## Motivation
 
