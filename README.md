@@ -21,12 +21,14 @@ _Found it useful? Want more updates?_
 
 [**Show your support by giving a :star:**](https://github.com/piotrwitek/typesafe-actions/stargazers)
 
-_Or become a sponsor_
-
+<!-- _Make a one time or a monthly donation to join [supporters](https://www.buymeacoffee.com/piotrekwitek)_ -->
 
 <a href="https://www.buymeacoffee.com/piotrekwitek">
   <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me a Coffee">
 </a>
+
+<!-- _Or become a [sponsor](..) to get your logo with a link on our README_ -->
+
 <a href="https://www.patreon.com/piotrekwitek">
   <img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" alt="Become a Patron" width="160">
 </a>
@@ -44,6 +46,11 @@ _Or become a sponsor_
 
 </div>
 
+### **Features**
+- Easily create completely typesafe [Actions](#action-creators-api) or even [Async Actions](#createasyncaction)
+- No boilerplate and completely typesafe [Reducers](#reducer-creators-api)
+- Game-changing [Helper Types](#type-helpers-api) for Redux
+
 ### **Playgrounds & Examples**
 
 - Todo-App playground: [Codesandbox](https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/codesandbox)
@@ -51,11 +58,10 @@ _Or become a sponsor_
 
 ### **Goals**
 
-- **minimalistic** - according to `size-snapshot` (Minified: 3.48 KB, Gzipped: 1.03 KB), check also on [bundlephobia](https://bundlephobia.com/result?p=typesafe-actions)
-- **secure** - no third-party dependencies
-- **optimized distribution packages** - bundled in 3 different formats (`cjs`, `esm` and `umd`) with separate bundles for dev & prod (same as `react`)
-- **focus on quality** - complete test-suite for an entire API surface containing regular runtime tests and extra type-tests to guarantee **type soundness** and to prevent regressions in the future TypeScript versions
-- **focus on performance** - integrated performance benchmarks to guarantee that the computational complexity of types are in check and there are no slow-downs when your application grow `npm run benchmark:XXX`
+- **Secure and Minimal** - no third-party dependencies, according to `size-snapshot` (Minified: 3.48 KB, Gzipped: 1.03 KB), check also on [bundlephobia](https://bundlephobia.com/result?p=typesafe-actions)
+- **Optimized** - distribution packages bundled in 3 different formats (`cjs`, `esm` and `umd`) with separate bundles for dev & prod (same as `react`)
+- **Quality** - complete test-suite for an entire API surface containing regular runtime tests and extra type-tests to guarantee **type soundness** and to prevent regressions in the future TypeScript versions
+- **Performance** - integrated performance benchmarks to guarantee that the computational complexity of types are in check and there are no slow-downs when your application grow `npm run benchmark:XXX`
 
 ---
 
@@ -65,11 +71,7 @@ _Or become a sponsor_
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
-- [Motivation](#motivation)
 - [Installation](#installation)
-- [Compatibility Notes](#compatibility-notes)
-- [Contributing Guide](#contributing-guide)
-- [Funding](#funding)
 - [Tutorial v4 (v5 is WIP #188)](#tutorial-v4-v5-is-wip-188)
   - [Constants](#constants)
   - [Actions](#actions)
@@ -108,84 +110,29 @@ _Or become a sponsor_
   - [`v2.x.x` to `v3.x.x`](#v2xx-to-v3xx)
   - [`v1.x.x` to `v2.x.x`](#v1xx-to-v2xx)
   - [Migrating from `redux-actions` to `typesafe-actions`](#migrating-from-redux-actions-to-typesafe-actions)
+- [Compatibility Notes](#compatibility-notes)
 - [Recipes](#recipes)
   - [Restrict Meta type in `action` creator](#restrict-meta-type-in-action-creator)
 - [Compare to others](#compare-to-others)
   - [`redux-actions`](#redux-actions)
-- [MIT License](#mit-license)
+- [Motivation](#motivation)
+- [Contributing](#contributing)
+- [Funding Issues](#funding-issues)
+- [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
----
-
-## Motivation
-
-When I started to combine Redux with TypeScript, I was trying to use [redux-actions](https://redux-actions.js.org/) to reduce the maintainability cost and boilerplate of **action-creators**. Unfortunately, the results were intimidating: incorrect type signatures and broken type-inference cascading throughout the entire code-base [(click here for a detailed comparison)](#redux-actions).
-
-Existing solutions in the wild have been either **too verbose because of redundant type annotations** (hard to maintain) or **used classes** (hinders readability and requires using the **new** keyword 😱)
-
-**So I created `typesafe-actions` to address all of the above pain points.**
-
-The core idea was to design an API that would mostly use the power of TypeScript **type-inference** 💪 to lift the "maintainability burden" of type annotations. In addition, I wanted to make it "look and feel" as close as possible to the idiomatic JavaScript ❤️ , so we don't have to write the redundant type annotations that which will create additional noise in your code.
-
-[⇧ back to top](#table-of-contents)
-
----
+<hr/>
 
 ## Installation
 
 ```bash
-// NPM
+# NPM
 npm install typesafe-actions
 
-// YARN
+# YARN
 yarn add typesafe-actions
 ```
-
-[⇧ back to top](#table-of-contents)
-
----
-
-## Compatibility Notes
-
-**TypeScript support**
-
-- `typesafe-actions@5.X.X` - minimal TS v3.2
-- `typesafe-actions@4.X.X` - minimal TS v3.2
-- `typesafe-actions@3.X.X` - minimal TS v3.2
-- `typesafe-actions@2.X.X` - minimal TS v2.9
-- `typesafe-actions@1.X.X` - minimal TS v2.7
-
-**Browser support**
-
-It's compatible with all modern browsers.
-
-For older browsers support (e.g. IE <= 11) and some mobile devices you need to provide the following polyfills:
-- [Object.assign](https://developer.mozilla.org/pl/docs/Web/JavaScript/Referencje/Obiekty/Object/assign#Polyfill)
-- [Array.prototype.includes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes)
-
-**Recommended polyfill for IE**
-
-To provide the best compatibility please include a popular polyfill package in your application, such as `core-js` or `react-app-polyfill` for `create-react-app`.
-Please check the `React` guidelines to learn how to do that: [LINK](https://reactjs.org/docs/javascript-environment-requirements.html)
-A polyfill fo IE11 is included in our `/codesandbox` application.
-
-[⇧ back to top](#table-of-contents)
-
----
-
-
-
----
-
-## Funding
-**Typesafe-Actions** is an independent open-source project created by people investing their free time for the benefit of our community.
-
-If you are using **Typesafe-Actions** please consider donating as this will guarantee the project will be updated and maintained in the long run.
-
-Issues can be funded by anyone interested in them being resolved. Reward will be transparently distributed to the contributor handling the task through the IssueHunt platform.
-
-[![Let's fund issues in this repository](https://issuehunt.io/static/embed/issuehunt-button-v1.svg)](https://issuehunt.io/repos/110746954)
 
 [⇧ back to top](#table-of-contents)
 
@@ -1081,8 +1028,11 @@ export type RootState = StateType<typeof rootReducer>;
 ---
 
 ## Migration Guides
+
 ### `v4.x.x` to `v5.x.x`
+
 **Breaking changes:**
+
 1. In `v5` all the deprecated `v4` creator functions are available under `deprecated` named import to help with incremental migration.
 ```ts
 // before
@@ -1092,6 +1042,7 @@ import { createAction, createStandardAction, createCustomAction } from "typesafe
 import { deprecated } from "typesafe-actions"
 const { createAction, createStandardAction, createCustomAction } = deprecated;
 ```
+
 2. `createStandardAction` was renamed to `createAction` and `.map` method was removed in favor of simpler `redux-actions` style API.
 ```ts
 // before
@@ -1109,13 +1060,14 @@ const withMappedPayloadAndMeta = createAction(
   ({ username, message }: Notification) => ({ username, message }) // meta creator
 )();
 ```
-1. `v4` version of `createAction` was removed. I suggest to refactor to use a new `createAction` as in point `2`, which was simplified and extended to support `redux-actions` style API.
+
+3. `v4` version of `createAction` was removed. I suggest to refactor to use a new `createAction` as in point `2`, which was simplified and extended to support `redux-actions` style API.
 ```ts
 // before
 const withPayloadAndMeta = createAction('CREATE_ACTION', resolve => {
   return (id: number, token: string) => resolve(id, token);
 });
-  
+
 // after
 const withPayloadAndMeta = createAction(
   'CREATE_ACTION',
@@ -1123,7 +1075,8 @@ const withPayloadAndMeta = createAction(
   (id: number, token: string) => token // meta creator
 })();
 ```
-1. `createCustomAction` - API was greatly simplified, now it's used like this:
+
+4. `createCustomAction` - API was greatly simplified, now it's used like this:
 ```ts
 // before
 const add = createCustomAction('CUSTOM', type => {
@@ -1136,6 +1089,7 @@ const add = createCustomAction(
   (first: number, second: number) => ({ customProp1: first, customProp2: second })
 );
 ```
+
 5. `AsyncActionCreator` should be just renamed to `AsyncActionCreatorBuilder`.
 ```ts
 // before
@@ -1146,15 +1100,17 @@ import { AsyncActionCreatorBuilder } from "typesafe-actions"
 ```
 
 ### `v3.x.x` to `v4.x.x`
+
 **No breaking changes!**
 
 ### `v2.x.x` to `v3.x.x`
-**No breaking changes!**
 
-You only need to update typescript dependency to `> v3.1`.
+Minimal supported TypeScript `v3.1+`.
 
 ### `v1.x.x` to `v2.x.x`
+
 **Breaking changes:**
+
 1. `createAction`
 - In `v2` we provide a `createActionDeprecated` function compatible with `v1` `createAction` to help with incremental migration.
 
@@ -1187,6 +1143,8 @@ const getTodoCustom = createStandardAction('GET_TODO').map(
 );
 ```
 
+[⇧ back to top](#table-of-contents)
+
 ### Migrating from `redux-actions` to `typesafe-actions`
 
 - createAction(s)
@@ -1210,6 +1168,34 @@ handleActions(reducerMap, initialState) => createReducer(initialState, reducerMa
 - combineActions
 
 Not needed because each function in the API accept single value or array of values for action types or action creators.
+
+[⇧ back to top](#table-of-contents)
+
+---
+
+## Compatibility Notes
+
+**TypeScript support**
+
+- `5.X.X` - TypeScript v3.2+
+- `4.X.X` - TypeScript v3.2+
+- `3.X.X` - TypeScript v3.2+
+- `2.X.X` - TypeScript v2.9+
+- `1.X.X` - TypeScript v2.7+
+
+**Browser support**
+
+It's compatible with all modern browsers.
+
+For older browsers support (e.g. IE <= 11) and some mobile devices you need to provide the following polyfills:
+- [Object.assign](https://developer.mozilla.org/pl/docs/Web/JavaScript/Referencje/Obiekty/Object/assign#Polyfill)
+- [Array.prototype.includes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes)
+
+**Recommended polyfill for IE**
+
+To provide the best compatibility please include a popular polyfill package in your application, such as `core-js` or `react-app-polyfill` for `create-react-app`.
+Please check the `React` guidelines to learn how to do that: [LINK](https://reactjs.org/docs/javascript-environment-requirements.html)
+A polyfill fo IE11 is included in our `/codesandbox` application.
 
 [⇧ back to top](#table-of-contents)
 
@@ -1361,6 +1347,43 @@ const notify3 = (username: string, message?: string) => action(
 
 ---
 
-## MIT License
+## Motivation
+
+When I started to combine Redux with TypeScript, I was trying to use [redux-actions](https://redux-actions.js.org/) to reduce the maintainability cost and boilerplate of **action-creators**. Unfortunately, the results were intimidating: incorrect type signatures and broken type-inference cascading throughout the entire code-base [(click here for a detailed comparison)](#redux-actions).
+
+Existing solutions in the wild have been either **too verbose because of redundant type annotations** (hard to maintain) or **used classes** (hinders readability and requires using the **new** keyword 😱)
+
+**So I created `typesafe-actions` to address all of the above pain points.**
+
+The core idea was to design an API that would mostly use the power of TypeScript **type-inference** 💪 to lift the "maintainability burden" of type annotations. In addition, I wanted to make it "look and feel" as close as possible to the idiomatic JavaScript ❤️ , so we don't have to write the redundant type annotations that which will create additional noise in your code.
+
+[⇧ back to top](#table-of-contents)
+
+---
+
+## Contributing
+
+You can help make this project better by contributing. If you're planning to contribute please make sure to check our contributing guide: [CONTRIBUTING.md](/CONTRIBUTING.md)
+
+[⇧ back to top](#table-of-contents)
+
+---
+
+## Funding Issues
+
+You can also help by funding issues.
+Issues like bug fixes or feature requests can be very quickly resolved when funded through the IssueHunt platform.
+
+I highly recommend to add a bounty to the issue that you're waiting for to increase priority and attract contributors willing to work on it.
+
+[![Let's fund issues in this repository](https://issuehunt.io/static/embed/issuehunt-button-v1.svg)](https://issuehunt.io/repos/110746954)
+
+[⇧ back to top](#table-of-contents)
+
+---
+
+## License
+
+[MIT License](/LICENSE)
 
 Copyright (c) 2017 Piotr Witek <piotrek.witek@gmail.com> (http://piotrwitek.github.io)
