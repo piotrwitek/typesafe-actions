@@ -1,5 +1,5 @@
 *
-!dist/*
+!dist/**
 !LICENSE
 !README.md
 !CHANGELOG.md
