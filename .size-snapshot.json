@@ -24,12 +24,12 @@
     }
   },
   "dist/typesafe-actions.umd.development.js": {
-    "bundled": 10582,
+    "bundled": 10584,
     "minified": 4086,
     "gzipped": 1270
   },
   "dist/typesafe-actions.umd.production.js": {
-    "bundled": 10582,
+    "bundled": 10584,
     "minified": 4086,
     "gzipped": 1270
   }

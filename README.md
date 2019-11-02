@@ -35,7 +35,7 @@ _Found it useful? Want more updates?_
 
 <br/><hr/>
 
-## What's new?
+### **What's new?**
 
 :tada: _Now updated to support **TypeScript v3.7**_ :tada:
 
