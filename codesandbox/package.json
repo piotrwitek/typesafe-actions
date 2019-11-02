@@ -18,11 +18,11 @@
     "eject": "react-scripts-ts eject"
   },
   "dependencies": {
-    "@types/jest": "24.0.20",
+    "@types/jest": "24.0.21",
     "@types/react": "16.9.11",
     "@types/react-dom": "16.9.3",
     "@types/react-redux": "7.1.5",
-    "@types/react-router-dom": "5.1.0",
+    "@types/react-router-dom": "5.1.2",
     "@types/react-router-redux": "5.0.18",
     "cuid": "2.1.6",
     "jest": "24.9.0",
@@ -43,7 +43,7 @@
     "tslint-react": "4.1.0",
     "typesafe-actions": "5.1.0-1",
     "typescript": "3.6.4",
-    "utility-types": "3.8.0"
+    "utility-types": "3.9.0"
   },
   "browserslist": {
     "production": [
