@@ -51,7 +51,7 @@ _Found it useful? Want more updates?_
 - No boilerplate and completely typesafe [Reducers](#reducer-creators-api)
 - Game-changing [Helper Types](#type-helpers-api) for Redux
 
-### **Playgrounds & Examples**
+### **Examples**
 
 - Todo-App playground: [Codesandbox](https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/codesandbox)
 - React, Redux, TypeScript - RealWorld App: [Github](https://github.com/piotrwitek/react-redux-typescript-realworld-app) | [Demo](https://react-redux-typescript-realworld-app.netlify.com/)
@@ -1194,7 +1194,7 @@ For older browsers support (e.g. IE <= 11) and some mobile devices you need to p
 **Recommended polyfill for IE**
 
 To provide the best compatibility please include a popular polyfill package in your application, such as `core-js` or `react-app-polyfill` for `create-react-app`.
-Please check the `React` guidelines to learn how to do that: [LINK](https://reactjs.org/docs/javascript-environment-requirements.html)
+Please check the `React` guidelines on how to do that: [LINK](https://reactjs.org/docs/javascript-environment-requirements.html)
 A polyfill fo IE11 is included in our `/codesandbox` application.
 
 [⇧ back to top](#table-of-contents)
