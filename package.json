@@ -60,7 +60,7 @@
     "rollup-plugin-terser": "5.1.2",
     "ts-jest": "22.4.6",
     "tslint": "5.20.0",
-    "typescript": "3.8.0-dev.20191026"
+    "typescript": "3.7.2"
   },
   "keywords": [
     "typescript",
