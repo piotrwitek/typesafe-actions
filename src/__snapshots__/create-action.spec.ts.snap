@@ -44,6 +44,8 @@ exports[`withPayload(null) 1`] = `"TH.PayloadAction<\\"CREATE_ACTION\\", string 
 
 exports[`withPayload(true) 1`] = `"TH.PayloadAction<\\"CREATE_ACTION\\", boolean>"`;
 
+exports[`withPayloadAndMeta('Piotr', 'Hello!') 1`] = `"TH.PayloadMetaAction<\\"CREATE_ACTION\\", string, { username: string; message: string; }>"`;
+
 exports[`withPayloadAndMeta({ username: 'Piotr', message: 'Hello!' }) 1`] = `"TH.PayloadMetaAction<\\"CREATE_ACTION\\", string, { username: string; message: string; }>"`;
 
 exports[`withPayloadAndMeta(1, 'token') 1`] = `"TH.PayloadMetaAction<\\"CREATE_ACTION\\", number, string>"`;

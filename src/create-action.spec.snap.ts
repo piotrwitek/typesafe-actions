@@ -108,7 +108,7 @@ describe('Redux Actions', () => {
     withTypeOnly(); // => { type: 'CREATE_ACTION' }
   });
 
-  describe('with payload - primitive param', () => {
+  describe('with payload - obj param', () => {
     const withPayload = createAction(
       'CREATE_ACTION',
       (arg: { payload: string }) => arg.payload
@@ -117,7 +117,7 @@ describe('Redux Actions', () => {
     withPayload({ payload: 'info message' }); // => { type: 'CREATE_ACTION', payload: 'info message' }
   });
 
-  describe('with payload - union param', () => {
+  describe('with payload - obj union param', () => {
     const withPayload = createAction(
       'CREATE_ACTION',
       (arg: { payload: string | null | number }) => arg.payload
@@ -130,7 +130,7 @@ describe('Redux Actions', () => {
     withPayload({ payload: 3 }); // => { type: 'CREATE_ACTION', payload: 3 }
   });
 
-  describe('with meta - primitive param', () => {
+  describe('with meta - obj param', () => {
     const withMeta = createAction(
       'CREATE_ACTION',
       undefined,
@@ -140,7 +140,7 @@ describe('Redux Actions', () => {
     withMeta({ meta: 'info message' }); // => { type: 'CREATE_ACTION', meta: 'info message' }
   });
 
-  describe('with meta - union param', () => {
+  describe('with meta - obj union param', () => {
     const withMeta = createAction(
       'CREATE_ACTION',
       undefined,
@@ -154,7 +154,7 @@ describe('Redux Actions', () => {
     withMeta({ meta: 3 }); // => { type: 'CREATE_ACTION', meta: 3 }
   });
 
-  describe('with payload and meta - primitive params', () => {
+  describe('with payload and meta - obj param', () => {
     const withPayloadAndMeta = createAction(
       'CREATE_ACTION',
       (arg: { username: string; message: string }) =>
@@ -168,5 +168,20 @@ describe('Redux Actions', () => {
     // tslint:disable:max-line-length
     // @dts-jest:pass:snap -> TH.PayloadMetaAction<"CREATE_ACTION", string, { username: string; message: string; }>
     withPayloadAndMeta({ username: 'Piotr', message: 'Hello!' }); // => { type: 'CREATE_ACTION', payload: 'Piotr: Hello!', meta: { username: 'Piotr', message: 'Hello!' } }
+  });
+
+  describe('with payload and meta - multiple primitive params', () => {
+    const withPayloadAndMeta = createAction(
+      'CREATE_ACTION',
+      (username: string, message: string) => `${username}: ${message}`,
+
+      (username: string, message: string) => ({
+        username: username,
+        message: message,
+      })
+    )<string, { username: string; message: string }>();
+    // tslint:disable:max-line-length
+    // @dts-jest:pass:snap -> TH.PayloadMetaAction<"CREATE_ACTION", string, { username: string; message: string; }>
+    withPayloadAndMeta('Piotr', 'Hello!'); // => { type: 'CREATE_ACTION', payload: 'Piotr: Hello!', meta: { username: 'Piotr', message: 'Hello!' } }
   });
 });
