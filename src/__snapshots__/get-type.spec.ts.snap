@@ -1,5 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`getType(createAction('CREATE_ACTION')()) 1`] = `"\\"CREATE_ACTION\\""`;
+exports[`from createAction getType(createAction('CREATE_ACTION')()) (type) should match snapshot 1`] = `"\\"CREATE_ACTION\\""`;
 
-exports[`getType(createCustomAction('CREATE_CUSTOM_ACTION')) 1`] = `"\\"CREATE_CUSTOM_ACTION\\""`;
+exports[`from createCustomAction getType(createCustomAction('CREATE_CUSTOM_ACTION')) (type) should match snapshot 1`] = `"\\"CREATE_CUSTOM_ACTION\\""`;

@@ -41,98 +41,99 @@ const $action = [
 
 /** TESTS */
 
-describe('isActionOf', () => {
-  describe('should work with single action-creator arg', () => {
-    // @dts-jest:pass:snap -> boolean
-    isActionOf(withTypeOnly)(typeOnlyAction); // => true
-    // @dts-jest:pass:snap -> boolean
-    isActionOf(withTypeOnly, typeOnlyAction); // => true
-    // @dts-jest:pass:snap -> boolean
-    isActionOf(withTypeOnly)(payloadAction); // => false
-    // @dts-jest:pass:snap -> boolean
-    isActionOf(withTypeOnly, payloadAction); // => false
-    // @dts-jest:pass:snap -> boolean
-    isActionOf([withTypeOnly])(typeOnlyAction); // => true
-    // @dts-jest:pass:snap -> boolean
-    isActionOf([withTypeOnly], typeOnlyAction); // => true
-    // @dts-jest:pass:snap -> boolean
-    isActionOf([withTypeOnly])(payloadAction); // => false
-    // @dts-jest:pass:snap -> boolean
-    isActionOf([withTypeOnly], payloadAction); // => false
-  });
+// @dts-jest:group should work with single action-creator arg
+{
+  // @dts-jest:pass:snap -> boolean
+  isActionOf(withTypeOnly)(typeOnlyAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf(withTypeOnly, typeOnlyAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf(withTypeOnly)(payloadAction); // => false
+  // @dts-jest:pass:snap -> boolean
+  isActionOf(withTypeOnly, payloadAction); // => false
+  // @dts-jest:pass:snap -> boolean
+  isActionOf([withTypeOnly])(typeOnlyAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf([withTypeOnly], typeOnlyAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf([withTypeOnly])(payloadAction); // => false
+  // @dts-jest:pass:snap -> boolean
+  isActionOf([withTypeOnly], payloadAction); // => false
+}
 
-  describe('should work with multiple action-creator args', () => {
-    // @dts-jest:pass:snap -> boolean
-    isActionOf([withTypeOnly, withPayload])(typeOnlyAction); // => true
-    // @dts-jest:pass:snap -> boolean
-    isActionOf([withTypeOnly, withPayload], typeOnlyAction); // => true
-    // @dts-jest:pass:snap -> boolean
-    isActionOf([withTypeOnly, withPayload])(payloadAction); // => true
-    // @dts-jest:pass:snap -> boolean
-    isActionOf([withTypeOnly, withPayload], payloadAction); // => true
-    // @dts-jest:pass:snap -> boolean
-    isActionOf([withTypeOnly, withPayload])(mappedPayloadAction); // => false
-    // @dts-jest:pass:snap -> boolean
-    isActionOf([withTypeOnly, withPayload], mappedPayloadAction); // => false
-  });
+// @dts-jest:group should work with multiple action-creator args
+{
+  // @dts-jest:pass:snap -> boolean
+  isActionOf([withTypeOnly, withPayload])(typeOnlyAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf([withTypeOnly, withPayload], typeOnlyAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf([withTypeOnly, withPayload])(payloadAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf([withTypeOnly, withPayload], payloadAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf([withTypeOnly, withPayload])(mappedPayloadAction); // => false
+  // @dts-jest:pass:snap -> boolean
+  isActionOf([withTypeOnly, withPayload], mappedPayloadAction); // => false
+}
 
-  describe('should correctly assert for an array with 1 arg', () => {
-    const actual = $action.filter(isActionOf([withTypeOnly]));
-    // @dts-jest:pass:snap -> TH.EmptyAction<"WITH_TYPE_ONLY">[]
-    actual; // => [typeOnlyExpected]
-  });
+// @dts-jest:group should correctly assert for an array with 1 arg
+{
+  const actual = $action.filter(isActionOf([withTypeOnly]));
+  // @dts-jest:pass:snap -> TH.EmptyAction<"WITH_TYPE_ONLY">[]
+  actual; // => [typeOnlyExpected]
+}
 
-  describe('should correctly assert for an array with 2 args', () => {
-    const actual = $action.filter(isActionOf([withTypeOnly, withPayload]));
-    // @dts-jest:pass:snap -> (TH.EmptyAction<"WITH_TYPE_ONLY"> | TH.PayloadAction<"WITH_PAYLOAD", number>)[]
-    actual; // => [typeOnlyExpected, payloadExpected]
-  });
+// @dts-jest:group should correctly assert for an array with 2 args
+{
+  const actual = $action.filter(isActionOf([withTypeOnly, withPayload]));
+  // @dts-jest:pass:snap -> (TH.EmptyAction<"WITH_TYPE_ONLY"> | TH.PayloadAction<"WITH_PAYLOAD", number>)[]
+  actual; // => [typeOnlyExpected, payloadExpected]
+}
 
-  describe('should correctly assert for an array with 3 args', () => {
-    const actual = $action.filter(
-      isActionOf([withTypeOnly, withPayload, withPayloadMeta])
-    );
-    // @dts-jest:pass:snap -> (TH.EmptyAction<"WITH_TYPE_ONLY"> | TH.PayloadAction<"WITH_PAYLOAD", number> | TH.PayloadMetaAction<"WITH_PAYLOAD_META", number, string>)[]
-    actual; // => [typeOnlyExpected,payloadExpected,payloadMetaExpected]
-  });
+// @dts-jest:group should correctly assert for an array with 3 args
+{
+  const actual = $action.filter(
+    isActionOf([withTypeOnly, withPayload, withPayloadMeta])
+  );
+  // @dts-jest:pass:snap -> (TH.EmptyAction<"WITH_TYPE_ONLY"> | TH.PayloadAction<"WITH_PAYLOAD", number> | TH.PayloadMetaAction<"WITH_PAYLOAD_META", number, string>)[]
+  actual; // => [typeOnlyExpected,payloadExpected,payloadMetaExpected]
+}
 
-  describe('should correctly assert for an array with 4 args', () => {
-    const actual = $action.filter(
-      isActionOf([
-        withTypeOnly,
-        withPayload,
-        withPayloadMeta,
-        withMappedPayload,
-      ])
-    );
-    // @dts-jest:pass:snap -> (TH.EmptyAction<"WITH_TYPE_ONLY"> | TH.PayloadAction<"WITH_PAYLOAD", number> | TH.PayloadAction<"WITH_MAPPED_PAYLOAD", number> | TH.PayloadMetaAction<"WITH_PAYLOAD_META", number, string>)[]
-    actual; // => [typeOnlyExpected,payloadExpected,payloadMetaExpected,mappedPayloadExpected]
-  });
+// @dts-jest:group should correctly assert for an array with 4 args
+{
+  const actual = $action.filter(
+    isActionOf([withTypeOnly, withPayload, withPayloadMeta, withMappedPayload])
+  );
+  // @dts-jest:pass:snap -> (TH.EmptyAction<"WITH_TYPE_ONLY"> | TH.PayloadAction<"WITH_PAYLOAD", number> | TH.PayloadAction<"WITH_MAPPED_PAYLOAD", number> | TH.PayloadMetaAction<"WITH_PAYLOAD_META", number, string>)[]
+  actual; // => [typeOnlyExpected,payloadExpected,payloadMetaExpected,mappedPayloadExpected]
+}
 
-  describe('should correctly assert for an array with 5 args', () => {
-    const actual = $action.filter(
-      isActionOf([
-        withTypeOnly,
-        withPayload,
-        withPayloadMeta,
-        withMappedPayload,
-        withMappedPayloadMeta,
-      ])
-    );
-    // @dts-jest:pass:snap -> (TH.EmptyAction<"WITH_TYPE_ONLY"> | TH.PayloadAction<"WITH_PAYLOAD", number> | TH.PayloadAction<"WITH_MAPPED_PAYLOAD", number> | TH.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | TH.PayloadMetaAction<"WITH_MAPPED_PAYLOAD_META", number, string>)[]
-    actual; // => [typeOnlyExpected,payloadExpected,payloadMetaExpected,mappedPayloadExpected,mappedPayloadMetaExpected]
-  });
+// @dts-jest:group should correctly assert for an array with 5 args
+{
+  const actual = $action.filter(
+    isActionOf([
+      withTypeOnly,
+      withPayload,
+      withPayloadMeta,
+      withMappedPayload,
+      withMappedPayloadMeta,
+    ])
+  );
+  // @dts-jest:pass:snap -> (TH.EmptyAction<"WITH_TYPE_ONLY"> | TH.PayloadAction<"WITH_PAYLOAD", number> | TH.PayloadAction<"WITH_MAPPED_PAYLOAD", number> | TH.PayloadMetaAction<"WITH_PAYLOAD_META", number, string> | TH.PayloadMetaAction<"WITH_MAPPED_PAYLOAD_META", number, string>)[]
+  actual; // => [typeOnlyExpected,payloadExpected,payloadMetaExpected,mappedPayloadExpected,mappedPayloadMetaExpected]
+}
 
-  describe('should correctly assert type with "any" action', () => {
-    const action: any = withPayload(1234);
+// @dts-jest:group should correctly assert type with "any" action
+{
+  const action: any = withPayload(1234);
 
-    if (isActionOf([withPayload, withPayloadMeta], action)) {
-      // @dts-jest:pass:snap -> TH.PayloadAction<"WITH_PAYLOAD", number> | TH.PayloadMetaAction<"WITH_PAYLOAD_META", number, string>
-      action; // => {"payload": 1234, "type": "WITH_PAYLOAD"}
-    }
-    if (isActionOf([withPayload, withPayloadMeta])(action)) {
-      // @dts-jest:pass:snap -> TH.PayloadAction<"WITH_PAYLOAD", number> | TH.PayloadMetaAction<"WITH_PAYLOAD_META", number, string>
-      action; // => {"payload": 1234, "type": "WITH_PAYLOAD"}
-    }
-  });
-});
+  if (isActionOf([withPayload, withPayloadMeta], action)) {
+    // @dts-jest:pass:snap -> TH.PayloadAction<"WITH_PAYLOAD", number> | TH.PayloadMetaAction<"WITH_PAYLOAD_META", number, string>
+    action; // => {"payload": 1234, "type": "WITH_PAYLOAD"}
+  }
+  if (isActionOf([withPayload, withPayloadMeta])(action)) {
+    // @dts-jest:pass:snap -> TH.PayloadAction<"WITH_PAYLOAD", number> | TH.PayloadMetaAction<"WITH_PAYLOAD_META", number, string>
+    action; // => {"payload": 1234, "type": "WITH_PAYLOAD"}
+  }
+}

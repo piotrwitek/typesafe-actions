@@ -1,57 +1,57 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`actionCreator.toString() 1`] = `"string"`;
+exports[`Redux Actions - with meta - obj param withMeta({ meta: 'info message' }) (type) should match snapshot 1`] = `"TH.PayloadMetaAction<\\"CREATE_ACTION\\", undefined, string>"`;
 
-exports[`setUserSetting('settingA', 'foo') 1`] = `"TH.PayloadAction<\\"SET_USER_SETTING\\", { setting: \\"settingA\\"; newValue: string; }>"`;
+exports[`Redux Actions - with meta - obj union param withMeta({ meta: 'info message' }) (type) should match snapshot 1`] = `"TH.PayloadMetaAction<\\"CREATE_ACTION\\", undefined, string | number | null>"`;
 
-exports[`setUserSetting('settingA', 0) 1`] = `"Argument of type '0' is not assignable to parameter of type 'string'."`;
+exports[`Redux Actions - with meta - obj union param withMeta({ meta: 3 }) (type) should match snapshot 1`] = `"TH.PayloadMetaAction<\\"CREATE_ACTION\\", undefined, string | number | null>"`;
 
-exports[`setUserSetting('settingB', 'foo') 1`] = `"Argument of type '\\"foo\\"' is not assignable to parameter of type 'number'."`;
+exports[`Redux Actions - with meta - obj union param withMeta({ meta: null }) (type) should match snapshot 1`] = `"TH.PayloadMetaAction<\\"CREATE_ACTION\\", undefined, string | number | null>"`;
 
-exports[`setUserSetting('settingB', 0) 1`] = `"TH.PayloadAction<\\"SET_USER_SETTING\\", { setting: \\"settingB\\"; newValue: number; }>"`;
+exports[`Redux Actions - with payload - obj param withPayload({ payload: 'info message' }) (type) should match snapshot 1`] = `"TH.PayloadAction<\\"CREATE_ACTION\\", string>"`;
 
-exports[`withMeta({ meta: 'info message' }) 1`] = `"TH.PayloadMetaAction<\\"CREATE_ACTION\\", undefined, string>"`;
+exports[`Redux Actions - with payload - obj union param withPayload({ payload: 'info message' }) (type) should match snapshot 1`] = `"TH.PayloadAction<\\"CREATE_ACTION\\", string | number | null>"`;
 
-exports[`withMeta({ meta: 'info message' }) 2`] = `"TH.PayloadMetaAction<\\"CREATE_ACTION\\", undefined, string | number | null>"`;
+exports[`Redux Actions - with payload - obj union param withPayload({ payload: 3 }) (type) should match snapshot 1`] = `"TH.PayloadAction<\\"CREATE_ACTION\\", string | number | null>"`;
 
-exports[`withMeta({ meta: 3 }) 1`] = `"TH.PayloadMetaAction<\\"CREATE_ACTION\\", undefined, string | number | null>"`;
+exports[`Redux Actions - with payload - obj union param withPayload({ payload: null }) (type) should match snapshot 1`] = `"TH.PayloadAction<\\"CREATE_ACTION\\", string | number | null>"`;
 
-exports[`withMeta({ meta: null }) 1`] = `"TH.PayloadMetaAction<\\"CREATE_ACTION\\", undefined, string | number | null>"`;
+exports[`Redux Actions - with payload and meta - multiple primitive params withPayloadAndMeta('Piotr', 'Hello!') (type) should match snapshot 1`] = `"TH.PayloadMetaAction<\\"CREATE_ACTION\\", string, { username: string; message: string; }>"`;
 
-exports[`withMeta(undefined, 'token') 1`] = `"TH.PayloadMetaAction<\\"CREATE_ACTION\\", undefined, string>"`;
+exports[`Redux Actions - with payload and meta - obj param withPayloadAndMeta({ username: 'Piotr', message: 'Hello!' }) (type) should match snapshot 1`] = `"TH.PayloadMetaAction<\\"CREATE_ACTION\\", string, { username: string; message: string; }>"`;
 
-exports[`withMeta(undefined, 'token') 2`] = `"TH.PayloadMetaAction<\\"CREATE_ACTION\\", undefined, any>"`;
+exports[`toString() method return a type actionCreator.toString() (type) should match snapshot 1`] = `"string"`;
 
-exports[`withPayload('foo') 1`] = `"TH.PayloadAction<\\"CREATE_ACTION\\", string | number | null>"`;
+exports[`type-safe usage with higher-order function setUserSetting('settingA', 'foo') (type) should match snapshot 1`] = `"TH.PayloadAction<\\"SET_USER_SETTING\\", { setting: \\"settingA\\"; newValue: string; }>"`;
 
-exports[`withPayload('up') 1`] = `"TH.PayloadAction<\\"CREATE_ACTION\\", \\"up\\" | \\"down\\" | \\"unknown\\">"`;
+exports[`type-safe usage with higher-order function setUserSetting('settingA', 0) (type) should match snapshot 1`] = `"Argument of type '0' is not assignable to parameter of type 'string'."`;
 
-exports[`withPayload({ payload: 'info message' }) 1`] = `"TH.PayloadAction<\\"CREATE_ACTION\\", string>"`;
+exports[`type-safe usage with higher-order function setUserSetting('settingB', 'foo') (type) should match snapshot 1`] = `"Argument of type '\\"foo\\"' is not assignable to parameter of type 'number'."`;
 
-exports[`withPayload({ payload: 'info message' }) 2`] = `"TH.PayloadAction<\\"CREATE_ACTION\\", string | number | null>"`;
+exports[`type-safe usage with higher-order function setUserSetting('settingB', 0) (type) should match snapshot 1`] = `"TH.PayloadAction<\\"SET_USER_SETTING\\", { setting: \\"settingB\\"; newValue: number; }>"`;
 
-exports[`withPayload({ payload: 3 }) 1`] = `"TH.PayloadAction<\\"CREATE_ACTION\\", string | number | null>"`;
+exports[`with meta - any withMeta(undefined, 'token') (type) should match snapshot 1`] = `"TH.PayloadMetaAction<\\"CREATE_ACTION\\", undefined, any>"`;
 
-exports[`withPayload({ payload: null }) 1`] = `"TH.PayloadAction<\\"CREATE_ACTION\\", string | number | null>"`;
+exports[`with meta withMeta(undefined, 'token') (type) should match snapshot 1`] = `"TH.PayloadMetaAction<\\"CREATE_ACTION\\", undefined, string>"`;
 
-exports[`withPayload(3) 1`] = `"TH.PayloadAction<\\"CREATE_ACTION\\", string | number | null>"`;
+exports[`with payload - any withPayload(10) (type) should match snapshot 1`] = `"TH.PayloadAction<\\"CREATE_ACTION\\", any>"`;
 
-exports[`withPayload(10) 1`] = `"TH.PayloadAction<\\"CREATE_ACTION\\", number>"`;
+exports[`with payload - boolean withPayload(true) (type) should match snapshot 1`] = `"TH.PayloadAction<\\"CREATE_ACTION\\", boolean>"`;
 
-exports[`withPayload(10) 2`] = `"TH.PayloadAction<\\"CREATE_ACTION\\", any>"`;
+exports[`with payload - literal string union withPayload('up') (type) should match snapshot 1`] = `"TH.PayloadAction<\\"CREATE_ACTION\\", \\"up\\" | \\"down\\" | \\"unknown\\">"`;
 
-exports[`withPayload(null) 1`] = `"TH.PayloadAction<\\"CREATE_ACTION\\", string | number | null>"`;
+exports[`with payload - number withPayload(10) (type) should match snapshot 1`] = `"TH.PayloadAction<\\"CREATE_ACTION\\", number>"`;
 
-exports[`withPayload(true) 1`] = `"TH.PayloadAction<\\"CREATE_ACTION\\", boolean>"`;
+exports[`with payload - primitives union withPayload('foo') (type) should match snapshot 1`] = `"TH.PayloadAction<\\"CREATE_ACTION\\", string | number | null>"`;
 
-exports[`withPayloadAndMeta('Piotr', 'Hello!') 1`] = `"TH.PayloadMetaAction<\\"CREATE_ACTION\\", string, { username: string; message: string; }>"`;
+exports[`with payload - primitives union withPayload(3) (type) should match snapshot 1`] = `"TH.PayloadAction<\\"CREATE_ACTION\\", string | number | null>"`;
 
-exports[`withPayloadAndMeta({ username: 'Piotr', message: 'Hello!' }) 1`] = `"TH.PayloadMetaAction<\\"CREATE_ACTION\\", string, { username: string; message: string; }>"`;
+exports[`with payload - primitives union withPayload(null) (type) should match snapshot 1`] = `"TH.PayloadAction<\\"CREATE_ACTION\\", string | number | null>"`;
 
-exports[`withPayloadAndMeta(1, 'token') 1`] = `"TH.PayloadMetaAction<\\"CREATE_ACTION\\", number, string>"`;
+exports[`with payload and meta withPayloadAndMeta(1, 'token') (type) should match snapshot 1`] = `"TH.PayloadMetaAction<\\"CREATE_ACTION\\", number, string>"`;
 
-exports[`withSymbol() 1`] = `"TH.EmptyAction<any>"`;
+exports[`with symbol withSymbol() (type) should match snapshot 1`] = `"TH.EmptyAction<any>"`;
 
-exports[`withTypeOnly() 1`] = `"TH.EmptyAction<\\"CREATE_ACTION\\">"`;
+exports[`with type only - undefined withTypeOnly() (type) should match snapshot 1`] = `"TH.EmptyAction<\\"CREATE_ACTION\\">"`;
 
-exports[`withTypeOnly() 2`] = `"TH.EmptyAction<\\"CREATE_ACTION\\">"`;
+exports[`with type only withTypeOnly() (type) should match snapshot 1`] = `"TH.EmptyAction<\\"CREATE_ACTION\\">"`;

@@ -15,7 +15,8 @@ const {
   asyncAction,
 } = actions;
 
-describe('StateType', () => {
+// @dts-jest:group StateType
+{
   const reducer = (
     state: boolean = false,
     action: ActionType<typeof withTypeOnly>
@@ -32,9 +33,10 @@ describe('StateType', () => {
   testType<StateType<typeof reducer>>();
   // @dts-jest:pass:snap
   reducer(undefined, withTypeOnly()); // => true
-});
+}
 
-describe('ActionType', () => {
+// @dts-jest:group ActionType
+{
   // @dts-jest:pass:snap
   testType<ActionType<typeof actions>>();
   type RootAction = ActionType<typeof actions>;
@@ -242,117 +244,106 @@ describe('ActionType', () => {
     return undefined;
   }
 
-  describe('action-helpers - createStandardAction', () => {
-    describe('should return action with type only', () => {
-      const actual = withTypeOnly();
-      const expected = { type: 'WITH_TYPE_ONLY' };
-      // @dts-jest:pass:snap
-      getTypeReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isActionOfReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isActionOfCurriedReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isActionOfArrayReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isOfTypeReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isOfTypeCurriedReducer(actual); // => expected
-    });
+  const emptyAction = withTypeOnly();
+  const expectedEmptyAction = { type: 'WITH_TYPE_ONLY' };
+  // @dts-jest:pass:snap
+  getTypeReducer(emptyAction); // => expectedEmptyAction
+  // @dts-jest:pass:snap
+  isActionOfReducer(emptyAction); // => expectedEmptyAction
+  // @dts-jest:pass:snap
+  isActionOfCurriedReducer(emptyAction); // => expectedEmptyAction
+  // @dts-jest:pass:snap
+  isActionOfArrayReducer(emptyAction); // => expectedEmptyAction
+  // @dts-jest:pass:snap
+  isOfTypeReducer(emptyAction); // => expectedEmptyAction
+  // @dts-jest:pass:snap
+  isOfTypeCurriedReducer(emptyAction); // => expectedEmptyAction
 
-    describe('should return action with payload', () => {
-      const actual = withPayload(2);
-      const expected = { type: 'WITH_PAYLOAD', payload: 2 };
-      // @dts-jest:pass:snap
-      getTypeReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isActionOfReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isActionOfCurriedReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isActionOfArrayReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isOfTypeReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isOfTypeCurriedReducer(actual); // => expected
-    });
+  const payloadAction = withPayload(2);
+  const expectedPayloadAction = { type: 'WITH_PAYLOAD', payload: 2 };
+  // @dts-jest:pass:snap
+  getTypeReducer(payloadAction); // => expectedPayloadAction
+  // @dts-jest:pass:snap
+  isActionOfReducer(payloadAction); // => expectedPayloadAction
+  // @dts-jest:pass:snap
+  isActionOfCurriedReducer(payloadAction); // => expectedPayloadAction
+  // @dts-jest:pass:snap
+  isActionOfArrayReducer(payloadAction); // => expectedPayloadAction
+  // @dts-jest:pass:snap
+  isOfTypeReducer(payloadAction); // => expectedPayloadAction
+  // @dts-jest:pass:snap
+  isOfTypeCurriedReducer(payloadAction); // => expectedPayloadAction
 
-    describe('should return action with payload and meta', () => {
-      const actual = withPayloadMeta(2, 'metaValue');
-      const expected = {
-        type: 'WITH_PAYLOAD_META',
-        payload: 2,
-        meta: 'metaValue',
-      };
-      // @dts-jest:pass:snap
-      getTypeReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isActionOfReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isActionOfCurriedReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isActionOfArrayReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isOfTypeReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isOfTypeCurriedReducer(actual); // => expected
-    });
+  const payloadMetaAction = withPayloadMeta(2, 'metaValue');
+  const expectedPayloadMetaAction = {
+    type: 'WITH_PAYLOAD_META',
+    payload: 2,
+    meta: 'metaValue',
+  };
+  // @dts-jest:pass:snap
+  getTypeReducer(payloadMetaAction); // => expectedPayloadMetaAction
+  // @dts-jest:pass:snap
+  isActionOfReducer(payloadMetaAction); // => expectedPayloadMetaAction
+  // @dts-jest:pass:snap
+  isActionOfCurriedReducer(payloadMetaAction); // => expectedPayloadMetaAction
+  // @dts-jest:pass:snap
+  isActionOfArrayReducer(payloadMetaAction); // => expectedPayloadMetaAction
+  // @dts-jest:pass:snap
+  isOfTypeReducer(payloadMetaAction); // => expectedPayloadMetaAction
+  // @dts-jest:pass:snap
+  isOfTypeCurriedReducer(payloadMetaAction); // => expectedPayloadMetaAction
 
-    describe('should return action with mapped payload', () => {
-      const actual = withMappedPayload(2);
-      const expected = { type: 'WITH_MAPPED_PAYLOAD', payload: 2 };
-      // @dts-jest:pass:snap
-      getTypeReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isActionOfReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isActionOfCurriedReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isActionOfArrayReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isOfTypeReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isOfTypeCurriedReducer(actual); // => expected
-    });
+  const mappedPayloadAction = withMappedPayload(2);
+  const expectedMappedPayloadAction = {
+    type: 'WITH_MAPPED_PAYLOAD',
+    payload: 2,
+  };
+  // @dts-jest:pass:snap
+  getTypeReducer(mappedPayloadAction); // => expectedMappedPayloadAction
+  // @dts-jest:pass:snap
+  isActionOfReducer(mappedPayloadAction); // => expectedMappedPayloadAction
+  // @dts-jest:pass:snap
+  isActionOfCurriedReducer(mappedPayloadAction); // => expectedMappedPayloadAction
+  // @dts-jest:pass:snap
+  isActionOfArrayReducer(mappedPayloadAction); // => expectedMappedPayloadAction
+  // @dts-jest:pass:snap
+  isOfTypeReducer(mappedPayloadAction); // => expectedMappedPayloadAction
+  // @dts-jest:pass:snap
+  isOfTypeCurriedReducer(mappedPayloadAction); // => expectedMappedPayloadAction
 
-    describe('should return action with mapped payload and meta', () => {
-      const actual = withMappedPayloadMeta(2, 'metaValue');
-      const expected = {
-        type: 'WITH_MAPPED_PAYLOAD_META',
-        payload: 2,
-        meta: 'metaValue',
-      };
-      // @dts-jest:pass:snap
-      getTypeReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isActionOfReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isActionOfCurriedReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isActionOfArrayReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isOfTypeReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isOfTypeCurriedReducer(actual); // => expected
-    });
+  const mappedPayloadMetaAction = withMappedPayloadMeta(2, 'metaValue');
+  const expectedMappedPayloadMetaAction = {
+    type: 'WITH_MAPPED_PAYLOAD_META',
+    payload: 2,
+    meta: 'metaValue',
+  };
+  // @dts-jest:pass:snap
+  getTypeReducer(mappedPayloadMetaAction); // => expectedMappedPayloadMetaAction
+  // @dts-jest:pass:snap
+  isActionOfReducer(mappedPayloadMetaAction); // => expectedMappedPayloadMetaAction
+  // @dts-jest:pass:snap
+  isActionOfCurriedReducer(mappedPayloadMetaAction); // => expectedMappedPayloadMetaAction
+  // @dts-jest:pass:snap
+  isActionOfArrayReducer(mappedPayloadMetaAction); // => expectedMappedPayloadMetaAction
+  // @dts-jest:pass:snap
+  isOfTypeReducer(mappedPayloadMetaAction); // => expectedMappedPayloadMetaAction
+  // @dts-jest:pass:snap
+  isOfTypeCurriedReducer(mappedPayloadMetaAction); // => expectedMappedPayloadMetaAction
 
-    describe('should return action with async action', () => {
-      const actual = asyncAction.request();
-      const expected = {
-        type: 'FETCH_USER_REQUEST',
-      };
-      // @dts-jest:pass:snap
-      getTypeReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isActionOfReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isActionOfCurriedReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isActionOfArrayReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isOfTypeReducer(actual); // => expected
-      // @dts-jest:pass:snap
-      isOfTypeCurriedReducer(actual); // => expected
-    });
-  });
-});
+  const asyncActionRequest = asyncAction.request();
+  const expectedAsyncActionRequest = {
+    type: 'FETCH_USER_REQUEST',
+  };
+  // @dts-jest:pass:snap
+  getTypeReducer(asyncActionRequest); // => expectedAsyncActionRequest
+  // @dts-jest:pass:snap
+  isActionOfReducer(asyncActionRequest); // => expectedAsyncActionRequest
+  // @dts-jest:pass:snap
+  isActionOfCurriedReducer(asyncActionRequest); // => expectedAsyncActionRequest
+  // @dts-jest:pass:snap
+  isActionOfArrayReducer(asyncActionRequest); // => expectedAsyncActionRequest
+  // @dts-jest:pass:snap
+  isOfTypeReducer(asyncActionRequest); // => expectedAsyncActionRequest
+  // @dts-jest:pass:snap
+  isOfTypeCurriedReducer(asyncActionRequest); // => expectedAsyncActionRequest
+}
