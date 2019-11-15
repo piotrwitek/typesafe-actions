@@ -8,7 +8,9 @@ about: Create a report to help us improve
 
 ## Mandatory info
 1. Are you extending internal types to enable type-free syntax with `createReducer`? (Check the docs [here](https://github.com/piotrwitek/typesafe-actions#extending-internal-types-to-enable-type-free-syntax-with-createreducer) if you're not sure)
-<!-- Answer Yes or No -->
+<!-- Yes or No -->
+2. Did you checked [compatibility notes](https://github.com/piotrwitek/typesafe-actions#compatibility-notes)?
+<!-- Yes or No -->
 
 ## Steps to Reproduce
 <!-- If you provide a codesandbox it will speed things up and your issue will be prioritized. -->
