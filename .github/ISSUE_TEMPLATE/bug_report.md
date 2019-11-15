@@ -11,16 +11,12 @@ about: Create a report to help us improve
 <!-- Answer Yes or No -->
 
 ## Steps to Reproduce
-<!--
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
--->
+<!-- If you provide a codesandbox it will speed things up and your issue will be prioritized. -->
 
 **CodeSandbox to help you reproduce issue in isolation**
-> Please use this sandbox as an isolated environment to reproduce the bug: https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/codesandbox
+https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/codesandbox
+
+<!-- If no codesandbox, then please provide a full working code example including actions, reducers and all necessary types so an example is complete. Code snippets out of context are not enough and your issue will not be valid. -->
 
 ## Expected behavior
 <!-- A clear description of what you expected to happen -->
