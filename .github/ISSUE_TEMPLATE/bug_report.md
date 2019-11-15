@@ -6,10 +6,9 @@ about: Create a report to help us improve
 ## Description
 <!-- A clear description of what the bug is -->
 
-## Are you extending internal types to enable type-free syntax with `createReducer`?
-> Check the docs [here](https://github.com/piotrwitek/typesafe-actions#extending-internal-types-to-enable-type-free-syntax-with-createreducer) if you're not sure what that means.
-> 
-<!-- Yes / No -->
+## Mandatory info
+1. Are you extending internal types to enable type-free syntax with `createReducer`? (Check the docs [here](https://github.com/piotrwitek/typesafe-actions#extending-internal-types-to-enable-type-free-syntax-with-createreducer) if you're not sure)
+<!-- Answer Yes or No -->
 
 ## Steps to Reproduce
 <!--
