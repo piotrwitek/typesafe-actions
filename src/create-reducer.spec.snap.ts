@@ -76,6 +76,7 @@ const initialState = 0;
         [getType(add)]: counterReducer3.handlers.ADD,
         [getType(increment)]: counterReducer4.handlers.INCREMENT,
       }),
+      // has to be typed as any because of typescript bug: https://github.com/microsoft/TypeScript/issues/29718
       createReducer(initialState, {
         [getType(add)]: (state: any, action: any) => state + action.payload,
         [getType(increment)]: (state: any, _: any) => state + 1,
