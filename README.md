@@ -341,7 +341,7 @@ We can extend internal types of `typesafe-actions` module with `RootAction` defi
 
 ```ts
 // types.d.ts
-import { StateType, ActionType } from 'typesafe-actions';
+import { ActionType } from 'typesafe-actions';
 
 export type RootAction = ActionType<typeof import('./actions').default>;
 
