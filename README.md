@@ -459,7 +459,7 @@ Typescript issues:
 
 ```ts
 import { createAsyncAction, createReducer } from 'typesafe-actions';
-import { put, call, takeEvery } from 'redux-saga/effects';
+import { put, call, takeEvery, all } from 'redux-saga/effects';
 
 // Create the set of async actions
 const fetchTodosAsync = createAsyncAction(
