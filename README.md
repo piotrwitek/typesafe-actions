@@ -385,7 +385,7 @@ counterReducer(0, add(4)); // => 4
 counterReducer(0, increment()); // => 1
 ```
 
-A default handler can be attached, which is called upon an empty `type` property.
+A default handler can be attached, which is invoked for all actions not associated with a handler.
 ```ts
 const add = createAction('todos/ADD', length => length)<number>();
 const reset = createAction('', () => 0)<number>();
@@ -396,6 +396,15 @@ const counterReducer = createReducer(0)
 const store = createStore(counterReducer);
 store.dispatch(add(3));
 store.dispatch(reset());
+```
+
+The `defaultHandler` isn't invoked at initialization of the redux store (default behavior).
+To enforce invoking the `defaultHandler` at initialization of the redux store, supply `true` as second argument to the `defaultHandler`.
+Note, that the initialization action doesn't have a payload.
+```ts
+const counterReducer = createReducer(0)
+  .handleAction(add, (state, action) => state + action.payload)
+  .defaultHandler((state, action) => state = 0, true);
 ```
 
 #### Alternative usage with regular switch reducer
