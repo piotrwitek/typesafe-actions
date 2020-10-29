@@ -12,6 +12,8 @@ exports[`Type refinement checks action (type) should match snapshot 5`] = `"T.Em
 
 exports[`Type refinement checks reducer.handlers (type) should match snapshot 1`] = `"Record<\\"foo1\\" | \\"foo2\\" | \\"foo3\\" | \\"foo4\\" | \\"foo5\\", (state: { foo: string | null; }, action: T.PayloadAction<\\"foo1\\", string> | T.PayloadAction<\\"foo2\\", string> | T.EmptyAction<\\"foo3\\"> | T.EmptyAction<\\"foo4\\"> | T.EmptyAction<\\"foo5\\">) => { foo: string | null; }>"`;
 
+exports[`Type refinement checks reducerDefaultResult (type) should match snapshot 1`] = `"{ foo: string | null; }"`;
+
 exports[`Type refinement checks reducerResult (type) should match snapshot 1`] = `"{ foo: string | null; }"`;
 
 exports[`Type refinement checks reducerResult (type) should match snapshot 2`] = `"{ foo: string | null; }"`;
@@ -19,8 +21,6 @@ exports[`Type refinement checks reducerResult (type) should match snapshot 2`] =
 exports[`Type refinement checks reducerResult (type) should match snapshot 3`] = `"{ foo: string | null; }"`;
 
 exports[`Type refinement checks reducerResult (type) should match snapshot 4`] = `"{ foo: string | null; }"`;
-
-exports[`Type refinement checks reducerResult (type) should match snapshot 5`] = `"{ foo: string | null; }"`;
 
 exports[`Type refinement checks state (type) should match snapshot 1`] = `"{ foo: string | null; }"`;
 

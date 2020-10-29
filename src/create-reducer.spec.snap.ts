@@ -12,7 +12,7 @@ const actions = {
   add,
   increment,
   decrement,
-  reduxInit
+  reduxInit,
 };
 
 declare module './type-helpers' {
@@ -71,13 +71,8 @@ const initialState = 0;
   Object.keys({ ...emptyReducer.handlers }); // => []
 
   const counterReducer5 = emptyReducer
-    .handleAction(
-      add,
-      (state, action) => state + action.payload
-    )
-    .defaultHandler(
-       (state, action) => state + 1
-    );
+    .handleAction(add, (state, action) => state + action.payload)
+    .defaultHandler((state, action) => state + 1);
 
   // @dts-jest:pass:snap -> Record<"ADD" | "INCREMENT" | "DECREMENT" | "@@redux/INIT.1", (state: number, action: T.PayloadAction<"ADD", number> | T.EmptyAction<"INCREMENT"> | T.EmptyAction<"DECREMENT"> | T.EmptyAction<"@@redux/INIT.1">) => number>
   counterReducer5.handlers;
@@ -216,9 +211,9 @@ const initialState = 0;
       reducerResult; // => { foo: "empty" }
     });
 
-    const reducerResult = reducer(defaultState, actions2.foo5());
+    const reducerDefaultResult = reducer(defaultState, actions2.foo5());
     // @dts-jest:pass:snap -> { foo: string | null; }
-    reducerResult; // => { foo: "default" }
+    reducerDefaultResult; // => { foo: "default" }
   }
 }
 
@@ -271,7 +266,7 @@ const initialState = 0;
 
   const counterReducer5 = reducerTest
     .handleType(['ADD'], (state, action) => state + action.payload)
-    .defaultHandler((state, action) => state + 1)
+    .defaultHandler((state, action) => state + 1);
   // @dts-jest:pass:snap -> Record<"ADD" | "INCREMENT" | "DECREMENT" | "@@redux/INIT.1", (state: number, action: T.PayloadAction<"ADD", number> | T.EmptyAction<"INCREMENT"> | T.EmptyAction<"DECREMENT"> | T.EmptyAction<"@@redux/INIT.1">) => number>
   counterReducer5.handlers;
   // @dts-jest:pass
