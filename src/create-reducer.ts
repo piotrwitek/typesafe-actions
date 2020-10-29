@@ -47,7 +47,7 @@ type HandleDefaultActionChainApi<
   TOutputAction extends Exclude<TInputAction, THandledAction>
 >(
   reducer: (state: TState, action: THandledAction) => TState,
-  executeAtInitialization: boolean
+  executeAtInitialization?: boolean
 ) => [TOutputAction] extends [Action]
   ? Reducer<TState, TRootAction> & {
       handlers: Record<

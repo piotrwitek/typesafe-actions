@@ -7,10 +7,12 @@ import { getType } from './get-type';
 const add = createAction('ADD')<number>();
 const increment = createAction('INCREMENT')();
 const decrement = createAction('DECREMENT')();
+const reduxInit = createAction('@@redux/INIT.1')();
 const actions = {
   add,
   increment,
   decrement,
+  reduxInit
 };
 
 declare module './type-helpers' {
@@ -68,6 +70,22 @@ const initialState = 0;
   // @dts-jest:pass
   Object.keys({ ...emptyReducer.handlers }); // => []
 
+  const counterReducer5 = emptyReducer
+    .handleAction(
+      add,
+      (state, action) => state + action.payload
+    )
+    .defaultHandler(
+       (state, action) => state + 1
+    );
+
+  // @dts-jest:pass:snap
+  counterReducer5.handlers;
+  // @dts-jest:pass
+  Object.keys({ ...counterReducer5.handlers }); // => [ "ADD"]
+  // @dts-jest:pass
+  Object.keys({ ...emptyReducer.handlers }); // => []
+
   {
     [
       counterReducer1,
@@ -92,6 +110,12 @@ const initialState = 0;
       // @dts-jest:pass
       fn(0, add(4)); // => 4
     });
+    // @dts-jest:pass
+    counterReducer5(0, reduxInit()); // => 0
+    // @dts-jest:pass
+    counterReducer5(0, {} as any); // => 1
+    // @dts-jest:pass
+    counterReducer5(0, add(4)); // => 4
   }
 }
 
@@ -110,6 +134,7 @@ const initialState = 0;
     foo2: createAction('foo2')<string>(),
     foo3: createAction('foo3')(),
     foo4: createAction('foo4')(),
+    foo5: createAction('foo5')(),
   };
 
   type Action = ActionType<typeof actions2>;
@@ -158,6 +183,17 @@ const initialState = 0;
         ...state,
         foo: 'empty',
       };
+    })
+    .defaultHandler((state, action) => {
+      // @dts-jest:pass:snap
+      state;
+      // @dts-jest:pass:snap
+      action;
+
+      return {
+        ...state,
+        foo: 'default',
+      };
     });
 
   // @dts-jest:pass:snap
@@ -179,6 +215,10 @@ const initialState = 0;
       // @dts-jest:pass:snap
       reducerResult; // => { foo: "empty" }
     });
+
+    const reducerResult = reducer(defaultState, actions2.foo5());
+    // @dts-jest:pass:snap
+    reducerResult; // => { foo: "default" }
   }
 }
 
@@ -229,6 +269,16 @@ const initialState = 0;
   // @dts-jest:pass
   Object.keys({ ...reducerTest.handlers }); // => []
 
+  const counterReducer5 = reducerTest
+    .handleType(['ADD'], (state, action) => state + action.payload)
+    .defaultHandler((state, action) => state + 1)
+  // @dts-jest:pass:snap
+  counterReducer5.handlers;
+  // @dts-jest:pass
+  Object.keys({ ...counterReducer5.handlers }); // => [ "ADD"]
+  // @dts-jest:pass
+  Object.keys({ ...reducerTest.handlers }); // => []
+
   {
     [
       counterReducer1,
@@ -253,5 +303,11 @@ const initialState = 0;
       // @dts-jest:pass
       fn(0, add(4)); // => 4
     });
+    // @dts-jest:pass
+    counterReducer5(0, reduxInit()); // => 0;
+    // @dts-jest:pass
+    counterReducer5(0, increment()); // => 1;
+    // @dts-jest:pass
+    counterReducer5(0, add(4)); // => 4;
   }
 }
