@@ -446,7 +446,8 @@ const fetchTodosFlow: Epic<RootAction, RootAction, RootState, Services> = (actio
         catchError((message: string) => of(fetchTodosAsync.failure(message))),
         takeUntil(action$.pipe(filter(isActionOf(fetchTodosAsync.cancel)))),
       )
-    );
+    )
+  );
 ```
 
 #### With `redux-saga` sagas
