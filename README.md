@@ -625,7 +625,7 @@ getData(1, 'meta'); // { type: 'GET_DATA', payload: number, meta: string }
 const notify = createStandardAction('NOTIFY').map(
   (payload: string, meta: Meta) => ({
     from: meta.username,
-    message: `${username}: ${payload}`,
+    message: `${meta.username}: ${payload}`,
     messageType: meta.type,
     datetime: new Date(),
   })
