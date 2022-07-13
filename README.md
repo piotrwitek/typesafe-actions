@@ -179,11 +179,11 @@ export default ({
 Different projects have different needs, and conventions vary across teams, and this is why `typesafe-actions` was designed with flexibility in mind. It provides three different major styles so you can choose whichever would be the best fit for your team.
 
 #### 1. Basic actions
-`action` and `createAction` are creators that can create **actions** with predefined properties ({ type, payload, meta }). This make them concise but also opinionated.
+`action` and `createAction` are creators that can create **actions** with predefined properties ({ type, payload, meta }). This makes them concise but also opinionated.
  
 Important property is that resulting **action-creator** will have a variadic number of arguments and preserve their semantic names `(id, title, amount, etc...)`.
 
-This two creators are very similar and the only real difference is that `action` **WILL NOT WORK** with **action-helpers**.
+These two creators are very similar and the only real difference is that `action` **WILL NOT WORK** with **action-helpers**.
 
 ```ts
 import { action, createAction } from 'typesafe-actions';
@@ -359,7 +359,7 @@ createReducer<State, Action>(...)
 
 #### Using createReducer API with type-free syntax
 
-We can prevent a lot of boilerplate code and type errors using this powerfull and completely typesafe API.
+We can prevent a lot of boilerplate code and type errors using this powerful and completely typesafe API.
 
 Using handleAction chain API:
 ```ts
@@ -1356,7 +1356,7 @@ Existing solutions in the wild have been either **too verbose because of redunda
 
 **So I created `typesafe-actions` to address all of the above pain points.**
 
-The core idea was to design an API that would mostly use the power of TypeScript **type-inference** 💪 to lift the "maintainability burden" of type annotations. In addition, I wanted to make it "look and feel" as close as possible to the idiomatic JavaScript ❤️ , so we don't have to write the redundant type annotations that which will create additional noise in your code.
+The core idea was to design an API that would mostly use the power of TypeScript **type-inference** 💪 to lift the "maintainability burden" of type annotations. In addition, I wanted to make it "look and feel" as close as possible to the idiomatic JavaScript ❤️ , so we don't have to write the redundant type annotations that will create additional noise in your code.
 
 [⇧ back to top](#table-of-contents)
 
