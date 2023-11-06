@@ -24,5 +24,5 @@ export function getType<TType extends TypeConstant>(
     throwInvalidActionCreator(1);
   }
 
-  return actionCreator.getType!();
+  return actionCreator.getType();
 }
