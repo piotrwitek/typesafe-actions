@@ -114,8 +114,8 @@ export interface ActionCreatorTypeMetadata<
   TType extends TypeConstant,
   TAction extends Action<TType> = Action<TType>
 > {
-  getType: () => TType;
-  toString?(): string;
+  getType(): TType;
+  toString(): string;
   type: TType;
   match(action: Action): action is TAction;
 }
