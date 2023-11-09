@@ -21,7 +21,7 @@ export function createCustomAction<
   type: TType,
   createHandler?: (...args: TArgs) => TReturn
 ): ((...args: TArgs) => ResolveType<{ type: TType } & TReturn>) &
-  ActionCreatorTypeMetadata<TType> {
+  ActionCreatorTypeMetadata<TType, ResolveType<{ type: TType } & TReturn>> {
   if (checkIsEmpty(type)) {
     throwIsEmpty(1);
   }
@@ -36,11 +36,18 @@ export function createCustomAction<
     return { type, ...customProps } as ResolveType<{ type: TType } & TReturn>;
   };
 
-  const typeMeta = {
+  const typeMeta: ActionCreatorTypeMetadata<
+    TType,
+    ResolveType<{ type: TType } & TReturn>
+  > = {
     getType: () => type,
     // redux-actions compatibility
     toString: () => type,
-  } as ActionCreatorTypeMetadata<TType>;
+    // redux-toolkit compatibility
+    type,
+    match: (action): action is ResolveType<{ type: TType } & TReturn> =>
+      action.type === type,
+  };
 
   return Object.assign(actionCreator, typeMeta);
 }

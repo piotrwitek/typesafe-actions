@@ -110,8 +110,14 @@ export type PayloadMetaActionCreator<
 /**
  * @desc Type representing type getter on Action Creator instance
  */
-export interface ActionCreatorTypeMetadata<TType extends TypeConstant> {
-  getType?: () => TType;
+export interface ActionCreatorTypeMetadata<
+  TType extends TypeConstant,
+  TAction extends Action<TType> = Action<TType>
+> {
+  getType(): TType;
+  toString(): string;
+  type: TType;
+  match(action: Action): action is TAction;
 }
 
 /**

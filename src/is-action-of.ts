@@ -45,9 +45,7 @@ export function isActionOf<AC extends ActionCreator<{ type: string }>>(
   actionCreators.forEach(checkInvalidActionCreatorInArray);
 
   const assertFn = (_action: { type: string }) =>
-    actionCreators.some(
-      actionCreator => _action.type === actionCreator.getType!()
-    );
+    actionCreators.some(actionCreator => actionCreator.match(_action));
 
   // 1 arg case => return curried version
   if (action === undefined) {
