@@ -106,8 +106,6 @@ const initialState = 0;
       fn(0, add(4)); // => 4
     });
     // @dts-jest:pass
-    counterReducer5(0, reduxInit()); // => 0
-    // @dts-jest:pass
     counterReducer5(0, {} as any); // => 1
     // @dts-jest:pass
     counterReducer5(0, add(4)); // => 4
@@ -298,8 +296,6 @@ const initialState = 0;
       // @dts-jest:pass
       fn(0, add(4)); // => 4
     });
-    // @dts-jest:pass
-    counterReducer5(0, reduxInit()); // => 0;
     // @dts-jest:pass
     counterReducer5(0, increment()); // => 1;
     // @dts-jest:pass

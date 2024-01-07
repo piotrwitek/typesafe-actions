@@ -398,15 +398,6 @@ store.dispatch(add(3));
 store.dispatch(reset());
 ```
 
-The `defaultHandler` isn't invoked at initialization of the redux store (default behavior).
-To enforce invoking the `defaultHandler` at initialization of the redux store, supply `true` as second argument to the `defaultHandler`.
-Note, that the initialization action doesn't have a payload.
-```ts
-const counterReducer = createReducer(0)
-  .handleAction(add, (state, action) => state + action.payload)
-  .defaultHandler((state, action) => state = 0, true);
-```
-
 #### Alternative usage with regular switch reducer
 
 First we need to start by generating a **tagged union type** of actions (`TodosAction`). It's very easy to do by using `ActionType` **type-helper**.
