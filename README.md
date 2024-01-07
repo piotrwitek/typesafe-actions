@@ -387,15 +387,12 @@ counterReducer(0, increment()); // => 1
 
 A default handler can be attached, which is invoked for all actions not associated with a handler.
 ```ts
-const add = createAction('todos/ADD', length => length)<number>();
-const reset = createAction('', () => 0)<number>();
-const counterReducer = createReducer(0)
-  .handleAction(add, (state, action) => state + action.payload)
-  .defaultHandler((state, action) => state = action.payload);
-
-const store = createStore(counterReducer);
-store.dispatch(add(3));
-store.dispatch(reset());
+const rootReducer = combineReducers({ /* ... */ });
+type RootState = StateType<typeof rootReducer>;
+const signOut = createAction('root/SIGN_OUT');
+export default createReducer(undefined as RootState)
+  .handleAction(signOut, (state, action) => rootReducer(undefined, action))
+  .defaultHandler((state, action) => rootReducer(state, action))
 ```
 
 #### Alternative usage with regular switch reducer
