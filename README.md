@@ -386,6 +386,8 @@ counterReducer(0, increment()); // => 1
 ```
 
 A default handler can be attached, which is invoked for all actions not associated with a handler.
+Please be aware that the defaultHandler may be triggered by the initialization process of the Redux store or by actions dispatched from some other libraries used as middleware, causing the state to be updated.
+
 ```ts
 const rootReducer = combineReducers({ /* ... */ });
 type RootState = StateType<typeof rootReducer>;
