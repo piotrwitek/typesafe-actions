@@ -10,7 +10,7 @@
 // action-creators
 export { action } from './action';
 export { createAction } from './create-action';
-export { createCustomAction } from './create-custom-action';
+export { createCustomAction, ActionCreatorWithType } from './create-custom-action';
 export { createAsyncAction } from './create-async-action';
 export { createReducer } from './create-reducer';
 

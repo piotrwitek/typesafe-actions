@@ -76,16 +76,22 @@ export type PayloadMetaAction<TType extends TypeConstant, TPayload, TMeta> = {
 /**
  * @desc Action Creator producing EmptyAction
  */
-export type EmptyActionCreator<TType extends TypeConstant> = () => EmptyAction<
+export type EmptyActionCreator<TType extends TypeConstant> = (() => EmptyAction<
   TType
->;
+>>) & {
+  type: TType;
+  match(action: Action<TypeConstant>): action is EmptyAction<TType>;
+};
 
 /**
  * @desc Action Creator producing PayloadAction
  */
-export type PayloadActionCreator<TType extends TypeConstant, TPayload> = (
+export type PayloadActionCreator<TType extends TypeConstant, TPayload> = ((
   payload: TPayload
-) => PayloadAction<TType, TPayload>;
+) => PayloadAction<TType, TPayload>) & {
+  type: TType;
+  match(action: Action<TypeConstant>): action is PayloadAction<TType, TPayload>;
+};
 
 // /**
 //  * @desc Action Creator producing MetaAction
@@ -102,16 +108,21 @@ export type PayloadMetaActionCreator<
   TType extends TypeConstant,
   TPayload,
   TMeta
-> = (
+> = ((
   payload: TPayload,
   meta: TMeta
-) => PayloadMetaAction<TType, TPayload, TMeta>;
+) => PayloadMetaAction<TType, TPayload, TMeta>) & {
+  type: TType;
+  match(action: Action<TypeConstant>): action is PayloadMetaAction<TType, TPayload, TMeta>;
+};
 
 /**
  * @desc Type representing type getter on Action Creator instance
  */
 export interface ActionCreatorTypeMetadata<TType extends TypeConstant> {
   getType?: () => TType;
+  type?: TType;
+  match?: (action: Action<TypeConstant>) => boolean;
 }
 
 /**

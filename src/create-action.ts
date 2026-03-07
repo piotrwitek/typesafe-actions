@@ -78,6 +78,6 @@ export function createAction<
         ...(payload !== undefined && { payload }),
         ...(meta !== undefined && { meta }),
       };
-    }) as ActionCreatorBuilder<TType, TPayload, TMeta>;
+    }) as unknown as ActionCreatorBuilder<TType, TPayload, TMeta>;
   };
 }
