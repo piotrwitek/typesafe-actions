@@ -23,12 +23,16 @@ https://github.com/piotrwitek/typesafe-actions#extending-internal-types-to-enabl
 
 <!-- You have two options, fill in a codesandbox template or provide full working code example. -->
 
-### CodeSandbox Link
+### CodeSandbox Link (Recommended)
 <!--
-Codesandbox will speed response time and your issue will be prioritized because it's easier to analyze:
+Codesandbox will speed response time and your issue will be prioritized because it's easier to analyze.
+
+**Click this link to open a pre-configured CodeSandbox with typesafe-actions:**
 https://codesandbox.io/s/github/piotrwitek/typesafe-actions/tree/master/codesandbox
+
+Then fork it, reproduce your bug, and paste the link here.
 -->
-*(PASTE HERE your codesandbox link)*
+*(PASTE HERE your codesandbox link after reproducing the bug)*
 
 ### No CodeSandbox Link
 If no codesandbox, then please provide a full working code example below including actions, reducers and your custom types used in the example.
