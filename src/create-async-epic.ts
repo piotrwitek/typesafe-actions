@@ -94,6 +94,8 @@ function subscribeToInput<T>(
   }
 
   let closed = false;
+  const iterableSymbol =
+    typeof Symbol === 'undefined' ? undefined : Symbol.iterator;
 
   if (source != null && typeof source.then === 'function') {
     source.then(
@@ -120,19 +122,36 @@ function subscribeToInput<T>(
     };
   }
 
+  if (Array.isArray(source)) {
+    for (let i = 0; i < source.length && !closed; i++) {
+      observer.next(source[i]);
+    }
+
+    if (!closed) {
+      observer.complete();
+    }
+
+    return {
+      get closed() {
+        return closed;
+      },
+      unsubscribe: () => {
+        closed = true;
+      },
+    };
+  }
+
   const iterator =
-    source != null && Symbol.iterator != null
-      ? source[Symbol.iterator]
+    source != null && iterableSymbol != null
+      ? source[iterableSymbol]
       : undefined;
 
   if (typeof iterator === 'function') {
     const values = iterator.call(source);
     let result = values.next();
 
-    while (!result.done) {
-      if (!closed) {
-        observer.next(result.value);
-      }
+    while (!closed && !result.done) {
+      observer.next(result.value);
       result = values.next();
     }
 

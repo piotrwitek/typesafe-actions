@@ -776,7 +776,9 @@ _Create a redux-observable-compatible epic from an async action object._
 createAsyncEpic(asyncAction, handler, options?)
 ```
 
-The returned epic listens for `asyncAction.request`, calls `handler` with the request action, `state$` and services, maps emitted values to `asyncAction.success`, catches errors as `asyncAction.failure`, and stops the active request when `asyncAction.cancel` is emitted.
+The returned epic listens for `asyncAction.request`, calls `handler` with the request action, `state$` and services, maps emitted values to `asyncAction.success`, catches errors as `asyncAction.failure`, and stops the active request when `asyncAction.cancel` is emitted. It uses switch-style concurrency: a new request cancels any active request for the same async action.
+
+When the failure action expects a constrained payload type, pass `mapError` to convert the thrown value before `asyncAction.failure` is created. Without `mapError`, the original thrown value is forwarded as the failure payload.
 
 `createAsyncEpic` requires `rxjs` as a peer dependency.
 

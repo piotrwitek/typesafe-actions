@@ -103,6 +103,29 @@ describe('createAsyncEpic', () => {
     expect(emitted).toEqual([fetchUserAsync.success(user)]);
   });
 
+  it('maps array handler results without requiring Symbol.iterator', () => {
+    const originalSymbol = (global as any).Symbol;
+    (global as any).Symbol = undefined;
+
+    try {
+      const epic = createAsyncEpic<
+        typeof fetchUserAsync,
+        RootAction,
+        State$,
+        Services
+      >(fetchUserAsync, () => [user]);
+      const emitted: RootAction[] = [];
+
+      epic(of(fetchUserAsync.request('42')), state$, services).subscribe(
+        action => emitted.push(action)
+      );
+
+      expect(emitted).toEqual([fetchUserAsync.success(user)]);
+    } finally {
+      (global as any).Symbol = originalSymbol;
+    }
+  });
+
   it('waits for active promise handlers after the action stream completes', async () => {
     const epic = createAsyncEpic<
       typeof fetchUserAsync,
