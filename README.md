@@ -860,8 +860,9 @@ if (action.type === getType(add)) {
 
 #### `isActionOf`
 
-_Check if action is an instance of given enhanced action-creator(s)
-(it will narrow action type to a type of given action-creator(s))_
+_Check if action is an instance of given enhanced action-creator(s) or async
+action-creator object (it will narrow action type to a type of given
+action-creator(s))_
 
 
 > **WARNING**: Regular action creators and [action](#action) will not work with this helper
@@ -875,13 +876,17 @@ isActionOf(actionCreator)(action)
 isActionOf([actionCreator1, actionCreator2, ...actionCreatorN], action)
 // with its curried equivalent
 isActionOf([actionCreator1, actionCreator2, ...actionCreatorN])(action)
+// also accepts async action-creator objects returned by createAsyncAction
+isActionOf(asyncActionCreator, action)
+// with its curried equivalent
+isActionOf(asyncActionCreator)(action)
 ```
 
 Examples:
 [> Advanced Usage Examples](src/is-action-of.spec.ts)
 
 ```ts
-import { addTodo, removeTodo } from './todos-actions';
+import { addTodo, removeTodo, fetchTodosAsync } from './todos-actions';
 
 // Works with any filter type function (`Array.prototype.filter`, lodash, ramda, rxjs, etc.)
 // - single action
@@ -908,6 +913,10 @@ if(isActionOf(addTodo, action)) {
 if(isActionOf([addTodo, removeTodo], action)) {
   return iAcceptOnlyTodoType(action.payload);
   // action type is { type: "todos/ADD"; payload: Todo; } | { type: "todos/REMOVE"; payload: Todo; }
+}
+// - async action creator object
+if(isActionOf(fetchTodosAsync, action)) {
+  // action type is inferred as the request | success | failure union
 }
 ```
 
