@@ -95,6 +95,8 @@ _Found it useful? Want more updates?_
     - [`createStandardAction`](#createstandardaction)
     - [`createCustomAction`](#createcustomaction)
     - [`createAsyncAction`](#createasyncaction)
+  - [Async-Flow Helpers API](#async-flow-helpers-api)
+    - [`createAsyncEpic`](#createasyncepic)
   - [Reducer-Creators API](#reducer-creators-api)
     - [`createReducer`](#createreducer)
   - [Action-Helpers API](#action-helpers-api)
@@ -450,6 +452,24 @@ const fetchTodosFlow: Epic<RootAction, RootAction, RootState, Services> = (actio
   );
 ```
 
+The same flow can be expressed with `createAsyncEpic`, which wires the `request`, `success`, `failure` and optional `cancel` action-creators automatically:
+
+```ts
+import { Epic, StateObservable } from 'redux-observable';
+import { from } from 'rxjs';
+import { createAsyncEpic } from 'typesafe-actions';
+
+const fetchTodosFlow: Epic<RootAction, RootAction, RootState, Services> =
+  createAsyncEpic<
+    typeof fetchTodosAsync,
+    RootAction,
+    StateObservable<RootState>,
+    Services
+  >(fetchTodosAsync, (action, _state$, { todosApi }) =>
+    from(todosApi.getAll(action.payload))
+  );
+```
+
 #### With `redux-saga` sagas
 With sagas it's not possible to achieve the same degree of type-safety as with epics because of limitations coming from `redux-saga` API design.
 
@@ -740,6 +760,60 @@ const fn = (
   >
 ) => a;
 fn(fetchUsersAsync);
+```
+
+[⇧ back to top](#table-of-contents)
+
+---
+
+### Async-Flow Helpers API
+
+#### `createAsyncEpic`
+
+_Create a redux-observable-compatible epic from an async action object._
+
+```ts
+createAsyncEpic(asyncAction, handler, options?)
+```
+
+The returned epic listens for `asyncAction.request`, calls `handler` with the request action, `state$` and services, maps emitted values to `asyncAction.success`, catches errors as `asyncAction.failure`, and stops the active request when `asyncAction.cancel` is emitted. It uses switch-style concurrency: a new request cancels any active request for the same async action.
+
+When the failure action expects a constrained payload type, pass `mapError` to convert the thrown value before `asyncAction.failure` is created. Without `mapError`, the original thrown value is forwarded as the failure payload.
+
+`createAsyncEpic` requires `rxjs` as a peer dependency.
+
+Examples:
+[> Advanced Usage Examples](src/create-async-epic.spec.ts)
+
+```ts
+import { Epic, StateObservable } from 'redux-observable';
+import { from } from 'rxjs';
+import { createAsyncAction, createAsyncEpic } from 'typesafe-actions';
+
+const fetchUserAsync = createAsyncAction(
+  'FETCH_USER_REQUEST',
+  'FETCH_USER_SUCCESS',
+  'FETCH_USER_FAILURE',
+  'FETCH_USER_CANCEL'
+)<string, User, Error, string>();
+
+const fetchUserEpic: Epic<RootAction, RootAction, RootState, Services> =
+  createAsyncEpic<
+    typeof fetchUserAsync,
+    RootAction,
+    StateObservable<RootState>,
+    Services
+  >(fetchUserAsync, (action, state$, { userApi }) =>
+    from(userApi.fetch(action.payload, state$.value.auth.token))
+  );
+
+const fetchUserWithErrorMapperEpic = createAsyncEpic(
+  fetchUserAsync,
+  (action, _state$, { userApi }: Services) => from(userApi.fetch(action.payload)),
+  {
+    mapError: error => error as Error,
+  }
+);
 ```
 
 [⇧ back to top](#table-of-contents)
