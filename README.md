@@ -519,7 +519,7 @@ export const loadTodosEpic: Epic<
     switchMap(action =>
       from(todosApi.getAll(action.payload)).pipe(
         map(fetchTodosAsync.success),
-        catchError((message: string) => of(fetchTodosAsync.failure(message)))
+        catchError((err: Error) => of(fetchTodosAsync.failure(err)))
       )
     )
   );
