@@ -1,4 +1,5 @@
 import { createReducer } from './create-reducer';
+import { getType } from './get-type';
 import { Action, Reducer } from './type-helpers';
 
 export type AsyncActionCreatorMap<
@@ -58,22 +59,23 @@ export function createAsyncReducer<
   initialState: TState,
   handlers: AsyncReducerHandlers<TState, TAsyncAction>
 ): Reducer<TState, AsyncActionType<TAsyncAction>> {
-  let reducer = createReducer<TState, AsyncActionType<TAsyncAction>>(
-    initialState
-  ) as any;
+  const handlersMap: any = {};
 
   if (handlers.request != null) {
-    reducer = reducer.handleAction(asyncAction.request, handlers.request);
+    handlersMap[getType(asyncAction.request)] = handlers.request;
   }
   if (handlers.success != null) {
-    reducer = reducer.handleAction(asyncAction.success, handlers.success);
+    handlersMap[getType(asyncAction.success)] = handlers.success;
   }
   if (handlers.failure != null) {
-    reducer = reducer.handleAction(asyncAction.failure, handlers.failure);
+    handlersMap[getType(asyncAction.failure)] = handlers.failure;
   }
   if (asyncAction.cancel != null && handlers.cancel != null) {
-    reducer = reducer.handleAction(asyncAction.cancel, handlers.cancel);
+    handlersMap[getType(asyncAction.cancel)] = handlers.cancel;
   }
 
-  return reducer;
+  return createReducer<TState, AsyncActionType<TAsyncAction>>(
+    initialState,
+    handlersMap
+  );
 }
