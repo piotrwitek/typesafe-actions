@@ -450,6 +450,102 @@ const fetchTodosFlow: Epic<RootAction, RootAction, RootState, Services> = (actio
   );
 ```
 
+##### What is the `Services` type?
+
+The fourth generic argument of `Epic<Input, Output, State, Dependencies>` is the
+type of the dependency object injected through `createEpicMiddleware`. In the
+example above, `Services` describes the API clients, loggers, storage adapters,
+or any other side-effecting dependencies that epics are allowed to use.
+
+Keeping those dependencies in one object gives two practical benefits:
+
+- epics stay decoupled from concrete imports such as `new TodosApiClient()`;
+- tests can pass a typed mock object instead of touching real network, storage,
+  or logging code.
+
+One recommended setup is to export the runtime services object and derive the
+`Services` type from it:
+
+```ts
+// services/index.ts
+import logger from './logger-service';
+import todosApi from './todos-api-client';
+
+export default {
+  logger,
+  todosApi,
+};
+```
+
+```ts
+// services/types.d.ts
+import {} from 'typesafe-actions';
+
+declare module 'typesafe-actions' {
+  export type Services = typeof import('./index').default;
+}
+```
+
+Then wire the same object into `redux-observable`:
+
+```ts
+// store/index.ts
+import { createEpicMiddleware } from 'redux-observable';
+import { RootAction, RootState, Services } from 'typesafe-actions';
+import services from '../services';
+
+const epicMiddleware = createEpicMiddleware<
+  RootAction,
+  RootAction,
+  RootState,
+  Services
+>({
+  dependencies: services,
+});
+```
+
+Each epic can now destructure only the dependency it needs, while still getting
+the full static type of the shared services object:
+
+```ts
+export const loadTodosEpic: Epic<
+  RootAction,
+  RootAction,
+  RootState,
+  Services
+> = (action$, state$, { todosApi }) =>
+  action$.pipe(
+    filter(isActionOf(fetchTodosAsync.request)),
+    switchMap(action =>
+      from(todosApi.getAll(action.payload)).pipe(
+        map(fetchTodosAsync.success),
+        catchError((message: string) => of(fetchTodosAsync.failure(message)))
+      )
+    )
+  );
+```
+
+For tests, create a reusable mock services object with the same shape. You only
+need the runtime properties used by your epic, and TypeScript will tell you when
+the service contract changes:
+
+```ts
+const services = {
+  logger: {
+    log: jest.fn<Services['logger']['log']>(),
+  },
+  todosApi: {
+    getAll: jest.fn<Services['todosApi']['getAll']>(),
+  },
+};
+
+services.todosApi.getAll.mockResolvedValue([{ id: '1', title: 'Test todo' }]);
+```
+
+When your services are classes with private members, mock the public interface
+instead of the concrete class instance, or keep the mock in a single shared test
+helper so all epic tests reuse the same typed dependency object.
+
 #### With `redux-saga` sagas
 With sagas it's not possible to achieve the same degree of type-safety as with epics because of limitations coming from `redux-saga` API design.
 
