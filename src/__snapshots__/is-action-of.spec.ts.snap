@@ -10,9 +10,19 @@ exports[`should correctly assert for an array with 4 args actual (type) should m
 
 exports[`should correctly assert for an array with 5 args actual (type) should match snapshot 1`] = `"(TH.EmptyAction<\\"WITH_TYPE_ONLY\\"> | TH.PayloadAction<\\"WITH_PAYLOAD\\", number> | TH.PayloadAction<\\"WITH_MAPPED_PAYLOAD\\", number> | TH.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string> | TH.PayloadMetaAction<\\"WITH_MAPPED_PAYLOAD_META\\", number, string>)[]"`;
 
+exports[`should correctly assert for async action-creator objects actual (type) should match snapshot 1`] = `"(TH.EmptyAction<\\"FETCH_USER_REQUEST\\"> | TH.PayloadAction<\\"FETCH_USER_SUCCESS\\", { firstName: string; lastName: string; }> | TH.PayloadAction<\\"FETCH_USER_FAILURE\\", Error>)[]"`;
+
 exports[`should correctly assert type with "any" action action (type) should match snapshot 1`] = `"TH.PayloadAction<\\"WITH_PAYLOAD\\", number> | TH.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string>"`;
 
 exports[`should correctly assert type with "any" action action (type) should match snapshot 2`] = `"TH.PayloadAction<\\"WITH_PAYLOAD\\", number> | TH.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string>"`;
+
+exports[`should work with async action-creator objects isActionOf(asyncAction)(asyncFailureAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with async action-creator objects isActionOf(asyncAction)(asyncRequestAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with async action-creator objects isActionOf(asyncAction, asyncSuccessAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with async action-creator objects isActionOf(asyncAction, payloadAction) (type) should match snapshot 1`] = `"boolean"`;
 
 exports[`should work with multiple action-creator args isActionOf([withTypeOnly, withPayload])(mappedPayloadAction) (type) should match snapshot 1`] = `"boolean"`;
 
