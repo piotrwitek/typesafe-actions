@@ -242,9 +242,11 @@ import { StateType, ActionType } from 'typesafe-actions';
 declare module 'typesafe-actions' {
   export type RootAction = ActionType<typeof import('./root-action').default>;
   export type RootState = StateType<typeof import('./root-reducer').default>;
+  export type Services = typeof import('./services').default;
 
   interface Types {
     RootAction: RootAction;
+    RootState: RootState;
   }
 }
 ```
@@ -259,10 +261,10 @@ Use `handleAction` when the action creator is the source of truth for the action
 // reducer.ts
 import { createReducer } from 'typesafe-actions';
 
-import { initialState, TodosState } from './types';
+import { initialState } from './types';
 import { addTodo, toggleTodo, loadTodosAsync } from './actions';
 
-export const todosReducer = createReducer(initialState as TodosState)
+export const todosReducer = createReducer(initialState)
   .handleAction(loadTodosAsync.request, state => ({
     ...state,
     isLoading: true,
@@ -440,9 +442,11 @@ import { StateType, ActionType } from 'typesafe-actions';
 declare module 'typesafe-actions' {
   export type RootAction = ActionType<typeof import('./root-action').default>;
   export type RootState = StateType<typeof import('./root-reducer').default>;
+  export type Services = typeof import('./services').default;
 
   interface Types {
     RootAction: RootAction;
+    RootState: RootState;
   }
 }
 ```
@@ -455,10 +459,10 @@ Use `handleType` when constants are the source of truth for action types.
 // reducer.ts
 import { createReducer } from 'typesafe-actions';
 
-import { initialState, TodosState } from './types';
+import { initialState } from './types';
 import { ADD, TOGGLE, LOAD_REQUEST, LOAD_SUCCESS, LOAD_FAILURE } from './constants';
 
-export const todosReducer = createReducer(initialState as TodosState)
+export const todosReducer = createReducer(initialState)
   .handleType(LOAD_REQUEST, state => ({
     ...state,
     isLoading: true,
