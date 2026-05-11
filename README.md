@@ -385,6 +385,18 @@ counterReducer(0, add(4)); // => 4
 counterReducer(0, increment()); // => 1
 ```
 
+A default handler can be attached, which is invoked for all actions not associated with a handler.
+Please be aware that the defaultHandler may be triggered by the initialization process of the Redux store or by actions dispatched from some other libraries used as middleware, causing the state to be updated.
+
+```ts
+const rootReducer = combineReducers({ /* ... */ });
+type RootState = StateType<typeof rootReducer>;
+const signOut = createAction('root/SIGN_OUT');
+export default createReducer(undefined as RootState)
+  .handleAction(signOut, (state, action) => rootReducer(undefined, action))
+  .defaultHandler((state, action) => rootReducer(state, action))
+```
+
 #### Alternative usage with regular switch reducer
 
 First we need to start by generating a **tagged union type** of actions (`TodosAction`). It's very easy to do by using `ActionType` **type-helper**.
