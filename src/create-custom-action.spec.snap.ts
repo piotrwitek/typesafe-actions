@@ -8,6 +8,23 @@ import { createCustomAction } from './create-custom-action';
   actionCreator.toString(); // => 'CREATE_CUSTOM_ACTION'
 }
 
+// @dts-jest:group Redux Toolkit compatibility metadata
+{
+  const actionCreator = createCustomAction(
+    'CREATE_CUSTOM_ACTION',
+    (id: number) => ({ payload: id })
+  );
+  const action = { type: 'CREATE_CUSTOM_ACTION', payload: 1 } as T.Action;
+  // @dts-jest:pass:snap -> "CREATE_CUSTOM_ACTION"
+  actionCreator.type; // => 'CREATE_CUSTOM_ACTION'
+  // @dts-jest:pass:snap -> boolean
+  actionCreator.match(action); // => true
+  if (actionCreator.match(action)) {
+    // @dts-jest:pass:snap -> number
+    action.payload; // => 1
+  }
+}
+
 // @dts-jest:group with symbol
 {
   const CREATE_CUSTOM_ACTION = Symbol(1);

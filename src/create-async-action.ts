@@ -2,6 +2,7 @@ import {
   TypeConstant,
   ActionCreatorBuilder,
   ActionBuilder,
+  ActionCreatorTypeMetadata,
 } from './type-helpers';
 import { createAction } from './create-action';
 
@@ -29,13 +30,21 @@ type AsyncActionHandler<
         ? T
         : undefined
     >
-  : (
+  : ((
       ...args: TArgs
     ) => ActionBuilder<
       TType,
       [TPayloadMeta] extends [[infer T, any]] ? T : TPayloadMeta,
       [TPayloadMeta] extends [[any, infer T]] ? T : undefined
-    >;
+    >) &
+      ActionCreatorTypeMetadata<
+        TType,
+        ActionBuilder<
+          TType,
+          [TPayloadMeta] extends [[infer T, any]] ? T : TPayloadMeta,
+          [TPayloadMeta] extends [[any, infer T]] ? T : undefined
+        >
+      >;
 
 interface AsyncAction<
   TType1 extends TypeConstant,

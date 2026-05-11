@@ -20,6 +20,12 @@ exports[`Redux Actions - with payload and meta - multiple primitive params withP
 
 exports[`Redux Actions - with payload and meta - obj param withPayloadAndMeta({ username: 'Piotr', message: 'Hello!' }) (type) should match snapshot 1`] = `"TH.PayloadMetaAction<\\"CREATE_ACTION\\", string, { username: string; message: string; }>"`;
 
+exports[`Redux Toolkit compatibility metadata action.payload (type) should match snapshot 1`] = `"number"`;
+
+exports[`Redux Toolkit compatibility metadata actionCreator.match(action) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`Redux Toolkit compatibility metadata actionCreator.type (type) should match snapshot 1`] = `"\\"CREATE_ACTION\\""`;
+
 exports[`toString() method return a type actionCreator.toString() (type) should match snapshot 1`] = `"string"`;
 
 exports[`type-safe usage with higher-order function setUserSetting('settingA', 'foo') (type) should match snapshot 1`] = `"TH.PayloadAction<\\"SET_USER_SETTING\\", { setting: \\"settingA\\"; newValue: string; }>"`;

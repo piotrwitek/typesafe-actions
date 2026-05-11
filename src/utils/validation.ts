@@ -14,7 +14,8 @@ export function throwIsEmpty(argPosition: number): never {
 
 export function checkValidActionCreator(
   arg: unknown
-): arg is ActionCreator<TypeConstant> {
+): arg is ActionCreator<TypeConstant> &
+  ActionCreatorTypeMetadata<TypeConstant> {
   return typeof arg === 'function' && 'getType' in arg;
 }
 

@@ -46,7 +46,7 @@ export function isActionOf<AC extends ActionCreator<{ type: string }>>(
 
   const assertFn = (_action: { type: string }) =>
     actionCreators.some(
-      actionCreator => _action.type === actionCreator.getType!()
+      actionCreator => _action.type === actionCreator.getType()
     );
 
   // 1 arg case => return curried version

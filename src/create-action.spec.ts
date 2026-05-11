@@ -8,6 +8,20 @@ import { createAction } from './create-action';
   actionCreator.toString(); // => 'CREATE_ACTION'
 }
 
+// @dts-jest:group Redux Toolkit compatibility metadata
+{
+  const actionCreator = createAction('CREATE_ACTION')<number>();
+  const action = { type: 'CREATE_ACTION', payload: 1 } as TH.Action;
+  // @dts-jest:pass:snap
+  actionCreator.type; // => 'CREATE_ACTION'
+  // @dts-jest:pass:snap
+  actionCreator.match(action); // => true
+  if (actionCreator.match(action)) {
+    // @dts-jest:pass:snap
+    action.payload; // => 1
+  }
+}
+
 // @dts-jest:group with symbol
 {
   const CREATE_ACTION = Symbol(1);

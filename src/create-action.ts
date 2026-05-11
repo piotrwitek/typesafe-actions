@@ -12,6 +12,22 @@ import {
   throwInvalidActionType,
 } from './utils/validation';
 
+type ActionCreatorWithPreparedPayload<
+  TType extends TypeConstant,
+  TArgs extends any[],
+  TPayload extends any = undefined,
+  TMeta extends any = undefined
+> = ((...args: TArgs) => ActionBuilder<TType, TPayload, TMeta>) &
+  ActionCreatorTypeMetadata<TType, ActionBuilder<TType, TPayload, TMeta>>;
+
+type ActionCreatorWithPreparedPayloadBuilder<
+  TType extends TypeConstant,
+  TArgs extends any[],
+  TPayload extends any = undefined,
+  TMeta extends any = undefined
+> = ActionCreatorWithPreparedPayload<TType, TArgs, TPayload, TMeta> &
+  ActionCreatorBuilder<TType, TPayload, TMeta>;
+
 export function createAction<TType extends TypeConstant>(
   type: TType
 ): <TPayload = undefined, TMeta = undefined>() => ActionCreatorBuilder<
@@ -32,7 +48,8 @@ export function createAction<
 ): <
   TPayload extends TCreatorPayload = TCreatorPayload,
   TMeta extends TCreatorMeta = TCreatorMeta
->() => (...args: TArgs) => ActionBuilder<TType, TPayload, TMeta>;
+>() => ((...args: TArgs) => ActionBuilder<TType, TPayload, TMeta>) &
+  ActionCreatorTypeMetadata<TType, ActionBuilder<TType, TPayload, TMeta>>;
 
 /**
  * @description create an action-creator
@@ -50,7 +67,11 @@ export function createAction<
   | (<
       TPayload extends TCreatorPayload = TCreatorPayload,
       TMeta extends TCreatorMeta = TCreatorMeta
-    >() => (...args: TArgs) => ActionBuilder<TType, TPayload, TMeta>)
+    >() => ((...args: TArgs) => ActionBuilder<TType, TPayload, TMeta>) &
+      ActionCreatorTypeMetadata<
+        TType,
+        ActionBuilder<TType, TPayload, TMeta>
+      >)
   | (<TPayload = undefined, TMeta = undefined>() => ActionCreatorBuilder<
       TType,
       TPayload,
@@ -78,6 +99,11 @@ export function createAction<
         ...(payload !== undefined && { payload }),
         ...(meta !== undefined && { meta }),
       };
-    }) as ActionCreatorBuilder<TType, TPayload, TMeta>;
+    }) as ActionCreatorWithPreparedPayloadBuilder<
+      TType,
+      TArgs,
+      TPayload,
+      TMeta
+    >;
   };
 }

@@ -110,8 +110,14 @@ export type PayloadMetaActionCreator<
 /**
  * @desc Type representing type getter on Action Creator instance
  */
-export interface ActionCreatorTypeMetadata<TType extends TypeConstant> {
-  getType?: () => TType;
+export interface ActionCreatorTypeMetadata<
+  TType extends TypeConstant,
+  TAction extends Action<TType> = Action<TType>
+> {
+  getType: () => TType;
+  toString: () => string;
+  type: TType;
+  match: (action: Action) => action is TAction;
 }
 
 /**
@@ -160,7 +166,7 @@ export type ActionBuilder<
 /**
  * @desc todo
  */
-export type ActionCreatorBuilder<
+type ActionCreatorBuilderType<
   TType extends TypeConstant,
   TPayload extends any = undefined,
   TMeta extends any = undefined
@@ -173,6 +179,33 @@ export type ActionCreatorBuilder<
       : EmptyActionCreator<TType>
     : PayloadActionCreator<TType, TPayload>
   : PayloadMetaActionCreator<TType, TPayload, TMeta>;
+
+/**
+ * @desc todo
+ */
+export type ActionCreatorBuilder<
+  TType extends TypeConstant,
+  TPayload extends any = undefined,
+  TMeta extends any = undefined
+> = ActionCreatorBuilderType<TType, TPayload, TMeta> &
+  ActionCreatorTypeMetadata<TType, ActionBuilder<TType, TPayload, TMeta>>;
+
+type ActionCreatorWithArgs<
+  TType extends TypeConstant,
+  TArgs extends any[],
+  TPayload extends any = undefined,
+  TMeta extends any = undefined
+> = (...args: TArgs) => ActionBuilder<TType, TPayload, TMeta>;
+
+type ActionCreatorBuilderWithArgs<
+  TType extends TypeConstant,
+  TArgs extends any[],
+  TPayload extends any = undefined,
+  TMeta extends any = undefined
+> = [TArgs] extends [never]
+  ? ActionCreatorBuilder<TType, TPayload, TMeta>
+  : ActionCreatorWithArgs<TType, TArgs, TPayload, TMeta> &
+      ActionCreatorTypeMetadata<TType, ActionBuilder<TType, TPayload, TMeta>>;
 
 /**
  * @desc todo
@@ -262,29 +295,50 @@ export type AsyncActionCreatorBuilder<
   TArgs4 extends any[] = TCancel extends [TType4, any, any] ? TCancel[1] : never
 > = [TCancel] extends [never]
   ? {
-      request: [TArgs1] extends [never]
-        ? ActionCreatorBuilder<TType1, TPayload1, TMeta1>
-        : (...args: TArgs1) => ActionBuilder<TType1, TPayload1, TMeta1>;
-      success: [TArgs2] extends [never]
-        ? ActionCreatorBuilder<TType2, TPayload2, TMeta2>
-        : (...args: TArgs2) => ActionBuilder<TType2, TPayload2, TMeta2>;
-      failure: [TArgs3] extends [never]
-        ? ActionCreatorBuilder<TType3, TPayload3, TMeta3>
-        : (...args: TArgs3) => ActionBuilder<TType3, TPayload3, TMeta3>;
+      request: ActionCreatorBuilderWithArgs<
+        TType1,
+        TArgs1,
+        TPayload1,
+        TMeta1
+      >;
+      success: ActionCreatorBuilderWithArgs<
+        TType2,
+        TArgs2,
+        TPayload2,
+        TMeta2
+      >;
+      failure: ActionCreatorBuilderWithArgs<
+        TType3,
+        TArgs3,
+        TPayload3,
+        TMeta3
+      >;
     }
   : {
-      request: [TArgs1] extends [never]
-        ? ActionCreatorBuilder<TType1, TPayload1, TMeta1>
-        : (...args: TArgs1) => ActionBuilder<TType1, TPayload1, TMeta1>;
-      success: [TArgs2] extends [never]
-        ? ActionCreatorBuilder<TType2, TPayload2, TMeta2>
-        : (...args: TArgs2) => ActionBuilder<TType2, TPayload2, TMeta2>;
-      failure: [TArgs3] extends [never]
-        ? ActionCreatorBuilder<TType3, TPayload3, TMeta3>
-        : (...args: TArgs3) => ActionBuilder<TType3, TPayload3, TMeta3>;
-      cancel: [TArgs4] extends [never]
-        ? ActionCreatorBuilder<TType4, TPayload4, TMeta4>
-        : (...args: TArgs4) => ActionBuilder<TType4, TPayload4, TMeta4>;
+      request: ActionCreatorBuilderWithArgs<
+        TType1,
+        TArgs1,
+        TPayload1,
+        TMeta1
+      >;
+      success: ActionCreatorBuilderWithArgs<
+        TType2,
+        TArgs2,
+        TPayload2,
+        TMeta2
+      >;
+      failure: ActionCreatorBuilderWithArgs<
+        TType3,
+        TArgs3,
+        TPayload3,
+        TMeta3
+      >;
+      cancel: ActionCreatorBuilderWithArgs<
+        TType4,
+        TArgs4,
+        TPayload4,
+        TMeta4
+      >;
     };
 
 /**

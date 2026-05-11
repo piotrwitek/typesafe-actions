@@ -31,6 +31,19 @@ type User = { firstName: string; lastName: string };
     type: 'FETCH_USERS_FAILURE', payload: Error('reason')
   } */
 
+  const action = {
+    type: 'FETCH_USERS_SUCCESS',
+    payload: [{ firstName: 'Piotr', lastName: 'Witek' }],
+  } as TH.Action;
+  // @dts-jest:pass:snap
+  fetchUsersAsync.success.type; // => 'FETCH_USERS_SUCCESS'
+  // @dts-jest:pass:snap
+  fetchUsersAsync.success.match(action); // => true
+  if (fetchUsersAsync.success.match(action)) {
+    // @dts-jest:pass:snap
+    action.payload; // => [{ firstName: 'Piotr', lastName: 'Witek' }]
+  }
+
   // @dts-jest:fail:snap
   fetchUsersAsync.cancel;
 

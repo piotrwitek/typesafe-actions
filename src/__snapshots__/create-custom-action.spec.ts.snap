@@ -1,5 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Redux Toolkit compatibility metadata action.payload (type) should match snapshot 1`] = `"number"`;
+
+exports[`Redux Toolkit compatibility metadata actionCreator.match(action) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`Redux Toolkit compatibility metadata actionCreator.type (type) should match snapshot 1`] = `"\\"CREATE_CUSTOM_ACTION\\""`;
+
 exports[`toString() method return a type actionCreator.toString() (type) should match snapshot 1`] = `"string"`;
 
 exports[`with meta withMeta('token') (type) should match snapshot 1`] = `"{ type: \\"CREATE_CUSTOM_ACTION\\"; meta: string; }"`;
