@@ -820,7 +820,7 @@ const loadingReducer = createReducer<State, Action>(false)
 ```
 
 The default handler runs for actions that do not have an explicit handler. It
-does not run for Redux initialization actions unless you pass `true` as the
+does not run for Redux internal actions unless you pass `true` as the
 second argument:
 ```ts
 const reducer = createReducer<State, Action>(false)

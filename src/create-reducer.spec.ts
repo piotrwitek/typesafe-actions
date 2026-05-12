@@ -319,19 +319,25 @@ describe('defaultHandler', () => {
     expect(reducer(0, decrement())).toBe(-1);
   });
 
-  it('does not run for Redux initialization actions by default', () => {
+  it('does not run for Redux internal actions by default', () => {
     const reducer = createReducer<number, ActionType<typeof actions>>(0)
       .handleAction(add, (state, action) => state + action.payload)
       .defaultHandler(() => 100);
 
     expect(reducer(undefined, { type: '@@redux/INIT.test' } as any)).toBe(0);
+    expect(
+      reducer(undefined, { type: '@@redux/PROBE_UNKNOWN_ACTION.test' } as any)
+    ).toBe(0);
   });
 
-  it('can opt into running for Redux initialization actions', () => {
+  it('can opt into running for Redux internal actions', () => {
     const reducer = createReducer<number, ActionType<typeof actions>>(0)
       .handleAction(add, (state, action) => state + action.payload)
       .defaultHandler(() => 100, true);
 
     expect(reducer(undefined, { type: '@@redux/INIT.test' } as any)).toBe(100);
+    expect(
+      reducer(undefined, { type: '@@redux/PROBE_UNKNOWN_ACTION.test' } as any)
+    ).toBe(100);
   });
 });

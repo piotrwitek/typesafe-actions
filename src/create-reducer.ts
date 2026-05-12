@@ -106,7 +106,7 @@ export function createReducer<TState, TRootAction extends Action = RootAction>(
     ...initialHandlers,
   };
 
-  const initializationActionTypes = /^@@redux\/INIT/;
+  const internalReduxActionTypes = /^@@redux\//;
 
   const rootReducer: Reducer<TState, TRootAction> = (
     state = initialState,
@@ -123,7 +123,7 @@ export function createReducer<TState, TRootAction extends Action = RootAction>(
     } else if (
       defaultHandler &&
       (runDefaultHandlerAtInitialization ||
-        !initializationActionTypes.test(action.type))
+        !internalReduxActionTypes.test(action.type))
     ) {
       return defaultHandler(state, action);
     } else {
