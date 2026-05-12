@@ -24,6 +24,11 @@ export type HandleActionChainApi<
         (state: TState, action: TRootAction) => TState
       >;
       handleAction: HandleActionChainApi<TState, TOutputAction, TRootAction>;
+      defaultHandler: HandleDefaultActionChainApi<
+        TState,
+        TOutputAction,
+        TRootAction
+      >;
     }
   : Reducer<TState, TRootAction> & {
       handlers: Record<
@@ -50,6 +55,11 @@ export type HandleTypeChainApi<
         (state: TState, action: TRootAction) => TState
       >;
       handleType: HandleTypeChainApi<TState, TOutputAction, TRootAction>;
+      defaultHandler: HandleDefaultActionChainApi<
+        TState,
+        TOutputAction,
+        TRootAction
+      >;
     }
   : Reducer<TState, TRootAction> & {
       handlers: Record<
@@ -57,6 +67,20 @@ export type HandleTypeChainApi<
         (state: TState, action: TRootAction) => TState
       >;
     };
+
+export type HandleDefaultActionChainApi<
+  TState,
+  TInputAction extends Action,
+  TRootAction extends Action
+> = (
+  reducer: (state: TState, action: TInputAction) => TState,
+  executeAtInitialization?: boolean
+) => Reducer<TState, TRootAction> & {
+  handlers: Record<
+    Exclude<TRootAction, TInputAction>['type'],
+    (state: TState, action: TRootAction) => TState
+  >;
+};
 
 type GetAction<
   TAction extends Action,
@@ -74,11 +98,15 @@ type RootAction = Types extends { RootAction: infer T } ? T : any;
 
 export function createReducer<TState, TRootAction extends Action = RootAction>(
   initialState: TState,
-  initialHandlers: InitialHandler<TState, TRootAction> = {}
+  initialHandlers: InitialHandler<TState, TRootAction> = {},
+  defaultHandler?: (state: TState, action: TRootAction) => TState,
+  runDefaultHandlerAtInitialization: boolean = false
 ) {
   const handlers: any = {
     ...initialHandlers,
   };
+
+  const initializationActionTypes = /^@@redux\/INIT/;
 
   const rootReducer: Reducer<TState, TRootAction> = (
     state = initialState,
@@ -92,6 +120,12 @@ export function createReducer<TState, TRootAction extends Action = RootAction>(
         );
       }
       return reducer(state, action);
+    } else if (
+      defaultHandler &&
+      (runDefaultHandlerAtInitialization ||
+        !initializationActionTypes.test(action.type))
+    ) {
+      return defaultHandler(state, action);
     } else {
       return state;
     }
@@ -121,18 +155,35 @@ export function createReducer<TState, TRootAction extends Action = RootAction>(
       )
       .forEach(type => (newHandlers[type] = reducer));
 
-    return createReducer<TState, TRootAction>(initialState, {
-      ...handlers,
-      ...newHandlers,
-    });
+    return createReducer<TState, TRootAction>(
+      initialState,
+      {
+        ...handlers,
+        ...newHandlers,
+      },
+      defaultHandler,
+      runDefaultHandlerAtInitialization
+    );
   }) as
     | HandleActionChainApi<TState, TRootAction, TRootAction>
     | HandleTypeChainApi<TState, TRootAction, TRootAction>;
+
+  const defaultReducerHandler = ((
+    reducer: (state: TState, action: TRootAction) => TState,
+    executeAtInitialization: boolean = false
+  ) =>
+    createReducer<TState, TRootAction>(
+      initialState,
+      handlers,
+      reducer,
+      executeAtInitialization
+    )) as HandleDefaultActionChainApi<TState, TRootAction, TRootAction>;
 
   const chainApi = Object.assign(rootReducer, {
     handlers: { ...handlers },
     handleAction: reducerHandler,
     handleType: reducerHandler,
+    defaultHandler: defaultReducerHandler,
   }) as Reducer<TState, TRootAction> &
     Readonly<{
       handlers: InitialHandler<TState, RootAction>;
@@ -142,6 +193,9 @@ export function createReducer<TState, TRootAction extends Action = RootAction>(
       handleType: [unknown] extends [TRootAction]
         ? any
         : HandleTypeChainApi<TState, TRootAction, TRootAction>;
+      defaultHandler: [unknown] extends [TRootAction]
+        ? any
+        : HandleDefaultActionChainApi<TState, TRootAction, TRootAction>;
     }>;
 
   return chainApi;
