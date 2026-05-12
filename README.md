@@ -760,6 +760,7 @@ createReducer<TState, TRootAction>(initialState)
   .handleAction([actionCreator1, actionCreator2, ...actionCreatorN], reducer)
   .handleType(type, reducer)
   .handleType([type1, type2, ...typeN], reducer)
+  .defaultHandler(reducer)
 ```
 
 Examples:
@@ -803,6 +804,28 @@ const counterReducer = createReducer<State, Action>(0)
 const counterReducer = createReducer<State, Action>(0)
   .handleType('ADD', (state, action) => state + action.payload)
   .handleType('INCREMENT', (state, _) => state + 1);
+```
+
+**Default handler:**
+```ts
+type State = boolean;
+type Action =
+  | { type: 'REQUEST_START' }
+  | { type: 'REQUEST_SUCCESS' }
+  | { type: 'REQUEST_FAILURE' };
+
+const loadingReducer = createReducer<State, Action>(false)
+  .handleType('REQUEST_START', () => true)
+  .defaultHandler(() => false);
+```
+
+The default handler runs for actions that do not have an explicit handler. It
+does not run for Redux internal actions unless you pass `true` as the
+second argument:
+```ts
+const reducer = createReducer<State, Action>(false)
+  .handleType('REQUEST_START', () => true)
+  .defaultHandler(() => false, true);
 ```
 
 **Extend or compose reducers - every operation is completely typesafe:**

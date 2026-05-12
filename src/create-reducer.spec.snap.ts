@@ -68,6 +68,22 @@ const initialState = 0;
   // @dts-jest:pass
   Object.keys({ ...emptyReducer.handlers }); // => []
 
+  const counterReducer5 = emptyReducer
+    .handleAction(add, (state, action) => state + action.payload)
+    .defaultHandler((state, action) => {
+      // @dts-jest:pass:snap -> T.EmptyAction<"INCREMENT"> | T.EmptyAction<"DECREMENT">
+      action;
+
+      return state - 1;
+    });
+
+  // @dts-jest:pass:snap -> Record<"ADD", (state: number, action: T.PayloadAction<"ADD", number> | T.EmptyAction<"INCREMENT"> | T.EmptyAction<"DECREMENT">) => number>
+  counterReducer5.handlers;
+  // @dts-jest:pass
+  Object.keys({ ...counterReducer5.handlers }); // => [ "ADD"]
+  // @dts-jest:pass
+  Object.keys({ ...emptyReducer.handlers }); // => []
+
   {
     [
       counterReducer1,
@@ -93,6 +109,8 @@ const initialState = 0;
       // @dts-jest:pass
       fn(0, add(4)); // => 4
     });
+    counterReducer5(0, decrement());
+    counterReducer5(0, add(4));
   }
 }
 
@@ -111,6 +129,7 @@ const initialState = 0;
     foo2: createAction('foo2')<string>(),
     foo3: createAction('foo3')(),
     foo4: createAction('foo4')(),
+    foo5: createAction('foo5')(),
   };
 
   type Action = ActionType<typeof actions2>;
@@ -159,9 +178,20 @@ const initialState = 0;
         ...state,
         foo: 'empty',
       };
+    })
+    .defaultHandler((state, action) => {
+      // @dts-jest:pass:snap -> { foo: string | null; }
+      state;
+      // @dts-jest:pass:snap -> T.EmptyAction<"foo5">
+      action;
+
+      return {
+        ...state,
+        foo: 'default',
+      };
     });
 
-  // @dts-jest:pass:snap -> Record<"foo1" | "foo2" | "foo3" | "foo4", (state: { foo: string | null; }, action: T.PayloadAction<"foo1", string> | T.PayloadAction<"foo2", string> | T.EmptyAction<"foo3"> | T.EmptyAction<"foo4">) => { foo: string | null; }>
+  // @dts-jest:pass:snap -> Record<"foo1" | "foo2" | "foo3" | "foo4", (state: { foo: string | null; }, action: T.PayloadAction<"foo1", string> | T.PayloadAction<"foo2", string> | T.EmptyAction<"foo3"> | T.EmptyAction<"foo4"> | T.EmptyAction<"foo5">) => { foo: string | null; }>
   reducer.handlers;
 
   {
@@ -180,6 +210,10 @@ const initialState = 0;
       // @dts-jest:pass:snap -> { foo: string | null; }
       reducerResult; // => { foo: "empty" }
     });
+
+    const reducerDefaultResult = reducer(defaultState, actions2.foo5());
+    // @dts-jest:pass:snap -> { foo: string | null; }
+    reducerDefaultResult; // => { foo: "default" }
   }
 }
 
@@ -230,6 +264,21 @@ const initialState = 0;
   // @dts-jest:pass
   Object.keys({ ...reducerTest.handlers }); // => []
 
+  const counterReducer5 = reducerTest
+    .handleType('ADD', (state, action) => state + action.payload)
+    .defaultHandler((state, action) => {
+      // @dts-jest:pass:snap -> T.EmptyAction<"INCREMENT"> | T.EmptyAction<"DECREMENT">
+      action;
+
+      return state - 1;
+    });
+  // @dts-jest:pass:snap -> Record<"ADD", (state: number, action: T.PayloadAction<"ADD", number> | T.EmptyAction<"INCREMENT"> | T.EmptyAction<"DECREMENT">) => number>
+  counterReducer5.handlers;
+  // @dts-jest:pass
+  Object.keys({ ...counterReducer5.handlers }); // => [ "ADD"]
+  // @dts-jest:pass
+  Object.keys({ ...reducerTest.handlers }); // => []
+
   {
     [
       counterReducer1,
@@ -254,5 +303,41 @@ const initialState = 0;
       // @dts-jest:pass
       fn(0, add(4)); // => 4
     });
+    counterReducer5(0, increment());
+    counterReducer5(0, add(4));
   }
 }
+
+describe('defaultHandler', () => {
+  it('handles actions without an explicit handler', () => {
+    const reducer = createReducer<number, ActionType<typeof actions>>(0)
+      .handleAction(add, (state, action) => state + action.payload)
+      .defaultHandler(state => state - 1);
+
+    expect(reducer(0, add(4))).toBe(4);
+    expect(reducer(0, increment())).toBe(-1);
+    expect(reducer(0, decrement())).toBe(-1);
+  });
+
+  it('does not run for Redux internal actions by default', () => {
+    const reducer = createReducer<number, ActionType<typeof actions>>(0)
+      .handleAction(add, (state, action) => state + action.payload)
+      .defaultHandler(() => 100);
+
+    expect(reducer(undefined, { type: '@@redux/INIT.test' } as any)).toBe(0);
+    expect(
+      reducer(undefined, { type: '@@redux/PROBE_UNKNOWN_ACTION.test' } as any)
+    ).toBe(0);
+  });
+
+  it('can opt into running for Redux internal actions', () => {
+    const reducer = createReducer<number, ActionType<typeof actions>>(0)
+      .handleAction(add, (state, action) => state + action.payload)
+      .defaultHandler(() => 100, true);
+
+    expect(reducer(undefined, { type: '@@redux/INIT.test' } as any)).toBe(100);
+    expect(
+      reducer(undefined, { type: '@@redux/PROBE_UNKNOWN_ACTION.test' } as any)
+    ).toBe(100);
+  });
+});
