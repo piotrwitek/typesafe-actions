@@ -97,6 +97,7 @@ _Found it useful? Want more updates?_
     - [`createAsyncAction`](#createasyncaction)
   - [Reducer-Creators API](#reducer-creators-api)
     - [`createReducer`](#createreducer)
+    - [`createAsyncReducer`](#createasyncreducer)
   - [Action-Helpers API](#action-helpers-api)
     - [`getType`](#gettype)
     - [`isActionOf`](#isactionof)
@@ -816,6 +817,96 @@ const bigReducer = createReducer<State, Action>(0, {
   ...newCounterReducer.handlers, // typesafe
   SUBTRACT: decrementReducer.handlers.DECREMENT, // <= error, wrong type
 })
+```
+
+#### `createAsyncReducer`
+
+_Create a typesafe reducer for async action-creator objects._
+
+```ts
+createAsyncReducer(asyncAction, initialState, {
+  request?,
+  success?,
+  failure?,
+  cancel?,
+})
+```
+
+Examples:
+[> Advanced Usage Examples](src/create-async-reducer.spec.ts)
+
+```ts
+import { createAsyncAction, createAsyncReducer } from 'typesafe-actions';
+
+type User = { firstName: string; lastName: string };
+
+type State = {
+  loading: boolean;
+  data: User | null;
+  error: Error | null;
+};
+
+const initialState: State = {
+  loading: false,
+  data: null,
+  error: null,
+};
+
+const fetchCurrentUserActions = createAsyncAction(
+  'FETCH_CURRENT_USER_REQUEST',
+  'FETCH_CURRENT_USER_SUCCESS',
+  'FETCH_CURRENT_USER_FAILURE'
+)<undefined, User, Error>();
+
+const currentUserReducer = createAsyncReducer(
+  fetchCurrentUserActions,
+  initialState,
+  {
+    request: state => ({
+      ...state,
+      loading: true,
+    }),
+    success: (state, action) => ({
+      loading: false,
+      data: action.payload,
+      error: null,
+    }),
+    failure: (state, action) => ({
+      ...state,
+      loading: false,
+      error: action.payload,
+    }),
+  }
+);
+```
+
+`createAsyncReducer` is also useful when building generic reducer factories.
+Each handler receives the precise action type for the matching async action
+creator, so factories can access `success` and `failure` payloads without
+switch statements or manual type casts.
+
+```ts
+import {
+  AsyncActionCreatorMap,
+  createAsyncReducer,
+  EmptyAction,
+  PayloadAction,
+} from 'typesafe-actions';
+
+const createErrorReducer = <
+  TSuccess,
+  TAsyncAction extends AsyncActionCreatorMap<
+    EmptyAction<string>,
+    PayloadAction<string, TSuccess>,
+    PayloadAction<string, Error>
+  >
+>(
+  asyncAction: TAsyncAction
+) =>
+  createAsyncReducer<Error | null, TAsyncAction>(asyncAction, null, {
+    success: () => null,
+    failure: (state, action) => action.payload,
+  });
 ```
 
 [⇧ back to top](#table-of-contents)
