@@ -73,6 +73,9 @@ _Found it useful? Want more updates?_
 
 - [Installation](#installation)
 - [Tutorial v4 (v5 is WIP #188)](#tutorial-v4-v5-is-wip-188)
+  - [v5 quick-start: two alternative paths](#v5-quick-start-two-alternative-paths)
+    - [Path A: action-creators only (no exported type constants)](#path-a-action-creators-only-no-exported-type-constants)
+    - [Path B: keep explicit type constants](#path-b-keep-explicit-type-constants)
   - [Constants](#constants)
   - [Actions](#actions)
     - [1. Basic actions](#1-basic-actions)
@@ -97,7 +100,6 @@ _Found it useful? Want more updates?_
     - [`createAsyncAction`](#createasyncaction)
   - [Reducer-Creators API](#reducer-creators-api)
     - [`createReducer`](#createreducer)
-    - [`createAsyncReducer`](#createasyncreducer)
   - [Action-Helpers API](#action-helpers-api)
     - [`getType`](#gettype)
     - [`isActionOf`](#isactionof)
@@ -145,6 +147,59 @@ To showcase the flexibility and the power of the **type-safety** provided by thi
 
 > **WARNING**  
 > Please make sure that you are familiar with the following concepts of programming languages to be able to follow along: [Type Inference](https://www.typescriptlang.org/docs/handbook/type-inference.html), [Control flow analysis](https://github.com/Microsoft/TypeScript/wiki/What%27s-new-in-TypeScript#control-flow-based-type-analysis), [Tagged union types](https://github.com/Microsoft/TypeScript/wiki/What%27s-new-in-TypeScript#tagged-union-types), [Generics](https://www.typescriptlang.org/docs/handbook/generics.html) and [Advanced Types](https://www.typescriptlang.org/docs/handbook/advanced-types.html).
+
+### v5 quick-start: two alternative paths
+
+If you are starting a new `v5` codebase, there are two practical setup paths:
+
+#### Path A: action-creators only (no exported type constants)
+
+Use action creators as the single source of truth and derive all action unions from them.
+
+```ts
+import { ActionType, createAction, createReducer, getType } from 'typesafe-actions';
+
+export const increment = createAction('counter/INCREMENT')();
+export const add = createAction('counter/ADD')<number>();
+
+const actions = { increment, add };
+type CounterAction = ActionType<typeof actions>;
+
+type CounterState = number;
+
+export const counterReducer = createReducer<CounterState, CounterAction>(0)
+  .handleAction(increment, state => state + 1)
+  .handleAction(add, (state, action) => state + action.payload);
+
+export const incrementType = getType(increment); // "counter/INCREMENT"
+```
+
+Choose this path when you want less boilerplate and better refactor ergonomics.
+
+#### Path B: keep explicit type constants
+
+Keep string constants for teams that prefer explicit, centralized type declarations.
+
+```ts
+import { ActionType, createAction, createReducer } from 'typesafe-actions';
+
+export const INCREMENT = 'counter/INCREMENT';
+export const ADD = 'counter/ADD';
+
+export const increment = createAction(INCREMENT)();
+export const add = createAction(ADD)<number>();
+
+const actions = { increment, add };
+type CounterAction = ActionType<typeof actions>;
+
+export const counterReducer = createReducer<number, CounterAction>(0, {
+  [INCREMENT]: state => state + 1,
+  [ADD]: (state, action) => state + action.payload,
+});
+```
+
+Choose this path when your team already has conventions around explicit constants
+or shared contracts.
 
 [⇧ back to top](#table-of-contents)
 
@@ -817,96 +872,6 @@ const bigReducer = createReducer<State, Action>(0, {
   ...newCounterReducer.handlers, // typesafe
   SUBTRACT: decrementReducer.handlers.DECREMENT, // <= error, wrong type
 })
-```
-
-#### `createAsyncReducer`
-
-_Create a typesafe reducer for async action-creator objects._
-
-```ts
-createAsyncReducer(asyncAction, initialState, {
-  request?,
-  success?,
-  failure?,
-  cancel?,
-})
-```
-
-Examples:
-[> Advanced Usage Examples](src/create-async-reducer.spec.ts)
-
-```ts
-import { createAsyncAction, createAsyncReducer } from 'typesafe-actions';
-
-type User = { firstName: string; lastName: string };
-
-type State = {
-  loading: boolean;
-  data: User | null;
-  error: Error | null;
-};
-
-const initialState: State = {
-  loading: false,
-  data: null,
-  error: null,
-};
-
-const fetchCurrentUserActions = createAsyncAction(
-  'FETCH_CURRENT_USER_REQUEST',
-  'FETCH_CURRENT_USER_SUCCESS',
-  'FETCH_CURRENT_USER_FAILURE'
-)<undefined, User, Error>();
-
-const currentUserReducer = createAsyncReducer(
-  fetchCurrentUserActions,
-  initialState,
-  {
-    request: state => ({
-      ...state,
-      loading: true,
-    }),
-    success: (state, action) => ({
-      loading: false,
-      data: action.payload,
-      error: null,
-    }),
-    failure: (state, action) => ({
-      ...state,
-      loading: false,
-      error: action.payload,
-    }),
-  }
-);
-```
-
-`createAsyncReducer` is also useful when building generic reducer factories.
-Each handler receives the precise action type for the matching async action
-creator, so factories can access `success` and `failure` payloads without
-switch statements or manual type casts.
-
-```ts
-import {
-  AsyncActionCreatorMap,
-  createAsyncReducer,
-  EmptyAction,
-  PayloadAction,
-} from 'typesafe-actions';
-
-const createErrorReducer = <
-  TSuccess,
-  TAsyncAction extends AsyncActionCreatorMap<
-    EmptyAction<string>,
-    PayloadAction<string, TSuccess>,
-    PayloadAction<string, Error>
-  >
->(
-  asyncAction: TAsyncAction
-) =>
-  createAsyncReducer<Error | null, TAsyncAction>(asyncAction, null, {
-    success: () => null,
-    failure: (state, action) => action.payload,
-  });
 ```
 
 [⇧ back to top](#table-of-contents)
