@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createAsyncEpic testType<Observable<FetchUserOutputAction>>(
+      epicCheck(of(fetchUserAsync.request('42')), state$, services)
+    ) (type) should match snapshot 1`] = `"Observable<FetchUserOutputAction>"`;
+
+exports[`createAsyncEpic testType<Services>(service) (type) should match snapshot 1`] = `"Services"`;
+
+exports[`createAsyncEpic testType<string>(action.payload) (type) should match snapshot 1`] = `"string"`;
+
+exports[`createAsyncEpic testType<string>(state.value.token) (type) should match snapshot 1`] = `"string"`;
