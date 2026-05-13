@@ -450,6 +450,62 @@ const fetchTodosFlow: Epic<RootAction, RootAction, RootState, Services> = (actio
   );
 ```
 
+#### Understanding the `Services` type in epics
+
+In `Epic<RootAction, RootAction, RootState, Services>`, the 4th generic
+parameter (`Services`) describes dependencies injected into epics. It is a
+typed replacement for hardcoded imports (HTTP clients, analytics, storage,
+feature flags, etc.), which makes runtime wiring explicit and tests easier.
+
+Define a shared service contract:
+
+```ts
+// services.ts
+export type Services = {
+  todosApi: {
+    getAll: (query: string) => Promise<Todo[]>;
+  };
+  toastService: {
+    success: (message: string) => void;
+  };
+};
+```
+
+Use it in epic signatures so injected dependencies are strongly typed:
+
+```ts
+// epics.ts
+import { Epic } from 'redux-observable';
+
+export const fetchTodosFlow: Epic<
+  RootAction,
+  RootAction,
+  RootState,
+  Services
+> = (action$, state$, { todosApi, toastService }) =>
+  action$.pipe(
+    filter(isActionOf(fetchTodosAsync.request)),
+    switchMap((action) =>
+      from(todosApi.getAll(action.payload)).pipe(
+        tap(() => toastService.success('Loaded todos')),
+        map(fetchTodosAsync.success),
+        catchError((message: string) => of(fetchTodosAsync.failure(message)))
+      )
+    )
+  );
+```
+
+In tests, pass lightweight mocks instead of real side-effect clients:
+
+```ts
+const servicesMock: Services = {
+  todosApi: { getAll: async () => [{ id: '1', title: 'mock' }] },
+  toastService: { success: () => undefined },
+};
+```
+
+This keeps epics deterministic, easier to reason about, and fully type-safe.
+
 #### With `redux-saga` sagas
 With sagas it's not possible to achieve the same degree of type-safety as with epics because of limitations coming from `redux-saga` API design.
 
