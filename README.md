@@ -73,6 +73,9 @@ _Found it useful? Want more updates?_
 
 - [Installation](#installation)
 - [Tutorial v4 (v5 is WIP #188)](#tutorial-v4-v5-is-wip-188)
+  - [v5 quick-start: two alternative paths](#v5-quick-start-two-alternative-paths)
+    - [Path A: action-creators only (no exported type constants)](#path-a-action-creators-only-no-exported-type-constants)
+    - [Path B: keep explicit type constants](#path-b-keep-explicit-type-constants)
   - [Constants](#constants)
   - [Actions](#actions)
     - [1. Basic actions](#1-basic-actions)
@@ -144,6 +147,59 @@ To showcase the flexibility and the power of the **type-safety** provided by thi
 
 > **WARNING**  
 > Please make sure that you are familiar with the following concepts of programming languages to be able to follow along: [Type Inference](https://www.typescriptlang.org/docs/handbook/type-inference.html), [Control flow analysis](https://github.com/Microsoft/TypeScript/wiki/What%27s-new-in-TypeScript#control-flow-based-type-analysis), [Tagged union types](https://github.com/Microsoft/TypeScript/wiki/What%27s-new-in-TypeScript#tagged-union-types), [Generics](https://www.typescriptlang.org/docs/handbook/generics.html) and [Advanced Types](https://www.typescriptlang.org/docs/handbook/advanced-types.html).
+
+### v5 quick-start: two alternative paths
+
+If you are starting a new `v5` codebase, there are two practical setup paths:
+
+#### Path A: action-creators only (no exported type constants)
+
+Use action creators as the single source of truth and derive all action unions from them.
+
+```ts
+import { ActionType, createAction, createReducer, getType } from 'typesafe-actions';
+
+export const increment = createAction('counter/INCREMENT')();
+export const add = createAction('counter/ADD')<number>();
+
+const actions = { increment, add };
+type CounterAction = ActionType<typeof actions>;
+
+type CounterState = number;
+
+export const counterReducer = createReducer<CounterState, CounterAction>(0)
+  .handleAction(increment, state => state + 1)
+  .handleAction(add, (state, action) => state + action.payload);
+
+export const incrementType = getType(increment); // "counter/INCREMENT"
+```
+
+Choose this path when you want less boilerplate and better refactor ergonomics.
+
+#### Path B: keep explicit type constants
+
+Keep string constants for teams that prefer explicit, centralized type declarations.
+
+```ts
+import { ActionType, createAction, createReducer } from 'typesafe-actions';
+
+export const INCREMENT = 'counter/INCREMENT';
+export const ADD = 'counter/ADD';
+
+export const increment = createAction(INCREMENT)();
+export const add = createAction(ADD)<number>();
+
+const actions = { increment, add };
+type CounterAction = ActionType<typeof actions>;
+
+export const counterReducer = createReducer<number, CounterAction>(0, {
+  [INCREMENT]: state => state + 1,
+  [ADD]: (state, action) => state + action.payload,
+});
+```
+
+Choose this path when your team already has conventions around explicit constants
+or shared contracts.
 
 [⇧ back to top](#table-of-contents)
 
