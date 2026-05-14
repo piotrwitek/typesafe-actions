@@ -425,7 +425,7 @@ This will mitigate **redux verbosity** and greatly reduce the maintenance cost o
 
 ```ts
 // actions.ts
-import { createAsyncAction } from 'typesafe-actions';
+import { createAsyncAction, isActionOf } from 'typesafe-actions';
 
 const fetchTodosAsync = createAsyncAction(
   'FETCH_TODOS_REQUEST',
@@ -435,6 +435,10 @@ const fetchTodosAsync = createAsyncAction(
 )<string, Todo[], Error, string>();
 
 // epics.ts
+import { Epic } from 'redux-observable';
+import { from, of } from 'rxjs';
+import { catchError, filter, map, switchMap, takeUntil } from 'rxjs/operators';
+
 import { fetchTodosAsync } from './actions';
 
 const fetchTodosFlow: Epic<RootAction, RootAction, RootState, Services> = (action$, state$, { todosApi }) =>
@@ -443,7 +447,7 @@ const fetchTodosFlow: Epic<RootAction, RootAction, RootState, Services> = (actio
     switchMap(action =>
       from(todosApi.getAll(action.payload)).pipe(
         map(fetchTodosAsync.success),
-        catchError((message: string) => of(fetchTodosAsync.failure(message))),
+        catchError((error: Error) => of(fetchTodosAsync.failure(error))),
         takeUntil(action$.pipe(filter(isActionOf(fetchTodosAsync.cancel)))),
       )
     )
