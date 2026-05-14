@@ -8,6 +8,7 @@ const {
   withPayloadMeta,
   withMappedPayload,
   withMappedPayloadMeta,
+  asyncAction,
 } = actions;
 
 /** HELPERS */
@@ -30,6 +31,23 @@ const mappedPayloadMetaExpected = {
   payload: 2,
   meta: 'metaValue',
 };
+const asyncRequestAction = asyncAction.request();
+const asyncRequestExpected = { type: 'FETCH_USER_REQUEST' };
+const asyncSuccessPayload = {
+  firstName: 'Ada',
+  lastName: 'Lovelace',
+};
+const asyncSuccessAction = asyncAction.success(asyncSuccessPayload);
+const asyncSuccessExpected = {
+  type: 'FETCH_USER_SUCCESS',
+  payload: asyncSuccessPayload,
+};
+const asyncFailurePayload = new Error('Unable to fetch user');
+const asyncFailureAction = asyncAction.failure(asyncFailurePayload);
+const asyncFailureExpected = {
+  type: 'FETCH_USER_FAILURE',
+  payload: asyncFailurePayload,
+};
 
 const $action = [
   typeOnlyAction,
@@ -37,6 +55,9 @@ const $action = [
   payloadMetaAction,
   mappedPayloadAction,
   mappedPayloadMetaAction,
+  asyncRequestAction,
+  asyncSuccessAction,
+  asyncFailureAction,
 ];
 
 /** TESTS */
@@ -136,4 +157,23 @@ const $action = [
     // @dts-jest:pass:snap
     action; // => {"payload": 1234, "type": "WITH_PAYLOAD"}
   }
+}
+
+// @dts-jest:group should work with async action-creator objects
+{
+  // @dts-jest:pass:snap
+  isActionOf(asyncAction)(asyncRequestAction); // => true
+  // @dts-jest:pass:snap
+  isActionOf(asyncAction, asyncSuccessAction); // => true
+  // @dts-jest:pass:snap
+  isActionOf(asyncAction)(asyncFailureAction); // => true
+  // @dts-jest:pass:snap
+  isActionOf(asyncAction, payloadAction); // => false
+}
+
+// @dts-jest:group should correctly assert for async action-creator objects
+{
+  const actual = $action.filter(isActionOf(asyncAction));
+  // @dts-jest:pass:snap
+  actual; // => [asyncRequestExpected,asyncSuccessExpected,asyncFailureExpected]
 }
