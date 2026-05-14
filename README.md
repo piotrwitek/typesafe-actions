@@ -476,6 +476,11 @@ Use it in epic signatures so injected dependencies are strongly typed:
 ```ts
 // epics.ts
 import { Epic } from 'redux-observable';
+import { of, from } from 'rxjs';
+import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
+import { isActionOf } from 'typesafe-actions';
+import { fetchTodosAsync } from './actions';
+import { Services } from './services';
 
 export const fetchTodosFlow: Epic<
   RootAction,
@@ -489,7 +494,13 @@ export const fetchTodosFlow: Epic<
       from(todosApi.getAll(action.payload)).pipe(
         tap(() => toastService.success('Loaded todos')),
         map(fetchTodosAsync.success),
-        catchError((message: string) => of(fetchTodosAsync.failure(message)))
+        catchError((error: unknown) =>
+          of(
+            fetchTodosAsync.failure(
+              error instanceof Error ? error.message : String(error)
+            )
+          )
+        )
       )
     )
   );
