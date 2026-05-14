@@ -498,13 +498,7 @@ export const fetchTodosFlow: Epic<
       from(todosApi.getAll(action.payload)).pipe(
         tap(() => toastService.success('Loaded todos')),
         map(fetchTodosAsync.success),
-        catchError((error: unknown) =>
-          of(
-            fetchTodosAsync.failure(
-              error instanceof Error ? error.message : String(error)
-            )
-          )
-        )
+        catchError((error: Error) => of(fetchTodosAsync.failure(error)))
       )
     )
   );
