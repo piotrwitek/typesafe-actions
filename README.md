@@ -97,7 +97,7 @@ _Found it useful? Want more updates?_
     - [`createAsyncAction`](#createasyncaction)
   - [Reducer-Creators API](#reducer-creators-api)
     - [`createReducer`](#createreducer)
-    - [`createAsyncReducer`](#createasyncreducer)
+    - [`createAsyncEpic`](#createasyncepic)
   - [Action-Helpers API](#action-helpers-api)
     - [`getType`](#gettype)
     - [`isActionOf`](#isactionof)
@@ -819,95 +819,47 @@ const bigReducer = createReducer<State, Action>(0, {
 })
 ```
 
-#### `createAsyncReducer`
+#### `createAsyncEpic`
 
-_Create a typesafe reducer for async action-creator objects._
+_Create a typesafe `redux-observable` epic factory for async action-creator objects._
 
 ```ts
-createAsyncReducer(asyncAction, initialState, {
-  request?,
-  success?,
-  failure?,
-  cancel?,
+createAsyncEpic(asyncAction, handler, {
+  mapError?,
 })
 ```
 
-Examples:
-[> Advanced Usage Examples](src/create-async-reducer.spec.ts)
+The `handler` receives the request action and should return an `ObservableInput`
+with a payload for the matching success action creator.
+Any thrown error or stream error is mapped to the failure action.
 
 ```ts
-import { createAsyncAction, createAsyncReducer } from 'typesafe-actions';
+import { from } from 'rxjs';
+import { createAsyncAction, createAsyncEpic } from 'typesafe-actions';
 
-type User = { firstName: string; lastName: string };
+type Todo = { id: string; title: string };
+type Services = { todosApi: { getAll: (filter: string) => Promise<Todo[]> } };
 
-type State = {
-  loading: boolean;
-  data: User | null;
-  error: Error | null;
-};
+const fetchTodosAsync = createAsyncAction(
+  'FETCH_TODOS_REQUEST',
+  'FETCH_TODOS_SUCCESS',
+  'FETCH_TODOS_FAILURE',
+  'FETCH_TODOS_CANCEL'
+)<string, Todo[], Error, string>();
 
-const initialState: State = {
-  loading: false,
-  data: null,
-  error: null,
-};
-
-const fetchCurrentUserActions = createAsyncAction(
-  'FETCH_CURRENT_USER_REQUEST',
-  'FETCH_CURRENT_USER_SUCCESS',
-  'FETCH_CURRENT_USER_FAILURE'
-)<undefined, User, Error>();
-
-const currentUserReducer = createAsyncReducer(
-  fetchCurrentUserActions,
-  initialState,
+const fetchTodosFlow = createAsyncEpic(
+  fetchTodosAsync,
+  (action, _state$, services: Services) =>
+    from(services.todosApi.getAll(action.payload)),
   {
-    request: state => ({
-      ...state,
-      loading: true,
-    }),
-    success: (state, action) => ({
-      loading: false,
-      data: action.payload,
-      error: null,
-    }),
-    failure: (state, action) => ({
-      ...state,
-      loading: false,
-      error: action.payload,
-    }),
+    mapError: error =>
+      error instanceof Error ? error : new Error(String(error)),
   }
 );
 ```
 
-`createAsyncReducer` is also useful when building generic reducer factories.
-Each handler receives the precise action type for the matching async action
-creator, so factories can access `success` and `failure` payloads without
-switch statements or manual type casts.
-
-```ts
-import {
-  AsyncActionCreatorMap,
-  createAsyncReducer,
-  EmptyAction,
-  PayloadAction,
-} from 'typesafe-actions';
-
-const createErrorReducer = <
-  TSuccess,
-  TAsyncAction extends AsyncActionCreatorMap<
-    EmptyAction<string>,
-    PayloadAction<string, TSuccess>,
-    PayloadAction<string, Error>
-  >
->(
-  asyncAction: TAsyncAction
-) =>
-  createAsyncReducer<Error | null, TAsyncAction>(asyncAction, null, {
-    success: () => null,
-    failure: (state, action) => action.payload,
-  });
-```
+`createAsyncEpic` also supports cancellation when your async action map includes
+the `cancel` action creator (`fetchTodosAsync.cancel` in the example above).
 
 [⇧ back to top](#table-of-contents)
 
