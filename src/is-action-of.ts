@@ -85,16 +85,13 @@ export function isActionOf<AC extends ActionCreatorOrAsyncAction>(
     throwIsEmpty(1);
   }
 
-  const actionCreators = (Array.isArray(actionCreatorOrCreators)
+  const actionCreators: Array<ActionCreator<{ type: string }>> = [];
+  const creatorsOrAsyncActions = Array.isArray(actionCreatorOrCreators)
     ? actionCreatorOrCreators
-    : [actionCreatorOrCreators]
-  ).reduce(
-    (flattenedActionCreators, actionCreatorOrAsyncAction) =>
-      flattenedActionCreators.concat(
-        flattenActionCreators(actionCreatorOrAsyncAction)
-      ),
-    [] as Array<ActionCreator<{ type: string }>>
-  );
+    : [actionCreatorOrCreators];
+  creatorsOrAsyncActions.forEach(actionCreatorOrAsyncAction => {
+    actionCreators.push(...flattenActionCreators(actionCreatorOrAsyncAction));
+  });
 
   actionCreators.forEach(checkInvalidActionCreatorInArray);
 
