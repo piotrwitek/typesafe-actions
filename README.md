@@ -97,6 +97,7 @@ _Found it useful? Want more updates?_
     - [`createAsyncAction`](#createasyncaction)
   - [Reducer-Creators API](#reducer-creators-api)
     - [`createReducer`](#createreducer)
+    - [`createAsyncEpic`](#createasyncepic)
   - [Action-Helpers API](#action-helpers-api)
     - [`getType`](#gettype)
     - [`isActionOf`](#isactionof)
@@ -817,6 +818,48 @@ const bigReducer = createReducer<State, Action>(0, {
   SUBTRACT: decrementReducer.handlers.DECREMENT, // <= error, wrong type
 })
 ```
+
+#### `createAsyncEpic`
+
+_Create a typesafe `redux-observable` epic factory for async action-creator objects._
+
+```ts
+createAsyncEpic(asyncAction, handler, {
+  mapError?,
+})
+```
+
+The `handler` receives the request action and should return an `ObservableInput`
+with a payload for the matching success action creator.
+Any thrown error or stream error is mapped to the failure action.
+
+```ts
+import { from } from 'rxjs';
+import { createAsyncAction, createAsyncEpic } from 'typesafe-actions';
+
+type Todo = { id: string; title: string };
+type Services = { todosApi: { getAll: (filter: string) => Promise<Todo[]> } };
+
+const fetchTodosAsync = createAsyncAction(
+  'FETCH_TODOS_REQUEST',
+  'FETCH_TODOS_SUCCESS',
+  'FETCH_TODOS_FAILURE',
+  'FETCH_TODOS_CANCEL'
+)<string, Todo[], Error, string>();
+
+const fetchTodosFlow = createAsyncEpic(
+  fetchTodosAsync,
+  (action, _state$, services: Services) =>
+    from(services.todosApi.getAll(action.payload)),
+  {
+    mapError: error =>
+      error instanceof Error ? error : new Error(String(error)),
+  }
+);
+```
+
+`createAsyncEpic` also supports cancellation when your async action map includes
+the `cancel` action creator (`fetchTodosAsync.cancel` in the example above).
 
 [⇧ back to top](#table-of-contents)
 
