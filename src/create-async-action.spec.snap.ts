@@ -1,8 +1,29 @@
 import * as TH from './type-helpers';
 import { AsyncActionCreatorBuilder } from './type-helpers';
 import { createAsyncAction } from './create-async-action';
+import { testType } from './utils/testing';
 
 type User = { firstName: string; lastName: string };
+
+// @dts-jest:group async action metadata
+{
+  const fetchUsersAsync = createAsyncAction(
+    'FETCH_USERS_REQUEST',
+    'FETCH_USERS_SUCCESS',
+    'FETCH_USERS_FAILURE'
+  )<undefined, User[], Error>();
+
+  // @dts-jest:pass:snap -> "FETCH_USERS_REQUEST"
+  fetchUsersAsync.request.type; // => 'FETCH_USERS_REQUEST'
+  // @dts-jest:pass:snap -> boolean
+  fetchUsersAsync.success.match(fetchUsersAsync.success([])); // => true
+
+  const action: TH.Action = { type: 'FETCH_USERS_SUCCESS' };
+  if (fetchUsersAsync.success.match(action)) {
+    // @dts-jest:pass:snap -> TH.PayloadAction<"FETCH_USERS_SUCCESS", User[]>
+    testType<TH.PayloadAction<'FETCH_USERS_SUCCESS', User[]>>(action);
+  }
+}
 
 // @dts-jest:group async action without cancel
 {

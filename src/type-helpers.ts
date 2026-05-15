@@ -76,16 +76,18 @@ export type PayloadMetaAction<TType extends TypeConstant, TPayload, TMeta> = {
 /**
  * @desc Action Creator producing EmptyAction
  */
-export type EmptyActionCreator<TType extends TypeConstant> = () => EmptyAction<
+export type EmptyActionCreator<TType extends TypeConstant> = (() => EmptyAction<
   TType
->;
+>) &
+  ActionCreatorMetadata<TType, EmptyAction<TType>>;
 
 /**
  * @desc Action Creator producing PayloadAction
  */
-export type PayloadActionCreator<TType extends TypeConstant, TPayload> = (
+export type PayloadActionCreator<TType extends TypeConstant, TPayload> = ((
   payload: TPayload
-) => PayloadAction<TType, TPayload>;
+) => PayloadAction<TType, TPayload>) &
+  ActionCreatorMetadata<TType, PayloadAction<TType, TPayload>>;
 
 // /**
 //  * @desc Action Creator producing MetaAction
@@ -102,16 +104,33 @@ export type PayloadMetaActionCreator<
   TType extends TypeConstant,
   TPayload,
   TMeta
-> = (
+> = ((
   payload: TPayload,
   meta: TMeta
-) => PayloadMetaAction<TType, TPayload, TMeta>;
+) => PayloadMetaAction<TType, TPayload, TMeta>) &
+  ActionCreatorMetadata<TType, PayloadMetaAction<TType, TPayload, TMeta>>;
 
 /**
  * @desc Type representing type getter on Action Creator instance
  */
-export interface ActionCreatorTypeMetadata<TType extends TypeConstant> {
+export interface ActionCreatorTypeMetadata<
+  TType extends TypeConstant,
+  TAction extends Action<TType> = Action<TType>
+> {
   getType?: () => TType;
+  type?: TType;
+  match?: (action: Action) => action is TAction;
+}
+
+/**
+ * @desc Type representing Redux Toolkit-compatible metadata on Action Creator instance
+ */
+export interface ActionCreatorMetadata<
+  TType extends TypeConstant,
+  TAction extends Action<TType> = Action<TType>
+> extends ActionCreatorTypeMetadata<TType, TAction> {
+  type: TType;
+  match: (action: Action) => action is TAction;
 }
 
 /**
