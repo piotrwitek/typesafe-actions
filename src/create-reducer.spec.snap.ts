@@ -94,6 +94,21 @@ const initialState = 0;
       fn(0, add(4)); // => 4
     });
   }
+
+  const loadingReducer = createReducer<boolean, ActionType<typeof actions>>(false)
+    .handleAction(add, () => true)
+    .handleDefault((state, action) => {
+      // @dts-jest:pass:snap -> T.EmptyAction<"INCREMENT"> | T.EmptyAction<"DECREMENT">
+      action;
+      return false;
+    });
+
+  {
+    // @dts-jest:pass
+    loadingReducer(false, add(1)); // => true
+    // @dts-jest:pass
+    loadingReducer(true, increment()); // => false
+  }
 }
 
 // @dts-jest:group Type refinement checks
