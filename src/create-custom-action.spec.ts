@@ -8,6 +8,29 @@ import { createCustomAction } from './create-custom-action';
   actionCreator.toString(); // => 'CREATE_CUSTOM_ACTION'
 }
 
+// @dts-jest:group type property metadata
+{
+  const actionCreator = createCustomAction('CREATE_CUSTOM_ACTION');
+  // @dts-jest:pass:snap
+  actionCreator.type; // => 'CREATE_CUSTOM_ACTION'
+}
+
+// @dts-jest:group match() method should narrow action type
+{
+  const actionCreator = createCustomAction(
+    'CREATE_CUSTOM_ACTION',
+    (id: number) => ({ payload: id })
+  );
+  const action:
+    | { type: 'CREATE_CUSTOM_ACTION'; payload: number }
+    | { type: 'OTHER' } = actionCreator(1);
+
+  if (actionCreator.match!(action)) {
+    // @dts-jest:pass:snap
+    action; // => { type: 'CREATE_CUSTOM_ACTION', payload: number }
+  }
+}
+
 // @dts-jest:group with symbol
 {
   const CREATE_CUSTOM_ACTION = Symbol(1);

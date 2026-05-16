@@ -1,4 +1,5 @@
 import { ActionCreatorTypeMetadata } from './type-helpers';
+import { getType } from './get-type';
 import {
   checkInvalidActionCreatorInArray,
   checkIsEmpty,
@@ -46,7 +47,10 @@ export function isActionOf<AC extends ActionCreator<{ type: string }>>(
 
   const assertFn = (_action: { type: string }) =>
     actionCreators.some(
-      actionCreator => _action.type === actionCreator.getType!()
+      actionCreator =>
+        actionCreator.match != null
+          ? actionCreator.match(_action)
+          : _action.type === getType(actionCreator)
     );
 
   // 1 arg case => return curried version

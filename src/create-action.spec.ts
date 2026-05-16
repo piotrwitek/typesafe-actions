@@ -8,6 +8,25 @@ import { createAction } from './create-action';
   actionCreator.toString(); // => 'CREATE_ACTION'
 }
 
+// @dts-jest:group type property metadata
+{
+  const actionCreator = createAction('CREATE_ACTION')();
+  // @dts-jest:pass:snap
+  actionCreator.type; // => 'CREATE_ACTION'
+}
+
+// @dts-jest:group match() method should narrow action type
+{
+  const actionCreator = createAction('CREATE_ACTION')<number>();
+  const action: { type: 'CREATE_ACTION'; payload: number } | { type: 'OTHER' } =
+    actionCreator(1);
+
+  if (actionCreator.match!(action)) {
+    // @dts-jest:pass:snap
+    action; // => { type: 'CREATE_ACTION', payload: number }
+  }
+}
+
 // @dts-jest:group with symbol
 {
   const CREATE_ACTION = Symbol(1);

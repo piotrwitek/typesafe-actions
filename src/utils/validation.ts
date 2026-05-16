@@ -15,7 +15,11 @@ export function throwIsEmpty(argPosition: number): never {
 export function checkValidActionCreator(
   arg: unknown
 ): arg is ActionCreator<TypeConstant> {
-  return typeof arg === 'function' && 'getType' in arg;
+  return (
+    typeof arg === 'function' &&
+    ((arg as ActionCreatorTypeMetadata<TypeConstant>).getType != null ||
+      (arg as ActionCreatorTypeMetadata<TypeConstant>).type != null)
+  );
 }
 
 export function checkInvalidActionCreator(arg: unknown) {
@@ -36,7 +40,7 @@ export function checkInvalidActionCreatorInArray(
     throw new Error(
       `Argument contains array with empty element at index ${idx}`
     );
-  } else if (arg.getType == null) {
+  } else if (arg.getType == null && arg.type == null) {
     throw new Error(
       // tslint:disable-next-line:max-line-length
       `Argument contains array with invalid element at index ${idx}, it should be an action-creator instance from "typesafe-actions"`

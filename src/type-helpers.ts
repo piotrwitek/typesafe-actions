@@ -112,6 +112,10 @@ export type PayloadMetaActionCreator<
  */
 export interface ActionCreatorTypeMetadata<TType extends TypeConstant> {
   getType?: () => TType;
+  type?: TType;
+  match?: (
+    action: { type: TypeConstant }
+  ) => action is { type: TType };
 }
 
 /**
