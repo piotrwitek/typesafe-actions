@@ -16,6 +16,13 @@ describe('action creator metadata', () => {
     expect(creator.match({ type: 'OTHER_ACTION' })).toBe(false);
   });
 
+  it('returns false when matching nullish values', () => {
+    const creator = createCustomAction('CREATE_CUSTOM_ACTION');
+
+    expect(creator.match(null)).toBe(false);
+    expect(creator.match(undefined)).toBe(false);
+  });
+
   it('exposes the action type on createAction creators', () => {
     const creator = createAction('CREATE_ACTION')<number>();
 

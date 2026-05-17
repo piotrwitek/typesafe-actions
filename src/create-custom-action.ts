@@ -39,10 +39,8 @@ export function createCustomAction<
   const typeMeta = {
     type,
     getType: () => type,
-    match: (action: {
-      type: TypeConstant;
-    }): action is ResolveType<{ type: TType } & TReturn> =>
-      action.type === type,
+    match: (action: any): action is ResolveType<{ type: TType } & TReturn> =>
+      action != null && action.type === type,
     // redux-actions compatibility
     toString: () => type,
   } as ActionCreatorMetadata<TType, ResolveType<{ type: TType } & TReturn>>;

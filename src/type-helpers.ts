@@ -119,7 +119,7 @@ export interface ActionCreatorTypeMetadata<
 > {
   getType?: () => TType;
   type?: TType;
-  match?: (action: Action) => action is TAction;
+  match?: (action: any) => action is TAction;
 }
 
 /**
@@ -130,7 +130,7 @@ export interface ActionCreatorMetadata<
   TAction extends Action<TType> = Action<TType>
 > extends ActionCreatorTypeMetadata<TType, TAction> {
   type: TType;
-  match: (action: Action) => action is TAction;
+  match: (action: any) => action is TAction;
 }
 
 /**
