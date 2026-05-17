@@ -1,7 +1,6 @@
 import {
   TypeConstant,
   ActionCreatorBuilder,
-  ActionCreatorTypeMetadata,
   ActionBuilder,
 } from './type-helpers';
 import { createCustomAction } from './create-custom-action';

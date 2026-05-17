@@ -1,11 +1,27 @@
 import * as TH from './type-helpers';
 import { createAction } from './create-action';
+import { testType } from './utils/testing';
 
 // @dts-jest:group toString() method return a type
 {
   const actionCreator = createAction('CREATE_ACTION')();
   // @dts-jest:pass:snap -> string
   actionCreator.toString(); // => 'CREATE_ACTION'
+}
+
+// @dts-jest:group Redux Toolkit-compatible metadata
+{
+  const withPayload = createAction('CREATE_ACTION')<number>();
+  // @dts-jest:pass:snap -> "CREATE_ACTION"
+  withPayload.type; // => 'CREATE_ACTION'
+  // @dts-jest:pass:snap -> boolean
+  withPayload.match(withPayload(1)); // => true
+
+  const action: TH.Action = { type: 'CREATE_ACTION' };
+  if (withPayload.match(action)) {
+    // @dts-jest:pass:snap -> TH.PayloadAction<"CREATE_ACTION", number>
+    testType<TH.PayloadAction<'CREATE_ACTION', number>>(action);
+  }
 }
 
 // @dts-jest:group with symbol

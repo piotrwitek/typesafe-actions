@@ -34,6 +34,7 @@ export {
   EmptyActionCreator,
   PayloadActionCreator,
   PayloadMetaActionCreator,
+  ActionCreatorMetadata,
   ActionCreatorTypeMetadata,
   ActionBuilder,
   ActionCreatorBuilder,

@@ -1,5 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`async action metadata fetchUsersAsync.request.type (type) should match snapshot 1`] = `"\\"FETCH_USERS_REQUEST\\""`;
+
+exports[`async action metadata fetchUsersAsync.success.match(fetchUsersAsync.success([])) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`async action metadata testType<TH.PayloadAction<'FETCH_USERS_SUCCESS', User[]>>(action) (type) should match snapshot 1`] = `"TH.PayloadAction<\\"FETCH_USERS_SUCCESS\\", User[]>"`;
+
 exports[`async action with any type fetchUsersAsync.cancel (type) should match snapshot 1`] = `"Property 'cancel' does not exist on type '{ request: PayloadActionCreator<\\"FETCH_USERS_REQUEST\\", any>; success: PayloadActionCreator<\\"FETCH_USERS_SUCCESS\\", any[]>; failure: PayloadActionCreator<...>; }'."`;
 
 exports[`async action with any type fetchUsersAsync.failure(
