@@ -12,6 +12,12 @@ export { action } from './action';
 export { createAction } from './create-action';
 export { createCustomAction } from './create-custom-action';
 export { createAsyncAction } from './create-async-action';
+export {
+  createAsyncEpic,
+  AsyncEpicOutputAction,
+  CreateAsyncEpicOptions,
+} from './create-async-epic';
+export { createAsyncReducer, AsyncActionCreatorMap } from './create-async-reducer';
 export { createReducer } from './create-reducer';
 
 // action-helpers

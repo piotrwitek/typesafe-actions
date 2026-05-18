@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createAsyncReducer in generic factories currentUserReducer(
+      undefined,
+      fetchCurrentUserActions.success({
+        firstName: 'Piotr',
+        lastName: 'Witek',
+      })
+    ) (type) should match snapshot 1`] = `"AsyncState<User, Error>"`;
+
+exports[`createAsyncReducer reducer(
+      {
+        loading: true,
+        data: null,
+        error: null,
+      },
+      fetchUserAsync.cancel('route-change')
+    ) (type) should match snapshot 1`] = `"AsyncState<User, Error>"`;
+
+exports[`createAsyncReducer reducer(
+      undefined,
+      fetchUserAsync.failure(Error('reason'))
+    ) (type) should match snapshot 1`] = `"AsyncState<User, Error>"`;
+
+exports[`createAsyncReducer reducer(
+      undefined,
+      fetchUserAsync.request()
+    ) (type) should match snapshot 1`] = `"AsyncState<User, Error>"`;
+
+exports[`createAsyncReducer reducer(
+      undefined,
+      fetchUserAsync.success({
+        firstName: 'Piotr',
+        lastName: 'Witek',
+      })
+    ) (type) should match snapshot 1`] = `"AsyncState<User, Error>"`;
