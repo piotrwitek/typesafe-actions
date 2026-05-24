@@ -95,13 +95,16 @@ const initialState = 0;
     });
   }
 
-  const loadingReducer = createReducer<boolean, ActionType<typeof actions>>(false)
-    .handleAction(add, () => true)
-    .handleDefault((state, action) => {
-      // @dts-jest:pass:snap -> T.EmptyAction<"INCREMENT"> | T.EmptyAction<"DECREMENT">
-      action;
-      return false;
-    });
+  const loadingReducerWithoutDefault = createReducer<
+    boolean,
+    ActionType<typeof actions>
+  >(false).handleAction(add, () => true);
+  type LoadingDefaultAction = Parameters<
+    Parameters<typeof loadingReducerWithoutDefault.handleDefault>[0]
+  >[1];
+  // @dts-jest:pass:snap -> T.EmptyAction<"INCREMENT"> | T.EmptyAction<"DECREMENT">
+  ({} as LoadingDefaultAction);
+  const loadingReducer = loadingReducerWithoutDefault.handleDefault(() => false);
 
   {
     // @dts-jest:pass

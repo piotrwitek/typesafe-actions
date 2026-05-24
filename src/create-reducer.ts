@@ -157,7 +157,9 @@ export function createReducer<TState, TRootAction extends Action = RootAction>(
     | HandleActionChainApi<TState, TRootAction, TRootAction>
     | HandleTypeChainApi<TState, TRootAction, TRootAction>;
 
-  const defaultReducerHandler = ((reducer: any) => {
+  const defaultReducerHandler = (((
+    reducer: (state: TState, action: TRootAction) => TState
+  ) => {
     return createReducer<TState, TRootAction>(
       initialState,
       {
@@ -165,7 +167,7 @@ export function createReducer<TState, TRootAction extends Action = RootAction>(
       },
       reducer
     );
-  }) as HandleDefaultChainApi<TState, TRootAction, TRootAction>;
+  }) as unknown) as HandleDefaultChainApi<TState, TRootAction, TRootAction>;
 
   const chainApi = Object.assign(rootReducer, {
     handlers: { ...handlers },
