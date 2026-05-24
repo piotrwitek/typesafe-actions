@@ -760,6 +760,7 @@ createReducer<TState, TRootAction>(initialState)
   .handleAction([actionCreator1, actionCreator2, ...actionCreatorN], reducer)
   .handleType(type, reducer)
   .handleType([type1, type2, ...typeN], reducer)
+  .handleDefault(reducer)
 ```
 
 Examples:
@@ -803,6 +804,16 @@ const counterReducer = createReducer<State, Action>(0)
 const counterReducer = createReducer<State, Action>(0)
   .handleType('ADD', (state, action) => state + action.payload)
   .handleType('INCREMENT', (state, _) => state + 1);
+```
+
+**Default handler (fallback) style:**
+```ts
+type LoadingState = boolean;
+type Action = { type: 'FETCH_START' } | { type: 'FETCH_SUCCESS' } | { type: 'FETCH_FAILURE' };
+
+const loadingReducer = createReducer<LoadingState, Action>(false)
+  .handleType('FETCH_START', () => true)
+  .handleDefault(() => false);
 ```
 
 **Extend or compose reducers - every operation is completely typesafe:**

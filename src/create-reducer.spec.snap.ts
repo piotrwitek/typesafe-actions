@@ -94,6 +94,24 @@ const initialState = 0;
       fn(0, add(4)); // => 4
     });
   }
+
+  const loadingReducerWithoutDefault = createReducer<
+    boolean,
+    ActionType<typeof actions>
+  >(false).handleAction(add, () => true);
+  type LoadingDefaultAction = Parameters<
+    Parameters<typeof loadingReducerWithoutDefault.handleDefault>[0]
+  >[1];
+  // @dts-jest:pass:snap -> T.EmptyAction<"INCREMENT"> | T.EmptyAction<"DECREMENT">
+  ({} as LoadingDefaultAction);
+  const loadingReducer = loadingReducerWithoutDefault.handleDefault(() => false);
+
+  {
+    // @dts-jest:pass
+    loadingReducer(false, add(1)); // => true
+    // @dts-jest:pass
+    loadingReducer(true, increment()); // => false
+  }
 }
 
 // @dts-jest:group Type refinement checks

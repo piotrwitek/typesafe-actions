@@ -26,6 +26,8 @@ exports[`Type refinement checks state (type) should match snapshot 3`] = `"{ foo
 
 exports[`Type refinement checks state (type) should match snapshot 4`] = `"{ foo: string | null; }"`;
 
+exports[`With Action Creators ({} as LoadingDefaultAction) (type) should match snapshot 1`] = `"T.EmptyAction<\\"INCREMENT\\"> | T.EmptyAction<\\"DECREMENT\\">"`;
+
 exports[`With Action Creators counterReducer1.handlers (type) should match snapshot 1`] = `"Record<\\"ADD\\" | \\"INCREMENT\\", (state: number, action: T.PayloadAction<\\"ADD\\", number> | T.EmptyAction<\\"INCREMENT\\"> | T.EmptyAction<\\"DECREMENT\\">) => number>"`;
 
 exports[`With Action Creators counterReducer2.handlers (type) should match snapshot 1`] = `"Record<\\"ADD\\" | \\"INCREMENT\\", (state: number, action: T.PayloadAction<\\"ADD\\", number> | T.EmptyAction<\\"INCREMENT\\"> | T.EmptyAction<\\"DECREMENT\\">) => number>"`;
