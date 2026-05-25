@@ -95,6 +95,7 @@ _Found it useful? Want more updates?_
     - [`createStandardAction`](#createstandardaction)
     - [`createCustomAction`](#createcustomaction)
     - [`createAsyncAction`](#createasyncaction)
+    - [`createAsyncEpic`](#createasyncepic)
   - [Reducer-Creators API](#reducer-creators-api)
     - [`createReducer`](#createreducer)
   - [Action-Helpers API](#action-helpers-api)
@@ -450,6 +451,19 @@ const fetchTodosFlow: Epic<RootAction, RootAction, RootState, Services> = (actio
   );
 ```
 
+The same request/success/failure/cancel flow can be expressed with `createAsyncEpic`:
+
+```ts
+import { from } from 'rxjs';
+import { createAsyncEpic } from 'typesafe-actions';
+import { fetchTodosAsync } from './actions';
+
+const fetchTodosFlow: Epic<RootAction, RootAction, RootState, Services> =
+  createAsyncEpic(fetchTodosAsync, (action, _state$, { todosApi }) =>
+    from(todosApi.getAll(action.payload))
+  );
+```
+
 #### With `redux-saga` sagas
 With sagas it's not possible to achieve the same degree of type-safety as with epics because of limitations coming from `redux-saga` API design.
 
@@ -740,6 +754,55 @@ const fn = (
   >
 ) => a;
 fn(fetchUsersAsync);
+```
+
+[⇧ back to top](#table-of-contents)
+
+---
+
+#### `createAsyncEpic`
+
+_Create a `redux-observable` compatible epic from an async action object._
+
+```ts
+createAsyncEpic(asyncAction, handler, options?)
+```
+
+`createAsyncEpic` listens for `asyncAction.request`, calls `handler` with the request action, `state$` and dependencies, maps emitted values with `asyncAction.success`, maps errors with `asyncAction.failure`, and cancels the active request when `asyncAction.cancel` is dispatched.
+
+The helper uses switch-style request handling: a later request cancels the previous in-flight request. `rxjs` is required when using this helper.
+
+Examples:
+[> Advanced Usage Examples](src/create-async-epic.spec.ts)
+
+```ts
+import { Epic } from 'redux-observable';
+import { from } from 'rxjs';
+import { createAsyncAction, createAsyncEpic } from 'typesafe-actions';
+
+const fetchUserAsync = createAsyncAction(
+  'FETCH_USER_REQUEST',
+  'FETCH_USER_SUCCESS',
+  'FETCH_USER_FAILURE',
+  'FETCH_USER_CANCEL'
+)<string, User, HttpError, string>();
+
+const fetchUserEpic: Epic<RootAction, RootAction, RootState, Services> =
+  createAsyncEpic(fetchUserAsync, (action, state$, { userApi }) =>
+    from(userApi.fetch(action.payload, state$.value.authToken))
+  );
+
+const fetchUserWithErrorMapperEpic = createAsyncEpic(
+  fetchUserAsync,
+  (action, _state$, { userApi }: Services) =>
+    from(userApi.fetch(action.payload)),
+  {
+    mapError: error => ({
+      status: 500,
+      message: String(error),
+    }),
+  }
+);
 ```
 
 [⇧ back to top](#table-of-contents)

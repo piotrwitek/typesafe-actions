@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createAsyncEpic testType<
+      Observable<
+        | T.PayloadAction<'FETCH_USER_SUCCESS', User>
+        | T.PayloadAction<'FETCH_USER_FAILURE', HttpError>
+      >
+    >(epic(action$, state$, services)) (type) should match snapshot 1`] = `"Observable<T.PayloadAction<\\"FETCH_USER_SUCCESS\\", User> | T.PayloadAction<\\"FETCH_USER_FAILURE\\", HttpError>>"`;
+
+exports[`createAsyncEpic testType<Services>(deps) (type) should match snapshot 1`] = `"Services"`;
+
+exports[`createAsyncEpic testType<string>(action.payload) (type) should match snapshot 1`] = `"string"`;
+
+exports[`createAsyncEpic testType<string>(state.value.token) (type) should match snapshot 1`] = `"string"`;
+
+exports[`createAsyncEpic without cancel testType<
+      Observable<
+        | T.PayloadAction<'PING_SUCCESS', string>
+        | T.PayloadAction<'PING_FAILURE', Error>
+      >
+    >(epic(action$, state$, {})) (type) should match snapshot 1`] = `"Observable<T.PayloadAction<\\"PING_SUCCESS\\", string> | T.PayloadAction<\\"PING_FAILURE\\", Error>>"`;

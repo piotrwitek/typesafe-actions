@@ -55,6 +55,10 @@ function createConfig(
         propertyReadSideEffects: false,
       },
       name: opts.name,
+      globals: {
+        rxjs: 'rxjs',
+        'rxjs/operators': 'rxjs.operators',
+      },
       sourcemap: true,
       // exports: 'named',
     },
