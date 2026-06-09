@@ -435,6 +435,11 @@ const fetchTodosAsync = createAsyncAction(
 )<string, Todo[], Error, string>();
 
 // epics.ts
+import { Epic } from 'redux-observable';
+import { from, of } from 'rxjs';
+import { catchError, filter, map, switchMap, takeUntil } from 'rxjs/operators';
+import { isActionOf } from 'typesafe-actions';
+
 import { fetchTodosAsync } from './actions';
 
 const fetchTodosFlow: Epic<RootAction, RootAction, RootState, Services> = (action$, state$, { todosApi }) =>
@@ -443,12 +448,17 @@ const fetchTodosFlow: Epic<RootAction, RootAction, RootState, Services> = (actio
     switchMap(action =>
       from(todosApi.getAll(action.payload)).pipe(
         map(fetchTodosAsync.success),
-        catchError((message: string) => of(fetchTodosAsync.failure(message))),
+        catchError((error: Error) => of(fetchTodosAsync.failure(error))),
         takeUntil(action$.pipe(filter(isActionOf(fetchTodosAsync.cancel)))),
       )
     )
   );
 ```
+
+> **NOTE:** `Services` is the type of the dependency object passed to
+> `createEpicMiddleware({ dependencies })` and received as the third epic
+> argument. Prefer deriving it from your shared services object in app-level
+> typings and reusing a single typed mock services object in epic tests.
 
 #### With `redux-saga` sagas
 With sagas it's not possible to achieve the same degree of type-safety as with epics because of limitations coming from `redux-saga` API design.
