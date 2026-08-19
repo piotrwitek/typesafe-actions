@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createAsyncReducer createAsyncReducer (type) should match snapshot 1`] = `"<TState>(initialState: TState, asyncAction: { request: any; success: any; failure: any; cancel?: any; }, handlers: { request?: ((state: TState, action: any) => TState) | undefined; success?: ((state: TState, action: any) => TState) | undefined; failure?: ((state: TState, action: any) => TState) | undefined; cancel?: ((state: TState, action: any) => TState) | undefined; }) => import(\\"/root/typesafe-actions/src/type-helpers\\").Reducer<TState, any>"`;
+
+exports[`createAsyncReducer reducer (type) should match snapshot 1`] = `"import(\\"/root/typesafe-actions/src/type-helpers\\").Reducer<UserState, any>"`;
+
+exports[`createErrorReducer createErrorReducer (type) should match snapshot 1`] = `"<TAction extends { success: any; failure: any; }>(asyncAction: TAction) => import(\\"/root/typesafe-actions/src/type-helpers\\").Reducer<any, any>"`;
+
+exports[`createErrorReducer errorReducer (type) should match snapshot 1`] = `"import(\\"/root/typesafe-actions/src/type-helpers\\").Reducer<any, any>"`;
+
+exports[`createLoadingReducer createLoadingReducer (type) should match snapshot 1`] = `"<TAction extends { request: any; success: any; failure: any; }>(asyncAction: TAction) => import(\\"/root/typesafe-actions/src/type-helpers\\").Reducer<boolean, any>"`;
+
+exports[`createLoadingReducer loadingReducer (type) should match snapshot 1`] = `"import(\\"/root/typesafe-actions/src/type-helpers\\").Reducer<boolean, any>"`;
