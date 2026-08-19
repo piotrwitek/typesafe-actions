@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Epic type export type MyEpic = Epic<any, any, any, any> (type) should match snapshot 1`] = `"any"`;
+
+exports[`catchErrorOperator const epic = (action$: Observable<any>, state$: Observable<any>, services: any) =>
+      action$.pipe(
+        filter(isActionOf(fetchUsers.request)),
+        switchMap(() =>
+          services.api.getUsers().pipe(
+            map(fetchUsers.success),
+            catchErrorOperator(fetchUsers.failure)
+          )
+        )
+      ) (type) should match snapshot 1`] = `"any"`;
+
+exports[`createAsyncEpic with cancel const fetchUsersEpic = createAsyncEpic(
+      fetchUsers,
+      (requestAction, state$, services: { api: { getUsers: () => Observable<User[]> } }) =>
+        services.api.getUsers()
+    ) (type) should match snapshot 1`] = `"any"`;
+
+exports[`createAsyncEpic with request payload const fetchUserEpic = createAsyncEpic(
+      fetchUser,
+      (requestAction, state$, services: { api: { getUser: (id: string) => Observable<User> } }) =>
+        services.api.getUser(requestAction.payload)
+    ) (type) should match snapshot 1`] = `"any"`;
+
+exports[`createAsyncEpic without cancel const fetchUsersEpic = createAsyncEpic(
+      fetchUsers,
+      (requestAction, state$, services: { api: { getUsers: () => Observable<User[]> } }) =>
+        services.api.getUsers()
+    ) (type) should match snapshot 1`] = `"any"`;
+
+exports[`takeUntilAction const epic = (action$: Observable<any>, state$: Observable<any>, services: any) =>
+      action$.pipe(
+        filter(isActionOf(fetchUsers.request)),
+        switchMap(() =>
+          services.api.getUsers().pipe(
+            map(fetchUsers.success),
+            takeUntilAction(action$, fetchUsers.cancel)
+          )
+        )
+      ) (type) should match snapshot 1`] = `"any"`;
