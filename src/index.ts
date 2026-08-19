@@ -13,6 +13,12 @@ export { createAction } from './create-action';
 export { createCustomAction } from './create-custom-action';
 export { createAsyncAction } from './create-async-action';
 export { createReducer } from './create-reducer';
+export {
+  createAsyncEpic,
+  catchErrorOperator,
+  takeUntilAction,
+} from './create-async-epic';
+export { Epic } from './create-async-epic';
 
 // action-helpers
 export { getType } from './get-type';
