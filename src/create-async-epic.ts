@@ -4,7 +4,6 @@ import { isActionOf } from './is-action-of';
 
 /**
  * Type representing an async action creator created with `createAsyncAction`.
- * The creator has `.request`, `.success`, `.failure`, and optionally `.cancel` methods.
  */
 interface AsyncActionCreatorLike {
   request: (...args: any[]) => any;
