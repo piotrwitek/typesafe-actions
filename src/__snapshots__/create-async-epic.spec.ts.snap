@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createAsyncEpic createAsyncEpic(loadAsync, () => of('result')) (type) should match snapshot 1`] = `"(action$: import(\\"/tmp/tsa-162/node_modules/rxjs/index\\").Observable<any>, state$: any, deps?: any) => import(\\"/tmp/tsa-162/node_modules/rxjs/index\\").Observable<any>"`;
+
+exports[`createAsyncEpic createAsyncEpic(noCancelAsync, () => of('result')) (type) should match snapshot 1`] = `"(action$: import(\\"/tmp/tsa-162/node_modules/rxjs/index\\").Observable<any>, state$: any, deps?: any) => import(\\"/tmp/tsa-162/node_modules/rxjs/index\\").Observable<any>"`;
