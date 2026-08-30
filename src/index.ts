@@ -13,6 +13,11 @@ export { createAction } from './create-action';
 export { createCustomAction } from './create-custom-action';
 export { createAsyncAction } from './create-async-action';
 export { createReducer } from './create-reducer';
+export {
+  createAsyncReducer,
+  createLoadingReducer,
+  createErrorReducer,
+} from './create-async-reducer';
 
 // action-helpers
 export { getType } from './get-type';
