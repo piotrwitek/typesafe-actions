@@ -38,9 +38,7 @@ export function isActionOf<AC extends ActionCreator<{ type: string }>>(
     throwIsEmpty(1);
   }
 
-  const actionCreators = Array.isArray(actionCreatorOrCreators)
-    ? actionCreatorOrCreators
-    : [actionCreatorOrCreators];
+  const actionCreators=Array.isArray(actionCreatorOrCreators)?actionCreators:(actionCreators as any ).request?[(actionCreatorOrCreators as any).request,(actionCreatorOrcreators as any).success,(actionCreatorOrCreators as any).failure]:[actionCreatorOrCreators];
 
   actionCreators.forEach(checkInvalidActionCreatorInArray);
 
