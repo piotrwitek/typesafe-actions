@@ -10,9 +10,91 @@ exports[`should correctly assert for an array with 4 args actual (type) should m
 
 exports[`should correctly assert for an array with 5 args actual (type) should match snapshot 1`] = `"(TH.EmptyAction<\\"WITH_TYPE_ONLY\\"> | TH.PayloadAction<\\"WITH_PAYLOAD\\", number> | TH.PayloadAction<\\"WITH_MAPPED_PAYLOAD\\", number> | TH.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string> | TH.PayloadMetaAction<\\"WITH_MAPPED_PAYLOAD_META\\", number, string>)[]"`;
 
+exports[`should correctly assert type for a single async-action object action (type) should match snapshot 1`] = `"TH.EmptyAction<\\"FETCH_USER_REQUEST\\"> | TH.PayloadAction<\\"FETCH_USER_SUCCESS\\", { firstName: string; lastName: string; }> | TH.PayloadAction<\\"FETCH_USER_FAILURE\\", Error>"`;
+
+exports[`should correctly assert type for a single async-action object action (type) should match snapshot 2`] = `"TH.EmptyAction<\\"FETCH_USER_REQUEST\\"> | TH.PayloadAction<\\"FETCH_USER_SUCCESS\\", { firstName: string; lastName: string; }> | TH.PayloadAction<\\"FETCH_USER_FAILURE\\", Error>"`;
+
+exports[`should correctly assert type for async-action objects with cancel action (type) should match snapshot 1`] = `"TH.EmptyAction<\\"FETCH_TODOS_REQUEST\\"> | TH.PayloadAction<\\"FETCH_TODOS_SUCCESS\\", string[]> | TH.PayloadAction<\\"FETCH_TODOS_FAILURE\\", Error> | TH.PayloadAction<\\"FETCH_TODOS_CANCEL\\", string>"`;
+
+exports[`should correctly assert type for async-action objects with cancel action (type) should match snapshot 2`] = `"TH.EmptyAction<\\"FETCH_TODOS_REQUEST\\"> | TH.PayloadAction<\\"FETCH_TODOS_SUCCESS\\", string[]> | TH.PayloadAction<\\"FETCH_TODOS_FAILURE\\", Error> | TH.PayloadAction<\\"FETCH_TODOS_CANCEL\\", string>"`;
+
+exports[`should correctly assert type for mixed async and regular creators action (type) should match snapshot 1`] = `"TH.PayloadAction<\\"WITH_PAYLOAD\\", number> | TH.EmptyAction<\\"FETCH_USER_REQUEST\\"> | TH.PayloadAction<\\"FETCH_USER_SUCCESS\\", { firstName: string; lastName: string; }> | TH.PayloadAction<\\"FETCH_USER_FAILURE\\", Error>"`;
+
+exports[`should correctly assert type for mixed async and regular creators action (type) should match snapshot 2`] = `"TH.PayloadAction<\\"WITH_PAYLOAD\\", number> | TH.EmptyAction<\\"FETCH_USER_REQUEST\\"> | TH.PayloadAction<\\"FETCH_USER_SUCCESS\\", { firstName: string; lastName: string; }> | TH.PayloadAction<\\"FETCH_USER_FAILURE\\", Error>"`;
+
 exports[`should correctly assert type with "any" action action (type) should match snapshot 1`] = `"TH.PayloadAction<\\"WITH_PAYLOAD\\", number> | TH.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string>"`;
 
 exports[`should correctly assert type with "any" action action (type) should match snapshot 2`] = `"TH.PayloadAction<\\"WITH_PAYLOAD\\", number> | TH.PayloadMetaAction<\\"WITH_PAYLOAD_META\\", number, string>"`;
+
+exports[`should correctly filter actions for a single async-action object actual (type) should match snapshot 1`] = `"(TH.EmptyAction<\\"FETCH_USER_REQUEST\\"> | TH.PayloadAction<\\"FETCH_USER_SUCCESS\\", { firstName: string; lastName: string; }> | TH.PayloadAction<\\"FETCH_USER_FAILURE\\", Error>)[]"`;
+
+exports[`should correctly filter actions for mixed async and regular creators actual (type) should match snapshot 1`] = `"(TH.PayloadAction<\\"WITH_PAYLOAD\\", number> | TH.EmptyAction<\\"FETCH_USER_REQUEST\\"> | TH.PayloadAction<\\"FETCH_USER_SUCCESS\\", { firstName: string; lastName: string; }> | TH.PayloadAction<\\"FETCH_USER_FAILURE\\", Error>)[]"`;
+
+exports[`should still match individual async action-creators isActionOf([asyncAction.request, asyncAction.success], asyncFailureAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should still match individual async action-creators isActionOf(asyncAction.failure, asyncFailureAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should still match individual async action-creators isActionOf(asyncAction.request, asyncRequestAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should still match individual async action-creators isActionOf(asyncAction.request, asyncSuccessAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should still match individual async action-creators isActionOf(asyncAction.success)(asyncSuccessAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with a single async-action object isActionOf(asyncAction)(asyncFailureAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with a single async-action object isActionOf(asyncAction)(asyncRequestAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with a single async-action object isActionOf(asyncAction)(asyncSuccessAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with a single async-action object isActionOf(asyncAction)(payloadAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with a single async-action object isActionOf(asyncAction)(typeOnlyAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with a single async-action object isActionOf(asyncAction, asyncFailureAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with a single async-action object isActionOf(asyncAction, asyncRequestAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with a single async-action object isActionOf(asyncAction, asyncSuccessAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with a single async-action object isActionOf(asyncAction, mappedPayloadAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with a single async-action object isActionOf(asyncAction, payloadAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with an array of async-action objects isActionOf([asyncAction, anotherAsyncAction])(asyncFailureAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with an array of async-action objects isActionOf([asyncAction, anotherAsyncAction])(payloadAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with an array of async-action objects isActionOf([asyncAction, anotherAsyncAction], anotherAsyncSuccessAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with an array of async-action objects isActionOf([asyncAction, anotherAsyncAction], typeOnlyAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with an array of async-action objects isActionOf([asyncAction])(asyncRequestAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with an array of async-action objects isActionOf([asyncAction], asyncSuccessAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with async-action objects that include cancel isActionOf(asyncActionWithCancel)(asyncCancelAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with async-action objects that include cancel isActionOf(asyncActionWithCancel)(asyncCancelSuccessAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with async-action objects that include cancel isActionOf(asyncActionWithCancel, asyncCancelFailureAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with async-action objects that include cancel isActionOf(asyncActionWithCancel, asyncCancelRequestAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with async-action objects that include cancel isActionOf(asyncActionWithCancel, asyncRequestAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with async-action objects that include cancel isActionOf(asyncActionWithCancel, payloadAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with mixed async-action objects and action-creators isActionOf([asyncAction, withPayload])(asyncRequestAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with mixed async-action objects and action-creators isActionOf([asyncAction, withPayload])(mappedPayloadAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with mixed async-action objects and action-creators isActionOf([asyncAction, withPayload], mappedPayloadMetaAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with mixed async-action objects and action-creators isActionOf([asyncAction, withPayload], payloadAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with mixed async-action objects and action-creators isActionOf([withTypeOnly, asyncAction])(typeOnlyAction) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`should work with mixed async-action objects and action-creators isActionOf([withTypeOnly, asyncAction], asyncFailureAction) (type) should match snapshot 1`] = `"boolean"`;
 
 exports[`should work with multiple action-creator args isActionOf([withTypeOnly, withPayload])(mappedPayloadAction) (type) should match snapshot 1`] = `"boolean"`;
 

@@ -1,4 +1,5 @@
 import * as TH from './type-helpers';
+import { createAsyncAction } from './create-async-action';
 import { isActionOf } from './is-action-of';
 
 import { actions } from './type-helpers-fixtures';
@@ -8,6 +9,7 @@ const {
   withPayloadMeta,
   withMappedPayload,
   withMappedPayloadMeta,
+  asyncAction,
 } = actions;
 
 /** HELPERS */
@@ -37,6 +39,54 @@ const $action = [
   payloadMetaAction,
   mappedPayloadAction,
   mappedPayloadMetaAction,
+];
+
+const asyncRequestAction = asyncAction.request();
+const asyncRequestExpected = { type: 'FETCH_USER_REQUEST' };
+const asyncSuccessPayload = {
+  firstName: 'Ada',
+  lastName: 'Lovelace',
+};
+const asyncSuccessAction = asyncAction.success(asyncSuccessPayload);
+const asyncSuccessExpected = {
+  type: 'FETCH_USER_SUCCESS',
+  payload: asyncSuccessPayload,
+};
+const asyncFailurePayload = new Error('Unable to fetch user');
+const asyncFailureAction = asyncAction.failure(asyncFailurePayload);
+const asyncFailureExpected = {
+  type: 'FETCH_USER_FAILURE',
+  payload: asyncFailurePayload,
+};
+
+const asyncActionWithCancel = createAsyncAction(
+  'FETCH_TODOS_REQUEST',
+  'FETCH_TODOS_SUCCESS',
+  'FETCH_TODOS_FAILURE',
+  'FETCH_TODOS_CANCEL'
+)<undefined, string[], Error, string>();
+
+const asyncCancelRequestAction = asyncActionWithCancel.request();
+const asyncCancelSuccessAction = asyncActionWithCancel.success(['a']);
+const asyncCancelFailureAction = asyncActionWithCancel.failure(
+  new Error('boom')
+);
+const asyncCancelAction = asyncActionWithCancel.cancel('reason');
+
+const anotherAsyncAction = createAsyncAction(
+  'LOAD_ITEM_REQUEST',
+  'LOAD_ITEM_SUCCESS',
+  'LOAD_ITEM_FAILURE'
+)<undefined, number, Error>();
+
+const anotherAsyncSuccessAction = anotherAsyncAction.success(42);
+
+const $asyncAndRegularActions = [
+  typeOnlyAction,
+  payloadAction,
+  asyncRequestAction,
+  asyncSuccessAction,
+  asyncFailureAction,
 ];
 
 /** TESTS */
@@ -136,4 +186,148 @@ const $action = [
     // @dts-jest:pass:snap -> TH.PayloadAction<"WITH_PAYLOAD", number> | TH.PayloadMetaAction<"WITH_PAYLOAD_META", number, string>
     action; // => {"payload": 1234, "type": "WITH_PAYLOAD"}
   }
+}
+
+// @dts-jest:group should work with a single async-action object
+{
+  // @dts-jest:pass:snap -> boolean
+  isActionOf(asyncAction)(asyncRequestAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf(asyncAction, asyncRequestAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf(asyncAction)(asyncSuccessAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf(asyncAction, asyncSuccessAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf(asyncAction)(asyncFailureAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf(asyncAction, asyncFailureAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf(asyncAction)(payloadAction); // => false
+  // @dts-jest:pass:snap -> boolean
+  isActionOf(asyncAction, payloadAction); // => false
+  // @dts-jest:pass:snap -> boolean
+  isActionOf(asyncAction)(typeOnlyAction); // => false
+  // @dts-jest:pass:snap -> boolean
+  isActionOf(asyncAction, mappedPayloadAction); // => false
+}
+
+// @dts-jest:group should work with async-action objects that include cancel
+{
+  // @dts-jest:pass:snap -> boolean
+  isActionOf(asyncActionWithCancel, asyncCancelRequestAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf(asyncActionWithCancel)(asyncCancelSuccessAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf(asyncActionWithCancel, asyncCancelFailureAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf(asyncActionWithCancel)(asyncCancelAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf(asyncActionWithCancel, asyncRequestAction); // => false
+  // @dts-jest:pass:snap -> boolean
+  isActionOf(asyncActionWithCancel, payloadAction); // => false
+}
+
+// @dts-jest:group should work with an array of async-action objects
+{
+  // @dts-jest:pass:snap -> boolean
+  isActionOf([asyncAction])(asyncRequestAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf([asyncAction], asyncSuccessAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf([asyncAction, anotherAsyncAction])(asyncFailureAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf([asyncAction, anotherAsyncAction], anotherAsyncSuccessAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf([asyncAction, anotherAsyncAction])(payloadAction); // => false
+  // @dts-jest:pass:snap -> boolean
+  isActionOf([asyncAction, anotherAsyncAction], typeOnlyAction); // => false
+}
+
+// @dts-jest:group should work with mixed async-action objects and action-creators
+{
+  // @dts-jest:pass:snap -> boolean
+  isActionOf([asyncAction, withPayload])(asyncRequestAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf([asyncAction, withPayload], payloadAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf([withTypeOnly, asyncAction])(typeOnlyAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf([withTypeOnly, asyncAction], asyncFailureAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf([asyncAction, withPayload])(mappedPayloadAction); // => false
+  // @dts-jest:pass:snap -> boolean
+  isActionOf([asyncAction, withPayload], mappedPayloadMetaAction); // => false
+}
+
+// @dts-jest:group should correctly filter actions for a single async-action object
+{
+  const actual = $asyncAndRegularActions.filter(isActionOf(asyncAction));
+  // @dts-jest:pass:snap -> (TH.EmptyAction<"FETCH_USER_REQUEST"> | TH.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | TH.PayloadAction<"FETCH_USER_FAILURE", Error>)[]
+  actual; // => [asyncRequestExpected,asyncSuccessExpected,asyncFailureExpected]
+}
+
+// @dts-jest:group should correctly filter actions for mixed async and regular creators
+{
+  const actual = $asyncAndRegularActions.filter(
+    isActionOf([asyncAction, withPayload])
+  );
+  // @dts-jest:pass:snap -> (TH.PayloadAction<"WITH_PAYLOAD", number> | TH.EmptyAction<"FETCH_USER_REQUEST"> | TH.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | TH.PayloadAction<"FETCH_USER_FAILURE", Error>)[]
+  actual; // => [payloadExpected,asyncRequestExpected,asyncSuccessExpected,asyncFailureExpected]
+}
+
+// @dts-jest:group should correctly assert type for a single async-action object
+{
+  const action: any = asyncSuccessAction;
+
+  if (isActionOf(asyncAction, action)) {
+    // @dts-jest:pass:snap -> TH.EmptyAction<"FETCH_USER_REQUEST"> | TH.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | TH.PayloadAction<"FETCH_USER_FAILURE", Error>
+    action; // => {"payload": {"firstName": "Ada", "lastName": "Lovelace"}, "type": "FETCH_USER_SUCCESS"}
+  }
+  if (isActionOf(asyncAction)(action)) {
+    // @dts-jest:pass:snap -> TH.EmptyAction<"FETCH_USER_REQUEST"> | TH.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | TH.PayloadAction<"FETCH_USER_FAILURE", Error>
+    action; // => {"payload": {"firstName": "Ada", "lastName": "Lovelace"}, "type": "FETCH_USER_SUCCESS"}
+  }
+}
+
+// @dts-jest:group should correctly assert type for async-action objects with cancel
+{
+  const action: any = asyncCancelAction;
+
+  if (isActionOf(asyncActionWithCancel, action)) {
+    // @dts-jest:pass:snap -> TH.EmptyAction<"FETCH_TODOS_REQUEST"> | TH.PayloadAction<"FETCH_TODOS_SUCCESS", string[]> | TH.PayloadAction<"FETCH_TODOS_FAILURE", Error> | TH.PayloadAction<"FETCH_TODOS_CANCEL", string>
+    action; // => {"payload": "reason", "type": "FETCH_TODOS_CANCEL"}
+  }
+  if (isActionOf(asyncActionWithCancel)(action)) {
+    // @dts-jest:pass:snap -> TH.EmptyAction<"FETCH_TODOS_REQUEST"> | TH.PayloadAction<"FETCH_TODOS_SUCCESS", string[]> | TH.PayloadAction<"FETCH_TODOS_FAILURE", Error> | TH.PayloadAction<"FETCH_TODOS_CANCEL", string>
+    action; // => {"payload": "reason", "type": "FETCH_TODOS_CANCEL"}
+  }
+}
+
+// @dts-jest:group should correctly assert type for mixed async and regular creators
+{
+  const action: any = payloadAction;
+
+  if (isActionOf([asyncAction, withPayload], action)) {
+    // @dts-jest:pass:snap -> TH.PayloadAction<"WITH_PAYLOAD", number> | TH.EmptyAction<"FETCH_USER_REQUEST"> | TH.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | TH.PayloadAction<"FETCH_USER_FAILURE", Error>
+    action; // => {"payload": 2, "type": "WITH_PAYLOAD"}
+  }
+  if (isActionOf([asyncAction, withPayload])(action)) {
+    // @dts-jest:pass:snap -> TH.PayloadAction<"WITH_PAYLOAD", number> | TH.EmptyAction<"FETCH_USER_REQUEST"> | TH.PayloadAction<"FETCH_USER_SUCCESS", { firstName: string; lastName: string; }> | TH.PayloadAction<"FETCH_USER_FAILURE", Error>
+    action; // => {"payload": 2, "type": "WITH_PAYLOAD"}
+  }
+}
+
+// @dts-jest:group should still match individual async action-creators
+{
+  // @dts-jest:pass:snap -> boolean
+  isActionOf(asyncAction.request, asyncRequestAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf(asyncAction.success)(asyncSuccessAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf(asyncAction.failure, asyncFailureAction); // => true
+  // @dts-jest:pass:snap -> boolean
+  isActionOf(asyncAction.request, asyncSuccessAction); // => false
+  // @dts-jest:pass:snap -> boolean
+  isActionOf([asyncAction.request, asyncAction.success], asyncFailureAction); // => false
 }
