@@ -385,6 +385,19 @@ counterReducer(0, add(4)); // => 4
 counterReducer(0, increment()); // => 1
 ```
 
+A default handler can be attached for remaining unhandled actions. The `action`
+argument is typed as the leftover action union:
+
+```ts
+const loadingReducer = createReducer(false)
+  .handleAction([fetchStart], () => true)
+  .defaultHandler(() => false);
+
+const rootReducer = createReducer(undefined as RootState)
+  .handleAction(signOut, (state, action) => appReducer(undefined, action))
+  .defaultHandler((state, action) => appReducer(state, action));
+```
+
 #### Alternative usage with regular switch reducer
 
 First we need to start by generating a **tagged union type** of actions (`TodosAction`). It's very easy to do by using `ActionType` **type-helper**.
@@ -760,6 +773,7 @@ createReducer<TState, TRootAction>(initialState)
   .handleAction([actionCreator1, actionCreator2, ...actionCreatorN], reducer)
   .handleType(type, reducer)
   .handleType([type1, type2, ...typeN], reducer)
+  .defaultHandler(reducer)
 ```
 
 Examples:
@@ -803,6 +817,44 @@ const counterReducer = createReducer<State, Action>(0)
 const counterReducer = createReducer<State, Action>(0)
   .handleType('ADD', (state, action) => state + action.payload)
   .handleType('INCREMENT', (state, _) => state + 1);
+```
+
+**Default handler:**
+
+`defaultHandler` runs for remaining actions that do not have an explicit
+`handleAction` / `handleType` handler. The `action` argument is typed as the
+union of those unhandled actions.
+
+```ts
+type State = boolean;
+type Action =
+  | { type: 'REQUEST_START' }
+  | { type: 'REQUEST_SUCCESS' }
+  | { type: 'REQUEST_FAILURE' };
+
+const loadingReducer = createReducer<State, Action>(false)
+  .handleType('REQUEST_START', () => true)
+  .defaultHandler(() => false);
+```
+
+Recipe - clear store on user sign out:
+
+```ts
+const appReducer = combineReducers({
+  session,
+  organization,
+  organizationAccount,
+});
+
+export type RootState = StateType<typeof appReducer>;
+
+export default createReducer(undefined as RootState)
+  .handleAction(signOut, (state, action) => {
+    return appReducer(undefined, action);
+  })
+  .defaultHandler((state, action) => {
+    return appReducer(state, action);
+  });
 ```
 
 **Extend or compose reducers - every operation is completely typesafe:**

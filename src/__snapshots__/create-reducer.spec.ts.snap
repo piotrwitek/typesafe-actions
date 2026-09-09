@@ -1,5 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Default handler fallbackOnlyAction (type) should match snapshot 1`] = `"T.EmptyAction<\\"REQUEST_START\\"> | T.EmptyAction<\\"REQUEST_SUCCESS\\"> | T.EmptyAction<\\"REQUEST_FAILURE\\">"`;
+
+exports[`Default handler loadingReducer.handlers (type) should match snapshot 1`] = `"Record<\\"REQUEST_START\\", (state: boolean, action: T.EmptyAction<\\"REQUEST_START\\"> | T.EmptyAction<\\"REQUEST_SUCCESS\\"> | T.EmptyAction<\\"REQUEST_FAILURE\\">) => boolean>"`;
+
+exports[`Default handler loadingReducerByType.handlers (type) should match snapshot 1`] = `"Record<\\"REQUEST_START\\", (state: boolean, action: T.EmptyAction<\\"REQUEST_START\\"> | T.EmptyAction<\\"REQUEST_SUCCESS\\"> | T.EmptyAction<\\"REQUEST_FAILURE\\">) => boolean>"`;
+
+exports[`Default handler remainingRequestAction (type) should match snapshot 1`] = `"T.EmptyAction<\\"REQUEST_SUCCESS\\"> | T.EmptyAction<\\"REQUEST_FAILURE\\">"`;
+
+exports[`Default handler remainingSessionAction (type) should match snapshot 1`] = `"T.PayloadAction<\\"SET_TOKEN\\", string>"`;
+
+exports[`Default handler rootSessionReducer.handlers (type) should match snapshot 1`] = `"Record<\\"SIGN_OUT\\", (state: { token: string | null; }, action: T.EmptyAction<\\"SIGN_OUT\\"> | T.PayloadAction<\\"SET_TOKEN\\", string>) => { token: string | null; }>"`;
+
 exports[`Type refinement checks action (type) should match snapshot 1`] = `"T.PayloadAction<\\"foo1\\", string>"`;
 
 exports[`Type refinement checks action (type) should match snapshot 2`] = `"T.PayloadAction<\\"foo2\\", string>"`;
