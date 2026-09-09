@@ -1,18 +1,18 @@
 {
   "dist/typesafe-actions.cjs.development.js": {
-    "bundled": 9154,
-    "minified": 5296,
-    "gzipped": 1299
+    "bundled": 11100,
+    "minified": 6403,
+    "gzipped": 1519
   },
   "dist/typesafe-actions.cjs.production.js": {
-    "bundled": 9154,
-    "minified": 5296,
-    "gzipped": 1299
+    "bundled": 11100,
+    "minified": 6403,
+    "gzipped": 1519
   },
   "dist/typesafe-actions.es.production.js": {
-    "bundled": 8964,
-    "minified": 5123,
-    "gzipped": 1262,
+    "bundled": 10821,
+    "minified": 6147,
+    "gzipped": 1474,
     "treeshaked": {
       "rollup": {
         "code": 0,
@@ -24,13 +24,13 @@
     }
   },
   "dist/typesafe-actions.umd.development.js": {
-    "bundled": 10584,
-    "minified": 4086,
-    "gzipped": 1270
+    "bundled": 12758,
+    "minified": 4888,
+    "gzipped": 1450
   },
   "dist/typesafe-actions.umd.production.js": {
-    "bundled": 10584,
-    "minified": 4086,
-    "gzipped": 1270
+    "bundled": 12758,
+    "minified": 4888,
+    "gzipped": 1450
   }
 }

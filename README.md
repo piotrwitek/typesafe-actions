@@ -97,6 +97,9 @@ _Found it useful? Want more updates?_
     - [`createAsyncAction`](#createasyncaction)
   - [Reducer-Creators API](#reducer-creators-api)
     - [`createReducer`](#createreducer)
+    - [`createAsyncReducer`](#createasyncreducer)
+    - [`createLoadingReducer`](#createloadingreducer)
+    - [`createErrorReducer`](#createerrorreducer)
   - [Action-Helpers API](#action-helpers-api)
     - [`getType`](#gettype)
     - [`isActionOf`](#isactionof)
@@ -490,6 +493,9 @@ function* mainSaga() {
 // Handle success reducer
 export const todoReducer = createReducer({})
     .handleAction(fetchTodosAsync.success, (state, action) => ({ ...state, todos: action.payload }));
+
+// Or use createAsyncReducer / createLoadingReducer / createErrorReducer
+// for request/success/failure/cancel maps without a switch or type casts.
 ```
 
 [⇧ back to top](#table-of-contents)
@@ -816,6 +822,153 @@ const bigReducer = createReducer<State, Action>(0, {
   ...newCounterReducer.handlers, // typesafe
   SUBTRACT: decrementReducer.handlers.DECREMENT, // <= error, wrong type
 })
+```
+
+[⇧ back to top](#table-of-contents)
+
+#### `createAsyncReducer`
+
+_Create a typesafe reducer for async action-creator objects (`request` / `success` / `failure` / optional `cancel`)._
+
+```ts
+createAsyncReducer(initialState, asyncAction, {
+  request?,
+  success?,
+  failure?,
+  cancel?,
+})
+```
+
+Each handler receives the **exact action type** of the matching creator, so generic reducer factories can read success and failure payloads without `switch` statements or casts. The returned reducer keeps the `createReducer` chain API (`handleAction`, `handleType`, `handlers`).
+
+Examples:
+[> Advanced Usage Examples](src/create-async-reducer.spec.ts)
+
+```ts
+import { createAsyncAction, createAsyncReducer } from 'typesafe-actions';
+
+type User = { firstName: string; lastName: string };
+
+type State = {
+  loading: boolean;
+  data: User | null;
+  error: Error | null;
+};
+
+const initialState: State = {
+  loading: false,
+  data: null,
+  error: null,
+};
+
+const fetchUserAsync = createAsyncAction(
+  'FETCH_USER_REQUEST',
+  'FETCH_USER_SUCCESS',
+  'FETCH_USER_FAILURE',
+  'FETCH_USER_CANCEL'
+)<undefined, User, Error, string>();
+
+const userReducer = createAsyncReducer(initialState, fetchUserAsync, {
+  request: state => ({
+    ...state,
+    loading: true,
+    error: null,
+  }),
+  success: (state, action) => ({
+    loading: false,
+    data: action.payload,
+    error: null,
+  }),
+  failure: (state, action) => ({
+    ...state,
+    loading: false,
+    error: action.payload,
+  }),
+  cancel: state => ({
+    ...state,
+    loading: false,
+  }),
+});
+```
+
+`createAsyncReducer` is also the primitive for building generic factories. Helper types (`AsyncActionCreatorMap`, `AsyncSuccessPayload`, `AsyncFailurePayload`) keep payload access typesafe:
+
+```ts
+import {
+  AsyncActionCreatorMap,
+  AsyncFailurePayload,
+  createAsyncReducer,
+  EmptyAction,
+  PayloadAction,
+} from 'typesafe-actions';
+
+const createErrorSlice = <
+  TAsyncAction extends AsyncActionCreatorMap<
+    EmptyAction<string>,
+    PayloadAction<string, unknown>,
+    PayloadAction<string, Error>
+  >
+>(
+  asyncAction: TAsyncAction
+) =>
+  createAsyncReducer<AsyncFailurePayload<TAsyncAction> | null, TAsyncAction>(
+    null,
+    asyncAction,
+    {
+      request: () => null,
+      success: () => null,
+      failure: (state, action) => action.payload,
+    }
+  );
+```
+
+[⇧ back to top](#table-of-contents)
+
+#### `createLoadingReducer`
+
+_One-liner boolean reducer for an async action-creator map. `request` sets `true`; `success`, `failure`, and `cancel` set `false`._
+
+```ts
+createLoadingReducer(asyncAction, initialState?)
+```
+
+```ts
+import { createAsyncAction, createLoadingReducer } from 'typesafe-actions';
+
+const fetchUserAsync = createAsyncAction(
+  'FETCH_USER_REQUEST',
+  'FETCH_USER_SUCCESS',
+  'FETCH_USER_FAILURE'
+)<undefined, User, Error>();
+
+const loadingReducer = createLoadingReducer(fetchUserAsync);
+// loadingReducer(undefined, fetchUserAsync.request()) => true
+// loadingReducer(true, fetchUserAsync.success(user)) => false
+```
+
+[⇧ back to top](#table-of-contents)
+
+#### `createErrorReducer`
+
+_One-liner error reducer for an async action-creator map. `failure` stores the failure payload; `request` and `success` clear it. The state type is inferred from the failure action payload._
+
+```ts
+createErrorReducer(asyncAction, initialState?)
+```
+
+```ts
+import { createAsyncAction, createErrorReducer } from 'typesafe-actions';
+
+const fetchUserAsync = createAsyncAction(
+  'FETCH_USER_REQUEST',
+  'FETCH_USER_SUCCESS',
+  'FETCH_USER_FAILURE'
+)<undefined, User, Error>();
+
+const errorReducer = createErrorReducer(fetchUserAsync);
+// errorReducer(null, fetchUserAsync.failure(new Error('fail'))) => Error('fail')
+// errorReducer(error, fetchUserAsync.success(user)) => null
+// errorReducer(error, fetchUserAsync.request()) => null
 ```
 
 [⇧ back to top](#table-of-contents)

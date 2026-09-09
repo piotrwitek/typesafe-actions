@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ActionFromCreator helper testType<SuccessAction>(successAction) (type) should match snapshot 1`] = `"TH.PayloadAction<\\"FETCH_USER_SUCCESS\\", User>"`;
+
+exports[`createAsyncReducer in generic factories currentUserReducer(
+      undefined,
+      fetchCurrentUserActions.success({
+        firstName: 'Piotr',
+        lastName: 'Witek',
+      })
+    ) (type) should match snapshot 1`] = `"AsyncState<User, Error>"`;
+
+exports[`createAsyncReducer reducer(
+      {
+        loading: true,
+        data: null,
+        error: null,
+      },
+      fetchUserAsync.cancel('route-change')
+    ) (type) should match snapshot 1`] = `"AsyncState<User, Error>"`;
+
+exports[`createAsyncReducer reducer(
+      undefined,
+      fetchUserAsync.failure(Error('reason'))
+    ) (type) should match snapshot 1`] = `"AsyncState<User, Error>"`;
+
+exports[`createAsyncReducer reducer(
+      undefined,
+      fetchUserAsync.request()
+    ) (type) should match snapshot 1`] = `"AsyncState<User, Error>"`;
+
+exports[`createAsyncReducer reducer(
+      undefined,
+      fetchUserAsync.success({
+        firstName: 'Piotr',
+        lastName: 'Witek',
+      })
+    ) (type) should match snapshot 1`] = `"AsyncState<User, Error>"`;
+
+exports[`createErrorReducer errorReducer(
+      Error('stale'),
+      fetchUserAsync.success({
+        firstName: 'Piotr',
+        lastName: 'Witek',
+      })
+    ) (type) should match snapshot 1`] = `"Error | null"`;
+
+exports[`createErrorReducer errorReducer(undefined, fetchUserAsync.failure(Error('reason'))) (type) should match snapshot 1`] = `"Error | null"`;
+
+exports[`createLoadingReducer loadingReducer(
+      true,
+      fetchUserAsync.success({
+        firstName: 'Piotr',
+        lastName: 'Witek',
+      })
+    ) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`createLoadingReducer loadingReducer(undefined, fetchUserAsync.request()) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`request action has no payload action.payload (type) should match snapshot 1`] = `"Property 'payload' does not exist on type 'EmptyAction<\\"FETCH_USER_REQUEST\\">'."`;
