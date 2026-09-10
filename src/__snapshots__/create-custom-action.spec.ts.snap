@@ -1,5 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Redux Toolkit-compatible metadata actionCreator.match({ type: 'OTHER_ACTION' }) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`Redux Toolkit-compatible metadata actionCreator.match(actionCreator(1)) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`Redux Toolkit-compatible metadata actionCreator.type (type) should match snapshot 1`] = `"\\"CREATE_CUSTOM_ACTION\\""`;
+
+exports[`Redux Toolkit-compatible metadata testType<{ type: 'CREATE_CUSTOM_ACTION'; payload: number }>(action) (type) should match snapshot 1`] = `"{ type: \\"CREATE_CUSTOM_ACTION\\"; payload: number; }"`;
+
+exports[`Redux Toolkit-compatible metadata testType<string>(action.payload) (type) should match snapshot 1`] = `"Argument of type 'number' is not assignable to parameter of type 'string | undefined'."`;
+
 exports[`toString() method return a type actionCreator.toString() (type) should match snapshot 1`] = `"string"`;
 
 exports[`with meta withMeta('token') (type) should match snapshot 1`] = `"{ type: \\"CREATE_CUSTOM_ACTION\\"; meta: string; }"`;

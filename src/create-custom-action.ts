@@ -1,7 +1,9 @@
 import {
   TypeConstant,
   ResolveType,
+  Action,
   ActionCreatorTypeMetadata,
+  ActionCreatorMatcher,
 } from './type-helpers';
 import {
   checkIsEmpty,
@@ -21,7 +23,8 @@ export function createCustomAction<
   type: TType,
   createHandler?: (...args: TArgs) => TReturn
 ): ((...args: TArgs) => ResolveType<{ type: TType } & TReturn>) &
-  ActionCreatorTypeMetadata<TType> {
+  ActionCreatorTypeMetadata<TType, ResolveType<{ type: TType } & TReturn>> &
+  ActionCreatorMatcher<TType, ResolveType<{ type: TType } & TReturn>> {
   if (checkIsEmpty(type)) {
     throwIsEmpty(1);
   }
@@ -37,10 +40,17 @@ export function createCustomAction<
   };
 
   const typeMeta = {
+    type,
     getType: () => type,
+    match: (action: Action): action is ResolveType<{ type: TType } & TReturn> =>
+      action != null && action.type === type,
     // redux-actions compatibility
     toString: () => type,
-  } as ActionCreatorTypeMetadata<TType>;
+  } as ActionCreatorTypeMetadata<
+    TType,
+    ResolveType<{ type: TType } & TReturn>
+  > &
+    ActionCreatorMatcher<TType, ResolveType<{ type: TType } & TReturn>>;
 
   return Object.assign(actionCreator, typeMeta);
 }

@@ -1,11 +1,34 @@
 import * as T from './type-helpers';
 import { createCustomAction } from './create-custom-action';
+import { testType } from './utils/testing';
 
 // @dts-jest:group toString() method return a type
 {
   const actionCreator = createCustomAction('CREATE_CUSTOM_ACTION');
   // @dts-jest:pass:snap
   actionCreator.toString(); // => 'CREATE_CUSTOM_ACTION'
+}
+
+// @dts-jest:group Redux Toolkit-compatible metadata
+{
+  const actionCreator = createCustomAction(
+    'CREATE_CUSTOM_ACTION',
+    (id: number) => ({ payload: id })
+  );
+  // @dts-jest:pass:snap
+  actionCreator.type; // => 'CREATE_CUSTOM_ACTION'
+  // @dts-jest:pass:snap
+  actionCreator.match(actionCreator(1)); // => true
+  // @dts-jest:pass:snap
+  actionCreator.match({ type: 'OTHER_ACTION' }); // => false
+
+  const action: T.Action = { type: 'CREATE_CUSTOM_ACTION' };
+  if (actionCreator.match(action)) {
+    // @dts-jest:pass:snap
+    testType<{ type: 'CREATE_CUSTOM_ACTION'; payload: number }>(action);
+    // @dts-jest:fail:snap
+    testType<string>(action.payload);
+  }
 }
 
 // @dts-jest:group with symbol

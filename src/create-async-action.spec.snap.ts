@@ -1,8 +1,38 @@
 import * as TH from './type-helpers';
 import { AsyncActionCreatorBuilder } from './type-helpers';
 import { createAsyncAction } from './create-async-action';
+import { testType } from './utils/testing';
 
 type User = { firstName: string; lastName: string };
+
+// @dts-jest:group async action metadata
+{
+  const fetchUsersAsync = createAsyncAction(
+    'FETCH_USERS_REQUEST',
+    'FETCH_USERS_SUCCESS',
+    'FETCH_USERS_FAILURE'
+  )<undefined, User[], Error>();
+
+  // @dts-jest:pass:snap -> "FETCH_USERS_REQUEST"
+  fetchUsersAsync.request.type; // => 'FETCH_USERS_REQUEST'
+  // @dts-jest:pass:snap -> "FETCH_USERS_SUCCESS"
+  fetchUsersAsync.success.type; // => 'FETCH_USERS_SUCCESS'
+  // @dts-jest:pass:snap -> "FETCH_USERS_FAILURE"
+  fetchUsersAsync.failure.type; // => 'FETCH_USERS_FAILURE'
+
+  // @dts-jest:pass:snap -> boolean
+  fetchUsersAsync.request.match(fetchUsersAsync.request()); // => true
+  // @dts-jest:pass:snap -> boolean
+  fetchUsersAsync.success.match(fetchUsersAsync.success([])); // => true
+  // @dts-jest:pass:snap -> boolean
+  fetchUsersAsync.failure.match(fetchUsersAsync.success([])); // => false
+
+  const action: TH.Action = { type: 'FETCH_USERS_SUCCESS' };
+  if (fetchUsersAsync.success.match(action)) {
+    // @dts-jest:pass:snap -> TH.PayloadAction<"FETCH_USERS_SUCCESS", User[]>
+    testType<TH.PayloadAction<'FETCH_USERS_SUCCESS', User[]>>(action);
+  }
+}
 
 // @dts-jest:group async action without cancel
 {
@@ -303,8 +333,15 @@ type User = { firstName: string; lastName: string };
     type: 'FETCH_USER_FAILURE', payload: Error('reason'), meta: 111
   } */
 
-  // @dts-jest:fail:snap -> Property 'cancel' does not exist on type '{ request: EmptyActionCreator<"FETCH_USER_REQUEST">; success: (__0: User) => PayloadAction<"FETCH_USER_SUCCESS", string>; failure: (error: Error, meta: number) => PayloadMetaAction<...>; }'.
+  // @dts-jest:fail:snap -> Property 'cancel' does not exist on type '{ request: EmptyActionCreator<"FETCH_USER_REQUEST">; success: ((__0: User) => PayloadAction<"FETCH_USER_SUCCESS", string>) & ActionCreatorMatcher<"FETCH_USER_SUCCESS", PayloadAction<...>>; failure: ((error: Error, meta: number) => PayloadMetaAction<...>) & ActionCreatorMatcher<...>; }'.
   fetchUserMappers.cancel;
+
+  // @dts-jest:pass:snap -> "FETCH_USER_SUCCESS"
+  fetchUserMappers.success.type; // => 'FETCH_USER_SUCCESS'
+  // @dts-jest:pass:snap -> boolean
+  fetchUserMappers.success.match(
+    fetchUserMappers.success({ firstName: 'Piotr', lastName: 'Witek' })
+  ); // => true
 
   const fn = (
     a: AsyncActionCreatorBuilder<
@@ -320,7 +357,7 @@ type User = { firstName: string; lastName: string };
     a.cancel;
     return a;
   };
-  // @dts-jest:pass:snap -> { request: TH.EmptyActionCreator<"FETCH_USER_REQUEST">; success: (args_0: User) => TH.PayloadAction<"FETCH_USER_SUCCESS", string>; failure: (args_0: Error, args_1: number) => TH.PayloadMetaAction<"FETCH_USER_FAILURE", Error, number>; }
+  // @dts-jest:pass:snap -> { request: TH.EmptyActionCreator<"FETCH_USER_REQUEST">; success: ((args_0: User) => TH.PayloadAction<"FETCH_USER_SUCCESS", string>) & TH.ActionCreatorMatcher<"FETCH_USER_SUCCESS", TH.PayloadAction<"FETCH_USER_SUCCESS", string>>; failure: ((args_0: Error, args_1: number) => TH.PayloadMetaAction<"FETCH_USER_FAILURE", Error, number>) & TH.ActionCreatorMatcher<"FETCH_USER_FAILURE", TH.PayloadMetaAction<"FETCH_USER_FAILURE", Error, number>>; }
   fn(fetchUserMappers);
 }
 
@@ -383,6 +420,6 @@ type User = { firstName: string; lastName: string };
     a.cancel;
     return a;
   };
-  // @dts-jest:pass:snap -> { request: TH.EmptyActionCreator<"FETCH_USER_REQUEST">; success: (args_0: User) => TH.PayloadAction<"FETCH_USER_SUCCESS", string>; failure: (args_0: Error, args_1: number) => TH.PayloadMetaAction<"FETCH_USER_FAILURE", Error, number>; cancel: (args_0: number) => TH.PayloadMetaAction<"FETCH_USER_CANCEL", undefined, number>; }
+  // @dts-jest:pass:snap -> { request: TH.EmptyActionCreator<"FETCH_USER_REQUEST">; success: ((args_0: User) => TH.PayloadAction<"FETCH_USER_SUCCESS", string>) & TH.ActionCreatorMatcher<"FETCH_USER_SUCCESS", TH.PayloadAction<"FETCH_USER_SUCCESS", string>>; failure: ((args_0: Error, args_1: number) => TH.PayloadMetaAction<"FETCH_USER_FAILURE", Error, number>) & TH.ActionCreatorMatcher<"FETCH_USER_FAILURE", TH.PayloadMetaAction<"FETCH_USER_FAILURE", Error, number>>; cancel: ((args_0: number) => TH.PayloadMetaAction<"FETCH_USER_CANCEL", undefined, number>) & TH.ActionCreatorMatcher<"FETCH_USER_CANCEL", TH.PayloadMetaAction<"FETCH_USER_CANCEL", undefined, number>>; }
   fn(fetchUserMappers);
 }

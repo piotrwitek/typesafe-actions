@@ -1,11 +1,46 @@
 import * as TH from './type-helpers';
 import { createAction } from './create-action';
+import { testType } from './utils/testing';
 
 // @dts-jest:group toString() method return a type
 {
   const actionCreator = createAction('CREATE_ACTION')();
   // @dts-jest:pass:snap
   actionCreator.toString(); // => 'CREATE_ACTION'
+}
+
+// @dts-jest:group Redux Toolkit-compatible metadata
+{
+  const increment = createAction('INCREMENT')();
+  const withPayload = createAction('CREATE_ACTION')<number>();
+  const withMappedPayload = createAction(
+    'CREATE_MAPPED_ACTION',
+    (amount: number) => amount
+  )<number>();
+
+  // @dts-jest:pass:snap
+  increment.type; // => 'INCREMENT'
+  // @dts-jest:pass:snap
+  withPayload.type; // => 'CREATE_ACTION'
+  // @dts-jest:pass:snap
+  withMappedPayload.type; // => 'CREATE_MAPPED_ACTION'
+
+  // @dts-jest:pass:snap
+  increment.match(increment()); // => true
+  // @dts-jest:pass:snap
+  withPayload.match(withPayload(1)); // => true
+  // @dts-jest:pass:snap
+  withPayload.match({ type: 'OTHER_ACTION' }); // => false
+  // @dts-jest:pass:snap
+  withMappedPayload.match(withMappedPayload(2)); // => true
+
+  const action: TH.Action = { type: 'CREATE_ACTION' };
+  if (withPayload.match(action)) {
+    // @dts-jest:pass:snap
+    testType<TH.PayloadAction<'CREATE_ACTION', number>>(action);
+    // @dts-jest:fail:snap
+    testType<string>(action.payload);
+  }
 }
 
 // @dts-jest:group with symbol

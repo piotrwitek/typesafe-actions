@@ -1,11 +1,46 @@
 import * as TH from './type-helpers';
 import { createAction } from './create-action';
+import { testType } from './utils/testing';
 
 // @dts-jest:group toString() method return a type
 {
   const actionCreator = createAction('CREATE_ACTION')();
   // @dts-jest:pass:snap -> string
   actionCreator.toString(); // => 'CREATE_ACTION'
+}
+
+// @dts-jest:group Redux Toolkit-compatible metadata
+{
+  const increment = createAction('INCREMENT')();
+  const withPayload = createAction('CREATE_ACTION')<number>();
+  const withMappedPayload = createAction(
+    'CREATE_MAPPED_ACTION',
+    (amount: number) => amount
+  )<number>();
+
+  // @dts-jest:pass:snap -> "INCREMENT"
+  increment.type; // => 'INCREMENT'
+  // @dts-jest:pass:snap -> "CREATE_ACTION"
+  withPayload.type; // => 'CREATE_ACTION'
+  // @dts-jest:pass:snap -> "CREATE_MAPPED_ACTION"
+  withMappedPayload.type; // => 'CREATE_MAPPED_ACTION'
+
+  // @dts-jest:pass:snap -> boolean
+  increment.match(increment()); // => true
+  // @dts-jest:pass:snap -> boolean
+  withPayload.match(withPayload(1)); // => true
+  // @dts-jest:pass:snap -> boolean
+  withPayload.match({ type: 'OTHER_ACTION' }); // => false
+  // @dts-jest:pass:snap -> boolean
+  withMappedPayload.match(withMappedPayload(2)); // => true
+
+  const action: TH.Action = { type: 'CREATE_ACTION' };
+  if (withPayload.match(action)) {
+    // @dts-jest:pass:snap -> TH.PayloadAction<"CREATE_ACTION", number>
+    testType<TH.PayloadAction<'CREATE_ACTION', number>>(action);
+    // @dts-jest:fail:snap -> Argument of type 'number' is not assignable to parameter of type 'string | undefined'.
+    testType<string>(action.payload);
+  }
 }
 
 // @dts-jest:group with symbol

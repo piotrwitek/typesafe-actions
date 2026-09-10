@@ -74,18 +74,32 @@ export type PayloadMetaAction<TType extends TypeConstant, TPayload, TMeta> = {
 };
 
 /**
+ * @desc Redux Toolkit-compatible `type` + `match` on an action creator
+ * @private
+ */
+export type ActionCreatorMatcher<
+  TType extends TypeConstant,
+  TAction extends Action<TType>
+> = {
+  type: TType;
+  match(action: Action): action is TAction;
+};
+
+/**
  * @desc Action Creator producing EmptyAction
  */
-export type EmptyActionCreator<TType extends TypeConstant> = () => EmptyAction<
+export type EmptyActionCreator<TType extends TypeConstant> = (() => EmptyAction<
   TType
->;
+>) &
+  ActionCreatorMatcher<TType, EmptyAction<TType>>;
 
 /**
  * @desc Action Creator producing PayloadAction
  */
-export type PayloadActionCreator<TType extends TypeConstant, TPayload> = (
+export type PayloadActionCreator<TType extends TypeConstant, TPayload> = ((
   payload: TPayload
-) => PayloadAction<TType, TPayload>;
+) => PayloadAction<TType, TPayload>) &
+  ActionCreatorMatcher<TType, PayloadAction<TType, TPayload>>;
 
 // /**
 //  * @desc Action Creator producing MetaAction
@@ -102,16 +116,22 @@ export type PayloadMetaActionCreator<
   TType extends TypeConstant,
   TPayload,
   TMeta
-> = (
+> = ((
   payload: TPayload,
   meta: TMeta
-) => PayloadMetaAction<TType, TPayload, TMeta>;
+) => PayloadMetaAction<TType, TPayload, TMeta>) &
+  ActionCreatorMatcher<TType, PayloadMetaAction<TType, TPayload, TMeta>>;
 
 /**
  * @desc Type representing type getter on Action Creator instance
  */
-export interface ActionCreatorTypeMetadata<TType extends TypeConstant> {
+export interface ActionCreatorTypeMetadata<
+  TType extends TypeConstant,
+  TAction extends Action<TType> = Action<TType>
+> {
   getType?: () => TType;
+  type?: TType;
+  match?: (action: Action) => action is TAction;
 }
 
 /**
@@ -264,27 +284,55 @@ export type AsyncActionCreatorBuilder<
   ? {
       request: [TArgs1] extends [never]
         ? ActionCreatorBuilder<TType1, TPayload1, TMeta1>
-        : (...args: TArgs1) => ActionBuilder<TType1, TPayload1, TMeta1>;
+        : ((...args: TArgs1) => ActionBuilder<TType1, TPayload1, TMeta1>) &
+            ActionCreatorMatcher<
+              TType1,
+              ActionBuilder<TType1, TPayload1, TMeta1>
+            >;
       success: [TArgs2] extends [never]
         ? ActionCreatorBuilder<TType2, TPayload2, TMeta2>
-        : (...args: TArgs2) => ActionBuilder<TType2, TPayload2, TMeta2>;
+        : ((...args: TArgs2) => ActionBuilder<TType2, TPayload2, TMeta2>) &
+            ActionCreatorMatcher<
+              TType2,
+              ActionBuilder<TType2, TPayload2, TMeta2>
+            >;
       failure: [TArgs3] extends [never]
         ? ActionCreatorBuilder<TType3, TPayload3, TMeta3>
-        : (...args: TArgs3) => ActionBuilder<TType3, TPayload3, TMeta3>;
+        : ((...args: TArgs3) => ActionBuilder<TType3, TPayload3, TMeta3>) &
+            ActionCreatorMatcher<
+              TType3,
+              ActionBuilder<TType3, TPayload3, TMeta3>
+            >;
     }
   : {
       request: [TArgs1] extends [never]
         ? ActionCreatorBuilder<TType1, TPayload1, TMeta1>
-        : (...args: TArgs1) => ActionBuilder<TType1, TPayload1, TMeta1>;
+        : ((...args: TArgs1) => ActionBuilder<TType1, TPayload1, TMeta1>) &
+            ActionCreatorMatcher<
+              TType1,
+              ActionBuilder<TType1, TPayload1, TMeta1>
+            >;
       success: [TArgs2] extends [never]
         ? ActionCreatorBuilder<TType2, TPayload2, TMeta2>
-        : (...args: TArgs2) => ActionBuilder<TType2, TPayload2, TMeta2>;
+        : ((...args: TArgs2) => ActionBuilder<TType2, TPayload2, TMeta2>) &
+            ActionCreatorMatcher<
+              TType2,
+              ActionBuilder<TType2, TPayload2, TMeta2>
+            >;
       failure: [TArgs3] extends [never]
         ? ActionCreatorBuilder<TType3, TPayload3, TMeta3>
-        : (...args: TArgs3) => ActionBuilder<TType3, TPayload3, TMeta3>;
+        : ((...args: TArgs3) => ActionBuilder<TType3, TPayload3, TMeta3>) &
+            ActionCreatorMatcher<
+              TType3,
+              ActionBuilder<TType3, TPayload3, TMeta3>
+            >;
       cancel: [TArgs4] extends [never]
         ? ActionCreatorBuilder<TType4, TPayload4, TMeta4>
-        : (...args: TArgs4) => ActionBuilder<TType4, TPayload4, TMeta4>;
+        : ((...args: TArgs4) => ActionBuilder<TType4, TPayload4, TMeta4>) &
+            ActionCreatorMatcher<
+              TType4,
+              ActionBuilder<TType4, TPayload4, TMeta4>
+            >;
     };
 
 /**

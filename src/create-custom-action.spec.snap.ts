@@ -1,11 +1,34 @@
 import * as T from './type-helpers';
 import { createCustomAction } from './create-custom-action';
+import { testType } from './utils/testing';
 
 // @dts-jest:group toString() method return a type
 {
   const actionCreator = createCustomAction('CREATE_CUSTOM_ACTION');
   // @dts-jest:pass:snap -> string
   actionCreator.toString(); // => 'CREATE_CUSTOM_ACTION'
+}
+
+// @dts-jest:group Redux Toolkit-compatible metadata
+{
+  const actionCreator = createCustomAction(
+    'CREATE_CUSTOM_ACTION',
+    (id: number) => ({ payload: id })
+  );
+  // @dts-jest:pass:snap -> "CREATE_CUSTOM_ACTION"
+  actionCreator.type; // => 'CREATE_CUSTOM_ACTION'
+  // @dts-jest:pass:snap -> boolean
+  actionCreator.match(actionCreator(1)); // => true
+  // @dts-jest:pass:snap -> boolean
+  actionCreator.match({ type: 'OTHER_ACTION' }); // => false
+
+  const action: T.Action = { type: 'CREATE_CUSTOM_ACTION' };
+  if (actionCreator.match(action)) {
+    // @dts-jest:pass:snap -> { type: "CREATE_CUSTOM_ACTION"; payload: number; }
+    testType<{ type: 'CREATE_CUSTOM_ACTION'; payload: number }>(action);
+    // @dts-jest:fail:snap -> Argument of type 'number' is not assignable to parameter of type 'string | undefined'.
+    testType<string>(action.payload);
+  }
 }
 
 // @dts-jest:group with symbol

@@ -85,6 +85,10 @@ const initialState = 0;
         [getType(add)]: (state: any, action: any) => state + action.payload,
         [getType(increment)]: (state: any, _: any) => state + 1,
       }),
+      createReducer<number, ActionType<typeof actions>>(initialState, {
+        [add.type]: (state: any, action: any) => state + action.payload,
+        [increment.type]: (state: any, _: any) => state + 1,
+      }),
     ].forEach(fn => {
       // @dts-jest:pass
       fn(0, {} as any); // => 0

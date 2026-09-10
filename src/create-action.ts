@@ -1,8 +1,8 @@
 import {
   TypeConstant,
   ActionCreatorBuilder,
-  ActionCreatorTypeMetadata,
   ActionBuilder,
+  ActionCreatorMatcher,
 } from './type-helpers';
 import { createCustomAction } from './create-custom-action';
 import {
@@ -32,7 +32,8 @@ export function createAction<
 ): <
   TPayload extends TCreatorPayload = TCreatorPayload,
   TMeta extends TCreatorMeta = TCreatorMeta
->() => (...args: TArgs) => ActionBuilder<TType, TPayload, TMeta>;
+>() => ((...args: TArgs) => ActionBuilder<TType, TPayload, TMeta>) &
+  ActionCreatorMatcher<TType, ActionBuilder<TType, TPayload, TMeta>>;
 
 /**
  * @description create an action-creator
@@ -50,7 +51,8 @@ export function createAction<
   | (<
       TPayload extends TCreatorPayload = TCreatorPayload,
       TMeta extends TCreatorMeta = TCreatorMeta
-    >() => (...args: TArgs) => ActionBuilder<TType, TPayload, TMeta>)
+    >() => ((...args: TArgs) => ActionBuilder<TType, TPayload, TMeta>) &
+      ActionCreatorMatcher<TType, ActionBuilder<TType, TPayload, TMeta>>)
   | (<TPayload = undefined, TMeta = undefined>() => ActionCreatorBuilder<
       TType,
       TPayload,

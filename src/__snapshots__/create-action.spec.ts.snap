@@ -20,6 +20,24 @@ exports[`Redux Actions - with payload and meta - multiple primitive params withP
 
 exports[`Redux Actions - with payload and meta - obj param withPayloadAndMeta({ username: 'Piotr', message: 'Hello!' }) (type) should match snapshot 1`] = `"TH.PayloadMetaAction<\\"CREATE_ACTION\\", string, { username: string; message: string; }>"`;
 
+exports[`Redux Toolkit-compatible metadata increment.match(increment()) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`Redux Toolkit-compatible metadata increment.type (type) should match snapshot 1`] = `"\\"INCREMENT\\""`;
+
+exports[`Redux Toolkit-compatible metadata testType<TH.PayloadAction<'CREATE_ACTION', number>>(action) (type) should match snapshot 1`] = `"TH.PayloadAction<\\"CREATE_ACTION\\", number>"`;
+
+exports[`Redux Toolkit-compatible metadata testType<string>(action.payload) (type) should match snapshot 1`] = `"Argument of type 'number' is not assignable to parameter of type 'string | undefined'."`;
+
+exports[`Redux Toolkit-compatible metadata withMappedPayload.match(withMappedPayload(2)) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`Redux Toolkit-compatible metadata withMappedPayload.type (type) should match snapshot 1`] = `"\\"CREATE_MAPPED_ACTION\\""`;
+
+exports[`Redux Toolkit-compatible metadata withPayload.match({ type: 'OTHER_ACTION' }) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`Redux Toolkit-compatible metadata withPayload.match(withPayload(1)) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`Redux Toolkit-compatible metadata withPayload.type (type) should match snapshot 1`] = `"\\"CREATE_ACTION\\""`;
+
 exports[`toString() method return a type actionCreator.toString() (type) should match snapshot 1`] = `"string"`;
 
 exports[`type-safe usage with higher-order function setUserSetting('settingA', 'foo') (type) should match snapshot 1`] = `"TH.PayloadAction<\\"SET_USER_SETTING\\", { setting: \\"settingA\\"; newValue: string; }>"`;

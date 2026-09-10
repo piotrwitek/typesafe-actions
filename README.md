@@ -580,6 +580,30 @@ dispatch(getTodo('some_id', 'some_meta'));
 // { type: 'GET_TODO', payload: string, meta: string }
 ```
 
+**Redux Toolkit compatibility** — enhanced action-creators expose a literal `.type` and a `.match()` type guard (same shape as RTK `BaseActionCreator`). This works for `createAction`, `createCustomAction`, and async child creators (`request` / `success` / `failure` / `cancel`):
+
+```ts
+import { createAction, createReducer } from 'typesafe-actions';
+
+const increment = createAction('INCREMENT')();
+const add = createAction('ADD')<number>();
+
+// RTK-style object map keyed by the action type literal
+const counterReducer = createReducer(0, {
+  [increment.type]: state => state + 1,
+  [add.type]: (state, action) =>
+    add.match(action) ? state + action.payload : state,
+});
+
+// Type guard — narrows `action` to this creator's action type
+function handle(action: { type: string }) {
+  if (add.match(action)) {
+    // action is { type: 'ADD'; payload: number }
+    return action.payload;
+  }
+}
+```
+
 [⇧ back to top](#table-of-contents)
 
 #### `createStandardAction`

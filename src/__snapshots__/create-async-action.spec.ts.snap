@@ -1,5 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`async action metadata fetchUsersAsync.failure.match(fetchUsersAsync.success([])) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`async action metadata fetchUsersAsync.failure.type (type) should match snapshot 1`] = `"\\"FETCH_USERS_FAILURE\\""`;
+
+exports[`async action metadata fetchUsersAsync.request.match(fetchUsersAsync.request()) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`async action metadata fetchUsersAsync.request.type (type) should match snapshot 1`] = `"\\"FETCH_USERS_REQUEST\\""`;
+
+exports[`async action metadata fetchUsersAsync.success.match(fetchUsersAsync.success([])) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`async action metadata fetchUsersAsync.success.type (type) should match snapshot 1`] = `"\\"FETCH_USERS_SUCCESS\\""`;
+
+exports[`async action metadata testType<TH.PayloadAction<'FETCH_USERS_SUCCESS', User[]>>(action) (type) should match snapshot 1`] = `"TH.PayloadAction<\\"FETCH_USERS_SUCCESS\\", User[]>"`;
+
 exports[`async action with any type fetchUsersAsync.cancel (type) should match snapshot 1`] = `"Property 'cancel' does not exist on type '{ request: PayloadActionCreator<\\"FETCH_USERS_REQUEST\\", any>; success: PayloadActionCreator<\\"FETCH_USERS_SUCCESS\\", any[]>; failure: PayloadActionCreator<...>; }'."`;
 
 exports[`async action with any type fetchUsersAsync.failure(
@@ -32,7 +46,7 @@ exports[`async action with cancel fetchUsersAsync.success([
 
 exports[`async action with cancel fn(fetchUsersAsync) (type) should match snapshot 1`] = `"{ request: TH.EmptyActionCreator<\\"FETCH_USERS_REQUEST\\">; success: TH.PayloadActionCreator<\\"FETCH_USERS_SUCCESS\\", User[]>; failure: TH.PayloadActionCreator<\\"FETCH_USERS_FAILURE\\", Error>; cancel: TH.PayloadActionCreator<\\"FETCH_USERS_CANCEL\\", string>; }"`;
 
-exports[`async action with mappers fetchUserMappers.cancel (type) should match snapshot 1`] = `"Property 'cancel' does not exist on type '{ request: EmptyActionCreator<\\"FETCH_USER_REQUEST\\">; success: (__0: User) => PayloadAction<\\"FETCH_USER_SUCCESS\\", string>; failure: (error: Error, meta: number) => PayloadMetaAction<...>; }'."`;
+exports[`async action with mappers fetchUserMappers.cancel (type) should match snapshot 1`] = `"Property 'cancel' does not exist on type '{ request: EmptyActionCreator<\\"FETCH_USER_REQUEST\\">; success: ((__0: User) => PayloadAction<\\"FETCH_USER_SUCCESS\\", string>) & ActionCreatorMatcher<\\"FETCH_USER_SUCCESS\\", PayloadAction<...>>; failure: ((error: Error, meta: number) => PayloadMetaAction<...>) & ActionCreatorMatcher<...>; }'."`;
 
 exports[`async action with mappers fetchUserMappers.failure(
       Error('reason'),
@@ -46,7 +60,13 @@ exports[`async action with mappers fetchUserMappers.success({
       lastName: 'Witek',
     }) (type) should match snapshot 1`] = `"TH.PayloadAction<\\"FETCH_USER_SUCCESS\\", string>"`;
 
-exports[`async action with mappers fn(fetchUserMappers) (type) should match snapshot 1`] = `"{ request: TH.EmptyActionCreator<\\"FETCH_USER_REQUEST\\">; success: (args_0: User) => TH.PayloadAction<\\"FETCH_USER_SUCCESS\\", string>; failure: (args_0: Error, args_1: number) => TH.PayloadMetaAction<\\"FETCH_USER_FAILURE\\", Error, number>; }"`;
+exports[`async action with mappers fetchUserMappers.success.match(
+      fetchUserMappers.success({ firstName: 'Piotr', lastName: 'Witek' })
+    ) (type) should match snapshot 1`] = `"boolean"`;
+
+exports[`async action with mappers fetchUserMappers.success.type (type) should match snapshot 1`] = `"\\"FETCH_USER_SUCCESS\\""`;
+
+exports[`async action with mappers fn(fetchUserMappers) (type) should match snapshot 1`] = `"{ request: TH.EmptyActionCreator<\\"FETCH_USER_REQUEST\\">; success: ((args_0: User) => TH.PayloadAction<\\"FETCH_USER_SUCCESS\\", string>) & TH.ActionCreatorMatcher<\\"FETCH_USER_SUCCESS\\", TH.PayloadAction<\\"FETCH_USER_SUCCESS\\", string>>; failure: ((args_0: Error, args_1: number) => TH.PayloadMetaAction<\\"FETCH_USER_FAILURE\\", Error, number>) & TH.ActionCreatorMatcher<\\"FETCH_USER_FAILURE\\", TH.PayloadMetaAction<\\"FETCH_USER_FAILURE\\", Error, number>>; }"`;
 
 exports[`async action with mappers with cancel fetchUserMappers.cancel(
       111
@@ -64,7 +84,7 @@ exports[`async action with mappers with cancel fetchUserMappers.success({
       lastName: 'Witek',
     }) (type) should match snapshot 1`] = `"TH.PayloadAction<\\"FETCH_USER_SUCCESS\\", string>"`;
 
-exports[`async action with mappers with cancel fn(fetchUserMappers) (type) should match snapshot 1`] = `"{ request: TH.EmptyActionCreator<\\"FETCH_USER_REQUEST\\">; success: (args_0: User) => TH.PayloadAction<\\"FETCH_USER_SUCCESS\\", string>; failure: (args_0: Error, args_1: number) => TH.PayloadMetaAction<\\"FETCH_USER_FAILURE\\", Error, number>; cancel: (args_0: number) => TH.PayloadMetaAction<\\"FETCH_USER_CANCEL\\", undefined, number>; }"`;
+exports[`async action with mappers with cancel fn(fetchUserMappers) (type) should match snapshot 1`] = `"{ request: TH.EmptyActionCreator<\\"FETCH_USER_REQUEST\\">; success: ((args_0: User) => TH.PayloadAction<\\"FETCH_USER_SUCCESS\\", string>) & TH.ActionCreatorMatcher<\\"FETCH_USER_SUCCESS\\", TH.PayloadAction<\\"FETCH_USER_SUCCESS\\", string>>; failure: ((args_0: Error, args_1: number) => TH.PayloadMetaAction<\\"FETCH_USER_FAILURE\\", Error, number>) & TH.ActionCreatorMatcher<\\"FETCH_USER_FAILURE\\", TH.PayloadMetaAction<\\"FETCH_USER_FAILURE\\", Error, number>>; cancel: ((args_0: number) => TH.PayloadMetaAction<\\"FETCH_USER_CANCEL\\", undefined, number>) & TH.ActionCreatorMatcher<\\"FETCH_USER_CANCEL\\", TH.PayloadMetaAction<\\"FETCH_USER_CANCEL\\", undefined, number>>; }"`;
 
 exports[`async action with meta fetchUsersAsync.cancel (type) should match snapshot 1`] = `"Property 'cancel' does not exist on type '{ request: PayloadMetaActionCreator<\\"FETCH_USERS_REQUEST\\", undefined, number>; success: PayloadActionCreator<\\"FETCH_USERS_SUCCESS\\", User[]>; failure: PayloadMetaActionCreator<...>; }'."`;
 
