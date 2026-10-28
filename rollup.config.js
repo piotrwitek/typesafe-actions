@@ -47,7 +47,7 @@ function createConfig(
       );
     },
     output: {
-      file: `dist/${pkg.name}.${format}.${env}.js`,
+      file: opts.file || `dist/${pkg.name}.${format}.${env}.js`,
       format,
       freeze: false,
       esModule: false,
@@ -56,6 +56,7 @@ function createConfig(
       },
       name: opts.name,
       sourcemap: true,
+      globals: opts.globals || {},
       // exports: 'named',
     },
     plugins: [
@@ -93,6 +94,11 @@ function createConfig(
   };
 }
 
+const rxjsGlobals = {
+  rxjs: 'rxjs',
+  'rxjs/operators': 'rxjs.operators',
+};
+
 export default [
   createConfig('cjs', 'development', {
     input: './out/index.js',
@@ -110,5 +116,20 @@ export default [
   createConfig('umd', 'production', {
     input: './out/index.js',
     name: 'TypesafeActions',
+  }),
+  createConfig('cjs', 'development', {
+    input: './out/async-epic.js',
+    file: `dist/${pkg.name}.async-epic.cjs.development.js`,
+    globals: rxjsGlobals,
+  }),
+  createConfig('cjs', 'production', {
+    input: './out/async-epic.js',
+    file: `dist/${pkg.name}.async-epic.cjs.production.js`,
+    globals: rxjsGlobals,
+  }),
+  createConfig('es', 'production', {
+    input: './out/async-epic.js',
+    file: `dist/${pkg.name}.async-epic.es.production.js`,
+    globals: rxjsGlobals,
   }),
 ];

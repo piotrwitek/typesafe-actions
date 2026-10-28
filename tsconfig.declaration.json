@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.json",
-  "include": ["src/index.ts"],
+  "include": ["src/index.ts", "src/async-epic.ts"],
   "compilerOptions": {
     "declaration": true,
     "emitDeclarationOnly": true,

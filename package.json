@@ -10,6 +10,28 @@
   "main": "index.js",
   "module": "dist/typesafe-actions.es.production.js",
   "browser": "dist/typesafe-actions.umd.production.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "browser": "./dist/typesafe-actions.umd.production.js",
+      "import": "./dist/typesafe-actions.es.production.js",
+      "require": "./index.js",
+      "default": "./index.js"
+    },
+    "./async-epic": {
+      "types": "./dist/async-epic.d.ts",
+      "import": "./dist/typesafe-actions.async-epic.es.production.js",
+      "require": "./async-epic.js",
+      "default": "./async-epic.js"
+    },
+    "./package.json": "./package.json",
+    "./dist/*": "./dist/*"
+  },
+  "typesVersions": {
+    "*": {
+      "async-epic": ["dist/async-epic.d.ts"]
+    }
+  },
   "engines": {
     "node": ">= 4"
   },
@@ -19,7 +41,8 @@
     }
   },
   "scripts": {
-    "ci-check": "npm run prettier && npm run lint && npm run tsc && npm run test",
+    "ci-check": "npm run prettier && npm run lint && npm run tsc && npm run test && npm run test:packaging",
+    "test:packaging": "npm run build && node scripts/packaging-regression.js",
     "reinstall": "rm -rf node_modules/ dist/ && npm install",
     "prettier": "prettier --list-different 'src/**/*.ts' || (echo '\nPlease fix code formatting by running:\nnpm run prettier:fix\n'; exit 1)",
     "prettier:fix": "prettier --write 'src/**/*.ts'",
@@ -31,7 +54,7 @@
     "test:watch": "jest --config jest.config.json --watch",
     "doctoc": "doctoc --maxlevel=4 README.md",
     "prebuild": "rm -rf dist/ .size-snapshot.json && tsc -p ./tsconfig.declaration.json",
-    "build": "tsc -p ./tsconfig.build.json && rollup -c",
+    "build": "tsc -p ./tsconfig.build.json && node scripts/run-rollup.js",
     "postbuild": "rm -rf out",
     "prepublishOnly": "npm run reinstall && npm run ci-check && npm run build",
     "benchmark:s": "node --max-old-space-size=8000 ./node_modules/.bin/tsc --diagnostics --outDir out benchmarks/10-actions.ts  && rm -rf out",
@@ -58,9 +81,18 @@
     "rollup-plugin-size-snapshot": "0.10.0",
     "rollup-plugin-sourcemaps": "0.4.2",
     "rollup-plugin-terser": "5.1.2",
+    "rxjs": "6.5.3",
     "ts-jest": "24.1.0",
     "tslint": "5.20.1",
     "typescript": "3.7.2"
+  },
+  "peerDependencies": {
+    "rxjs": "^6.0.0 || ^7.0.0"
+  },
+  "peerDependenciesMeta": {
+    "rxjs": {
+      "optional": true
+    }
   },
   "keywords": [
     "typescript",

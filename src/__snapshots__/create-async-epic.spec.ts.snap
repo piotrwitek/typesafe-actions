@@ -1,0 +1,65 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`catchErrorAndHandleWithAction types testType<Observable<User | T.PayloadAction<'FETCH_USER_FAILURE', HttpError>>>(
+      result$
+    ) (type) should match snapshot 1`] = `"Observable<User | T.PayloadAction<\\"FETCH_USER_FAILURE\\", HttpError>>"`;
+
+exports[`createAsyncEpic mapError testType<
+      (
+        action$: Observable<T.Action>,
+        state$: unknown,
+        services: unknown
+      ) => Observable<
+        | T.PayloadAction<'FETCH_USER_SUCCESS', User>
+        | T.PayloadAction<'FETCH_USER_FAILURE', HttpError>
+      >
+    >(epic) (type) should match snapshot 1`] = `"(action$: Observable<T.Action<string>>, state$: unknown, services: unknown) => Observable<T.PayloadAction<\\"FETCH_USER_SUCCESS\\", User> | T.PayloadAction<\\"FETCH_USER_FAILURE\\", HttpError>>"`;
+
+exports[`createAsyncEpic mapError testType<string>(action.payload) (type) should match snapshot 1`] = `"string"`;
+
+exports[`createAsyncEpic rejects invalid handler result createAsyncEpic(fetchUserAsync, () => of('not-a-user')) (type) should match snapshot 1`] = `
+"Type 'Observable<string>' is not assignable to type 'ObservableInput<User>'.
+  Type 'Observable<string>' is not assignable to type 'Subscribable<User>'.
+    Types of property 'subscribe' are incompatible.
+      Type '{ (observer?: NextObserver<string> | ErrorObserver<string> | CompletionObserver<string> | undefined): Subscription; (next: null | undefined, error: null | undefined, complete: () => void): Subscription; (next: null | undefined, error: (error: any) => void, complete?: (() => void) | undefined): Subscription; (next: (...' is not assignable to type '{ (observer?: NextObserver<User> | ErrorObserver<User> | CompletionObserver<User> | undefined): Unsubscribable; (next: null | undefined, error: null | undefined, complete: () => void): Unsubscribable; (next: null | undefined, error: (error: any) => void, complete?: (() => void) | undefined): Unsubscribable; (next: (...'.
+        Types of parameters 'observer' and 'observer' are incompatible.
+          Type 'NextObserver<User> | ErrorObserver<User> | CompletionObserver<User> | undefined' is not assignable to type 'NextObserver<string> | ErrorObserver<string> | CompletionObserver<string> | undefined'.
+            Type 'NextObserver<User>' is not assignable to type 'NextObserver<string> | ErrorObserver<string> | CompletionObserver<string> | undefined'.
+              Type 'NextObserver<User>' is not assignable to type 'NextObserver<string>'.
+                Type 'string' is not assignable to type 'User'."
+`;
+
+exports[`createAsyncEpic types testType<
+      (
+        action$: Observable<RootAction>,
+        state$: State$,
+        services: Services
+      ) => Observable<
+        | T.PayloadAction<'FETCH_USER_SUCCESS', User>
+        | T.PayloadAction<'FETCH_USER_FAILURE', HttpError>
+      >
+    >(epic) (type) should match snapshot 1`] = `"(action$: Observable<RootAction>, state$: State$, services: Services) => Observable<T.PayloadAction<\\"FETCH_USER_SUCCESS\\", User> | T.PayloadAction<\\"FETCH_USER_FAILURE\\", HttpError>>"`;
+
+exports[`createAsyncEpic types testType<Services>(services) (type) should match snapshot 1`] = `"Services"`;
+
+exports[`createAsyncEpic types testType<string>(action.payload) (type) should match snapshot 1`] = `"string"`;
+
+exports[`createAsyncEpic types testType<string>(state.value.token) (type) should match snapshot 1`] = `"string"`;
+
+exports[`createAsyncEpic without cancel testType<
+      (
+        action$: Observable<T.Action>,
+        state$: unknown,
+        services: unknown
+      ) => Observable<
+        | T.PayloadAction<'PING_SUCCESS', string>
+        | T.PayloadAction<'PING_FAILURE', Error>
+      >
+    >(epic) (type) should match snapshot 1`] = `"(action$: Observable<T.Action<string>>, state$: unknown, services: unknown) => Observable<T.PayloadAction<\\"PING_SUCCESS\\", string> | T.PayloadAction<\\"PING_FAILURE\\", Error>>"`;
+
+exports[`handleAsyncAction types testType<
+      Observable<
+        | T.PayloadAction<'FETCH_USER_SUCCESS', User>
+        | T.PayloadAction<'FETCH_USER_FAILURE', HttpError>
+      >
+    >(result$) (type) should match snapshot 1`] = `"Observable<T.PayloadAction<\\"FETCH_USER_SUCCESS\\", User> | T.PayloadAction<\\"FETCH_USER_FAILURE\\", HttpError>>"`;

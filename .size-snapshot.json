@@ -2,17 +2,17 @@
   "dist/typesafe-actions.cjs.development.js": {
     "bundled": 9154,
     "minified": 5296,
-    "gzipped": 1299
+    "gzipped": 1290
   },
   "dist/typesafe-actions.cjs.production.js": {
     "bundled": 9154,
     "minified": 5296,
-    "gzipped": 1299
+    "gzipped": 1290
   },
   "dist/typesafe-actions.es.production.js": {
     "bundled": 8964,
     "minified": 5123,
-    "gzipped": 1262,
+    "gzipped": 1254,
     "treeshaked": {
       "rollup": {
         "code": 0,
@@ -26,11 +26,35 @@
   "dist/typesafe-actions.umd.development.js": {
     "bundled": 10584,
     "minified": 4086,
-    "gzipped": 1270
+    "gzipped": 1262
   },
   "dist/typesafe-actions.umd.production.js": {
     "bundled": 10584,
     "minified": 4086,
-    "gzipped": 1270
+    "gzipped": 1262
+  },
+  "dist/typesafe-actions.async-epic.cjs.development.js": {
+    "bundled": 5245,
+    "minified": 3274,
+    "gzipped": 1023
+  },
+  "dist/typesafe-actions.async-epic.cjs.production.js": {
+    "bundled": 5245,
+    "minified": 3274,
+    "gzipped": 1023
+  },
+  "dist/typesafe-actions.async-epic.es.production.js": {
+    "bundled": 5081,
+    "minified": 3107,
+    "gzipped": 1002,
+    "treeshaked": {
+      "rollup": {
+        "code": 36,
+        "import_statements": 36
+      },
+      "webpack": {
+        "code": 1107
+      }
+    }
   }
 }
